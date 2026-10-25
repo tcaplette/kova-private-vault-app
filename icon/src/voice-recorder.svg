@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Voice recorder - a white capsule microphone with a graphite grille, beside a red record dot.
+     108 x 108 adaptive canvas; the subject stays inside the 66 dp safe circle
+     centred at 54,54. The launcher vectors and the 512 px Play PNG are made from
+     this file. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="108" height="108" viewBox="0 0 108 108">
+  <g id="background">
+    <path d="M0,0 H108 V108 H0 Z" fill="#5B3A55"/>
+  </g>
+  <g id="foreground">
+    <path d="M50,25 h0 a9,9 0 0,1 9,9 v18 a9,9 0 0,1 -9,9 h0 a9,9 0 0,1 -9,-9 v-18 a9,9 0 0,1 9,-9 Z" fill="#F8FAFC"/>
+    <path d="M50,27.5 h0 a6.5,6.5 0 0,1 6.5,6.5 v5 a6.5,6.5 0 0,1 -6.5,6.5 h-0 a6.5,6.5 0 0,1 -6.5,-6.5 v-5 a6.5,6.5 0 0,1 6.5,-6.5 Z" fill="#374151"/>
+    <path d="M46.2,31 h7.6 a0.7,0.7 0 0,1 0.7,0.7 v0 a0.7,0.7 0 0,1 -0.7,0.7 h-7.6 a0.7,0.7 0 0,1 -0.7,-0.7 v-0 a0.7,0.7 0 0,1 0.7,-0.7 Z" fill="#9CA3AF"/>
+    <path d="M46.2,34.6 h7.6 a0.7,0.7 0 0,1 0.7,0.7 v0 a0.7,0.7 0 0,1 -0.7,0.7 h-7.6 a0.7,0.7 0 0,1 -0.7,-0.7 v-0 a0.7,0.7 0 0,1 0.7,-0.7 Z" fill="#9CA3AF"/>
+    <path d="M46.2,38.2 h7.6 a0.7,0.7 0 0,1 0.7,0.7 v0 a0.7,0.7 0 0,1 -0.7,0.7 h-7.6 a0.7,0.7 0 0,1 -0.7,-0.7 v-0 a0.7,0.7 0 0,1 0.7,-0.7 Z" fill="#9CA3AF"/>
+    <path d="M46.2,41.8 h7.6 a0.7,0.7 0 0,1 0.7,0.7 v0 a0.7,0.7 0 0,1 -0.7,0.7 h-7.6 a0.7,0.7 0 0,1 -0.7,-0.7 v-0 a0.7,0.7 0 0,1 0.7,-0.7 Z" fill="#9CA3AF"/>
+    <path d="M36,45 V48 A14,14 0 0,0 64,48 V45" fill="none" stroke="#F8FAFC" stroke-width="3" stroke-linecap="round"/>
+    <path d="M50,62 V74" fill="none" stroke="#F8FAFC" stroke-width="3" stroke-linecap="round"/>
+    <path d="M42,76 H58" fill="none" stroke="#F8FAFC" stroke-width="3" stroke-linecap="round"/>
+    <path d="M66,33 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0 Z" fill="#EF4444"/>
+  </g>
+  <g id="monochrome" display="none">
+    <path d="M50,25 h0 a9,9 0 0,1 9,9 v18 a9,9 0 0,1 -9,9 h0 a9,9 0 0,1 -9,-9 v-18 a9,9 0 0,1 9,-9 Z M46.2,31 h7.6 a0.7,0.7 0 0,1 0.7,0.7 v0 a0.7,0.7 0 0,1 -0.7,0.7 h-7.6 a0.7,0.7 0 0,1 -0.7,-0.7 v-0 a0.7,0.7 0 0,1 0.7,-0.7 Z M46.2,34.6 h7.6 a0.7,0.7 0 0,1 0.7,0.7 v0 a0.7,0.7 0 0,1 -0.7,0.7 h-7.6 a0.7,0.7 0 0,1 -0.7,-0.7 v-0 a0.7,0.7 0 0,1 0.7,-0.7 Z M46.2,38.2 h7.6 a0.7,0.7 0 0,1 0.7,0.7 v0 a0.7,0.7 0 0,1 -0.7,0.7 h-7.6 a0.7,0.7 0 0,1 -0.7,-0.7 v-0 a0.7,0.7 0 0,1 0.7,-0.7 Z M46.2,41.8 h7.6 a0.7,0.7 0 0,1 0.7,0.7 v0 a0.7,0.7 0 0,1 -0.7,0.7 h-7.6 a0.7,0.7 0 0,1 -0.7,-0.7 v-0 a0.7,0.7 0 0,1 0.7,-0.7 Z" fill="#000000" fill-rule="evenodd"/>
+    <path d="M36,45 V48 A14,14 0 0,0 64,48 V45" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
+    <path d="M50,62 V74" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
+    <path d="M42,76 H58" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
+    <path d="M66,33 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0 Z" fill="#000000"/>
+  </g>
+</svg>

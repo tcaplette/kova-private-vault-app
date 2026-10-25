@@ -1,0 +1,13 @@
+{
+  "uniqueId": "JetBrains:JetBrainsMono",
+  "artifactVersion": "2.211",
+  "name": "JetBrains Mono",
+  "description": "The monospaced typeface.",
+  "website": "https://www.jetbrains.com/lp/mono/",
+  "licenses": [
+    "OFL-1.1-JetBrainsMono"
+  ],
+  "scm": {
+    "url": "https://github.com/JetBrains/JetBrainsMono"
+  }
+}

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Debug-only. Merges into the debug APK and **never** into the release one, and it
+  is not `src/main/AndroidManifest.xml` — which is the manifest
+  `manifest-hardening`, `OpenExternallyScanTest` and `LauncherIdentityScanTest`
+  read, and which is unchanged by this file.
+
+  It carries two things, and both are debug-only for the same reason: neither belongs in an APK
+  that is uploaded.
+
+  **One — the crash log's `Application`** (`debug-crash-log`). `android:name` is overridden to
+  `DebugVaultApplication`, which extends the shipped `VaultApplication`, installs
+  `DebugCrashLog` and does nothing else. The override is what keeps the handler out of `main`:
+  `OUTLINE.md` I2 forbids crash-reporting SDKs, and a class that is not in the release APK is a
+  stronger claim than a class that ships and is branched around by `BuildConfig.DEBUG`.
+  `tools:replace` is required — the merger treats two `android:name` values on `<application>` as a
+  conflict and fails the build rather than picking one.
+
+  **Two — a host activity for Compose tests.** A Compose test needs a host activity to call
+  setContent on, and that activity must live in the app under test's process —
+  an activity declared in the androidTest manifest belongs to
+  com.app.vault.test and ActivityScenario refuses to launch it. The usual
+  supplier is androidx.compose.ui:ui-test-manifest, a debugImplementation that
+  declares exactly this; P2-23's block adds no Gradle dependency, so the
+  declaration is written out here instead. It is the same component either way.
+
+  **Not MainActivity.** AppearanceDeviceTest originally hosted its compositions in
+  the real activity, whose onCreate loads the index, connects Billing and reads
+  the biometric wrap. Launching it twenty times per run left a Keystore alias
+  behind and made BiometricWrapTest's "creation must touch no Keystore alias"
+  fail — a test that passed alone and failed in the suite, which is the worst
+  kind. A bare ComponentActivity runs none of our code.
+
+  Not exported, and carrying no intent filter: nothing but the instrumentation
+  ever starts it, and it is not a launcher entry.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <application
+        android:name=".DebugVaultApplication"
+        tools:replace="android:name">
+        <activity
+            android:name="androidx.activity.ComponentActivity"
+            android:exported="false" />
+    </application>
+</manifest>

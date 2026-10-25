@@ -1,0 +1,1697 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      The app's text — `app-languages`. Every string a person reads is here, grouped by the
+      screen it appears on, with a comment heading each group. The eight translations keep
+      this file's key order so a reviewer can read them side by side.
+
+      Left in code on purpose, in every language (`app-languages` D4):
+      - Log lines, exception and require() messages: read in logcat and crash reports,
+        never on a screen.
+      - Data written into files and read back by code: the export manifest and its
+        reasons, export stamps and EXIF/XMP fields, file and folder names the app finds
+        again by name (the gallery's "Vault" export folder, a received share's "Shared item" fallback name),
+        container and blob names, preference keys and MIME types.
+      - The recovery and share-code words: the BIP-39 English list in res/raw. A kit
+        written down under one language has to open the vault under another.
+      - The calculator's notation (sin, cos, tan, ln, log, π, e, EXP, AC, DEL, INV,
+        DEG/RAD) and the language names on the Language sheet, which are each language's
+        own name for itself.
+      - The debug-only Crash log screen and its drawer row, which ship in no release build.
+    -->
+
+    <!--
+      The application label: "Kova", the owner's name for the app (2026-10-25). It
+      replaced "Toolbox", an agent-drafted category name nobody chose. It is the same
+      in every locale.
+
+      This is what notifications, Settings > Apps, the app-info page, storage,
+      battery, the permission manager and every runtime permission dialog read. An
+      activity-alias label does not reach it and no runtime API overrides it, so
+      whatever stands here is what a cover identity says about itself the moment any
+      of those surfaces appears. With "Vault" here, granting the recorder its
+      microphone read "Allow Vault to record audio?" over a voice recorder, which is
+      why it must never be "Vault" or any identity's name.
+
+      P2-22 left this as "Vault" on two arguments. The first — that a label other than
+      an alias's imposes a build-time choice on every install including the honest
+      default — is true, and is the price: a user who never wears a cover sees "Vault"
+      on their home screen (the alias label, unchanged) and this word in Settings. The
+      second — that it would desync the label from the name the Play listing is
+      approved under — is simply wrong. The Play Console title is a separate field
+      from android:label; the two differ routinely and nothing couples them.
+    -->
+    <string name="app_name">Kova</string>
+
+    <!--
+      Launcher identity labels — P2-22. These are the words the launcher and recents
+      show, in the device's language (`app-languages` D5); LauncherIdentity names these
+      same resources, and LauncherIdentityScanTest fails the build if the two disagree.
+    -->
+    <string name="identity_vault">保险库</string>
+
+    <!--
+      P2-24's cover identities. Ordinary names for ordinary apps: the cover has to be
+      a believable instance of the thing it claims to be, and a clever name is the
+      first thing that makes somebody look twice.
+    -->
+    <string name="identity_calculator">计算器</string>
+    <string name="identity_musicplayer">音乐</string>
+    <string name="identity_voicerecorder">录音机</string>
+
+    <!-- Language — the drawer row and the Language sheet -->
+    <!-- Not a phrase: the tag of the language this file is written in. Each translation
+         names its own (ja, ko, pt-BR, …). System default's line reads it to say which
+         language the device's setting resolves to. -->
+    <string name="language_resource_tag">zh-CN</string>
+    <string name="language_german">德语</string>
+    <string name="language_english">英语</string>
+    <string name="language_spanish">西班牙语</string>
+    <string name="language_french">法语</string>
+    <string name="language_portuguese_brazil">葡萄牙语（巴西）</string>
+    <string name="language_japanese">日语</string>
+    <string name="language_korean">韩语</string>
+    <string name="language_chinese_simplified">简体中文</string>
+    <string name="language_chinese_traditional">繁体中文</string>
+    <string name="language_title">语言</string>
+    <string name="language_system_default">系统默认</string>
+    <string name="language_explainer">仅更改此应用的语言。手机的语言保持不变。</string>
+    <string name="language_suggested">建议</string>
+    <string name="language_all">所有语言</string>
+    <string name="language_system_default_detail">%1$s — 跟随手机</string>
+    <string name="language_changed">语言已更改为%1$s</string>
+    <string name="drawer_language">语言 \u0020· \u0020%1$s</string>
+
+    <!-- Messages — unlock, backup, restore and vault lifecycle (MainActivity) -->
+    <string name="backup_incomplete">此备份文件不完整，可能来自一次未完成的备份。</string>
+    <string name="backup_unreadable">无法读取备份。请检查存放备份的应用是否已登录。</string>
+    <string name="backup_other_list">此备份来自另一个保险库列表。请使用“从文件导入保险库”将其恢复。</string>
+    <string name="bio_invalidated">由于你的生物识别信息已更改，生物识别解锁已关闭。请使用密码短语。</string>
+    <string name="bio_after_migration">此次更新后生物识别解锁已关闭。请在设置中重新开启。</string>
+    <string name="vault_newer_version">此保险库上次是由较新版本的应用打开的。你的文件安全无虞，没有任何更改。请更新应用后再打开。</string>
+    <string name="vault_index_relinked">发生故障后，此保险库的索引需要重新链接。所有内容均已找到，没有丢失任何东西。</string>
+    <string name="vault_index_unreadable">无法打开此保险库。其索引缺失或已损坏，搜索保险库文件也未找到其他索引。你的恢复套件可以将其恢复。</string>
+    <string name="capture_not_saved">无法将该拍摄内容保存到保险库。</string>
+    <string name="backup_folder_on_phone">该文件夹在这部手机上。备份在这里会随手机一起丢失，请选择云应用或 SD 卡。</string>
+    <string name="restore_device_not_empty">此设备上已有保险库。备份只能恢复到空设备上。</string>
+    <string name="restore_open_vaults_first">请先打开你的保险库。</string>
+    <string name="restore_file_not_opened">无法打开备份文件。</string>
+    <string name="restore_file_unreadable">无法读取备份文件。请检查存放备份的应用是否已登录。</string>
+    <string name="restore_no_backup_in_folder">在该文件夹中未找到备份。</string>
+    <string name="capture_mode_permission_denied">该模式需要它刚才请求的权限。现已关闭。</string>
+    <string name="decoy_trial_notice">创建诱饵保险库会导入真实照片，而 30 天试用期从保险库中添加第一项内容时开始。如果你想用自己的东西开始试用，请稍后再做。</string>
+    <string name="vault_list_not_saved">无法保存。</string>
+    <string name="editor_could_not_open">无法打开此项进行编辑。</string>
+    <string name="folder_name_length">文件夹名称至少需要 1 个字符，最多 %1$d 个字符。</string>
+    <string name="folder_name_duplicate">这里已有同名文件夹。</string>
+    <string name="folder_cycle">文件夹不能放在自身内部。</string>
+    <string name="vault_destroy_failed">无法移除“%1$s”。其中的内容均未丢失。</string>
+    <string name="share_create_failed">无法创建分享。设备上的空间可能不足。</string>
+    <string name="setup_vault_not_created">无法创建保险库。请重试。</string>
+    <string name="decoy_choose_photos_first">请先选择照片。</string>
+    <string name="decoy_set_passphrase_first">请先设置诱饵保险库的密码短语。</string>
+    <string name="decoy_passphrase_in_use">该密码短语已能打开此设备上的一个保险库。请返回并另选一个。</string>
+    <string name="decoy_no_room">此设备上没有空间再添加保险库了。</string>
+    <string name="decoy_passphrase_needed">此设备上已有一个诱饵保险库，现在设置新的可能会将其覆盖。请返回并同时输入该诱饵保险库的密码短语。</string>
+    <string name="decoy_not_created">没有创建保险库。</string>
+    <string name="recovery_words_wrong_backup">这些单词无法打开此备份。</string>
+    <string name="import_words_wrong_backup">这些单词无法打开此备份。</string>
+    <string name="recovery_list_not_here">此备份的保险库列表不在这部手机上。请解锁，然后在菜单中选择“从文件导入保险库”。</string>
+    <string name="this_vault">此保险库</string>
+    <string name="that_vault">该保险库</string>
+    <string name="backup_open_vault_first_file">请先打开要备份的保险库。一个备份只包含一个保险库。</string>
+    <string name="backup_open_vault_first_folder">请先打开要备份的保险库。一个文件夹只包含一个保险库。</string>
+    <string name="backup_folder_another_vault">该文件夹已包含此设备上的另一个保险库。每个保险库都需要自己的文件夹，在这里备份会删除其中的内容。</string>
+    <string name="backup_folder_another_install">该文件夹已包含另一个备份。请选择一个空文件夹，或此保险库曾写入的文件夹。在这里备份会删除其中的内容。</string>
+    <plurals name="vault_destroy_items_left">
+        <item quantity="other">有 %1$d 项无法导出，因此保留了此保险库。其中剩余的内容均未改动。</item>
+    </plurals>
+    <string name="kit_print_job">保险库恢复套件</string>
+    <string name="panic_wrong_passphrase">该密码短语无法打开此保险库列表。</string>
+    <string name="panic_wrong_phrase">这不是你的紧急短语。</string>
+    <string name="panic_too_close">与你的密码短语太接近，一个输入错误就可能触发它。请另选一个。</string>
+    <string name="panic_in_use">该短语已能打开一个保险库列表。请另选一个。</string>
+    <string name="panic_no_room">此设备上没有空间再添加短语了。</string>
+    <string name="panic_cleared">你之前的紧急短语在这里已失效，因此已关闭。请设置一个新的。</string>
+    <string name="panic_not_saved">未能保存。请重试。</string>
+    <string name="pairing_not_a_code">这不是配对码。</string>
+    <string name="pairing_newer_app">此代码由较新版本的应用生成。请更新后再扫描。</string>
+    <string name="pairing_own_code">这是这部手机自己的代码。</string>
+    <string name="pairing_already_known">你已有此联系人，名为“%1$s”。</string>
+    <string name="remote_not_an_invite">这不是邀请文件。</string>
+    <string name="remote_wrong_reply">此文件不是 %1$s 对此邀请的回复。</string>
+    <string name="remote_wrong_confirmation">此文件不是 %1$s 的确认文件。</string>
+    <string name="memo_notifications_off">通知已关闭，因此通知栏中不会显示“停止”。</string>
+    <string name="memo_too_short">时间太短，无法保留。</string>
+    <string name="vault_list_full">此列表已满。请移除一个保险库以腾出空间。</string>
+    <string name="vault_not_created">无法创建该保险库。</string>
+    <string name="vault_not_opened">无法打开该保险库。</string>
+    <string name="bio_prompt_unlock_title">解锁保险库</string>
+    <string name="bio_prompt_use_passphrase">使用密码短语</string>
+    <string name="purchase_unavailable">目前无法在此设备上购买（代码 %1$d）。你已拥有的内容不受影响。</string>
+    <plurals name="imports_failed">
+        <item quantity="other">%1$d 项导入未完成。没有添加任何内容。请重试。</item>
+    </plurals>
+
+    <!-- Notifications — the foreground work and the recording -->
+    <string name="notification_working">正在处理</string>
+    <string name="notification_channel_import">导入</string>
+    <string name="notification_channel_archive">归档</string>
+    <string name="notification_channel_export">导出</string>
+    <string name="notification_channel_recording">录音</string>
+    <string name="notification_recording">正在录音</string>
+    <string name="notification_stop">停止</string>
+
+    <!-- The printed recovery kit -->
+    <string name="kit_print_heading">保险库恢复套件</string>
+    <string name="kit_print_line_1">这 24 个单词可以打开此保险库。请妥善保管此页。</string>
+    <string name="kit_print_line_2">这些单词无法更改或作废。</string>
+
+    <!-- Biometric unlock — the screen, the drawer row and the first-run step -->
+    <string name="bio_name">生物识别解锁</string>
+    <string name="bio_lead">一种更快的打开方式，但永远不会取代你的密码短语。</string>
+    <string name="bio_row_fingerprint">指纹解锁</string>
+    <string name="bio_row_face">人脸解锁</string>
+    <string name="bio_row_both">人脸和指纹解锁</string>
+    <string name="bio_on">开启</string>
+    <string name="bio_off">关闭</string>
+    <string name="bio_line_not_set_up">尚未设置。点按即可在设备设置中进行设置。</string>
+    <string name="bio_line_not_available_now">目前不可用，传感器没有响应。</string>
+    <string name="bio_line_needs_update">需要设备制造商提供安全更新后，保险库才能使用它。</string>
+    <string name="bio_unsupported">此设备不支持。</string>
+    <string name="bio_unsupported_face">此设备不支持。其人脸解锁的安全性不足以保护加密数据。</string>
+    <string name="bio_unsupported_fingerprint">此设备不支持。其指纹传感器的安全性不足以保护加密数据。</string>
+    <string name="bio_drawer_not_set_up">未设置</string>
+    <string name="bio_drawer_not_available_now">目前不可用</string>
+    <string name="bio_drawer_needs_update">需要安全更新</string>
+    <string name="bio_drawer_not_supported">此设备不支持</string>
+    <string name="bio_fact_how">如何打开保险库</string>
+    <string name="bio_fact_how_fingerprint">保险库锁定时，Android 会要求验证你的指纹。触摸传感器，保险库即会打开。</string>
+    <string name="bio_fact_how_face">保险库锁定时，Android 会要求验证你的人脸。看着屏幕，然后点按确认——仅凭一眼绝不会打开保险库。</string>
+    <string name="bio_fact_how_both">保险库锁定时，Android 会同时等待你的人脸和指纹。触摸传感器，或看着屏幕并点按确认——先用哪种就由哪种打开保险库。</string>
+    <string name="bio_fact_how_unnamed">保险库锁定时，Android 会要求验证此设备上设置的生物识别信息。</string>
+    <string name="bio_fact_fingerprint_only">只使用指纹</string>
+    <string name="bio_fact_fingerprint_only_body">应用可以使用哪些生物识别方式由 Android 决定，而不是此应用。在设备设置中打开人脸解锁，关闭在应用中使用它，之后就只有指纹能打开保险库。</string>
+    <string name="bio_fact_turns_off">生物识别信息变化时它会关闭</string>
+    <string name="bio_fact_turns_off_fingerprint">在设备设置中添加或删除指纹会关闭此功能。请用密码短语解锁，然后在菜单的“生物识别解锁”中重新开启。</string>
+    <string name="bio_fact_turns_off_face">在设备设置中添加或删除人脸会关闭此功能。请用密码短语解锁，然后在菜单的“生物识别解锁”中重新开启。</string>
+    <string name="bio_fact_turns_off_both">在设备设置中添加或删除人脸或指纹会关闭此功能。请用密码短语解锁，然后在菜单的“生物识别解锁”中重新开启。</string>
+    <string name="bio_fact_turns_off_unnamed">在设备设置中添加或删除生物识别信息会关闭此功能。请用密码短语解锁，然后在菜单的“生物识别解锁”中重新开启。</string>
+    <string name="bio_fact_passphrase">密码短语始终能打开保险库</string>
+    <string name="bio_fact_passphrase_body">生物识别解锁只是第二种打开方式，绝不是替代品。如果你忘记了密码短语，它无法让你进入——你的恢复套件可以。</string>
+    <string name="bio_button_fallback">使用生物识别</string>
+    <string name="bio_enable_title">开启生物识别解锁</string>
+
+    <!-- Calculator cover — how it opens -->
+    <string name="method_sequence">按键顺序</string>
+    <string name="method_sequence_line">输入你的按键顺序，然后长按 =。</string>
+    <string name="method_sequence_pattern">按键顺序，然后图案</string>
+    <string name="method_sequence_pattern_line">输入你的按键顺序并长按 =，然后在出现的圆点上绘制你的图案。</string>
+    <string name="method_hold_pattern">长按，然后图案</string>
+    <string name="method_hold_pattern_line">长按你选择的位置 2 秒，然后在出现的圆点上绘制你的图案。</string>
+    <string name="method_choose_lead">选择从此图标打开密码短语界面的方式。下一步进行设置。</string>
+
+    <!-- Intruder capture — where an attempt failed -->
+    <string name="capture_where_music">音乐播放器</string>
+    <string name="capture_where_recorder">录音机</string>
+    <string name="capture_where_calculator">计算器</string>
+    <string name="capture_where_cover">伪装界面</string>
+    <string name="capture_where_pattern">%1$s：图案错误</string>
+    <string name="capture_where_pattern_dots">%1$s：在显示的圆点上图案错误</string>
+    <string name="capture_where_pattern_lockout">%1$s：锁定期间尝试的图案</string>
+    <string name="capture_where_pattern_lockout_dots">%1$s：锁定期间在显示的圆点上尝试的图案</string>
+    <string name="capture_where_wrong_fingerprint">解锁界面：指纹错误</string>
+    <string name="capture_where_wrong_face">解锁界面：人脸错误</string>
+    <string name="capture_where_wrong_both">解锁界面：人脸或指纹错误</string>
+    <string name="capture_where_wrong_biometric">解锁界面：生物识别错误</string>
+    <string name="capture_where_wrong_passphrase">解锁界面：密码短语错误</string>
+    <string name="capture_where_vault_passphrase">保险库密码短语：密码短语错误</string>
+
+    <!-- Passphrase strength — the meter under every passphrase field -->
+    <string name="strength_add_another_word">再加一两个单词。不常见的单词最有帮助。</string>
+    <string name="strength_default_suggestions_use_few_words">使用几个互不相关的单词。</string>
+    <string name="strength_default_suggestions_no_need_symbols">这里不需要符号、数字或大写字母——长度才是关键。</string>
+    <string name="strength_dictionary_warning_passwords_top10">这是最常用的十个密码之一。</string>
+    <string name="strength_dictionary_warning_passwords_top100">这是最常用的一百个密码之一。</string>
+    <string name="strength_dictionary_warning_passwords_very_common">这是非常常见的密码，很早就会被猜到。</string>
+    <string name="strength_dictionary_warning_passwords_similar">这与一个已被广泛使用的密码很接近。</string>
+    <string name="strength_dictionary_warning_english_wikipedia_itself">单独一个单词很容易被猜到。</string>
+    <string name="strength_dictionary_warning_etc_names_themselves">单独一个名字很容易被猜到。</string>
+    <string name="strength_dictionary_warning_etc_names_common">常见名字很容易被猜到。</string>
+    <string name="strength_dictionary_suggestions_capitalization">首字母大写几乎没有作用。不如再加一个单词。</string>
+    <string name="strength_dictionary_suggestions_all_uppercase">全部大写和全部小写一样容易被猜到。</string>
+    <string name="strength_dictionary_suggestions_reversed">把单词倒着拼写并不会更难猜。</string>
+    <string name="strength_dictionary_suggestions_l33t">用形似字符替换字母（例如用 4 代替 a）早已在预料之中。</string>
+    <string name="strength_spatial_warning_straight_rows_of_keys">一排连续的按键是最先被尝试的组合之一。</string>
+    <string name="strength_spatial_warning_short_keyboard_patterns">在键盘上划出的短图案很容易被猜到。</string>
+    <string name="strength_spatial_suggestions_use_longer_keyboard_pattern">请使用单词，而不是在键盘上划出的形状。</string>
+    <string name="strength_repeat_warning_like_aaa">重复的字符和单个字符一样快就会被猜到。</string>
+    <string name="strength_repeat_warning_like_abcabcabc">重复的片段几乎不比单个片段更难猜。</string>
+    <string name="strength_repeat_suggestions_avoid_repeated_words">重复单词或字母作用很小。请再加一个不同的单词。</string>
+    <string name="strength_sequence_warning_like_abcor6543">像 abc 或 6543 这样的连续序列会被立即猜到。</string>
+    <string name="strength_sequence_suggestions_avoid_sequences">避免按顺序排列的字母或数字。</string>
+    <string name="strength_regex_warning_recent_years">最近的年份是最先被猜的内容之一。</string>
+    <string name="strength_regex_suggestions_avoid_recent_years">不要使用年份，尤其是对你有特殊意义的年份。</string>
+    <string name="strength_date_warning_dates">日期很容易被猜到，即使是只有你知道的日期。</string>
+    <string name="strength_date_suggestions_avoid_dates">不要使用日期，尤其是对你有特殊意义的日期。</string>
+    <string name="strength_very_weak">非常弱</string>
+    <string name="strength_weak">弱</string>
+    <string name="strength_fair">一般</string>
+    <string name="strength_almost">差一点</string>
+    <string name="strength_strong_enough">足够强</string>
+    <string name="strength_count">%1$d/%2$d 个字符</string>
+    <string name="passphrase_requirement">至少 %1$d 个字符。几个不常见的单词胜过一个复杂的单词。</string>
+    <string name="passphrase_too_weak">该密码短语太容易被猜到。请再加一两个单词。</string>
+
+    <!-- First vault and the lock screen -->
+    <string name="passphrase_label">密码短语</string>
+    <string name="passphrase_again_label">再次输入</string>
+    <string name="passphrase_mismatch">两次输入不一致。</string>
+    <string name="setup_title">设置密码短语</string>
+    <string name="setup_lead">密码短语无法重置。接下来你会看到一个由 24 个单词组成的恢复套件，这是进入此保险库的唯一其他方式。两者都丢失，其中的一切将永远消失。</string>
+    <string name="setup_preparing">正在准备存储空间</string>
+    <string name="setup_create">创建保险库</string>
+    <string name="setup_restore_backup">从备份恢复</string>
+    <string name="unlock_welcome">欢迎回来</string>
+    <string name="unlock_lead">输入你的密码短语以打开此保险库。</string>
+    <string name="unlock_failed">未能打开保险库。</string>
+    <string name="unlock_action">解锁</string>
+    <string name="unlock_forgot">忘记密码短语？</string>
+    <string name="unlock_busy">正在解锁</string>
+    <string name="passphrase_hide">隐藏密码短语</string>
+    <string name="passphrase_show">显示密码短语</string>
+    <string name="passphrase_match">两次输入一致</string>
+
+    <!-- Photo details — the sheet, and the export and share lines -->
+    <string name="photo_details_privacy">隐私</string>
+    <string name="photo_details_custom">自定义</string>
+    <!-- Joining a list: "%1$s" is everything before the last item, already joined with list_separator. -->
+    <string name="list_separator">、</string>
+    <string name="list_and">%1$s和%2$s</string>
+    <string name="list_or">%1$s或%2$s</string>
+    <string name="exif_noun_location">位置</string>
+    <string name="exif_noun_camera">相机信息</string>
+    <string name="exif_noun_the_date">日期</string>
+    <string name="exif_noun_date">日期</string>
+    <string name="exif_noun_software">编辑记录</string>
+    <string name="exif_export_names_only">导出的 JPEG 照片只会移除名称、说明和评论。其他格式按原样写出。</string>
+    <plurals name="exif_export_removed">
+        <item quantity="other">导出的 JPEG 照片会移除%1$s。</item>
+    </plurals>
+    <plurals name="exif_export_kept">
+        <item quantity="other">%1$s会保留。</item>
+    </plurals>
+    <plurals name="exif_export_kept_sorted">
+        <item quantity="other">%1$s会保留，因此你的图库仍能正常排序。</item>
+    </plurals>
+    <string name="exif_export_summary">%1$s其他格式按原样写出。</string>
+    <string name="exif_share_names_only">仅名称、说明和评论。</string>
+    <string name="exif_share_removed">不含%1$s。</string>
+    <string name="exif_share_kept">保留%1$s。</string>
+    <string name="photo_details_title">照片详情</string>
+    <string name="photo_details_lead">选择照片离开保险库前要移除的信息。</string>
+    <string name="photo_details_privacy_row">隐私（推荐）</string>
+    <string name="photo_details_privacy_detail">移除位置、相机信息和编辑记录</string>
+    <string name="photo_details_custom_detail">选择要移除的信息。</string>
+    <string name="photo_details_remove_heading">移除</string>
+    <string name="photo_details_removed">已移除</string>
+    <string name="photo_details_kept">已保留</string>
+    <string name="photo_details_import_heading">导入时</string>
+    <string name="photo_details_import_row">从导入的照片中移除</string>
+    <string name="photo_details_import_on">开启 · 照片导入后便无法撤消。</string>
+    <string name="photo_details_footer">仅限 JPEG 照片，其他格式保持原样。每次移除还会去掉名称、说明、评论、标记的人物以及应用无法识别的任何信息，并保留照片正常显示所需的信息，包括动态效果和 HDR。</string>
+    <string name="photo_details_location">位置</string>
+    <string name="photo_details_location_covers">GPS 位置、海拔和方向</string>
+    <string name="photo_details_camera">相机信息</string>
+    <string name="photo_details_camera_covers">品牌、型号、镜头、序列号和设置</string>
+    <string name="photo_details_date">日期和时间</string>
+    <string name="photo_details_date_covers">拍摄时间和最后修改时间</string>
+    <string name="photo_details_software">软件和编辑记录</string>
+    <string name="photo_details_software_covers">创建或编辑它的应用</string>
+
+    <!-- Drawer — appearance -->
+    <string name="appearance">外观</string>
+    <string name="appearance_system">跟随系统</string>
+    <string name="appearance_light">浅色</string>
+    <string name="appearance_dark">深色</string>
+
+    <!-- Drawer — the vault's rows and the install's -->
+    <string name="drawer_trash">回收站</string>
+    <string name="drawer_backup">备份</string>
+    <string name="drawer_intruder_capture">入侵者拍摄</string>
+    <string name="drawer_open_share">打开分享…</string>
+    <string name="drawer_unvault_everything">全部移出保险库</string>
+    <string name="drawer_destroy_vault">销毁保险库</string>
+    <string name="drawer_purchase">购买 \u0020· \u0020%1$s</string>
+    <string name="drawer_app_identity">应用身份 \u0020· \u0020%1$s</string>
+    <string name="drawer_face_down">屏幕朝下锁定</string>
+    <string name="face_down_no_sensor">此设备没有运动传感器，无法判断屏幕是否朝下。</string>
+    <string name="face_down_lead">将手机翻转并放下，即可锁定保险库。</string>
+    <string name="face_down_switch">使用屏幕朝下锁定</string>
+    <string name="face_down_lock_after">锁定前等待</string>
+    <string name="face_down_immediately">立即</string>
+    <string name="face_down_locks_at_once">立即锁定</string>
+    <string name="face_down_locks_after">%1$s后锁定</string>
+    <string name="face_down_timeout_line">你的屏幕会在 %1$s后关闭，这会先锁定保险库。</string>
+    <plurals name="face_down_seconds">
+        <item quantity="other">%1$d 秒</item>
+    </plurals>
+    <plurals name="face_down_minutes">
+        <item quantity="other">%1$d 分钟</item>
+    </plurals>
+    <string name="drawer_decoy">诱饵保险库</string>
+    <string name="drawer_decoy_set_up">已设置，无法再创建第二个。</string>
+    <string name="drawer_set_up_decoy">设置诱饵保险库</string>
+    <string name="drawer_panic">紧急凭据</string>
+    <string name="drawer_photo_details">照片详情 \u0020· \u0020%1$s</string>
+    <string name="drawer_contacts">联系人</string>
+    <string name="drawer_recover_vault">用恢复套件找回保险库</string>
+    <string name="drawer_restore_vault">从备份恢复保险库</string>
+    <string name="drawer_import_vault">从文件导入保险库</string>
+    <string name="drawer_capture_waiting">有一条入侵者拍摄记录</string>
+
+    <!-- Purchase — the screen, the drawer row and the trial -->
+    <string name="trial_blocked">你的试用期已结束。打开、查看和导出保险库中的所有内容仍不受限制。如需添加更多内容，请在菜单的“购买”中一次性购买此应用。</string>
+    <plurals name="trial_reminder">
+        <item quantity="other">试用期还剩 %1$d 天。无论如何，打开、查看和导出都不受限制。</item>
+    </plurals>
+    <string name="purchase_title">购买</string>
+    <plurals name="purchase_days_from_first">
+        <item quantity="other">从你添加第一项内容起 %1$d 天</item>
+    </plurals>
+    <plurals name="purchase_days_left">
+        <item quantity="other">还剩 %1$d 天</item>
+    </plurals>
+    <string name="purchase_owned_body">向保险库添加内容、创建保险库和发送分享均不受限制。此购买属于你的 Google 账号，重新安装后也会恢复。</string>
+    <string name="purchase_pending_body">Google Play 正在等待你的付款完成。完成后所有功能都会解锁，你无需保持此界面打开。</string>
+    <string name="purchase_trial_body">试用期结束后，向保险库添加内容、创建保险库和发送分享将停止。打开、查看和导出保险库中已有的一切，以及打开别人发给你的分享，无论是否付费都不会停止。</string>
+    <string name="purchase_one_payment">一次付款。不是订阅，不会续费。</string>
+    <string name="purchase_buy_for">以 %1$s 购买</string>
+    <string name="purchase_buy">购买</string>
+    <string name="purchase_state_owned">已购买</string>
+    <string name="purchase_state_pending">付款待处理</string>
+    <string name="purchase_state_not_started">试用尚未开始</string>
+    <plurals name="purchase_state_trial_left">
+        <item quantity="other">试用期，还剩 %1$d 天</item>
+    </plurals>
+    <string name="purchase_state_trial">试用期</string>
+    <string name="purchase_state_ended">试用已结束</string>
+
+    <!-- App identity — the screen and the sheet that commits a choice -->
+    <string name="identity_screen_title">应用身份</string>
+    <string name="identity_screen_lead">选择此应用在启动器和最近使用的应用中显示的名称和图标。每一种都会打开此保险库，且没有你的密码短语或你设置的生物识别信息都无法打开。</string>
+    <string name="identity_current">当前显示</string>
+    <string name="identity_opens_vault">直接打开保险库</string>
+    <string name="identity_opens_calculator">先打开一个计算器</string>
+    <string name="identity_opens_calculator_setup">先打开一个计算器——需要设置</string>
+    <string name="identity_opens_music">先打开一个音乐播放器</string>
+    <string name="identity_opens_music_setup">先打开一个音乐播放器——需要设置</string>
+    <string name="identity_opens_recorder">先打开一个录音机</string>
+    <string name="identity_opens_recorder_setup">先打开一个录音机——需要设置</string>
+    <string name="identity_calculator_weak">伪装中最弱的一种——它的手势只是一段很短的按键序列。</string>
+    <string name="identity_calculator_weak_unset">仅使用按键顺序时，它是伪装中最弱的一种。</string>
+    <string name="identity_boundary_title">应用身份不会改变什么</string>
+    <string name="identity_boundary_body">Android 自身的设置、应用信息页以及导入期间的任何通知，仍会以真实名称显示此应用。应用身份只改变启动器和最近使用的应用，不改变其他任何东西。</string>
+    <string name="identity_commit_body">更改此项会移除所有已固定的快捷方式以及此应用在主屏幕上的位置。之后你可以重新放置。</string>
+    <string name="identity_rationale_music">看不到你音乐的音乐播放器不够逼真——打开后会是一个空的音乐库。此图标需要访问此设备上的音频。</string>
+    <string name="identity_rationale_recorder">不能使用麦克风的录音机不够逼真——按录音键什么也不会发生。此图标需要访问麦克风。</string>
+    <string name="identity_blocked_music">Android 不会在应用内再次询问。你可以在此应用自身的设置页面的“权限”中更改音频访问权限。</string>
+    <string name="identity_blocked_recorder">Android 不会在应用内再次询问。你可以在此应用自身的设置页面的“权限”中更改麦克风访问权限。</string>
+    <string name="identity_use_icon">使用此图标</string>
+    <string name="identity_set_up">设置</string>
+    <string name="identity_ask_again">再次询问</string>
+    <string name="identity_open_settings">打开设置</string>
+
+    <!-- Shared words -->
+    <string name="state_expanded">已展开</string>
+    <string name="state_collapsed">已收起</string>
+    <string name="action_continue">继续</string>
+    <string name="action_done">完成</string>
+    <string name="action_save">保存</string>
+    <string name="action_back">返回</string>
+    <string name="action_cancel">取消</string>
+    <string name="action_remove">移除</string>
+    <string name="action_not_now">以后再说</string>
+    <string name="menu">菜单</string>
+    <string name="action_saving">正在保存</string>
+    <string name="rename">重命名</string>
+    <string name="delete">删除</string>
+    <string name="more">更多</string>
+    <string name="pause">暂停</string>
+    <string name="play">播放</string>
+    <string name="seek">跳转</string>
+    <string name="slideshow">幻灯片</string>
+    <string name="speed">速度</string>
+    <plurals name="seconds">
+        <item quantity="other">%1$d 秒</item>
+    </plurals>
+    <string name="undo">撤消</string>
+    <string name="redo">重做</string>
+    <string name="export">导出</string>
+    <plurals name="minutes">
+        <item quantity="other">%1$d 分钟</item>
+    </plurals>
+    <string name="start_recording">开始录音</string>
+    <string name="stop_recording">停止录音</string>
+    <string name="warning">警告</string>
+
+    <!-- Cover setup — recording how a cover opens -->
+    <string name="setup_cover_choose_title">你想怎样打开它？</string>
+    <string name="setup_cover_draw_shape">现在绘制你的形状</string>
+    <string name="setup_cover_record">记录你的手势</string>
+    <string name="setup_cover_draw_again">再画一次</string>
+    <string name="setup_cover_do_again">再来一次</string>
+    <string name="setup_cover_mismatch_title">这是一个不同的手势</string>
+    <string name="setup_cover_hold_title">选择长按位置</string>
+    <string name="setup_cover_hold_again_title">再次长按</string>
+    <string name="setup_cover_hold_mismatch_title">这是一个不同的位置</string>
+    <string name="setup_cover_hold_mismatch">第二次长按的位置不同，因此两次都没有保留。</string>
+    <string name="setup_cover_start_over">重新开始</string>
+    <string name="setup_cover_done_title">设置完成</string>
+    <string name="setup_cover_hold_line">在屏幕上任意位置长按 2 秒。按住这个位置就会调出圆点——无论那里显示的是什么都有效。</string>
+    <string name="setup_cover_hold_again_line">再次长按同一位置。</string>
+    <string name="setup_cover_hold_early_line">继续按住 2 秒。</string>
+    <string name="setup_cover_too_short">太短了。手势至少需要%1$s。</string>
+    <string name="setup_cover_so_far">目前%1$s。还需要 %2$d 个。</string>
+    <string name="setup_cover_at_cap">%1$s——这是它能记住的上限。%2$s</string>
+    <string name="setup_cover_enough">%1$s。%2$s</string>
+    <string name="setup_cover_keys_again">再按一次相同的按键。按“AC”可重新开始。</string>
+    <string name="setup_cover_keys">按下你想使用的按键——可以是一道普通的算式。每个按键都算数，包括“DEL”。按错了？按“AC”重新开始。</string>
+    <string name="setup_cover_shape_again">再画一次相同的形状。</string>
+    <string name="setup_cover_shape_music">绘制一个形状，按你能记住的顺序连接九个点中的至少五个。此界面关闭后将不再显示。</string>
+    <string name="setup_cover_shape_recorder">绘制一个形状，按你能记住的顺序连接九个点中的至少五个。在这里录制的任何内容都不会保留。</string>
+    <string name="setup_cover_finish_keys">长按“=”完成。</string>
+    <string name="setup_cover_finish_shape">抬起手指完成。</string>
+    <plurals name="setup_cover_key_count">
+        <item quantity="other">%1$d 个按键</item>
+    </plurals>
+    <plurals name="setup_cover_node_count">
+        <item quantity="other">%1$d 个点</item>
+    </plurals>
+    <string name="setup_cover_mismatch_sequence">第二次的按键顺序与第一次不一致，因此两次都没有保留。重新开始是唯一安全的做法：保留第一次，就会让碰巧对上的第二次在两个你只记得一半的手势之间做选择，而你也会对着一个看不见的目标反复练习。</string>
+    <string name="setup_cover_mismatch_pattern">第二次的图案与第一次不一致，因此两次都没有保留。重新开始是唯一安全的做法：保留第一次，就会让碰巧对上的第二次在两个你只记得一半的手势之间做选择，而你也会对着一个看不见的目标反复练习。</string>
+    <string name="setup_cover_sequence_kept">你的按键顺序已保留——只需重新绘制形状。</string>
+    <string name="setup_cover_spot_kept">你的位置已保留——只需重新绘制形状。</string>
+    <string name="setup_cover_nothing_changed">没有任何更改。你的启动器仍显示之前的图标。</string>
+    <string name="setup_cover_done_vault">此图标会打开要求输入密码短语的界面。</string>
+    <string name="setup_cover_done_route">从此图标进入密码短语界面的方法：</string>
+    <string name="setup_cover_done_hidden_dots">你的形状随时也可以在隐藏的圆点上使用。</string>
+    <plurals name="setup_cover_route_keys_shape">
+        <item quantity="other">在计算器上按 %1$s，然后长按“=”，圆点就会出现。在上面绘制你的形状：%2$d 个点。</item>
+    </plurals>
+    <string name="setup_cover_wrong_key">如果按错了键，请按“AC”重新开始。</string>
+    <string name="setup_cover_remember">没有人能帮你找回这个手势，应用也不会再向你显示它——如果你不想依赖记忆，请趁现在还来得及，从菜单切换回保险库自己的图标。</string>
+    <string name="setup_cover_route_keys">在计算器上按 %1$s，然后长按“=”。如果按错了键，请按“AC”重新开始。</string>
+    <plurals name="setup_cover_route_shape">
+        <item quantity="other">在屏幕上绘制你选择的形状（%1$d 个点），然后抬起手指。</item>
+    </plurals>
+    <plurals name="setup_cover_route_hold">
+        <item quantity="other">长按你选择的位置（%1$s）2 秒，圆点就会出现。在上面绘制你的形状：%2$d 个点。</item>
+    </plurals>
+    <string name="hold_place">%1$s，%2$s</string>
+    <string name="hold_row_top">第一行</string>
+    <string name="hold_row_second">第二行</string>
+    <string name="hold_row_third">第三行</string>
+    <string name="hold_row_bottom">最后一行</string>
+    <string name="hold_column_left">左</string>
+    <string name="hold_column_centre">中</string>
+    <string name="hold_column_right">右</string>
+
+    <!-- Panic credential -->
+    <string name="panic_status_on">紧急凭据已开启</string>
+    <string name="panic_status_off">紧急凭据已关闭</string>
+    <string name="panic_fact_survives">此保险库列表会保留下来</string>
+    <string name="panic_fact_survives_body">在锁定界面输入紧急短语后，此保险库列表会照常打开，而不在其中的所有保险库将在此设备上永久无法打开。</string>
+    <string name="panic_fact_way_in">它销毁的是入口，而不是文件</string>
+    <string name="panic_fact_way_in_body">其他保险库会作为无法读取的数据留在此设备上。它们的 24 词恢复套件仍可以打开它们。</string>
+    <string name="panic_fact_silent">不会有任何提示表明它已生效</string>
+    <string name="panic_fact_silent_body">旁观者看到的只是一次普通的解锁。</string>
+    <string name="panic_fact_backup">它也会清空你的备份文件夹</string>
+    <string name="panic_fact_backup_body">你的云服务商保存在其回收站或版本历史中的副本，此应用无法触及。</string>
+    <string name="panic_change">更改紧急短语</string>
+    <string name="panic_turn_it_off">关闭它</string>
+    <string name="panic_turn_off_title">关闭紧急短语</string>
+    <string name="panic_turn_off">关闭</string>
+    <string name="panic_set_title">设置紧急短语</string>
+    <string name="panic_your_passphrase">你的密码短语</string>
+    <string name="panic_passphrase_hint">打开此保险库列表的那个密码短语。</string>
+    <string name="panic_phrase_label">紧急短语</string>
+    <string name="panic_turn_on">开启</string>
+    <string name="panic_forgot_title">清除忘记的紧急短语</string>
+    <string name="panic_forgot_body">你的密码短语可以关闭紧急短语。之后你可以设置一个新的。</string>
+    <string name="panic_clear">清除紧急短语</string>
+    <string name="panic_current_label">当前紧急短语</string>
+    <string name="panic_forgot">忘记了紧急短语？</string>
+    <string name="panic_new_label">新紧急短语</string>
+    <string name="panic_phrase_requirement">%1$s不要与你的任何密码短语相似——只有此列表的密码短语能被检查。</string>
+    <string name="panic_label_again">再次输入%1$s</string>
+
+    <!-- Vault names -->
+    <string name="vault_name_label">名称</string>
+    <string name="vault_name_empty">请为保险库命名。</string>
+    <string name="vault_name_too_long">这个名称对此保险库来说太长了。</string>
+
+    <!-- Decoy — building a vault you can hand over -->
+    <string name="decoy_captured_during_setup">在创建此保险库时拍摄——一个看起来已经用了几个月的保险库里，不该有今天拍的照片</string>
+    <string name="decoy_step">第 %1$d 步，共 %2$d 步</string>
+    <string name="decoy_leave">退出诱饵保险库设置</string>
+    <string name="decoy_intro_title">一个可以交出去的保险库</string>
+    <string name="decoy_intro_lead">一个拥有独立密码短语的普通保险库，里面放着你不介意别人看到的东西。</string>
+    <string name="decoy_start">开始</string>
+    <string name="decoy_fact_used">它必须看起来被用过</string>
+    <string name="decoy_fact_used_body">空的保险库骗不了任何人。这个保险库会放入你选择的照片，并带有看起来像数月日常使用的日期和记录。</string>
+    <string name="decoy_fact_photos">照片是你自己的</string>
+    <string name="decoy_fact_photos_body">照片来自此设备。应用不附带任何内容，因为附带的内容在每部装有它的手机上都一模一样。你把这个保险库交给谁，谁就会看到这些照片，所以请选择你愿意展示的。</string>
+    <string name="decoy_fact_own">你自己的保险库原封不动</string>
+    <string name="decoy_fact_own_body">这会在它旁边创建第二个保险库。此设备上已有的任何内容都不会被移动、更改或移除，你当前打开的保险库也不会受到影响。</string>
+    <string name="decoy_fact_cost">需要付出什么</string>
+    <string name="decoy_photos_title">选择照片</string>
+    <string name="decoy_photos_lead">选择 %1$d 到 %2$d 张，时间跨度至少 %3$d 周。</string>
+    <string name="decoy_choose_to_continue">选择照片以继续</string>
+    <string name="decoy_not_plausible">还不是一组可信的照片</string>
+    <string name="decoy_choose_photos">选择照片</string>
+    <string name="decoy_choose_again">重新选择</string>
+    <string name="decoy_nothing_chosen">尚未选择任何照片。选择器会显示你的照片库；应用不会读取它，也看不到你没有选择的内容。</string>
+    <plurals name="decoy_summary_in">
+        <item quantity="other">将放入 %1$d 张。</item>
+    </plurals>
+    <plurals name="decoy_summary_kept">
+        <item quantity="other">%1$d 张保留拍摄日期</item>
+    </plurals>
+    <plurals name="decoy_summary_assigned">
+        <item quantity="other">%1$d 张没有日期，将为其分配一个</item>
+    </plurals>
+    <string name="decoy_summary_dates">%1$s。</string>
+    <string name="decoy_summary_dates_assigned">%1$s，%2$s。</string>
+    <plurals name="decoy_summary_declined">
+        <item quantity="other">%1$d 张被排除：%2$s。</item>
+    </plurals>
+    <string name="decoy_summary_truncated">只取了前 %1$d 张——再多就不是诱饵，而是第二个照片库了。</string>
+    <string name="decoy_gate_enough">项数足够：%1$d，最少需要 %2$d。</string>
+    <string name="decoy_gate_not_enough">项数不够。你有 %1$d 项，最少需要 %2$d 项——请重新选择并至少再添加 %3$d 项。</string>
+    <plurals name="decoy_gate_spread">
+        <item quantity="other">时间跨度为 %1$d 周，最少需要 %2$d 周。</item>
+    </plurals>
+    <plurals name="decoy_gate_not_spread">
+        <item quantity="other">时间跨度为 %1$d 周，最少需要 %2$d 周。请重新选择并添加更早的照片，或没有日期的照片——这些照片会被分配此前几个月中的日期。</item>
+    </plurals>
+    <plurals name="decoy_age_months">
+        <item quantity="other">此保险库看起来最多已有 %1$d 个月。</item>
+    </plurals>
+    <plurals name="decoy_age_install">
+        <item quantity="other">此应用是 %1$d 天前安装的，因此这个保险库不可能比这更早——无需任何密码短语，文件列表就能显示安装日期。它的记录会覆盖这些天，其余由照片撑起。</item>
+    </plurals>
+    <string name="decoy_requirement_met">已满足要求</string>
+    <string name="decoy_requirement_not_met">未满足要求</string>
+    <string name="decoy_name_title">命名并锁定</string>
+    <string name="decoy_name_lead">打开此保险库的人首先看到的就是这个名称，而这个密码短语就是你要交出去的那个。</string>
+    <string name="decoy_name_hint">选一个普通的名称——就像存放度假照片的保险库会有的那种名字。</string>
+    <string name="decoy_passphrase_label">诱饵保险库的密码短语</string>
+    <string name="decoy_passphrase_note">此密码短语必须与打开你自己保险库的不同。在锁定界面输入它只会打开此保险库，不会打开其他任何东西。</string>
+    <string name="decoy_building">正在创建%1$s</string>
+    <string name="decoy_building_body">正在准备存储空间，然后导入照片。这需要一点时间，请勿中断。</string>
+    <string name="decoy_ready_title">准备创建</string>
+    <string name="decoy_ready_lead">还没有写入任何内容。确认你自己的密码短语后就会开始。</string>
+    <string name="decoy_confirm_passphrase">确认你的密码短语</string>
+    <string name="decoy_fact_made">将创建什么</string>
+    <plurals name="decoy_fact_made_body">
+        <item quantity="other">一个名为“%1$s”的保险库，存有你的 %2$d 张照片，日期和解锁记录分布在此前的几个月中。</item>
+    </plurals>
+    <string name="decoy_fact_this_vault">此保险库会怎样</string>
+    <string name="decoy_fact_this_vault_body">不会怎样。你自己的保险库原封不动——不会被这次操作覆盖，要求你输入它的密码短语也不是为了保护它。</string>
+    <string name="decoy_fact_end_up">你最终会到达哪里</string>
+    <string name="decoy_fact_end_up_body">最后一步会把你带进新的保险库，让你看到输入其密码短语的人会看到什么。完成后你会回到这里。</string>
+    <string name="decoy_other_vaults">我在此设备上还有其他保险库</string>
+    <string name="decoy_other_vaults_hint">仅当你有第二个能在锁定界面打开某些内容的密码短语时。</string>
+    <plurals name="decoy_entries_added">
+        <item quantity="other">已添加 %1$d 条记录。</item>
+    </plurals>
+    <string name="decoy_handover_title">这就是对方会看到的</string>
+    <string name="decoy_handover_lead">在锁定界面输入此保险库的密码短语，只会到达这里，不会到达其他任何地方。你现在看到的就是对方会看到的。</string>
+    <string name="decoy_show_words">显示恢复单词</string>
+    <string name="decoy_fact_no_way_across">从这里无法通往别处</string>
+    <string name="decoy_fact_no_way_across_body">持有此密码短语的人会到达此保险库并止步于此。他们看不出你自己的保险库存在，更别说打开它——这正是它的意义所在。</string>
+    <string name="decoy_fact_nothing_names">这里没有任何东西提到另一个保险库</string>
+    <string name="decoy_fact_nothing_names_body">此保险库不知道你自己的保险库存在，此界面上的任何东西也不知道。对打开它的人来说，这就是整台设备。</string>
+    <string name="decoy_fact_inside">里面有什么</string>
+    <plurals name="decoy_fact_inside_body">
+        <item quantity="other">%1$d 张照片及其拍摄日期，以及看起来像数月日常使用的解锁记录。</item>
+    </plurals>
+    <string name="decoy_fact_back">然后你会回到自己的保险库</string>
+    <string name="decoy_fact_back_body">只剩下抄下恢复单词这最后一步。之后此保险库会关闭，你自己的保险库会在原来的位置重新打开。</string>
+    <string name="decoy_vaults_label">保险库</string>
+    <string name="decoy_confirm_title">确认是你本人</string>
+    <string name="decoy_confirm_body">输入你当前打开的保险库的密码短语。这只授权创建诱饵保险库，不授权其他任何操作。</string>
+    <string name="decoy_confirm_wrong">这不是你当前打开的保险库的密码短语。</string>
+    <string name="decoy_checking">正在检查</string>
+    <string name="decoy_build">创建诱饵保险库</string>
+    <string name="decoy_preserve_title">此设备上的其他保险库</string>
+    <string name="decoy_preserve_body">仅适用于能在锁定界面打开某些内容的第二个密码短语——比如你已创建的诱饵保险库，或你恢复的保险库。你自己列表上的保险库不属于此类，也永远不会有风险。</string>
+    <string name="decoy_preserve_warning">应用找不到它打不开的保险库，因此也无法避开它。任何未在此输入密码短语的此类保险库都可能被新的保险库覆盖。</string>
+    <string name="decoy_preserve_label">要保留的保险库的密码短语</string>
+    <string name="decoy_preserve_add">添加到列表</string>
+    <string name="decoy_preserve_empty">尚未添加。对大多数人来说，留空就对了。</string>
+    <string name="decoy_preserve_entry">密码短语 %1$d</string>
+    <string name="decoy_preserve_remove">移除密码短语 %1$d</string>
+
+    <!-- Onboarding — the first-run steps -->
+    <string name="onboarding_welcome_title">只有你能打开的照片</string>
+    <string name="onboarding_welcome_lead">你放进来的一切都会在此设备上加密，并一直留在设备上。没有账号，没有服务器，我们也无法看到其中任何内容——这个应用根本无法连接互联网。</string>
+    <string name="onboarding_welcome_steps">设置只需八个简短步骤。所有步骤都不是必需的，你之后也可以在设置中改变主意。</string>
+    <string name="onboarding_get_started">开始使用</string>
+    <string name="onboarding_have_backup">我有要恢复的备份</string>
+    <string name="onboarding_passphrase_lead">这是唯一能打开你保险库的东西。它无法重置。</string>
+    <string name="onboarding_fact_no_reset">没有重置，也没有账号</string>
+    <string name="onboarding_fact_no_reset_body">没有人能帮你找回它——我们不能，任何人都不能。这正是意义所在，也是风险所在。</string>
+    <string name="onboarding_fact_kit_next">接下来你会得到恢复套件</string>
+    <string name="onboarding_fact_kit_next_body">24 个单词，在你忘记密码短语时可以打开此保险库。这是唯一的其他入口。</string>
+    <string name="onboarding_kit_title">把这些抄下来</string>
+    <string name="onboarding_kit_lead">24 个单词，在密码短语丢失时可以打开此保险库。此后，你还可以从菜单中再查看 3 次，之后它们将从此应用中永久消失。</string>
+    <string name="onboarding_fact_anyone">任何持有这些单词的人都能打开此保险库</string>
+    <string name="onboarding_fact_anyone_body">它们无法更改或作废。请把纸放在翻看你物品的人不会去找的地方。</string>
+    <string name="onboarding_fact_backup_words">备份是用这些单词恢复的，而不是密码短语</string>
+    <string name="onboarding_fact_backup_words_body">如果你以后在云文件夹中保存副本，只有这些单词能读取它。</string>
+    <string name="onboarding_kit_type">输入“%1$s”以确认你已将它们抄下。</string>
+    <string name="onboarding_capture_title">看看是谁试图进入</string>
+    <string name="onboarding_capture_lead">解锁失败后，手机会悄悄记录拿着它的人。</string>
+    <string name="onboarding_fact_failed_unlock">它只在解锁失败时运行</string>
+    <string name="onboarding_fact_failed_unlock_body">解锁成功时不会记录任何内容，也没有任何东西离开此设备——每条拍摄都会被封存，只有你的密码短语能读取，并在“入侵者拍摄”中等你查看。</string>
+    <string name="onboarding_fact_permission">每种模式都会请求自己的权限</string>
+    <string name="onboarding_fact_permission_body">开启一种模式，Android 只会请求该模式所需的权限。拒绝后该模式保持关闭，其他一切不变。</string>
+    <string name="onboarding_decoy_title">准备一个可以交出去的保险库</string>
+    <string name="onboarding_decoy_lead">第二个拥有独立密码短语的保险库，里面放着你不介意别人看到的东西。</string>
+    <string name="onboarding_fact_used_body">空的保险库骗不了任何人。这个保险库会放入你选择的照片，并带有看起来像数月日常使用的日期和记录。</string>
+    <string name="onboarding_fact_choose">照片由你选择</string>
+    <string name="onboarding_fact_choose_body">照片来自此设备，是你自己的。你把这个保险库交给谁，谁就会看到它们，所以请选择你愿意展示的。</string>
+    <string name="onboarding_fact_trial">这会开始你的 30 天试用期</string>
+    <string name="onboarding_fact_trial_body">创建诱饵保险库会导入真实照片，而试用期从保险库中添加第一项内容时开始。如果你想用自己的东西开始试用，请跳过此步。</string>
+    <string name="onboarding_backup_title">在别处保留一份副本</string>
+    <string name="onboarding_backup_lead">如果这部手机丢失或损坏，保险库中的一切都会随之消失——除非有一份副本。</string>
+    <string name="onboarding_panic_title">一个能关闭其他保险库的密码短语</string>
+    <string name="onboarding_panic_lead">在锁定界面输入它，会打开一个保险库，并永久关闭此设备上的其他所有保险库。</string>
+    <string name="onboarding_panic_set_up">设置紧急凭据</string>
+    <string name="onboarding_fact_ordinary">看起来就像一次普通的解锁</string>
+    <string name="onboarding_fact_ordinary_body">同样的界面，同样的速度，什么也看不出来。这正是意义所在——旁观者一无所获。</string>
+    <string name="onboarding_fact_way_in_body">其他保险库会作为无法读取的数据留在此设备上，它们的 24 词恢复套件仍可以打开它们。这就是找回它们的方法。</string>
+    <string name="onboarding_identity_title">让它看起来像别的东西</string>
+    <string name="onboarding_identity_lead">此应用可以在你的主屏幕上伪装成计算器、音乐播放器或录音机。</string>
+    <string name="onboarding_finish">完成设置</string>
+    <string name="onboarding_choose_identity">选择应用身份</string>
+    <string name="onboarding_fact_disguise">伪装是真实的，而且有效</string>
+    <string name="onboarding_fact_disguise_body">启动器中的条目和最近使用的应用卡片都会改变。你要在伪装界面上做出自己选择的手势才能回来。</string>
+    <string name="onboarding_fact_hides">它隐藏的是应用，不是文件</string>
+    <string name="onboarding_fact_hides_body">能读取此设备存储空间的人，或打开 Android 自身设置的人，仍能看出此应用的存在。打开保险库的仍然只有你的密码短语——或你设置的生物识别信息。</string>
+    <string name="onboarding_fact_rehearse">你会将手势练习两遍</string>
+    <string name="onboarding_fact_rehearse_body">一次用于记录，一次凭记忆完成。无法重复的触发方式，就是打不开的保险库。</string>
+
+    <!-- Intruder capture — the modes -->
+    <string name="capture_mode_photo">照片</string>
+    <string name="capture_mode_audio">音频</string>
+    <string name="capture_mode_video">视频</string>
+    <string name="capture_mode_photo_line">前置摄像头拍一张静态照片</string>
+    <string name="capture_mode_audio_line">麦克风录一段短音频</string>
+    <string name="capture_mode_video_line">一段带声音的短视频</string>
+    <string name="capture_no_front_camera">此设备没有前置摄像头。</string>
+    <string name="capture_sheet_lead">解锁失败后录制。</string>
+    <string name="capture_sheet_photo">前置摄像头的一张静态照片。</string>
+    <string name="capture_sheet_audio">麦克风录制的几秒钟。</string>
+    <string name="capture_sheet_video">几秒钟的画面和声音。</string>
+    <string name="capture_sheet_no_front">此设备没有前置摄像头，因此照片和视频不可用。</string>
+    <!-- Intruder capture — the home screen's timeline, its flows and its notices -->
+    <string name="intruder_capture_settings">拍摄设置</string>
+    <string name="intruder_today">今天</string>
+    <string name="intruder_yesterday">昨天</string>
+    <string name="intruder_empty_off_title">没有拍摄记录</string>
+    <string name="intruder_empty_off_body">打开一种模式后，手机会悄悄记录任何解锁失败的人。</string>
+    <string name="intruder_empty_off_action">选择要记录的内容</string>
+    <string name="intruder_empty_on_title">还没有拍摄记录</string>
+    <string name="intruder_empty_on_body">%1$s已开启。解锁失败后，拍摄记录会显示在这里。</string>
+    <string name="intruder_empty_on_action">更改记录的内容</string>
+    <string name="intruder_left_moved">已移至 %1$s</string>
+    <string name="intruder_left_exported">已导出</string>
+    <string name="intruder_left_deleted">已删除</string>
+    <string name="intruder_row_description">%1$s。%2$s，%3$s。</string>
+    <string name="intruder_row_description_left">%1$s。%2$s，%3$s。%4$s。</string>
+    <string name="intruder_move_to_vault">移至保险库</string>
+    <string name="intruder_export">导出</string>
+    <plurals name="intruder_capture_count">
+        <item quantity="other">%1$d 条拍摄记录</item>
+    </plurals>
+    <string name="intruder_move_failed">无法移动这些拍摄记录。没有任何更改。</string>
+    <plurals name="intruder_delete_title">
+        <item quantity="other">要永久删除 %1$d 条拍摄记录吗？</item>
+    </plurals>
+    <plurals name="intruder_delete_body">
+        <item quantity="other">拍摄内容会被销毁，无法恢复。时间线上的记录行会保留。</item>
+    </plurals>
+    <plurals name="intruder_export_title">
+        <item quantity="other">导出 %1$d 条拍摄记录</item>
+    </plurals>
+    <plurals name="intruder_export_body">
+        <item quantity="other">这 %1$d 条拍摄记录会被解密、写出、核对，然后从“入侵者拍摄”中移除。时间线上的记录行会保留。</item>
+    </plurals>
+    <string name="intruder_export_checked">每个文件都会先读回并比对，然后才删除其加密副本。任何不一致的内容都会留在“入侵者拍摄”中，并列在清单文件里。</string>
+    <string name="intruder_export_wrong_passphrase">这不是打开此保险库列表的密码短语。</string>
+    <string name="intruder_export_progress_left">已导出 %1$d / %2$d，还剩 %3$d</string>
+    <string name="intruder_export_busy">正在导出</string>
+    <string name="intruder_blank">画面全黑</string>
+    <string name="intruder_silent">没有声音</string>
+    <string name="intruder_permission_camera_off">相机权限已关闭</string>
+    <string name="intruder_permission_camera_on">相机权限已重新开启</string>
+    <string name="intruder_permission_microphone_off">麦克风权限已关闭</string>
+    <string name="intruder_permission_microphone_on">麦克风权限已重新开启</string>
+    <string name="intruder_permission_stopped">于 %1$s 发现 · %2$s已停止</string>
+    <string name="intruder_permission_resumed">于 %1$s 发现 · %2$s已恢复记录</string>
+    <string name="intruder_permission_noticed">于 %1$s 发现</string>
+    <string name="capture_banner_camera_one">%1$s未在记录。相机权限已关闭。</string>
+    <string name="capture_banner_camera_many">%1$s未在记录。相机权限已关闭。</string>
+    <string name="capture_banner_microphone_one">%1$s未在记录。麦克风权限已关闭。</string>
+    <string name="capture_banner_microphone_many">%1$s未在记录。麦克风权限已关闭。</string>
+    <string name="capture_turn_back_on">重新开启</string>
+    <string name="capture_sheet_no_camera">未在记录 · 相机权限已关闭</string>
+    <string name="capture_sheet_no_microphone">未在记录 · 麦克风权限已关闭</string>
+    <string name="capture_auto_reset">如果几个月不使用此应用，Android 可能会移除它的权限，拍摄就会停止。</string>
+    <string name="capture_keep_permissions">保留权限</string>
+    <string name="intruder_subtitle_description">保险库：%1$s</string>
+
+    <!-- Recovery kit — showing, re-showing and entering the 24 words -->
+    <string name="kit_acknowledgement">我已了解</string>
+    <string name="kit_title_list">你的恢复套件</string>
+    <string name="kit_title_vault">%1$s的恢复套件</string>
+    <string name="kit_title_short">恢复套件</string>
+    <string name="kit_body_list">如果你忘记了密码短语，这 24 个单词是重新进入你的密码短语所打开的保险库的唯一方法。请按顺序抄下来，并把纸放在安全的地方。\n\n任何持有这些单词的人都能打开这些保险库，包括你以后添加的保险库。你设置了独立密码短语的保险库不在其中——它有自己的套件。这些单词无法更改或作废。</string>
+    <string name="kit_body_list_backup">如果你将此保险库备份到云文件夹，恢复它靠的是这些单词，而不是你的密码短语。同时丢失此设备和这一页，任何人——包括你——都无法打开备份。</string>
+    <string name="kit_body_vault">如果你忘记了刚刚设置的密码短语，这 24 个单词是重新进入%1$s的唯一方法。请按顺序抄下来，并把纸放在安全的地方。\n\n打开你保险库列表的密码短语打不开这个保险库，该列表的恢复套件也打不开。密码短语和这一页都丢失，%1$s中的一切将永远消失。\n\n任何持有这些单词的人都能打开%1$s。它们无法更改或作废。</string>
+    <string name="kit_type_acknowledgement">输入“%1$s”以确认你已将它们抄下，并知道密码短语无法重置。</string>
+    <string name="kit_print">打印</string>
+    <string name="kit_last_view">最后一次查看——之后无法再次显示。</string>
+    <plurals name="kit_views_left_after">
+        <item quantity="other">这次之后还可查看 %1$d 次。</item>
+    </plurals>
+    <string name="kit_remaining_views">继续之后，你还可以从菜单中再查看 3 次。第三次之后将无法再显示，你抄下的副本将是唯一的一份。</string>
+    <string name="drawer_kit">恢复套件 \u0020· \u0020%1$s</string>
+    <string name="kit_cannot_show">无法再次显示</string>
+    <plurals name="kit_views_left">
+        <item quantity="other">还可查看 %1$d 次</item>
+    </plurals>
+    <string name="kit_exhausted">你的恢复套件已达到可显示次数上限。此应用无法再显示它。请把你抄下的副本放在安全的地方。</string>
+    <string name="kit_enter_list">输入你的密码短语以显示它。</string>
+    <string name="kit_enter_vault">输入%1$s的密码短语以显示它。</string>
+    <string name="kit_last_time">这是最后一次可以显示你的恢复套件。离开下一个界面后就无法再显示，所以请确认 24 个单词都已抄下。%1$s</string>
+    <plurals name="kit_views_more">
+        <item quantity="other">你还可以查看恢复套件 %1$d 次。现在查看会用掉一次，剩下 %2$d 次。%3$s</item>
+    </plurals>
+    <string name="kit_wrong_list">该密码短语无法打开此列表。</string>
+    <string name="kit_wrong_vault">该密码短语无法打开此保险库。</string>
+    <string name="kit_passphrase_for">%1$s的密码短语</string>
+    <string name="kit_open_failed">无法打开你的恢复套件。请重试。</string>
+    <string name="kit_show">显示恢复套件</string>
+    <string name="kit_words_open_nothing">这些单词无法打开此设备上的保险库。</string>
+    <string name="kit_new_passphrase_title">设置新的密码短语</string>
+    <string name="kit_enter_title">输入你的套件</string>
+    <string name="kit_enter_lead">输入恢复套件中的 24 个单词，每格一个。</string>
+    <string name="kit_add_backup_file">添加备份文件</string>
+    <string name="kit_lost_files">文件也丢了？选择你保存到云应用或 SD 卡的备份，文件也会一并恢复。</string>
+    <string name="kit_sd_backup">SD 卡备份</string>
+    <string name="kit_backup_file">备份文件</string>
+    <string name="kit_new_passphrase_restoring">设置这部手机用来打开保险库的密码短语。你的 24 个单词不会改变。请保管好那张纸。</string>
+    <string name="kit_new_passphrase_lead">你的恢复套件验证通过。设置今后用来打开保险库的密码短语——旧的将失效。你的 24 个单词不会改变。请保管好那张纸。</string>
+    <string name="kit_passphrase_in_use">该密码短语已能打开这部手机上的某些内容。请另选一个。</string>
+    <string name="kit_new_passphrase_label">新密码短语</string>
+    <string name="kit_mismatch">两次输入不一致。</string>
+    <string name="kit_setting_passphrase">正在设置密码短语</string>
+    <string name="kit_set_passphrase">设置密码短语</string>
+    <string name="kit_recover_title">找回保险库</string>
+    <string name="kit_recover_lead">输入某个保险库自己的恢复套件中的 24 个单词，每格一个。它会用你刚才使用的密码短语从此列表打开——如果它已在列表中，就不再要求它自己的密码短语——因此你以后不再需要这些单词。\n\n这不会找回文件——保险库的存储数据必须已经在此设备上。</string>
+    <string name="kit_recover_name">在此列表中的名称</string>
+    <string name="kit_recover_name_hint">保险库的名称保存在它原来所在的列表中，因此需要在这里重新命名。</string>
+    <string name="kit_recovering">正在找回</string>
+    <string name="kit_recover_action">找回保险库</string>
+    <string name="kit_not_a_word">不是有效单词</string>
+    <string name="kit_word">第 %1$d 个单词</string>
+    <string name="kit_word_wrong">第 %1$d 个单词，不在 24 个单词的词表中</string>
+    <plurals name="kit_words_to_check">
+        <item quantity="other">还有 %1$d 个单词需要检查。</item>
+    </plurals>
+    <string name="kit_checksum_failed">这些都是有效单词，但整组校验不通过——很可能是顺序错了。请对照你的套件按顺序核对。</string>
+
+    <!-- Vault list — the list, a new vault, editing a vault, a vault's own passphrase -->
+    <string name="vault_icon_home">家</string>
+    <string name="vault_icon_family">家人</string>
+    <string name="vault_icon_person">人物</string>
+    <string name="vault_icon_child">孩子</string>
+    <string name="vault_icon_favourite">收藏</string>
+    <string name="vault_icon_pets">宠物</string>
+    <string name="vault_icon_work">工作</string>
+    <string name="vault_icon_id">证件</string>
+    <string name="vault_icon_bank">银行</string>
+    <string name="vault_icon_savings">储蓄</string>
+    <string name="vault_icon_receipts">收据</string>
+    <string name="vault_icon_documents">文档</string>
+    <string name="vault_icon_medical">医疗</string>
+    <string name="vault_icon_school">学校</string>
+    <string name="vault_icon_travel">旅行</string>
+    <string name="vault_icon_car">汽车</string>
+    <string name="vault_icon_camera">相机</string>
+    <string name="vault_icon_music">音乐</string>
+    <string name="vault_icon_books">书籍</string>
+    <string name="vault_icon_celebration">庆祝</string>
+    <string name="vault_icon_star">星星</string>
+    <string name="vault_icon_diamond">钻石</string>
+    <string name="vault_icon_shopping">购物</string>
+    <string name="vault_icon_archive">归档</string>
+    <string name="vault_list_lock">锁定</string>
+    <string name="vault_new">新建保险库</string>
+    <string name="first_vault_name">我的保险库</string>
+    <string name="vault_list_lead">一个密码短语即可打开此列表及其中的一切。</string>
+    <string name="vault_list_lead_locked">一个密码短语即可打开此列表。标记为“已锁定”的保险库需要各自的密码短语。</string>
+    <string name="vault_list_empty">此列表中没有保险库。</string>
+    <string name="vault_list_empty_body">你在这里创建的一切都由你刚才使用的密码短语打开。</string>
+    <string name="vault_list_create">创建保险库</string>
+    <string name="vault_row_locked">已锁定——有独立密码短语</string>
+    <string name="vault_row_list_passphrase">用此列表的密码短语打开</string>
+    <string name="vault_row_options">%1$s的选项</string>
+    <string name="vault_edit">编辑保险库</string>
+    <string name="vault_flow_name_title">为保险库命名</string>
+    <string name="vault_flow_name_lead">你会在保险库列表中看到这个名称和徽章。</string>
+    <string name="vault_flow_opens_title">%1$s 应如何打开？</string>
+    <string name="vault_flow_opens_lead">之后你可以在“编辑保险库”中添加、更改或移除密码短语。</string>
+    <string name="vault_opens_list">用你的保险库列表</string>
+    <string name="vault_opens_list_detail">用你已经使用过的密码短语，直接从列表中打开。</string>
+    <string name="vault_opens_own">用它自己的密码短语</string>
+    <string name="vault_opens_own_detail">只有它自己的密码短语能打开它。它有自己的恢复套件和自己的入侵者拍摄。</string>
+    <string name="vault_flow_passphrase_title">为%1$s选择密码短语</string>
+    <string name="vault_flow_passphrase_lead">只有这个密码短语能打开%1$s。你保险库列表的密码短语打不开，列表的恢复套件也不行——所以%1$s会获得自己的恢复套件。</string>
+    <string name="vault_flow_capture_title">看看是谁试图打开%1$s</string>
+    <string name="vault_flow_capture_lead">在%1$s的密码短语输错后，手机会悄悄记录下拿着它的人。</string>
+    <string name="vault_capture_fact">只有%1$s能看到</string>
+    <string name="vault_capture_fact_body">每次拍摄都会为%1$s密封，并在其中菜单的“入侵者拍摄”里等待。你的保险库列表上不会显示任何内容。</string>
+    <string name="vault_discard_new_title">放弃此保险库？</string>
+    <string name="vault_discard_new_body">尚未创建任何内容。</string>
+    <string name="vault_discard_add_title">放弃此密码短语？</string>
+    <string name="vault_discard_add_body">%1$s仍然用你保险库列表的密码短语打开。</string>
+    <string name="vault_capture_not_enrolled">未能为%1$s开启入侵者拍摄。请从其菜单中的“入侵者拍摄”开启。</string>
+    <string name="vault_passphrase_label">此保险库的密码短语</string>
+    <string name="vault_creating">正在创建…</string>
+    <string name="vault_open_named">打开%1$s</string>
+    <string name="vault_has_own_passphrase">此保险库有独立的密码短语。</string>
+    <string name="vault_open_wrong">该密码短语未能打开%1$s。</string>
+    <string name="vault_opening">正在打开</string>
+    <string name="vault_open">打开保险库</string>
+    <string name="vault_colour">颜色</string>
+    <string name="vault_icon">图标</string>
+    <string name="vault_icon_letter">文字</string>
+    <!-- A sample of a letter, shown on the Letter icon before the vault has a name. -->
+    <!-- The name an imported vault is given on the list. From then on it is the vault's own name. -->
+    <string name="imported_vault">导入的保险库</string>
+
+    <!-- Vault grid — destinations, filters, sorting and the add line -->
+    <string name="add_photos_or_videos">添加照片或视频</string>
+    <string name="add_files">添加文件</string>
+    <string name="destination_media">媒体</string>
+    <string name="destination_files">文件</string>
+    <string name="destination_notes">笔记</string>
+    <string name="destination_memos">语音备忘录</string>
+    <string name="added_to">已添加到%1$s。</string>
+    <string name="media_filter_all">全部</string>
+    <string name="media_filter_photos">照片</string>
+    <string name="media_filter_videos">视频</string>
+    <string name="sort_newest">最新在前</string>
+    <string name="sort_oldest">最早在前</string>
+    <string name="sort_recently_added">最近添加在前</string>
+    <string name="sort_first_added">最早添加在前</string>
+    <string name="sort_name_az">名称 A–Z</string>
+    <string name="sort_name_za">名称 Z–A</string>
+    <string name="sort_last_edited">最近编辑</string>
+    <string name="media_filter_show_all">显示全部</string>
+    <string name="media_filter_show_photos">显示照片</string>
+    <string name="media_filter_show_videos">显示视频</string>
+    <string name="view_as_list">以列表显示</string>
+    <string name="view_as_grid">以网格显示</string>
+
+    <!-- Vault grid — the bar, selection, the add button and empty states -->
+    <string name="grid_selected">已选择 %1$d 项</string>
+    <string name="folder_options">文件夹选项</string>
+    <plurals name="item_count">
+        <item quantity="other">%1$d 项</item>
+    </plurals>
+    <string name="sort_current">当前使用</string>
+    <string name="sort_alphabetical">按字母顺序，而非数字大小</string>
+    <string name="folder_new">新建文件夹</string>
+    <string name="grid_destination_settings">%1$s设置</string>
+    <string name="grid_trash_and_settings">回收站和设置</string>
+    <string name="fab_camera">相机</string>
+    <string name="fab_voice_memo">语音备忘录</string>
+    <string name="fab_new_note">新建笔记</string>
+    <string name="fab_actions">操作</string>
+    <string name="fab_close_actions">关闭操作</string>
+    <string name="fab_no_camera">此设备上没有</string>
+    <string name="select_all">全选</string>
+    <string name="move_to_folder">移至文件夹</string>
+    <string name="remove_from_folder">从文件夹中移除</string>
+    <string name="share_securely">安全分享</string>
+    <string name="unvault_selected">将所选项移出保险库</string>
+    <string name="delete_selected">删除所选项</string>
+    <string name="restore_selected">恢复所选项</string>
+    <string name="delete_selected_forever">永久删除所选项</string>
+    <string name="leave_selection">退出选择</string>
+    <string name="all_vaults">所有保险库</string>
+    <string name="select">选择</string>
+    <string name="pinned">已置顶</string>
+    <string name="kind_video">视频</string>
+    <string name="kind_audio">音频</string>
+    <string name="kind_file">文件</string>
+    <string name="empty_media">此保险库是空的。</string>
+    <string name="empty_media_line">你添加的照片和视频在写入存储空间之前就会被加密。</string>
+    <string name="empty_files">还没有文件。</string>
+    <string name="empty_files_line">文档以及此应用无法打开的其他任何内容都会加密保存在这里。</string>
+    <string name="empty_notes">还没有笔记。</string>
+    <string name="empty_notes_line">你写的笔记保存在此保险库中，永远不会离开它。</string>
+    <string name="empty_memos">还没有录音。</string>
+    <string name="empty_memos_line">你录制的语音备忘录在写入时即被加密。</string>
+    <string name="empty_add_photos">添加照片</string>
+    <string name="empty_add_media">添加媒体</string>
+    <string name="empty_create_note">新建笔记</string>
+    <string name="empty_create_memo">新建语音备忘录</string>
+    <string name="search">搜索</string>
+    <string name="search_no_match">没有匹配项。</string>
+    <string name="search_no_match_line">搜索范围包括名称、文件夹和标签。</string>
+    <string name="folder_empty">此文件夹中没有内容。</string>
+    <string name="folder_empty_line">可以导入到这里，或从保险库的任何地方移入内容。</string>
+    <string name="trash_empty">回收站中没有内容。</string>
+    <string name="trash_empty_line">删除的项目会在这里保留 %1$d 天，然后被销毁。</string>
+    <string name="section_edited">编辑于 %1$s</string>
+    <string name="section_added">添加于 %1$s</string>
+
+    <!-- Viewer — one item, full screen -->
+    <string name="viewer_thumbnail_set">缩略图已设为 %1$s。</string>
+    <string name="viewer_frame_unusable">无法使用此帧。</string>
+    <string name="viewer_rotate">旋转</string>
+    <string name="viewer_edit_image">编辑图片</string>
+    <string name="viewer_opening">正在打开…</string>
+    <string name="viewer_could_not_open">无法打开此项。</string>
+    <string name="viewer_export_item">导出此项</string>
+    <plurals name="viewer_skip_forward">
+        <item quantity="other">快进 %1$d 秒</item>
+    </plurals>
+    <plurals name="viewer_skip_back">
+        <item quantity="other">快退 %1$d 秒</item>
+    </plurals>
+    <string name="viewer_set_folder_cover">设为文件夹封面</string>
+    <string name="viewer_use_frame">将此帧用作缩略图</string>
+
+    <!-- Settings rows — a choice revealed in place -->
+    <string name="reveal_choose">选择%1$s</string>
+    <string name="reveal_close">关闭%1$s</string>
+    <string name="reveal_shown">%1$s已显示</string>
+    <string name="reveal_hidden">%1$s已隐藏</string>
+    <string name="reveal_speed">速度</string>
+    <string name="reveal_speeds">速度</string>
+    <string name="reveal_length">时长</string>
+    <string name="reveal_lengths">时长</string>
+    <string name="reveal_way">方式</string>
+    <string name="reveal_ways">方式</string>
+    <string name="reveal_quality">质量</string>
+    <string name="reveal_qualities">质量</string>
+
+    <!-- Slideshow -->
+    <string name="slideshow_speed_quick">快速</string>
+    <string name="slideshow_speed_usual">正常节奏</string>
+    <string name="slideshow_speed_slow">每张都慢慢看</string>
+    <string name="slideshow_end">结束幻灯片</string>
+    <string name="slideshow_play">播放幻灯片</string>
+    <string name="slideshow_pause">暂停幻灯片</string>
+    <string name="slideshow_options">幻灯片选项</string>
+    <string name="slideshow_options_lead">这些选项打开时幻灯片会暂停等待，关闭后继续播放。</string>
+    <string name="slideshow_speed_footnote">每张照片停留的时间。视频会播放到结束。</string>
+    <string name="slideshow_repeat">循环播放</string>
+    <string name="slideshow_repeat_on">开启 · 播放完最后一项后，幻灯片从第一项重新开始。</string>
+    <string name="slideshow_repeat_off">关闭 · 幻灯片在最后一项后结束。</string>
+    <string name="slideshow_shuffle">随机播放</string>
+    <string name="slideshow_shuffle_on">开启 · 每一项按随机顺序各显示一次，之后才会重复。</string>
+    <string name="slideshow_shuffle_off">关闭 · 按列表顺序显示。</string>
+
+    <!-- Folders -->
+    <string name="colour_none">无颜色</string>
+    <string name="colour_red">红色</string>
+    <string name="colour_amber">琥珀色</string>
+    <string name="colour_teal">青色</string>
+    <string name="colour_blue">蓝色</string>
+    <string name="colour_pink">粉色</string>
+    <string name="folder_rename">重命名文件夹</string>
+    <string name="folder_create">创建</string>
+    <string name="folder_move">移动</string>
+    <string name="folder_cover">封面</string>
+    <string name="folder_delete">删除文件夹</string>
+    <string name="folder_delete_named">“%1$s”将被移除。</string>
+    <string name="folder_delete_moves_to">其中的所有内容都会移到“%1$s”。不会删除任何内容，也不会放入回收站。</string>
+    <string name="folder_delete_moves_home">其中的所有内容都会移到主屏幕。不会删除任何内容，也不会放入回收站。</string>
+    <string name="folder_cover_recent">使用最新的一项</string>
+    <string name="folder_cover_empty">此文件夹中还没有可以显示的内容。</string>
+    <string name="folder_cover_current">当前封面</string>
+    <string name="picker_move_folder">移动“%1$s”</string>
+    <plurals name="picker_move_items">
+        <item quantity="other">移动 %1$d 项</item>
+    </plurals>
+    <string name="picker_folder_lead">文件夹中的所有内容都会随之移动。</string>
+    <string name="picker_items_lead">一项最多只能在一个文件夹中，因此移动会替换它当前所在的文件夹。</string>
+    <string name="picker_mixed_kinds">媒体、文件、笔记和语音备忘录各有自己的文件夹。要移入文件夹，请只选择同一类项目。</string>
+    <string name="picker_home">主屏幕</string>
+    <string name="picker_up">上一级</string>
+    <string name="picker_where_now">当前位置</string>
+    <string name="picker_move_here">移到这里</string>
+    <string name="picker_move_into">移入“%1$s”</string>
+    <string name="picker_move_home">移到主屏幕</string>
+    <string name="colour_yellow">黄色</string>
+    <string name="colour_white">白色</string>
+    <string name="colour_black">黑色</string>
+
+    <!-- Rename, delete and destroy -->
+    <string name="rename_item">重命名项目</string>
+    <string name="rename_lead">这是此项导出时使用的名称。扩展名保持不变——它决定此项如何打开以及导出到哪里。</string>
+    <string name="rename_refused">名称至少需要一个字符，不能只由点组成，不能包含斜杠，且包括扩展名在内最多 %1$d 个字符。</string>
+    <string name="delete_one_forever">要永久删除%1$s吗？</string>
+    <plurals name="delete_many_forever">
+        <item quantity="other">要永久删除 %1$d 项吗？</item>
+    </plurals>
+    <string name="delete_one">要删除%1$s吗？</string>
+    <plurals name="delete_many">
+        <item quantity="other">要删除 %1$d 项吗？</item>
+    </plurals>
+    <string name="delete_body_one_forever">此保险库中的副本将被销毁，无法恢复。</string>
+    <string name="delete_body_many_forever">此保险库中的这些副本将被销毁，无法恢复。</string>
+    <string name="delete_body_trash">已移至回收站。%1$d 天后将被永久删除。</string>
+    <string name="delete_forever">永久删除</string>
+    <string name="keep">保留</string>
+    <string name="destroy_title">要销毁“%1$s”吗？</string>
+    <string name="destroy_body">此保险库中的一切都会消失——每张照片、每个视频、每条笔记和每个文件夹。它们不会进入回收站，也无法恢复。</string>
+    <string name="destroy_others_safe">你的其他保险库不受影响。</string>
+    <string name="destroy_backup_file">它的备份文件也会被删除——否则你的恢复套件仍能打开此保险库的完整副本。你的云服务商保存在其回收站或版本历史中的副本，此应用无法触及。</string>
+    <string name="destroy_backup_folder">它的备份文件夹也会被清空——否则你的恢复套件仍能打开此保险库的完整副本。你的云服务商保存在其回收站或版本历史中的副本，此应用无法触及。</string>
+    <string name="destroy_give_back">先把我的文件还给我，再销毁</string>
+    <string name="destroy_everything">销毁其中的一切</string>
+    <string name="destroy_keep">保留保险库</string>
+    <string name="destroy_gate_own">此操作无法撤销。请先输入能打开 %1$s 的密码短语——它自己的，而不是保险库列表的。</string>
+    <string name="destroy_gate_list">此操作无法撤销。请先输入保险库列表的密码短语。</string>
+    <string name="destroy_gate_lost">忘了这个密码短语？这个保险库自己的 24 个单词可以找回它。在保险库列表中打开菜单，选择“用恢复套件找回保险库”，然后在那里销毁它。</string>
+    <string name="destroy_continue">继续</string>
+    <string name="destroy_checking">正在检查…</string>
+    <string name="destroy_return_then">每个文件都取出并检查完毕后，%1$s 将被销毁。</string>
+
+    <!-- Destination settings — Media, Notes and Memos -->
+    <string name="skip_short">短距离跳转</string>
+    <string name="skip_usual">常规跳转</string>
+    <string name="skip_longer">较长跳转</string>
+    <string name="skip_scene">跳过一个场景</string>
+    <string name="orientation_auto">自动</string>
+    <string name="orientation_auto_detail">视频随手机方向旋转</string>
+    <string name="orientation_landscape">横屏</string>
+    <string name="orientation_landscape_detail">无论怎么拿手机，视频都以横屏打开</string>
+    <string name="speed_0_5">0.5×</string>
+    <string name="speed_0_5_detail">半速</string>
+    <string name="speed_0_75">0.75×</string>
+    <string name="speed_0_75_detail">稍慢</string>
+    <string name="speed_normal">正常</string>
+    <string name="speed_normal_detail">与录制时一致</string>
+    <string name="speed_1_25">1.25×</string>
+    <string name="speed_1_25_detail">稍快</string>
+    <string name="speed_1_5">1.5×</string>
+    <string name="speed_1_5_detail">1.5 倍速</string>
+    <string name="speed_2">2×</string>
+    <string name="speed_2_detail">2 倍速</string>
+    <string name="quality_standard">标准</string>
+    <string name="quality_standard_detail">64 kbps · 每分钟约 0.5 MB</string>
+    <string name="quality_high">高</string>
+    <string name="quality_high_detail">128 kbps · 每分钟约 1 MB</string>
+    <string name="quality_highest">最高</string>
+    <string name="quality_highest_detail">256 kbps · 每分钟约 2 MB</string>
+    <string name="media_settings_intro">打开照片和视频时的显示和播放方式。</string>
+    <string name="media_settings_viewing">查看时</string>
+    <string name="media_keep_on">查看时保持屏幕常亮</string>
+    <string name="media_keep_on_on">开启 · 打开照片或视频时屏幕保持常亮，保险库也随之保持打开。</string>
+    <string name="media_keep_on_off">关闭 · 屏幕按手机的常规计时熄灭，保险库也随之锁定。</string>
+    <string name="media_brightness">查看时最高亮度</string>
+    <string name="media_brightness_on">开启 · 照片和视频以最高亮度打开。关闭后恢复你原来的亮度。</string>
+    <string name="media_brightness_off">关闭 · 照片和视频以手机当前亮度打开。</string>
+    <string name="media_stretch">拉伸低分辨率照片</string>
+    <string name="media_stretch_on">开启 · 比屏幕小的照片会放大至填满屏幕。</string>
+    <string name="media_stretch_off">关闭 · 比屏幕小的照片按原尺寸显示。</string>
+    <string name="media_quality">最高显示质量</string>
+    <string name="media_quality_on">开启 · 照片以全分辨率打开，放大时细节更多。会占用更多内存和电量。</string>
+    <string name="media_quality_off">关闭 · 照片以屏幕分辨率打开。放大时细节较少。</string>
+    <string name="playback_speed">播放速度</string>
+    <string name="media_speed_footnote">音调保持不变。</string>
+    <string name="media_resume">继续播放视频</string>
+    <string name="media_resume_on">开启 · 视频从你上次停止的地方开始播放。</string>
+    <string name="media_resume_off">关闭 · 视频从头开始播放，不保存停止位置。</string>
+    <string name="media_repeat">循环播放视频</string>
+    <string name="media_repeat_on">开启 · 视频播放结束后从头重新播放。</string>
+    <string name="media_repeat_off">关闭 · 视频在结尾停止。</string>
+    <string name="media_skip">点按两下以跳转</string>
+    <string name="media_skip_footnote">点按两下视频右侧可快进，点按两下左侧可快退。</string>
+    <string name="media_orientation">视频方向</string>
+    <string name="notes_settings_intro">这些设置适用于每个保险库中的每条笔记。</string>
+    <string name="notes_checklists">清单</string>
+    <string name="notes_move_checked">将已勾选项移到底部</string>
+    <string name="notes_move_checked_on">开启 · 勾选某项后，它会移到所在清单中未勾选项的下方。取消勾选会将其移回上方。</string>
+    <string name="notes_move_checked_off">关闭 · 已勾选项保持原位。</string>
+    <string name="notes_keyboard">键盘</string>
+    <string name="notes_incognito">无痕键盘</string>
+    <string name="notes_incognito_on">开启 · 要求你的键盘不要从笔记中学习字词。大多数键盘会遵守，有些可能不会。</string>
+    <string name="notes_incognito_off">关闭 · 你的键盘可能会从笔记中学习字词，并在其他应用中推荐它们。</string>
+    <string name="memos_settings_intro">语音备忘录的录制方式，以及打开时的播放方式。</string>
+    <string name="memos_quality">录音质量</string>
+    <string name="memos_quality_footnote">每条语音备忘录保持开始录制时的质量。更改从下一条开始生效。</string>
+    <string name="memos_stereo">立体声录音</string>
+    <string name="memos_stereo_on">开启 · 语音备忘录以双声道录制，大小约为两倍。不支持的手机会以单声道录制。</string>
+    <string name="memos_stereo_off">关闭 · 语音备忘录以单声道录制。</string>
+    <string name="memos_bluetooth">使用蓝牙麦克风</string>
+    <string name="memos_bluetooth_on">开启 · 已连接的蓝牙耳机以通话质量和单声道录制语音备忘录——质量和立体声设置对其不适用。未连接时，由手机麦克风录制。</string>
+    <string name="memos_bluetooth_off">关闭 · 由手机麦克风录制语音备忘录。蓝牙耳机会以通话质量和单声道录制，不适用质量或立体声设置。</string>
+    <string name="memos_playback">播放</string>
+    <string name="memos_speed_footnote">音调保持不变。视频遵循“媒体”中的速度，而不是这里的。</string>
+    <string name="memos_skip_silence">跳过静音</string>
+    <string name="memos_skip_silence_on">开启 · 播放语音备忘录时跳过静音片段。</string>
+    <string name="memos_skip_silence_off">关闭 · 语音备忘录连同静音部分完整播放。</string>
+
+    <!-- Notes -->
+    <string name="note_title">标题</string>
+    <string name="note_body">笔记</string>
+    <string name="note_edit">编辑笔记</string>
+    <string name="note_placeholder">开始书写</string>
+    <string name="note_too_long">此笔记为 %1$d 字节，上限为 %2$d 字节。上限按字节而非字符计算，因此带重音的字母、表情符号和非拉丁文字每个都会算作不止一个。</string>
+    <string name="note_pin">置顶</string>
+    <string name="note_unpin">取消置顶</string>
+    <string name="note_delete">删除笔记</string>
+    <string name="format_checklist">清单</string>
+    <string name="format_bullet">项目符号列表</string>
+    <string name="format_numbered">编号列表</string>
+    <string name="format_heading">标题</string>
+    <string name="format_bold">粗体</string>
+    <string name="format_italic">斜体</string>
+    <string name="format_strike">删除线</string>
+    <string name="note_completed">已完成：%1$s</string>
+    <string name="note_attached_image">附加的图片</string>
+    <string name="note_attachment_missing">此附件已不在保险库中。</string>
+    <string name="note_attachment_missing_label">缺失的附件 %1$s</string>
+
+    <!-- Image editor -->
+    <!-- Aspect ratios: the numbers are the same in every language; write them the way the language writes a ratio. -->
+    <string name="aspect_free">自由</string>
+    <string name="aspect_1_1">1:1</string>
+    <string name="aspect_4_3">4:3</string>
+    <string name="aspect_3_2">3:2</string>
+    <string name="aspect_16_9">16:9</string>
+    <string name="filter_original">原图</string>
+    <string name="filter_mono">黑白</string>
+    <string name="filter_warm">暖色</string>
+    <string name="filter_cool">冷色</string>
+    <string name="filter_fade">褪色</string>
+    <string name="filter_punch">鲜明</string>
+    <string name="width_fine">细</string>
+    <string name="width_medium">中</string>
+    <string name="width_bold">粗</string>
+    <string name="editor_save_note">保存会添加一个新项目，并保留原图。</string>
+    <string name="editor_saving">正在保存…</string>
+    <string name="editor_save_copy">保存副本</string>
+    <string name="editor_discard_title">要放弃这些编辑吗？</string>
+    <string name="editor_discard_body">图片会恢复原样，其他一切不变。</string>
+    <string name="editor_discard">放弃</string>
+    <string name="editor_keep_editing">继续编辑</string>
+    <string name="editor_discard_edits">放弃编辑</string>
+    <string name="editor_title">编辑</string>
+    <string name="tool_crop">裁剪</string>
+    <string name="tool_straighten">拉直</string>
+    <string name="tool_filters">滤镜</string>
+    <string name="tool_light">光线</string>
+    <string name="tool_markup">标注</string>
+    <string name="editor_crop_hint">拖动四角或框本身。</string>
+    <string name="editor_rotate_left">向左旋转</string>
+    <string name="editor_rotate_right">向右旋转</string>
+    <string name="editor_flip_horizontal">水平翻转</string>
+    <string name="editor_flip_vertical">垂直翻转</string>
+    <string name="editor_straighten_value">拉直 \u0020· \u0020%1$s°</string>
+    <string name="editor_strength">强度</string>
+    <string name="editor_brightness">亮度</string>
+    <string name="editor_contrast">对比度</string>
+    <string name="editor_saturation">饱和度</string>
+    <string name="editor_warmth">色温</string>
+    <string name="editor_erase_hint">触摸笔画即可移除。</string>
+    <string name="editor_draw_hint">在图片上拖动即可绘制。</string>
+    <string name="editor_eraser">橡皮擦</string>
+    <string name="editor_reset">重置</string>
+
+    <!-- Voice memo -->
+    <string name="memo_recorded">已录制</string>
+    <string name="memo_permission_body">录音需要使用麦克风。在这里录制的任何内容都不会离开设备——它会直接写入保险库，此权限仅用于此。它不会为其他任何用途打开麦克风。</string>
+    <string name="memo_speak">开口说话，内容会直接存入此保险库</string>
+    <string name="memo_trial">保存语音备忘录会开始你的 30 天试用期。计时从第一项内容存入保险库时开始，而这就是第一项。</string>
+    <string name="memo_allow_microphone">允许使用麦克风</string>
+    <string name="memo_save">保存到保险库</string>
+    <string name="memo_position">在此录音中的位置</string>
+    <string name="memo_minutes_seconds">%1$s %2$s</string>
+    <string name="memo_recording_length">正在录音，%1$s</string>
+    <string name="memo_recorded_length">已录制，%1$s</string>
+    <string name="memo_nothing_yet">尚未录制任何内容</string>
+    <string name="memo_discard_title">要放弃这段录音吗？</string>
+    <string name="memo_discard_body">此录音尚未保存，离开就会丢失。保险库中已有的内容不受影响。</string>
+    <string name="memo_keep_recording">继续录音</string>
+    <string name="memo_already_running">已有录音正在进行。</string>
+    <string name="memo_could_not_record">保险库暂时无法接收录音。</string>
+    <string name="memo_mic_failed">无法启动麦克风。</string>
+
+    <!-- Camera -->
+    <string name="camera_recording_failed">保险库无法接收录像。</string>
+    <string name="camera_permission_body">相机需要权限才能拍摄。在这里拍摄的任何内容都不会进入图库——它会直接写入保险库，此权限仅用于此。</string>
+    <string name="camera_allow">允许使用相机</string>
+    <string name="camera_close">关闭相机</string>
+    <string name="camera_switch_back">切换到后置摄像头</string>
+    <string name="camera_switch_front">切换到前置摄像头</string>
+    <string name="camera_take_photo">拍照</string>
+    <string name="camera_open_receipt">在保险库中打开</string>
+    <string name="camera_saving">正在将拍摄内容保存到保险库</string>
+    <string name="camera_receipt">最近一次拍摄，已保存到保险库</string>
+    <string name="camera_none">此设备没有相机。</string>
+    <string name="camera_no_sizes">此相机未报告任何可用尺寸。</string>
+    <string name="camera_no_still">此相机不提供照片尺寸。</string>
+    <string name="camera_taken">相机正被其他应用占用。</string>
+    <string name="camera_not_opened">无法打开相机。</string>
+    <string name="camera_photo_failed">无法拍照。</string>
+    <string name="camera_recording_refused">此设备无法开始录像。</string>
+    <string name="camera_preview_failed">相机无法开始预览。</string>
+
+    <!-- Backup and restore -->
+    <string name="backup_turn_on">开启备份</string>
+    <string name="backup_choose_where">选择备份位置</string>
+    <string name="backup_now">立即备份</string>
+    <string name="backup_backed_up_to">已备份到</string>
+    <string name="backup_how_it_works">备份的工作原理</string>
+    <string name="backup_stop">停止备份</string>
+    <string name="backup_caption_off">复制之前在这部手机上加密。</string>
+    <string name="backup_caption_file">在你做出更改的几分钟后，以及锁定此保险库时，复制整个保险库。</string>
+    <string name="backup_caption_folder">每次更改后，以及锁定此保险库时进行复制。</string>
+    <string name="backup_last_copied">上次复制 %1$s · %2$s</string>
+    <string name="backup_is_off">备份已关闭</string>
+    <string name="backup_only_here">此保险库只存在于这部手机上 · %1$s</string>
+    <string name="backup_checking">正在检查文件夹…</string>
+    <string name="backup_up_to_date">已是最新</string>
+    <plurals name="backup_changes_to_copy">
+        <item quantity="other">有 %1$d 项更改待复制</item>
+    </plurals>
+    <string name="backup_copying">正在复制…</string>
+    <string name="backup_progress">%1$s / %2$s</string>
+    <plurals name="backup_files_failed">
+        <item quantity="other">有 %1$d 个文件未能复制</item>
+    </plurals>
+    <string name="backup_partial_line">下次会再试一次。</string>
+    <string name="backup_unreachable_file">无法访问备份文件</string>
+    <string name="backup_unreachable_folder">无法访问文件夹</string>
+    <string name="backup_unreachable_line">它可能已被删除，或存放它的应用已退出登录。</string>
+    <string name="backup_no_space">空间不足</string>
+    <string name="backup_no_space_line">还需要 %1$s 的可用空间才能交付备份。</string>
+    <string name="backup_just_now">刚刚</string>
+    <string name="backup_before_title">开启备份之前</string>
+    <string name="backup_before_words">恢复需要你的 24 个单词</string>
+    <string name="backup_before_words_body">你的密码短语无法打开备份。如果这部手机和这些单词都丢失了，没有人能打开它——包括你。</string>
+    <string name="backup_before_provider">服务商能看到备份的大小和更改时间</string>
+    <string name="backup_before_provider_body">永远看不到名称、日期、相册或文件里的内容。</string>
+    <string name="backup_before_one_vault">此备份仅用于此保险库</string>
+    <string name="backup_before_one_vault_body">每个保险库都需要自己的备份。</string>
+    <string name="backup_back_up_to">备份到</string>
+    <string name="backup_no_destinations">这部手机上没有云应用或 SD 卡。请安装你的云服务商的应用并登录，然后回到这里。</string>
+    <string name="backup_dest_cloud">一个备份文件，更改后更新</string>
+    <string name="backup_dest_volume">一个文件夹，每次更改后更新</string>
+    <string name="backup_how_copied">复制哪些内容</string>
+    <string name="backup_how_copied_body">此保险库的文件（在这部手机上加密），以及你的恢复套件能打开的加密保险库列表。你的密码短语以及它解锁的文件都留在这部手机上。</string>
+    <string name="backup_how_when">何时复制</string>
+    <string name="backup_how_when_body">每次更改后都会复制，无需任何操作。SD 卡文件夹会在几秒内更新，并且只复制更改的部分。云应用的备份文件包含整个保险库，因此会在你停止更改几分钟后重写，或在你锁定时立即重写。从未打开的保险库永远不会被复制。</string>
+    <string name="backup_how_restoring">恢复</string>
+    <string name="backup_how_restoring_body">备份是用你的 24 个单词恢复的，而不是密码短语。如果这部手机和这些单词都丢失了，任何人——包括你——都无法读取备份。</string>
+    <string name="backup_how_provider">服务商能看到什么</string>
+    <string name="backup_how_provider_body">云应用只能看到一个文件：它的大小和更改时间。里面的内容是封存的，因此无法统计或衡量你的文件。SD 卡文件夹会显示文件数量、每个文件按固定步长向上取整后的大小以及各自的更改时间——超过 16 MB 的项目会显示为一组，这种模式可能让人认出它是此应用的备份。两者都看不到名称、日期、相册或文件里的任何内容。</string>
+    <string name="backup_how_per_vault">每个保险库一个备份</string>
+    <string name="backup_how_per_vault_body">每个保险库都需要自己的备份。每个备份还包含同一份加密的保险库列表，因此能看到其中两个的人可以判断它们属于同一个人。</string>
+    <string name="backup_how_destinations">云应用和 SD 卡</string>
+    <string name="backup_how_destinations_body">云应用获得一个包含整个保险库的文件，经过封存，服务商只能看到其大小和更改时间。每次都会完整重写。SD 卡获得一个只复制更改部分的文件夹。不提供这部手机自身的存储空间——那里的副本会随手机一起丢失。</string>
+    <string name="backup_how_deleting">删除和停止</string>
+    <string name="backup_how_deleting_body">在这里删除的内容会在下一次复制时从备份中移除。你的服务商保存在其回收站或版本历史中的副本，此应用无法触及——包括复制中断时留下的较早备份文件。停止备份不会移动已有的备份。</string>
+    <string name="backup_stop_title">要停止备份此保险库吗？</string>
+    <string name="backup_stop_body">已经生成的备份会保留在原处。如果你想删除它，请通过你的服务商删除。</string>
+    <string name="backup_keep">继续备份</string>
+    <string name="backup_on_sd_card">备份在 SD 卡上</string>
+    <string name="restore_into_list">选择此列表中某个保险库的备份——云应用中的文件或 SD 卡上的文件夹。它会回到此列表中。</string>
+    <string name="restore_lead">选择你保存到云应用的备份文件，或 SD 卡上的文件夹。你需要恢复套件中的 24 个单词——你的密码短语无法打开备份。</string>
+    <string name="restore_choose_file">选择备份文件</string>
+    <string name="restore_copying">正在复制文件… %1$d / %2$d</string>
+    <string name="import_title">导入保险库</string>
+    <string name="import_lead">从 .vault 文件，或从保存到云应用或 SD 卡的备份中找回保险库。</string>
+    <string name="import_choose_file">选择文件</string>
+    <string name="import_vault_file">.vault 文件</string>
+    <string name="import_list_full">此列表已满。请移除一个保险库腾出空间，然后再次导入。</string>
+    <string name="import_failed">未能打开。可能是密码短语错误，或者这不是此应用能读取的 .vault 文件。</string>
+    <string name="import_passphrase_label">此文件的密码短语</string>
+    <string name="import_importing">正在导入</string>
+    <string name="import_action">导入保险库</string>
+    <string name="import_backup_here">这是此列表中某个保险库的备份。</string>
+    <string name="import_restore_vault">恢复保险库</string>
+    <string name="import_other_list">此备份来自另一个保险库列表。请输入该列表的恢复套件中的 24 个单词。</string>
+    <string name="import_own_list">它会作为一个独立的保险库列表回来，与此列表分开，并用它自己的密码短语打开。它的 24 个单词不会改变。</string>
+    <string name="import_no_room">这部手机上没有空间再添加保险库列表了。</string>
+    <string name="import_restore_list">恢复保险库列表</string>
+    <string name="import_copying">正在复制文件…</string>
+    <string name="import_vault_restored">保险库已恢复</string>
+    <string name="import_list_restored">保险库列表已恢复</string>
+    <string name="import_vault_restored_body">它已回到原来的保险库列表。用该列表的密码短语打开即可看到它。</string>
+    <string name="import_list_restored_body">锁定应用并输入它的密码短语即可打开。</string>
+
+    <!-- Sizes and units -->
+    <string name="size_bytes">%1$d B</string>
+    <string name="size_kb">%1$s kB</string>
+    <string name="size_mb">%1$s MB</string>
+    <string name="size_gb">%1$s GB</string>
+    <string name="size_tb">%1$s TB</string>
+    <string name="size_pb">%1$s PB</string>
+
+    <!-- Unvault and the encrypted archive -->
+    <plurals name="unvault_items">
+        <item quantity="other">将 %1$d 项移出保险库</item>
+    </plurals>
+    <plurals name="unvault_selected_body">
+        <item quantity="other">你选择的 %1$d 项会被解密、写出、校验，然后从保险库中移除。你没有选择的一切保持原样。</item>
+    </plurals>
+    <plurals name="unvault_all_body">
+        <item quantity="other">此保险库中的全部 %1$d 项都会被解密、写出、校验，然后从保险库中移除。完成后保险库将为空，你的文件会重新变回普通文件。</item>
+    </plurals>
+    <string name="unvault_checked">每个文件都会先读回并比对，然后才删除其加密副本。任何不一致的内容都会留在保险库中，并列在清单文件里。</string>
+    <string name="unvault_where">位置</string>
+    <string name="unvault_gallery">照片和视频</string>
+    <string name="unvault_folder_chosen">所选文件夹</string>
+    <string name="unvault_choose_folder">选择文件夹</string>
+    <string name="unvault_remove_details">移除照片详情</string>
+    <string name="unvault_details_kept">导出的照片会保留它们携带的所有信息，包括位置。</string>
+    <string name="unvault_passphrase_needed">请输入你的密码短语以继续。生物识别解锁无法执行此操作。</string>
+    <string name="unvault_passphrase_needed_own">请输入这个保险库自己的密码短语以继续。保险库列表的密码短语和生物识别解锁都无法执行此操作。</string>
+    <string name="unvault_wrong_passphrase">未能打开此保险库。</string>
+    <string name="unvault_progress">已移出 %1$d / %2$d</string>
+    <string name="unvault_progress_left">已移出 %1$d / %2$d，保险库中还剩 %3$d</string>
+    <string name="unvault_busy">正在移出保险库</string>
+    <string name="archive_title">要换新设备吗？</string>
+    <string name="archive_body">保存一个可以在新手机上打开的加密 .vault 文件。为文件本身设置一个密码短语——它不是打开你保险库的那个，你在另一台设备上会需要它。这不会清空此保险库，回收站中的项目不包括在内。</string>
+    <string name="archive_passphrase_label">文件的密码短语</string>
+    <string name="archive_save">保存加密归档</string>
+
+    <!-- Sharing -->
+    <string name="lifespan_day">24 小时</string>
+    <string name="lifespan_week">7 天</string>
+    <string name="lifespan_month">30 天</string>
+    <string name="share_trial_ended">你的试用期已结束</string>
+    <string name="share_trial_ended_body">发送分享需要一次性购买。打开别人发给你的分享，以及打开、查看和导出你自己的内容，仍然免费。</string>
+    <string name="share_lead_contact">这会生成一个只有 %1$s 的手机能打开的加密文件。无需传递代码。</string>
+    <string name="share_lead_code">这会生成一个加密文件和一个四词代码。收件人需要此应用和代码才能打开。</string>
+    <string name="share_who">谁能打开</string>
+    <string name="share_contact_detail">在 %1$s 的手机上打开，无需代码</string>
+    <string name="share_anyone">任何持有代码的人</string>
+    <string name="share_anyone_detail">安全性较低。任何拥有文件和单词的人都能打开。</string>
+    <string name="share_how_long">可打开的期限</string>
+    <string name="share_no_limit">无限制</string>
+    <string name="share_no_limit_detail">随时都能打开</string>
+    <string name="share_open_once">仅打开一次</string>
+    <string name="share_open_once_detail">打开一次后再也无法打开</string>
+    <string name="share_expires">到期</string>
+    <string name="share_expires_detail">在 %1$s 之前可以打开</string>
+    <string name="share_limits_contact">这些限制由 %1$s 手机上的应用执行，其他手机都无法打开此文件。文件一旦发出，就无法撤回。</string>
+    <string name="share_limits_code">这些限制由打开它的手机上的应用执行。文件一旦发出，就无法撤回。</string>
+    <string name="share_photo_carries">照片携带的信息</string>
+    <string name="share_remove_details">移除详情</string>
+    <string name="share_as_is">按原样发送</string>
+    <string name="share_as_is_detail">位置、日期和相机信息也会一并发送</string>
+    <string name="share_sealing">正在封存</string>
+    <string name="share_try_again">重试</string>
+    <string name="share_create">创建分享</string>
+    <string name="share_less_secure">安全性低于发送给联系人</string>
+    <string name="share_risk_any_phone">任何拥有文件和这四个单词的人，都能在任何手机上打开它。</string>
+    <string name="share_risk_once">“仅打开一次”是指每部手机一次。转发后，它还能再次打开。</string>
+    <string name="share_risk_same_chat">在与文件同一个聊天中发送单词，等于把两者都交了出去。</string>
+    <string name="share_risk_guessing">任何保留了文件副本的人都可以无限次地继续猜测这些单词。</string>
+    <string name="share_pair_first">若只想与一个人分享，请先与对方配对。</string>
+    <string name="share_pair">与他人配对</string>
+    <string name="share_code_title">代码</string>
+    <string name="share_code_label">分享代码：%1$s</string>
+    <string name="share_code_separately">请通过与文件不同的方式发送代码。</string>
+    <string name="share_code_both">任何同时拥有两者的人都能打开它。在与文件同一个聊天中输入代码，会一次性把两者都交出去。</string>
+    <string name="share_code_once">此代码只显示一次，不会保存。请立即复制。</string>
+    <string name="share_send_file">发送文件…</string>
+    <string name="share_copy_code">复制代码</string>
+    <string name="share_sealed_to">已封存给 %1$s</string>
+    <string name="share_sealed_body">只有 %1$s 能打开它。文件已封存到对方的手机上——无需发送代码。</string>
+    <string name="share_save_device">保存到设备</string>
+    <string name="share_saved">已保存。请在你用来发送的应用中，从“文件”里添加附件。</string>
+    <string name="share_save_failed">无法保存文件。请重试，或改为直接发送。</string>
+    <string name="share_save_hint">也可以先保存，再从“文件”中添加附件。这样你用来发送的应用就无法判断是哪个应用生成了它。</string>
+    <string name="share_refused_trash">回收站中的项目无法分享。</string>
+    <string name="share_refused_no_length">无法读取此视频的时长，因此无法分享。</string>
+    <string name="share_refused_too_long">超过 %1$d 秒的视频无法分享。</string>
+
+    <!-- Opening a share -->
+    <string name="share_open_title">打开分享</string>
+    <string name="share_open_reading">正在读取文件</string>
+    <string name="share_open_enter_code">如果它是附带代码发送的，请输入代码。</string>
+    <string name="share_open_code_hint">发送者应该已经通过与文件不同的方式给了你四个单词。</string>
+    <string name="share_open_failed">无法打开此分享。</string>
+    <string name="share_open_check">请检查这四个单词，并确认这是发给你的那个文件。</string>
+    <string name="share_open_action">打开分享</string>
+    <string name="share_open_no_contacts">这部手机无法读取其联系人，因此封存给它的分享无法在这里打开。</string>
+    <string name="share_open_contacts">打开联系人</string>
+    <string name="share_open_view">查看</string>
+    <string name="share_open_keep">保留在此保险库中</string>
+    <string name="share_open_keep_needs_purchase">保留分享需要一次性购买。离开时不会保存任何内容。</string>
+    <string name="share_open_leave">如果不保留就离开，不会保存任何内容。</string>
+    <string name="share_open_cannot_keep">此分享无法保留。离开时不会保存任何内容。</string>
+    <string name="share_open_sealed_here">此分享已封存到这部手机上，打开时无需代码。</string>
+    <string name="share_open_open">打开</string>
+    <string name="share_open_newer">此分享由较新版本的应用创建。请更新此应用后打开。</string>
+    <string name="share_open_already_opened">此分享被设为只能打开一次，并且已经被打开过了。</string>
+    <string name="share_open_expired">此分享已于 %1$s 到期。</string>
+    <string name="share_open_code_correct">代码正确。此限制由这部手机上的应用执行，发送者无法解除。</string>
+    <string name="share_open_limit_once">发送者将其设为只能打开一次。此限制由这部手机上的应用执行。</string>
+    <string name="share_open_limit_expiry">发送者将其设为在 %1$s 后无法打开。此限制由这部手机上的应用执行。</string>
+
+    <!-- Contacts and pairing -->
+    <string name="contacts_waiting">等待中</string>
+    <string name="contacts_invite_sent">邀请已发送——等待对方回复</string>
+    <string name="contacts_reply_sent">回复已发送——等待对方确认</string>
+    <string name="contacts_confirmation_ready">确认文件可以发送了</string>
+    <string name="contacts_add">添加联系人</string>
+    <string name="contacts_together">面对面</string>
+    <string name="contacts_together_detail">互相扫描对方的代码。最可靠的配对方式。</string>
+    <string name="contacts_not_together">不在一起</string>
+    <string name="contacts_not_together_detail">给对方发送一个邀请文件和四个单词。</string>
+    <string name="contacts_have_invite">我收到了邀请</string>
+    <string name="contacts_have_invite_detail">打开对方发来的文件，并输入对方的四个单词。</string>
+    <string name="contacts_empty">还没有联系人。与某人配对——面对面或给对方发送邀请——之后就可以不用代码给对方发送文件。</string>
+    <string name="contacts_remove_named">移除 %1$s</string>
+    <string name="contacts_unreadable">这部手机无法读取其联系人。</string>
+    <string name="contacts_unreadable_body">联系人列表锁定在此设备持有的一个密钥上，而该密钥已经不在了——恢复到另一部手机上就会出现这种情况。列表本身没有改动；只是这里没有任何东西能打开它。\n\n重新开始会给这部手机一个新的配对码。与你配对过的每个人都需要重新扫描。</string>
+    <string name="contacts_new_identity">启用新身份</string>
+    <string name="contacts_new_identity_title">要启用新身份吗？</string>
+    <string name="contacts_new_identity_body">无法读取的联系人列表将被删除，这部手机会获得一个新的配对码。与你配对过的每个人都需要重新扫描。</string>
+    <string name="contacts_start_again">重新开始</string>
+    <string name="contacts_remove_title">要移除 %1$s 吗？</string>
+    <string name="contacts_remove_body">你已经发送的内容不受影响。你可以再次与对方配对。</string>
+    <string name="pairing_title">配对联系人</string>
+    <string name="pairing_saved">已保存 %1$s。现在让对方扫描你的代码。</string>
+    <string name="pairing_show">把这个给另一部手机看，然后扫描对方的代码。你们都需要扫描对方的代码。</string>
+    <string name="pairing_in_person">面对面扫描是最可靠的配对方式。在你给某人发送文件之前，与此相关的任何信息都不会离开这部手机。</string>
+    <string name="pairing_scan">扫描对方的代码</string>
+    <string name="pairing_your_code">你的配对码</string>
+    <string name="pairing_camera_permission">相机需要权限才能读取代码。它看到的任何内容都不会被记录——画面解码后即被丢弃，此权限仅用于此。</string>
+    <string name="pairing_point">将相机对准另一部手机上的代码。</string>
+    <string name="pairing_camera_looking">相机，正在寻找配对码</string>
+    <string name="pairing_who">这是谁？名称只属于你——它保存在这部手机上，不会发送到任何地方。</string>
+    <string name="pairing_save">保存联系人</string>
+    <string name="remote_invite_title">邀请他人</string>
+    <string name="remote_answer_title">回应邀请</string>
+    <string name="remote_important">重要</string>
+    <string name="remote_name_too_long">名称太长。请换一个短一点的。</string>
+    <string name="remote_name_yours">名称只属于你，并保留在这部手机上。</string>
+    <string name="remote_who_inviting">你要邀请谁？</string>
+    <string name="remote_make_invite">生成邀请</string>
+    <string name="remote_invite_ready">邀请已就绪</string>
+    <string name="remote_invite_send">把邀请文件发给 %1$s。然后通过其他方式把这四个单词告诉对方——在通话中或当面说。</string>
+    <string name="remote_your_words">你的四个单词：%1$s</string>
+    <string name="remote_invite_strict">任何拥有该文件和这些单词的人都能成为这个联系人。只把单词告诉 %1$s，绝不要在与文件同一个聊天中发送。</string>
+    <string name="remote_open_reply">打开 %1$s 的回复</string>
+    <string name="remote_send_invite_again">再次发送邀请文件</string>
+    <string name="remote_waiting_reply_today">正在等待 %1$s 的回复。此邀请将于 %2$s 结束。</string>
+    <string name="remote_waiting_reply_tomorrow">正在等待 %1$s 的回复。此邀请将于明天 %2$s 结束。</string>
+    <string name="remote_send_invite">发送邀请文件</string>
+    <string name="remote_cancel_invite">取消邀请</string>
+    <string name="remote_now_contact">%1$s 现在是你的联系人了。</string>
+    <string name="remote_send_confirmation_body">把这个确认文件发给对方，对方也就能添加你了。</string>
+    <string name="remote_send_confirmation_again">再次发送确认文件</string>
+    <string name="remote_send_confirmation">发送确认文件</string>
+    <string name="remote_open_invite">打开邀请文件</string>
+    <string name="remote_who_sent">是谁发来的？</string>
+    <string name="remote_their_words">对方的四个单词</string>
+    <string name="remote_know_sender">只有在你知道发送者是谁时才继续。生成邀请的人会成为你的联系人。</string>
+    <string name="remote_make_reply">生成回复</string>
+    <string name="remote_send_reply_title">发送你的回复</string>
+    <string name="remote_send_reply_body">把这个回复文件发给 %1$s。</string>
+    <string name="remote_open_confirmation">打开 %1$s 的确认文件</string>
+    <string name="remote_send_reply_again">再次发送回复文件</string>
+    <string name="remote_waiting_confirmation_today">正在等待 %1$s 的确认。将于 %2$s 结束。</string>
+    <string name="remote_waiting_confirmation_tomorrow">正在等待 %1$s 的确认。将于明天 %2$s 结束。</string>
+    <string name="remote_send_reply">发送回复文件</string>
+    <string name="remote_ended">此邀请已结束</string>
+    <string name="remote_ended_reply">该回复不匹配，因此此邀请已结束。请检查四个单词是否输入完全正确，以及你们是否都在使用最新版本的应用。</string>
+    <string name="remote_ended_this">已结束</string>
+    <string name="remote_ended_confirmation">该确认文件不匹配，因此已结束。请让 %1$s 重新生成一个邀请，并与对方核对四个单词。</string>
+    <string name="remote_ended_expired">此邀请已结束。邀请的有效期为 24 小时。</string>
+    <string name="remote_ended_already">此邀请已经结束。</string>
+    <string name="remote_own_invite">这是你自己的邀请</string>
+    <string name="remote_own_invite_body">这是这部手机自己的邀请。</string>
+    <string name="remote_unreadable_body">联系人列表锁定在此设备已不再拥有的一个密钥上。“联系人”中说明了你可以怎么做。</string>
+    <string name="remote_new_invite">生成新邀请</string>
+
+    <!-- Removing the originals from the gallery -->
+    <string name="originals_title">要从图库中移除原件吗？</string>
+    <string name="originals_removed">已从图库中移除原件。</string>
+    <plurals name="originals_photos">
+        <item quantity="other">%1$d 张照片</item>
+    </plurals>
+    <plurals name="originals_videos">
+        <item quantity="other">%1$d 个视频</item>
+    </plurals>
+    <plurals name="originals_in_vault">
+        <item quantity="other">%1$s已在此保险库中。Android 会请你确认。</item>
+    </plurals>
+    <plurals name="originals_stay">
+        <item quantity="other">另有 %1$d 项无法从这里移除，将保留在你的图库中。</item>
+    </plurals>
+
+    <!-- Lock screen warnings -->
+    <string name="warning_rooted">此设备似乎已获取 root 权限。拥有 root 权限的其他应用可以在此保险库打开时读取其内存。</string>
+    <string name="warning_debuggable">这是可调试的版本。保险库打开时，其内存可以通过 USB 读取。</string>
+    <string name="warning_debugger">当前有调试器连接到此应用。</string>
+    <plurals name="warning_accessibility">
+        <item quantity="other">有 %1$d 个无障碍服务正在运行。此类服务可以读取屏幕上的内容，包括你在这里打开的任何内容。</item>
+    </plurals>
+
+    <!-- Covers — the calculator, the music player and the voice recorder -->
+    <string name="calc_divide_by_zero">不能除以零</string>
+    <string name="calc_undefined">未定义</string>
+    <string name="calc_infinity">无穷大</string>
+    <string name="calc_invalid_format">格式无效</string>
+    <string name="pattern_draw">绘制图案</string>
+    <string name="pattern_wrong">图案错误</string>
+    <string name="music_unknown_track">未知歌曲</string>
+    <string name="music_unknown_artist">未知艺术家</string>
+    <string name="music_unknown_album">未知专辑</string>
+    <string name="music_tracks">歌曲</string>
+    <string name="music_albums">专辑</string>
+    <string name="music_artists">艺术家</string>
+    <string name="music_shuffle_all">全部随机播放</string>
+    <plurals name="music_track_count">
+        <item quantity="other">%1$d 首歌曲</item>
+    </plurals>
+    <string name="music_close_player">关闭播放器</string>
+    <string name="music_nothing_playing">未在播放</string>
+    <string name="music_shuffle_on">随机播放已开启</string>
+    <string name="music_shuffle_off">随机播放已关闭</string>
+    <string name="music_previous">上一首</string>
+    <string name="music_next">下一首</string>
+    <string name="music_repeat_one">单曲循环</string>
+    <string name="music_repeat_all">全部循环</string>
+    <string name="music_repeat_off">循环已关闭</string>
+    <string name="music_tap_to_open">点按即可打开播放器</string>
+    <string name="music_loading">正在加载音乐库…</string>
+    <string name="music_none">此设备上没有音乐</string>
+    <string name="music_none_line">你添加的歌曲会显示在这里。</string>
+    <string name="music_access_off">音乐访问权限已关闭</string>
+    <string name="music_access_off_line">请在设置中开启“音乐和音频”，以播放此设备上的内容。</string>
+    <string name="recorder_default_title">录音 %1$s</string>
+    <plurals name="recorder_count">
+        <item quantity="other">%1$d 条录音 · %2$s</item>
+    </plurals>
+    <string name="recorder_search">搜索录音</string>
+    <string name="recorder_hide_controls">隐藏控件</string>
+    <string name="recorder_show_controls">显示控件</string>
+    <string name="recorder_paused">已暂停</string>
+    <string name="recorder_resume">继续</string>
+    <string name="recorder_delete_title">要删除“%1$s”吗？</string>
+    <string name="recorder_delete_body">此录音将从此设备中移除。</string>
+    <string name="recorder_none">还没有录音</string>
+    <string name="recorder_mic_off">麦克风访问权限已关闭</string>
+    <string name="recorder_none_line">按录音键即可录制。</string>
+    <string name="recorder_mic_off_line">请在设置中开启“麦克风”以进行录音。</string>
+    <string name="recorder_no_match">没有与“%1$s”匹配的录音</string>
+    <string name="recorder_paused_length">已暂停，%1$s</string>
+
+    <!-- The unlock digest — what happened since the last unlock -->
+    <string name="digest_altered">此事件日志在第 %1$d 条记录处被篡改。</string>
+    <string name="digest_not_opened_since">自 %1$s 以来未被打开。</string>
+    <plurals name="digest_recoveries">
+        <item quantity="other">有 %1$d 次使用恢复套件打开了此保险库。</item>
+    </plurals>
+    <plurals name="digest_failed">
+        <item quantity="other">有 %1$d 次解锁尝试失败。</item>
+    </plurals>
+    <plurals name="digest_imported">
+        <item quantity="other">已导入 %1$d 项。</item>
+    </plurals>
+    <plurals name="digest_deleted">
+        <item quantity="other">已删除 %1$d 个源文件。</item>
+    </plurals>
+    <string name="digest_biometric">生物识别信息的更改使生物识别解锁失效。</string>
+    <string name="digest_dev_options">此设备上启用了开发者选项或 USB 调试。</string>
+    <string name="digest_root">此设备的 root 状态发生了变化。</string>
+    <string name="digest_data_cleared">此应用的数据似乎已被清除。</string>
+    <string name="digest_new_device">此保险库正在一台与设置时不同的设备上运行。</string>
+    <string name="digest_clock">此设备的时钟被调回过去。</string>
+    <string name="vault_passphrase_heading">密码短语</string>
+    <string name="vault_passphrase_state_list">用你保险库列表的密码短语打开。</string>
+    <string name="vault_passphrase_state_own">只能用它自己的密码短语打开。</string>
+    <string name="vault_passphrase_add">添加密码短语</string>
+    <string name="vault_passphrase_add_supporting">只有那个密码短语能打开它</string>
+    <string name="vault_passphrase_change">更改密码短语</string>
+    <string name="vault_passphrase_remove">移除密码短语</string>
+    <string name="vault_passphrase_remove_supporting">你保险库列表的密码短语将能打开它</string>
+    <string name="vault_passphrase_added">已添加密码短语。</string>
+    <string name="vault_passphrase_changed">已更改密码短语。</string>
+    <string name="vault_passphrase_removed">已移除密码短语。</string>
+    <string name="vault_passphrase_add_lead">添加后，只有这个密码短语能打开%1$s。你保险库列表的密码短语打不开，列表的恢复套件也不行——所以%1$s会获得自己的恢复套件。</string>
+    <string name="vault_passphrase_list_label">保险库列表密码短语</string>
+    <string name="vault_passphrase_list_supporting">打开本应用保险库列表的那个。</string>
+    <string name="vault_passphrase_list_empty">请输入打开你保险库列表的密码短语。</string>
+    <string name="vault_passphrase_new_again">再次输入新密码短语</string>
+    <string name="vault_passphrase_backups_heading">之前的备份</string>
+    <string name="vault_passphrase_add_backups">在此之前保存的备份中，%1$s仍可用你保险库列表的密码短语打开。</string>
+    <string name="vault_passphrase_add_button">添加密码短语</string>
+    <string name="vault_passphrase_adding">正在添加…</string>
+    <string name="vault_passphrase_change_lead">%1$s的恢复套件保持不变，它的 24 个词仍能打开它。你保险库列表的密码短语仍然打不开。</string>
+    <string name="vault_passphrase_current_label">当前密码短语</string>
+    <string name="vault_passphrase_current_empty">请输入此保险库当前的密码短语。</string>
+    <string name="vault_passphrase_change_backups">在此之前保存的备份中，%1$s用旧密码短语打开。</string>
+    <string name="vault_passphrase_changing">正在更改…</string>
+    <string name="vault_passphrase_remove_opens">你保险库列表的密码短语能打开它</string>
+    <string name="vault_passphrase_remove_opens_body">%1$s将直接从列表打开，不再有自己的密码短语。</string>
+    <string name="vault_passphrase_remove_kit">你列表的恢复套件涵盖它</string>
+    <string name="vault_passphrase_remove_kit_body">列表的 24 个词将能恢复%1$s。它自己的 24 个词也仍能打开它，且无法作废。</string>
+    <string name="vault_passphrase_remove_captures">它的入侵者拍摄移至首页</string>
+    <string name="vault_passphrase_remove_captures_body">它的记录并入首页的入侵者拍摄，它自己的拍摄设置将关闭。</string>
+    <string name="vault_passphrase_removing">正在移除…</string>
+    <plurals name="kit_remaining_views_fewer">
+        <item quantity="other">继续之后，你还可以从菜单中再查看 %1$d 次。之后将无法再显示，你抄下的副本将是唯一的一份。</item>
+    </plurals>
+    <string name="kit_remaining_views_none">本应用已显示过允许的全部次数，继续之后将无法再显示。你抄下的副本将是唯一的一份。</string>
+    <!-- `third-party-notices`. The Open-source licences row and its two screens. -->
+    <string name="licences_title">开源许可</string>
+    <plurals name="licences_drawer_line">
+        <item quantity="other">%1$d 个库及其许可</item>
+    </plurals>
+    <string name="licences_lead">%1$s 使用以下库构建。每个库均按其自身的许可使用，许可内容如下所示。</string>
+    <string name="licences_open_action">打开许可</string>
+    <string name="licences_version">版本 %1$s</string>
+    <string name="licences_source">来源</string>
+    <string name="licences_licence">许可</string>
+</resources>

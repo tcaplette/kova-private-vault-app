@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Music player - a record on a cream platter with the tonearm resting on it.
+     108 x 108 adaptive canvas; the subject stays inside the 66 dp safe circle
+     centred at 54,54. The launcher vectors and the 512 px Play PNG are made from
+     this file. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="108" height="108" viewBox="0 0 108 108">
+  <g id="background">
+    <path d="M0,0 H108 V108 H0 Z" fill="#134E4A"/>
+  </g>
+  <g id="foreground">
+    <path d="M26,56 a24,24 0 1,0 48,0 a24,24 0 1,0 -48,0 Z" fill="#F5EBDD"/>
+    <path d="M29,56 a21,21 0 1,0 42,0 a21,21 0 1,0 -42,0 Z" fill="#1C1917"/>
+    <path d="M33,56 a17,17 0 1,0 34,0 a17,17 0 1,0 -34,0 Z" fill="none" stroke="#3A3330" stroke-width="0.8"/>
+    <path d="M37,56 a13,13 0 1,0 26,0 a13,13 0 1,0 -26,0 Z" fill="none" stroke="#3A3330" stroke-width="0.8"/>
+    <path d="M43,56 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0 Z" fill="#C2410C"/>
+    <path d="M48.8,56 a1.2,1.2 0 1,0 2.4,0 a1.2,1.2 0 1,0 -2.4,0 Z" fill="#F5EBDD"/>
+    <path d="M72,35 L69,57 L63.5,63" fill="none" stroke="#E7E5E4" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M61.5,61.5 h4 a1,1 0 0,1 1,1 v2 a1,1 0 0,1 -1,1 h-4 a1,1 0 0,1 -1,-1 v-2 a1,1 0 0,1 1,-1 Z" fill="#E7E5E4"/>
+    <path d="M68,35 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0 Z" fill="#E7E5E4"/>
+    <path d="M70.4,35 a1.6,1.6 0 1,0 3.2,0 a1.6,1.6 0 1,0 -3.2,0 Z" fill="#134E4A"/>
+  </g>
+  <g id="monochrome" display="none">
+    <path d="M28,56 a22,22 0 1,0 44,0 a22,22 0 1,0 -44,0 Z M34,56 a16,16 0 1,0 32,0 a16,16 0 1,0 -32,0 Z M35.5,56 a14.5,14.5 0 1,0 29,0 a14.5,14.5 0 1,0 -29,0 Z M43,56 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0 Z M48.5,56 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0 Z" fill="#000000" fill-rule="evenodd"/>
+    <path d="M72,35 L69,57 L63.5,63" fill="none" stroke="#000000" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M68,35 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0 Z M70.4,35 a1.6,1.6 0 1,0 3.2,0 a1.6,1.6 0 1,0 -3.2,0 Z" fill="#000000" fill-rule="evenodd"/>
+  </g>
+</svg>

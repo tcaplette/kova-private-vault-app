@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    P4-2. The only path the share provider exposes.
+
+    `files-path` is `Context.filesDir`, and the subdirectory is named so the provider
+    can reach share containers and nothing else — not `blobs/`, not `incoming/`, not
+    the slot file. A provider rooted at `filesDir` itself would have been one
+    mis-built URI away from serving a vault blob.
+-->
+<paths>
+    <files-path
+        name="shares"
+        path="shares/" />
+</paths>

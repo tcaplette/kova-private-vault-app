@@ -1,0 +1,1697 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      The app's text — `app-languages`. Every string a person reads is here, grouped by the
+      screen it appears on, with a comment heading each group. The eight translations keep
+      this file's key order so a reviewer can read them side by side.
+
+      Left in code on purpose, in every language (`app-languages` D4):
+      - Log lines, exception and require() messages: read in logcat and crash reports,
+        never on a screen.
+      - Data written into files and read back by code: the export manifest and its
+        reasons, export stamps and EXIF/XMP fields, file and folder names the app finds
+        again by name (the gallery's "Vault" export folder, a received share's "Shared item" fallback name),
+        container and blob names, preference keys and MIME types.
+      - The recovery and share-code words: the BIP-39 English list in res/raw. A kit
+        written down under one language has to open the vault under another.
+      - The calculator's notation (sin, cos, tan, ln, log, π, e, EXP, AC, DEL, INV,
+        DEG/RAD) and the language names on the Language sheet, which are each language's
+        own name for itself.
+      - The debug-only Crash log screen and its drawer row, which ship in no release build.
+    -->
+
+    <!--
+      The application label: "Kova", the owner's name for the app (2026-10-25). It
+      replaced "Toolbox", an agent-drafted category name nobody chose. It is the same
+      in every locale.
+
+      This is what notifications, Settings > Apps, the app-info page, storage,
+      battery, the permission manager and every runtime permission dialog read. An
+      activity-alias label does not reach it and no runtime API overrides it, so
+      whatever stands here is what a cover identity says about itself the moment any
+      of those surfaces appears. With "Vault" here, granting the recorder its
+      microphone read "Allow Vault to record audio?" over a voice recorder, which is
+      why it must never be "Vault" or any identity's name.
+
+      P2-22 left this as "Vault" on two arguments. The first — that a label other than
+      an alias's imposes a build-time choice on every install including the honest
+      default — is true, and is the price: a user who never wears a cover sees "Vault"
+      on their home screen (the alias label, unchanged) and this word in Settings. The
+      second — that it would desync the label from the name the Play listing is
+      approved under — is simply wrong. The Play Console title is a separate field
+      from android:label; the two differ routinely and nothing couples them.
+    -->
+    <string name="app_name">Kova</string>
+
+    <!--
+      Launcher identity labels — P2-22. These are the words the launcher and recents
+      show, in the device's language (`app-languages` D5); LauncherIdentity names these
+      same resources, and LauncherIdentityScanTest fails the build if the two disagree.
+    -->
+    <string name="identity_vault">保管庫</string>
+
+    <!--
+      P2-24's cover identities. Ordinary names for ordinary apps: the cover has to be
+      a believable instance of the thing it claims to be, and a clever name is the
+      first thing that makes somebody look twice.
+    -->
+    <string name="identity_calculator">電卓</string>
+    <string name="identity_musicplayer">ミュージック</string>
+    <string name="identity_voicerecorder">ボイスレコーダー</string>
+
+    <!-- Language — the drawer row and the Language sheet -->
+    <!-- Not a phrase: the tag of the language this file is written in. Each translation
+         names its own (ja, ko, pt-BR, …). System default's line reads it to say which
+         language the device's setting resolves to. -->
+    <string name="language_resource_tag">ja</string>
+    <string name="language_german">ドイツ語</string>
+    <string name="language_english">英語</string>
+    <string name="language_spanish">スペイン語</string>
+    <string name="language_french">フランス語</string>
+    <string name="language_portuguese_brazil">ポルトガル語（ブラジル）</string>
+    <string name="language_japanese">日本語</string>
+    <string name="language_korean">韓国語</string>
+    <string name="language_chinese_simplified">中国語（簡体字）</string>
+    <string name="language_chinese_traditional">中国語（繁体字）</string>
+    <string name="language_title">言語</string>
+    <string name="language_system_default">システムのデフォルト</string>
+    <string name="language_explainer">このアプリの言語だけが変わります。スマートフォンの言語はそのままです。</string>
+    <string name="language_suggested">候補</string>
+    <string name="language_all">すべての言語</string>
+    <string name="language_system_default_detail">%1$s — スマートフォンに合わせる</string>
+    <string name="language_changed">言語を%1$sに変更しました</string>
+    <string name="drawer_language">言語 \u0020· \u0020%1$s</string>
+
+    <!-- Messages — unlock, backup, restore and vault lifecycle (MainActivity) -->
+    <string name="backup_incomplete">このバックアップファイルは不完全です。完了しなかったバックアップのものかもしれません。</string>
+    <string name="backup_unreadable">バックアップを読み取れませんでした。保存先のアプリにログインしているか確認してください。</string>
+    <string name="backup_other_list">このバックアップは別の保管庫リストのものです。「ファイルから保管庫をインポート」で戻してください。</string>
+    <string name="bio_invalidated">生体認証の登録内容が変わったため、生体認証によるロック解除はオフになりました。パスフレーズを使用してください。</string>
+    <string name="bio_after_migration">このアップデート後、生体認証によるロック解除はオフになっています。設定でもう一度オンにしてください。</string>
+    <string name="vault_newer_version">この保管庫は、より新しいバージョンのアプリで最後に開かれました。ファイルは無事で、何も変更されていません。開くにはアプリをアップデートしてください。</string>
+    <string name="vault_index_relinked">この保管庫のインデックスは障害後に再リンクする必要がありました。すべて見つかり、失われたものはありません。</string>
+    <string name="vault_index_unreadable">この保管庫を開けませんでした。インデックスが見つからないか破損しており、保管庫のファイルを検索しても別のインデックスは見つかりませんでした。復元キットで復元できます。</string>
+    <string name="capture_not_saved">その撮影内容を保管庫に保存できませんでした。</string>
+    <string name="backup_folder_on_phone">そのフォルダはこのスマートフォン上にあります。ここに保存したバックアップはスマートフォンと一緒に失われます。クラウドアプリか SD カードを選んでください。</string>
+    <string name="restore_device_not_empty">このデバイスにはすでに保管庫があります。バックアップは空のデバイスにのみ復元できます。</string>
+    <string name="restore_open_vaults_first">先に保管庫を開いてください。</string>
+    <string name="restore_file_not_opened">バックアップファイルを開けませんでした。</string>
+    <string name="restore_file_unreadable">バックアップファイルを読み取れませんでした。保存先のアプリにログインしているか確認してください。</string>
+    <string name="restore_no_backup_in_folder">そのフォルダにバックアップは見つかりませんでした。</string>
+    <string name="capture_mode_permission_denied">このモードには、今リクエストした権限が必要です。オフになっています。</string>
+    <string name="decoy_trial_notice">ダミー保管庫を作ると実際の写真がインポートされ、30 日間の試用期間は保管庫に最初に何かが追加された時点で始まります。自分のもので始めたい場合は、これを後回しにしてください。</string>
+    <string name="vault_list_not_saved">保存できませんでした。</string>
+    <string name="editor_could_not_open">このアイテムを編集用に開けませんでした。</string>
+    <string name="folder_name_length">フォルダ名は 1 文字以上 %1$d 文字以下にしてください。</string>
+    <string name="folder_name_duplicate">ここにはすでに同じ名前のフォルダがあります。</string>
+    <string name="folder_cycle">フォルダを自分自身の中に入れることはできません。</string>
+    <string name="vault_destroy_failed">「%1$s」を削除できませんでした。中身は何も失われていません。</string>
+    <string name="share_create_failed">共有を作成できませんでした。デバイスの空き容量が足りない可能性があります。</string>
+    <string name="setup_vault_not_created">保管庫を作成できませんでした。もう一度お試しください。</string>
+    <string name="decoy_choose_photos_first">先に写真を選んでください。</string>
+    <string name="decoy_set_passphrase_first">先にダミー保管庫のパスフレーズを設定してください。</string>
+    <string name="decoy_passphrase_in_use">そのパスフレーズはすでにこのデバイスの保管庫を開きます。戻って別のものを選んでください。</string>
+    <string name="decoy_no_room">このデバイスには、これ以上保管庫を追加する空きがありません。</string>
+    <string name="decoy_passphrase_needed">このデバイスにはすでにダミー保管庫があり、今新たに設定すると上書きされる可能性があります。戻ってダミー保管庫のパスフレーズも入力してください。</string>
+    <string name="decoy_not_created">保管庫は作成されませんでした。</string>
+    <string name="recovery_words_wrong_backup">これらの単語ではこのバックアップを開けません。</string>
+    <string name="import_words_wrong_backup">これらの単語ではこのバックアップを開けません。</string>
+    <string name="recovery_list_not_here">このバックアップの保管庫リストはこのスマートフォンにありません。ロックを解除してから、メニューの「ファイルから保管庫をインポート」を選んでください。</string>
+    <string name="this_vault">この保管庫</string>
+    <string name="that_vault">その保管庫</string>
+    <string name="backup_open_vault_first_file">先にバックアップしたい保管庫を開いてください。1 つのバックアップには 1 つの保管庫が入ります。</string>
+    <string name="backup_open_vault_first_folder">先にバックアップしたい保管庫を開いてください。1 つのフォルダには 1 つの保管庫が入ります。</string>
+    <string name="backup_folder_another_vault">そのフォルダには、このデバイスの別の保管庫がすでに入っています。保管庫ごとに専用のフォルダが必要です。ここにバックアップすると中身が削除されます。</string>
+    <string name="backup_folder_another_install">そのフォルダには別のバックアップがすでに入っています。空のフォルダか、この保管庫が保存したフォルダを選んでください。ここにバックアップすると中身が削除されます。</string>
+    <plurals name="vault_destroy_items_left">
+        <item quantity="other">%1$d 個のアイテムを書き出せなかったため、この保管庫は残されました。中に残っているものはすべてそのままです。</item>
+    </plurals>
+    <string name="kit_print_job">保管庫の復元キット</string>
+    <string name="panic_wrong_passphrase">そのパスフレーズではこの保管庫リストを開けません。</string>
+    <string name="panic_wrong_phrase">それはパニックフレーズではありません。</string>
+    <string name="panic_too_close">パスフレーズに近すぎます。入力ミス 1 つで作動するおそれがあります。別のものを選んでください。</string>
+    <string name="panic_in_use">そのフレーズはすでに保管庫リストを開きます。別のものを選んでください。</string>
+    <string name="panic_no_room">このデバイスには、これ以上フレーズを追加する空きがありません。</string>
+    <string name="panic_cleared">以前のパニックフレーズはここでは使えなくなったため、オフになっています。新しいものを設定してください。</string>
+    <string name="panic_not_saved">保存されませんでした。もう一度お試しください。</string>
+    <string name="pairing_not_a_code">それはペアリングコードではありません。</string>
+    <string name="pairing_newer_app">このコードはより新しいバージョンのアプリで作成されました。スキャンするにはアップデートしてください。</string>
+    <string name="pairing_own_code">それはこのスマートフォン自身のコードです。</string>
+    <string name="pairing_already_known">この連絡先は「%1$s」としてすでに登録されています。</string>
+    <string name="remote_not_an_invite">これは招待ファイルではありません。</string>
+    <string name="remote_wrong_reply">このファイルは、この招待に対する %1$s さんの返信ではありません。</string>
+    <string name="remote_wrong_confirmation">このファイルは %1$s さんの確認ファイルではありません。</string>
+    <string name="memo_notifications_off">通知がオフのため、通知シェードに「停止」は表示されません。</string>
+    <string name="memo_too_short">短すぎるため保存できません。</string>
+    <string name="vault_list_full">このリストはいっぱいです。空きを作るには保管庫を 1 つ削除してください。</string>
+    <string name="vault_not_created">その保管庫を作成できませんでした。</string>
+    <string name="vault_not_opened">その保管庫を開けませんでした。</string>
+    <string name="bio_prompt_unlock_title">保管庫のロックを解除</string>
+    <string name="bio_prompt_use_passphrase">パスフレーズを使用</string>
+    <string name="purchase_unavailable">現在、このデバイスから購入できません（コード %1$d）。すでにお持ちのものには影響ありません。</string>
+    <plurals name="imports_failed">
+        <item quantity="other">%1$d 件のインポートが完了しませんでした。何も追加されていません。もう一度お試しください。</item>
+    </plurals>
+
+    <!-- Notifications — the foreground work and the recording -->
+    <string name="notification_working">処理中</string>
+    <string name="notification_channel_import">インポート</string>
+    <string name="notification_channel_archive">アーカイブ</string>
+    <string name="notification_channel_export">エクスポート</string>
+    <string name="notification_channel_recording">録音</string>
+    <string name="notification_recording">録音中</string>
+    <string name="notification_stop">停止</string>
+
+    <!-- The printed recovery kit -->
+    <string name="kit_print_heading">保管庫の復元キット</string>
+    <string name="kit_print_line_1">この 24 個の単語でこの保管庫を開けます。このページは安全な場所に保管してください。</string>
+    <string name="kit_print_line_2">これらの単語は変更も取り消しもできません。</string>
+
+    <!-- Biometric unlock — the screen, the drawer row and the first-run step -->
+    <string name="bio_name">生体認証によるロック解除</string>
+    <string name="bio_lead">パスフレーズの代わりにはならない、より速い開き方です。</string>
+    <string name="bio_row_fingerprint">指紋認証によるロック解除</string>
+    <string name="bio_row_face">顔認証によるロック解除</string>
+    <string name="bio_row_both">顔認証と指紋認証によるロック解除</string>
+    <string name="bio_on">オン</string>
+    <string name="bio_off">オフ</string>
+    <string name="bio_line_not_set_up">まだ設定されていません。タップしてデバイスの設定で設定してください。</string>
+    <string name="bio_line_not_available_now">現在利用できません。センサーが応答していません。</string>
+    <string name="bio_line_needs_update">保管庫で使用するには、デバイスメーカーのセキュリティアップデートが必要です。</string>
+    <string name="bio_unsupported">このデバイスではサポートされていません。</string>
+    <string name="bio_unsupported_face">このデバイスではサポートされていません。このデバイスの顔認証は、暗号化されたデータを保護するには安全性が不十分です。</string>
+    <string name="bio_unsupported_fingerprint">このデバイスではサポートされていません。このデバイスの指紋センサーは、暗号化されたデータを保護するには安全性が不十分です。</string>
+    <string name="bio_drawer_not_set_up">未設定</string>
+    <string name="bio_drawer_not_available_now">現在利用できません</string>
+    <string name="bio_drawer_needs_update">セキュリティアップデートが必要です</string>
+    <string name="bio_drawer_not_supported">このデバイスではサポートされていません</string>
+    <string name="bio_fact_how">保管庫の開き方</string>
+    <string name="bio_fact_how_fingerprint">保管庫がロックされていると、Android が指紋を求めます。センサーに触れると保管庫が開きます。</string>
+    <string name="bio_fact_how_face">保管庫がロックされていると、Android が顔認証を求めます。画面を見てからタップして確定してください。見るだけで保管庫が開くことはありません。</string>
+    <string name="bio_fact_how_both">保管庫がロックされていると、Android は顔と指紋を同時に待ち受けます。センサーに触れるか、画面を見てタップして確定してください。先に使ったほうで保管庫が開きます。</string>
+    <string name="bio_fact_how_unnamed">保管庫がロックされていると、Android はこのデバイスで設定されている生体認証を求めます。</string>
+    <string name="bio_fact_fingerprint_only">指紋だけを使うには</string>
+    <string name="bio_fact_fingerprint_only_body">アプリが使える生体認証を決めるのは Android で、このアプリではありません。デバイスの設定で顔認証を開き、アプリでの使用をオフにすると、指紋だけで保管庫が開くようになります。</string>
+    <string name="bio_fact_turns_off">生体認証が変わるとオフになります</string>
+    <string name="bio_fact_turns_off_fingerprint">デバイスの設定で指紋を追加または削除すると、これはオフになります。パスフレーズでロックを解除し、メニューの「生体認証によるロック解除」からもう一度オンにしてください。</string>
+    <string name="bio_fact_turns_off_face">デバイスの設定で顔を追加または削除すると、これはオフになります。パスフレーズでロックを解除し、メニューの「生体認証によるロック解除」からもう一度オンにしてください。</string>
+    <string name="bio_fact_turns_off_both">デバイスの設定で顔や指紋を追加または削除すると、これはオフになります。パスフレーズでロックを解除し、メニューの「生体認証によるロック解除」からもう一度オンにしてください。</string>
+    <string name="bio_fact_turns_off_unnamed">デバイスの設定で生体認証を追加または削除すると、これはオフになります。パスフレーズでロックを解除し、メニューの「生体認証によるロック解除」からもう一度オンにしてください。</string>
+    <string name="bio_fact_passphrase">パスフレーズでは必ず保管庫を開けます</string>
+    <string name="bio_fact_passphrase_body">生体認証によるロック解除は 2 つ目の開き方で、代わりにはなりません。パスフレーズを忘れた場合、生体認証では開けません。開けるのは復元キットです。</string>
+    <string name="bio_button_fallback">生体認証を使用</string>
+    <string name="bio_enable_title">生体認証によるロック解除をオンにする</string>
+
+    <!-- Calculator cover — how it opens -->
+    <string name="method_sequence">ボタンの順番</string>
+    <string name="method_sequence_line">順番どおりに入力してから = を長押しします。</string>
+    <string name="method_sequence_pattern">ボタンの順番、次にパターン</string>
+    <string name="method_sequence_pattern_line">順番どおりに入力して = を長押しし、表示されたドットにパターンを描きます。</string>
+    <string name="method_hold_pattern">長押し、次にパターン</string>
+    <string name="method_hold_pattern_line">選んだ場所を 2 秒間長押しし、表示されたドットにパターンを描きます。</string>
+    <string name="method_choose_lead">このアイコンからパスフレーズ画面を開く方法を選んでください。設定は次に行います。</string>
+
+    <!-- Intruder capture — where an attempt failed -->
+    <string name="capture_where_music">ミュージックプレーヤー</string>
+    <string name="capture_where_recorder">ボイスレコーダー</string>
+    <string name="capture_where_calculator">電卓</string>
+    <string name="capture_where_cover">カバー</string>
+    <string name="capture_where_pattern">%1$s: パターンの誤り</string>
+    <string name="capture_where_pattern_dots">%1$s: 表示されたドットでのパターンの誤り</string>
+    <string name="capture_where_pattern_lockout">%1$s: ロックアウト中に試されたパターン</string>
+    <string name="capture_where_pattern_lockout_dots">%1$s: ロックアウト中に表示されたドットで試されたパターン</string>
+    <string name="capture_where_wrong_fingerprint">ロック解除画面: 指紋の誤り</string>
+    <string name="capture_where_wrong_face">ロック解除画面: 顔の誤り</string>
+    <string name="capture_where_wrong_both">ロック解除画面: 顔または指紋の誤り</string>
+    <string name="capture_where_wrong_biometric">ロック解除画面: 生体認証の誤り</string>
+    <string name="capture_where_wrong_passphrase">ロック解除画面: パスフレーズの誤り</string>
+    <string name="capture_where_vault_passphrase">保管庫のパスフレーズ: パスフレーズの誤り</string>
+
+    <!-- Passphrase strength — the meter under every passphrase field -->
+    <string name="strength_add_another_word">もう 1～2 語加えてください。珍しい単語ほど効果があります。</string>
+    <string name="strength_default_suggestions_use_few_words">関連のない単語をいくつか組み合わせてください。</string>
+    <string name="strength_default_suggestions_no_need_symbols">ここでは記号、数字、大文字は必要ありません。大事なのは長さです。</string>
+    <string name="strength_dictionary_warning_passwords_top10">これは最もよく使われているパスワード上位 10 個の 1 つです。</string>
+    <string name="strength_dictionary_warning_passwords_top100">これは最もよく使われているパスワード上位 100 個の 1 つです。</string>
+    <string name="strength_dictionary_warning_passwords_very_common">これは非常によく使われているパスワードで、早い段階で推測されます。</string>
+    <string name="strength_dictionary_warning_passwords_similar">これは広く使われているパスワードに近いものです。</string>
+    <string name="strength_dictionary_warning_english_wikipedia_itself">単語 1 つだけでは簡単に推測されます。</string>
+    <string name="strength_dictionary_warning_etc_names_themselves">名前 1 つだけでは簡単に推測されます。</string>
+    <string name="strength_dictionary_warning_etc_names_common">よくある名前は簡単に推測されます。</string>
+    <string name="strength_dictionary_suggestions_capitalization">先頭を大文字にしてもほとんど効果がありません。代わりに単語を加えてください。</string>
+    <string name="strength_dictionary_suggestions_all_uppercase">すべて大文字にしても、すべて小文字と同じくらい簡単に推測されます。</string>
+    <string name="strength_dictionary_suggestions_reversed">単語を逆さに綴っても、推測の難しさはほとんど変わりません。</string>
+    <string name="strength_dictionary_suggestions_l33t">a を 4 にするなど、似た文字への置き換えはすでに想定されています。</string>
+    <string name="strength_spatial_warning_straight_rows_of_keys">キーを一直線に並べたものは、最初に試されるものの 1 つです。</string>
+    <string name="strength_spatial_warning_short_keyboard_patterns">キーボード上でなぞった短いパターンは簡単に推測されます。</string>
+    <string name="strength_spatial_suggestions_use_longer_keyboard_pattern">キーボードでなぞった形ではなく、単語を使ってください。</string>
+    <string name="strength_repeat_warning_like_aaa">同じ文字の繰り返しは、1 文字と同じくらい早く推測されます。</string>
+    <string name="strength_repeat_warning_like_abcabcabc">同じかたまりの繰り返しは、かたまり 1 つとほとんど変わらず推測されます。</string>
+    <string name="strength_repeat_suggestions_avoid_repeated_words">単語や文字を繰り返してもほとんど効果がありません。別の単語を加えてください。</string>
+    <string name="strength_sequence_warning_like_abcor6543">abc や 6543 のような連続はすぐに推測されます。</string>
+    <string name="strength_sequence_suggestions_avoid_sequences">順番に並んだ文字や数字は避けてください。</string>
+    <string name="strength_regex_warning_recent_years">最近の年は最初に推測されるものの 1 つです。</string>
+    <string name="strength_regex_suggestions_avoid_recent_years">年、特に自分にとって意味のある年は入れないでください。</string>
+    <string name="strength_date_warning_dates">日付は、自分しか知らないものでも簡単に推測されます。</string>
+    <string name="strength_date_suggestions_avoid_dates">日付、特に自分にとって意味のある日付は入れないでください。</string>
+    <string name="strength_very_weak">非常に弱い</string>
+    <string name="strength_weak">弱い</string>
+    <string name="strength_fair">まあまあ</string>
+    <string name="strength_almost">もう少し</string>
+    <string name="strength_strong_enough">十分な強度</string>
+    <string name="strength_count">%1$d / %2$d 文字</string>
+    <string name="passphrase_requirement">%1$d 文字以上。複雑な単語 1 つより、珍しい単語をいくつか並べるほうが強力です。</string>
+    <string name="passphrase_too_weak">そのパスフレーズは推測されやすすぎます。もう 1～2 語加えてください。</string>
+
+    <!-- First vault and the lock screen -->
+    <string name="passphrase_label">パスフレーズ</string>
+    <string name="passphrase_again_label">もう一度入力</string>
+    <string name="passphrase_mismatch">2 つの入力が一致しません。</string>
+    <string name="setup_title">パスフレーズを決める</string>
+    <string name="setup_lead">パスフレーズはリセットできません。次に 24 語の復元キットが表示されます。これがこの保管庫に入る唯一の別の方法です。両方を失うと、中身はすべて永久に失われます。</string>
+    <string name="setup_preparing">ストレージを準備しています</string>
+    <string name="setup_create">保管庫を作成</string>
+    <string name="setup_restore_backup">バックアップから復元</string>
+    <string name="unlock_welcome">おかえりなさい</string>
+    <string name="unlock_lead">この保管庫を開くにはパスフレーズを入力してください。</string>
+    <string name="unlock_failed">保管庫は開きませんでした。</string>
+    <string name="unlock_action">ロック解除</string>
+    <string name="unlock_forgot">パスフレーズをお忘れですか？</string>
+    <string name="unlock_busy">ロックを解除しています</string>
+    <string name="passphrase_hide">パスフレーズを非表示</string>
+    <string name="passphrase_show">パスフレーズを表示</string>
+    <string name="passphrase_match">2 つの入力が一致しています</string>
+
+    <!-- Photo details — the sheet, and the export and share lines -->
+    <string name="photo_details_privacy">プライバシー</string>
+    <string name="photo_details_custom">カスタム</string>
+    <!-- Joining a list: "%1$s" is everything before the last item, already joined with list_separator. -->
+    <string name="list_separator">、</string>
+    <string name="list_and">%1$sと%2$s</string>
+    <string name="list_or">%1$sまたは%2$s</string>
+    <string name="exif_noun_location">位置情報</string>
+    <string name="exif_noun_camera">カメラ情報</string>
+    <string name="exif_noun_the_date">日付</string>
+    <string name="exif_noun_date">日付</string>
+    <string name="exif_noun_software">編集履歴</string>
+    <string name="exif_export_names_only">エクスポートした JPEG 写真から削除されるのは、名前、キャプション、コメントだけです。その他の形式はそのまま書き出されます。</string>
+    <plurals name="exif_export_removed">
+        <item quantity="other">エクスポートした JPEG 写真から%1$sが削除されます。</item>
+    </plurals>
+    <plurals name="exif_export_kept">
+        <item quantity="other">%1$sは残ります。</item>
+    </plurals>
+    <plurals name="exif_export_kept_sorted">
+        <item quantity="other">%1$sは残るので、ギャラリーでの並び順は変わりません。</item>
+    </plurals>
+    <string name="exif_export_summary">%1$s その他の形式はそのまま書き出されます。</string>
+    <string name="exif_share_names_only">名前、キャプション、コメントのみ。</string>
+    <string name="exif_share_removed">%1$sなし。</string>
+    <string name="exif_share_kept">%1$sは残ります。</string>
+    <string name="photo_details_title">写真の詳細情報</string>
+    <string name="photo_details_lead">写真が保管庫から出る前に削除する情報を選んでください。</string>
+    <string name="photo_details_privacy_row">プライバシー（推奨）</string>
+    <string name="photo_details_privacy_detail">位置情報、カメラ情報、編集履歴を削除します</string>
+    <string name="photo_details_custom_detail">削除する情報を選びます。</string>
+    <string name="photo_details_remove_heading">削除</string>
+    <string name="photo_details_removed">削除</string>
+    <string name="photo_details_kept">保持</string>
+    <string name="photo_details_import_heading">インポート時</string>
+    <string name="photo_details_import_row">インポートする写真から削除</string>
+    <string name="photo_details_import_on">オン · インポートした写真については元に戻せません。</string>
+    <string name="photo_details_footer">JPEG 写真のみが対象です。その他の形式はそのまま残ります。どの削除でも、名前、キャプション、コメント、タグ付けされた人物、アプリが認識できないものはすべて削除され、モーションや HDR など写真を正しく表示するのに必要な情報は残ります。</string>
+    <string name="photo_details_location">位置情報</string>
+    <string name="photo_details_location_covers">GPS の位置、高度、方角</string>
+    <string name="photo_details_camera">カメラ情報</string>
+    <string name="photo_details_camera_covers">メーカー、モデル、レンズ、シリアル番号、設定</string>
+    <string name="photo_details_date">日時</string>
+    <string name="photo_details_date_covers">撮影日時と最終変更日時</string>
+    <string name="photo_details_software">ソフトウェアと編集履歴</string>
+    <string name="photo_details_software_covers">作成や編集に使われたアプリ</string>
+
+    <!-- Drawer — appearance -->
+    <string name="appearance">外観</string>
+    <string name="appearance_system">システム</string>
+    <string name="appearance_light">ライト</string>
+    <string name="appearance_dark">ダーク</string>
+
+    <!-- Drawer — the vault's rows and the install's -->
+    <string name="drawer_trash">ゴミ箱</string>
+    <string name="drawer_backup">バックアップ</string>
+    <string name="drawer_intruder_capture">侵入者の撮影</string>
+    <string name="drawer_open_share">共有を開く…</string>
+    <string name="drawer_unvault_everything">すべてを保管庫から出す</string>
+    <string name="drawer_destroy_vault">保管庫を破棄</string>
+    <string name="drawer_purchase">購入 \u0020· \u0020%1$s</string>
+    <string name="drawer_app_identity">アプリの表示 \u0020· \u0020%1$s</string>
+    <string name="drawer_face_down">伏せてロック</string>
+    <string name="face_down_no_sensor">このデバイスにはモーションセンサーがないため、伏せられたことを検知できません。</string>
+    <string name="face_down_lead">スマートフォンを裏返して置くと、保管庫がロックされます。</string>
+    <string name="face_down_switch">伏せてロックを使用</string>
+    <string name="face_down_lock_after">ロックまでの時間</string>
+    <string name="face_down_immediately">すぐに</string>
+    <string name="face_down_locks_at_once">すぐにロック</string>
+    <string name="face_down_locks_after">%1$s後にロック</string>
+    <string name="face_down_timeout_line">画面は %1$s で消灯し、その時点で保管庫がロックされます。</string>
+    <plurals name="face_down_seconds">
+        <item quantity="other">%1$d 秒</item>
+    </plurals>
+    <plurals name="face_down_minutes">
+        <item quantity="other">%1$d 分</item>
+    </plurals>
+    <string name="drawer_decoy">ダミー保管庫</string>
+    <string name="drawer_decoy_set_up">設定済み。2 つ目は作成できません。</string>
+    <string name="drawer_set_up_decoy">ダミー保管庫を設定</string>
+    <string name="drawer_panic">パニック用の認証情報</string>
+    <string name="drawer_photo_details">写真の詳細情報 \u0020· \u0020%1$s</string>
+    <string name="drawer_contacts">連絡先</string>
+    <string name="drawer_recover_vault">復元キットで保管庫を復旧</string>
+    <string name="drawer_restore_vault">バックアップから保管庫を復元</string>
+    <string name="drawer_import_vault">ファイルから保管庫をインポート</string>
+    <string name="drawer_capture_waiting">侵入者の撮影記録があります</string>
+
+    <!-- Purchase — the screen, the drawer row and the trial -->
+    <string name="trial_blocked">試用期間が終了しました。保管庫内のすべてのものを開く、見る、エクスポートすることは引き続き制限なくできます。追加するには、メニューの「購入」からアプリを一度購入してください。</string>
+    <plurals name="trial_reminder">
+        <item quantity="other">試用期間は残り %1$d 日です。開く、見る、エクスポートはいずれにしても制限なくできます。</item>
+    </plurals>
+    <string name="purchase_title">購入</string>
+    <plurals name="purchase_days_from_first">
+        <item quantity="other">最初に何かを追加してから %1$d 日間</item>
+    </plurals>
+    <plurals name="purchase_days_left">
+        <item quantity="other">残り %1$d 日</item>
+    </plurals>
+    <string name="purchase_owned_body">保管庫への追加、保管庫の作成、共有の送信は制限なくできます。購入は Google アカウントに紐づいており、再インストールしても戻ります。</string>
+    <string name="purchase_pending_body">Google Play が支払いの完了を待っています。完了するとすべて利用できるようになります。この画面を開いたままにする必要はありません。</string>
+    <string name="purchase_trial_body">試用期間が終わると、保管庫への追加、保管庫の作成、共有の送信ができなくなります。保管庫にすでにあるものを開く、見る、エクスポートすること、そして送られてきた共有を開くことは、購入の有無にかかわらず制限されません。</string>
+    <string name="purchase_one_payment">支払いは 1 回のみ。サブスクリプションではなく、更新もありません。</string>
+    <string name="purchase_buy_for">%1$s で購入</string>
+    <string name="purchase_buy">購入</string>
+    <string name="purchase_state_owned">購入済み</string>
+    <string name="purchase_state_pending">支払い保留中</string>
+    <string name="purchase_state_not_started">試用期間未開始</string>
+    <plurals name="purchase_state_trial_left">
+        <item quantity="other">試用期間、残り %1$d 日</item>
+    </plurals>
+    <string name="purchase_state_trial">試用期間</string>
+    <string name="purchase_state_ended">試用期間終了</string>
+
+    <!-- App identity — the screen and the sheet that commits a choice -->
+    <string name="identity_screen_title">アプリの表示</string>
+    <string name="identity_screen_lead">このアプリがランチャーと最近使ったアプリに表示する名前とアイコンを選んでください。どれを選んでもこの保管庫が開き、パスフレーズか設定済みの生体認証なしで開くことはありません。</string>
+    <string name="identity_current">現在表示中</string>
+    <string name="identity_opens_vault">保管庫を直接開きます</string>
+    <string name="identity_opens_calculator">最初に電卓を開きます</string>
+    <string name="identity_opens_calculator_setup">最初に電卓を開きます（設定が必要）</string>
+    <string name="identity_opens_music">最初にミュージックプレーヤーを開きます</string>
+    <string name="identity_opens_music_setup">最初にミュージックプレーヤーを開きます（設定が必要）</string>
+    <string name="identity_opens_recorder">最初にボイスレコーダーを開きます</string>
+    <string name="identity_opens_recorder_setup">最初にボイスレコーダーを開きます（設定が必要）</string>
+    <string name="identity_calculator_weak">カバーの中で最も弱いものです。ジェスチャーが短いキー操作の並びだからです。</string>
+    <string name="identity_calculator_weak_unset">ボタンの順番だけの場合、カバーの中で最も弱いものです。</string>
+    <string name="identity_boundary_title">アプリの表示で変わらないもの</string>
+    <string name="identity_boundary_body">Android の設定、アプリ情報ページ、インポート中の通知では、このアプリは本当の名前で表示されたままです。変わるのはランチャーと最近使ったアプリだけです。</string>
+    <string name="identity_commit_body">これを変更すると、固定したショートカットやホーム画面に置いたアプリはすべて削除されます。後でもう一度配置できます。</string>
+    <string name="identity_rationale_music">音楽が見えないミュージックプレーヤーでは本物らしく見えません。空のライブラリが開いてしまいます。このアイコンには、このデバイスの音声へのアクセスが必要です。</string>
+    <string name="identity_rationale_recorder">マイクを使えないボイスレコーダーでは本物らしく見えません。録音ボタンを押しても何も起きません。このアイコンにはマイクへのアクセスが必要です。</string>
+    <string name="identity_blocked_music">Android はアプリ内からもう一度確認することはありません。音声へのアクセスは、このアプリの設定ページの「権限」から変更できます。</string>
+    <string name="identity_blocked_recorder">Android はアプリ内からもう一度確認することはありません。マイクへのアクセスは、このアプリの設定ページの「権限」から変更できます。</string>
+    <string name="identity_use_icon">このアイコンを使用</string>
+    <string name="identity_set_up">設定</string>
+    <string name="identity_ask_again">もう一度確認</string>
+    <string name="identity_open_settings">設定を開く</string>
+
+    <!-- Shared words -->
+    <string name="state_expanded">展開</string>
+    <string name="state_collapsed">折りたたみ</string>
+    <string name="action_continue">続行</string>
+    <string name="action_done">完了</string>
+    <string name="action_save">保存</string>
+    <string name="action_back">戻る</string>
+    <string name="action_cancel">キャンセル</string>
+    <string name="action_remove">削除</string>
+    <string name="action_not_now">後で</string>
+    <string name="menu">メニュー</string>
+    <string name="action_saving">保存中</string>
+    <string name="rename">名前を変更</string>
+    <string name="delete">削除</string>
+    <string name="more">その他</string>
+    <string name="pause">一時停止</string>
+    <string name="play">再生</string>
+    <string name="seek">シーク</string>
+    <string name="slideshow">スライドショー</string>
+    <string name="speed">速度</string>
+    <plurals name="seconds">
+        <item quantity="other">%1$d 秒</item>
+    </plurals>
+    <string name="undo">元に戻す</string>
+    <string name="redo">やり直す</string>
+    <string name="export">エクスポート</string>
+    <plurals name="minutes">
+        <item quantity="other">%1$d 分</item>
+    </plurals>
+    <string name="start_recording">録音を開始</string>
+    <string name="stop_recording">録音を停止</string>
+    <string name="warning">警告</string>
+
+    <!-- Cover setup — recording how a cover opens -->
+    <string name="setup_cover_choose_title">どうやって開きますか？</string>
+    <string name="setup_cover_draw_shape">次に形を描いてください</string>
+    <string name="setup_cover_record">ジェスチャーを記録</string>
+    <string name="setup_cover_draw_again">もう一度描く</string>
+    <string name="setup_cover_do_again">もう一度</string>
+    <string name="setup_cover_mismatch_title">違うジェスチャーでした</string>
+    <string name="setup_cover_hold_title">長押しする場所を選ぶ</string>
+    <string name="setup_cover_hold_again_title">もう一度長押し</string>
+    <string name="setup_cover_hold_mismatch_title">違う場所でした</string>
+    <string name="setup_cover_hold_mismatch">2 回目の長押しが違う場所だったため、どちらも保存されませんでした。</string>
+    <string name="setup_cover_start_over">最初からやり直す</string>
+    <string name="setup_cover_done_title">準備完了</string>
+    <string name="setup_cover_hold_line">画面のどこかを 2 秒間長押ししてください。その場所でドットが表示されます。そこに何が表示されていても使えます。</string>
+    <string name="setup_cover_hold_again_line">同じ場所をもう一度長押ししてください。</string>
+    <string name="setup_cover_hold_early_line">2 秒間押し続けてください。</string>
+    <string name="setup_cover_too_short">短すぎます。ジェスチャーには%1$s以上必要です。</string>
+    <string name="setup_cover_so_far">ここまで%1$s。あと %2$d です。</string>
+    <string name="setup_cover_at_cap">%1$s。これ以上は記憶できません。%2$s</string>
+    <string name="setup_cover_enough">%1$s。%2$s</string>
+    <string name="setup_cover_keys_again">同じキーをもう一度押してください。やり直すには「AC」を押します。</string>
+    <string name="setup_cover_keys">使いたいキーを押してください。普通の計算でもかまいません。「DEL」を含め、すべてのキーが数に入ります。押し間違えたら「AC」を押してやり直してください。</string>
+    <string name="setup_cover_shape_again">同じ形をもう一度描いてください。</string>
+    <string name="setup_cover_shape_music">9 個の点のうち 5 個以上を、覚えられる順番でつないで形を描いてください。この画面を閉じると、もう表示されません。</string>
+    <string name="setup_cover_shape_recorder">9 個の点のうち 5 個以上を、覚えられる順番でつないで形を描いてください。ここでの録音は保存されません。</string>
+    <string name="setup_cover_finish_keys">「=」を長押しして完了します。</string>
+    <string name="setup_cover_finish_shape">指を離して完了します。</string>
+    <plurals name="setup_cover_key_count">
+        <item quantity="other">キー %1$d 個</item>
+    </plurals>
+    <plurals name="setup_cover_node_count">
+        <item quantity="other">点 %1$d 個</item>
+    </plurals>
+    <string name="setup_cover_mismatch_sequence">2 回目の順番が 1 回目と一致しなかったため、どちらも保存されませんでした。最初からやり直すのが唯一の安全な方法です。1 回目を残すと、たまたま当たった 2 回目が、うろ覚えの 2 つのジェスチャーのどちらかを選ぶことになり、見えない目標に向かって練習することになるからです。</string>
+    <string name="setup_cover_mismatch_pattern">2 回目のパターンが 1 回目と一致しなかったため、どちらも保存されませんでした。最初からやり直すのが唯一の安全な方法です。1 回目を残すと、たまたま当たった 2 回目が、うろ覚えの 2 つのジェスチャーのどちらかを選ぶことになり、見えない目標に向かって練習することになるからです。</string>
+    <string name="setup_cover_sequence_kept">順番は保存されています。やり直すのは形だけです。</string>
+    <string name="setup_cover_spot_kept">場所は保存されています。やり直すのは形だけです。</string>
+    <string name="setup_cover_nothing_changed">何も変更されていません。ランチャーには以前と同じアイコンが表示されています。</string>
+    <string name="setup_cover_done_vault">このアイコンを開くと、パスフレーズを求める画面が表示されます。</string>
+    <string name="setup_cover_done_route">このアイコンからパスフレーズ画面に進むには:</string>
+    <string name="setup_cover_done_hidden_dots">描いた形は、隠れたドットの上でもいつでも使えます。</string>
+    <plurals name="setup_cover_route_keys_shape">
+        <item quantity="other">電卓で %1$s を押し、「=」を長押しするとドットが表示されます。そこに形を描きます（点 %2$d 個）。</item>
+    </plurals>
+    <string name="setup_cover_wrong_key">押し間違えたら「AC」を押してやり直してください。</string>
+    <string name="setup_cover_remember">このジェスチャーは誰にも復元できず、アプリが再表示することもありません。覚えておくことに頼りたくない場合は、今のうちにドロワーから保管庫本来のアイコンに戻してください。</string>
+    <string name="setup_cover_route_keys">電卓で %1$s を押し、「=」を長押しします。押し間違えたら「AC」を押してやり直してください。</string>
+    <plurals name="setup_cover_route_shape">
+        <item quantity="other">選んだ形を画面全体に描き（点 %1$d 個）、指を離します。</item>
+    </plurals>
+    <plurals name="setup_cover_route_hold">
+        <item quantity="other">選んだ場所（%1$s）を 2 秒間長押しするとドットが表示されます。そこに形を描きます（点 %2$d 個）。</item>
+    </plurals>
+    <string name="hold_place">%1$s、%2$s</string>
+    <string name="hold_row_top">一番上の行</string>
+    <string name="hold_row_second">2 行目</string>
+    <string name="hold_row_third">3 行目</string>
+    <string name="hold_row_bottom">一番下の行</string>
+    <string name="hold_column_left">左</string>
+    <string name="hold_column_centre">中央</string>
+    <string name="hold_column_right">右</string>
+
+    <!-- Panic credential -->
+    <string name="panic_status_on">パニック用の認証情報はオンです</string>
+    <string name="panic_status_off">パニック用の認証情報はオフです</string>
+    <string name="panic_fact_survives">この保管庫リストは残ります</string>
+    <string name="panic_fact_survives_body">ロック画面でパニックフレーズを入力すると、この保管庫リストはいつもどおり開き、リストにないすべての保管庫はこのデバイスで二度と開かなくなります。</string>
+    <string name="panic_fact_way_in">壊すのは入り口で、ファイルではありません</string>
+    <string name="panic_fact_way_in_body">ほかの保管庫は読み取れないデータとしてこのデバイスに残ります。24 語の復元キットがあれば、今後も開けます。</string>
+    <string name="panic_fact_silent">作動したことは何も示されません</string>
+    <string name="panic_fact_silent_body">見ている人には、普通のロック解除にしか見えません。</string>
+    <string name="panic_fact_backup">バックアップフォルダも空になります</string>
+    <string name="panic_fact_backup_body">クラウドサービスが独自のゴミ箱やバージョン履歴に残しているコピーには、このアプリは手が届きません。</string>
+    <string name="panic_change">パニックフレーズを変更</string>
+    <string name="panic_turn_it_off">オフにする</string>
+    <string name="panic_turn_off_title">パニックフレーズをオフにする</string>
+    <string name="panic_turn_off">オフにする</string>
+    <string name="panic_set_title">パニックフレーズを設定</string>
+    <string name="panic_your_passphrase">あなたのパスフレーズ</string>
+    <string name="panic_passphrase_hint">この保管庫リストを開いたパスフレーズです。</string>
+    <string name="panic_phrase_label">パニックフレーズ</string>
+    <string name="panic_turn_on">オンにする</string>
+    <string name="panic_forgot_title">忘れたパニックフレーズを消去</string>
+    <string name="panic_forgot_body">パスフレーズを入力するとパニックフレーズがオフになります。その後、新しいものを設定できます。</string>
+    <string name="panic_clear">パニックフレーズを消去</string>
+    <string name="panic_current_label">現在のパニックフレーズ</string>
+    <string name="panic_forgot">パニックフレーズを忘れた場合</string>
+    <string name="panic_new_label">新しいパニックフレーズ</string>
+    <string name="panic_phrase_requirement">%1$s どのパスフレーズとも似ていないものにしてください。確認できるのはこのリストのパスフレーズだけです。</string>
+    <string name="panic_label_again">%1$s（確認）</string>
+
+    <!-- Vault names -->
+    <string name="vault_name_label">名前</string>
+    <string name="vault_name_empty">保管庫に名前を付けてください。</string>
+    <string name="vault_name_too_long">この保管庫には長すぎる名前です。</string>
+
+    <!-- Decoy — building a vault you can hand over -->
+    <string name="decoy_captured_during_setup">この保管庫の作成中に撮影されたもの。何か月も使われてきたように見せる保管庫に、今日撮った写真はふさわしくありません</string>
+    <string name="decoy_step">ステップ %1$d / %2$d</string>
+    <string name="decoy_leave">ダミー保管庫の設定を終了</string>
+    <string name="decoy_intro_title">渡してもいい保管庫</string>
+    <string name="decoy_intro_lead">専用のパスフレーズを持つ普通の保管庫で、人に見られてもかまわないものを入れておきます。</string>
+    <string name="decoy_start">開始</string>
+    <string name="decoy_fact_used">使われているように見える必要があります</string>
+    <string name="decoy_fact_used_body">空の保管庫では誰もだませません。この保管庫には選んだ写真が入り、何か月も普通に使ってきたような日付と履歴が付きます。</string>
+    <string name="decoy_fact_photos">写真はあなた自身のものです</string>
+    <string name="decoy_fact_photos_body">写真はこのデバイスから取り込みます。アプリには何も同梱されていません。同梱された内容は、それを持つすべてのスマートフォンで同じになってしまうからです。この保管庫を渡した相手にはこれらの写真が見えるので、見せてもいいものを選んでください。</string>
+    <string name="decoy_fact_own">あなたの保管庫はそのままです</string>
+    <string name="decoy_fact_own_body">これはその横に 2 つ目の保管庫を作ります。このデバイスにすでにあるものが移動、変更、削除されることはなく、今開いている保管庫が影響を受けることもありません。</string>
+    <string name="decoy_fact_cost">かかるもの</string>
+    <string name="decoy_photos_title">写真を選ぶ</string>
+    <string name="decoy_photos_lead">%1$d～%2$d 枚、%3$d 週間以上にわたるものを選んでください。</string>
+    <string name="decoy_choose_to_continue">続けるには写真を選んでください</string>
+    <string name="decoy_not_plausible">まだ自然な組み合わせではありません</string>
+    <string name="decoy_choose_photos">写真を選ぶ</string>
+    <string name="decoy_choose_again">選び直す</string>
+    <string name="decoy_nothing_chosen">まだ何も選ばれていません。選択画面には写真ライブラリが表示されますが、アプリがそれを読み取ることはなく、選ばなかったものを見ることもありません。</string>
+    <plurals name="decoy_summary_in">
+        <item quantity="other">%1$d 枚が入ります。</item>
+    </plurals>
+    <plurals name="decoy_summary_kept">
+        <item quantity="other">%1$d 枚は撮影日をそのまま使います</item>
+    </plurals>
+    <plurals name="decoy_summary_assigned">
+        <item quantity="other">%1$d 枚は日付がないため日付が付けられます</item>
+    </plurals>
+    <string name="decoy_summary_dates">%1$s。</string>
+    <string name="decoy_summary_dates_assigned">%1$s、%2$s。</string>
+    <plurals name="decoy_summary_declined">
+        <item quantity="other">%1$d 枚は除外: %2$s。</item>
+    </plurals>
+    <string name="decoy_summary_truncated">最初の %1$d 枚だけを取り込みました。それ以上はダミーではなく、2 つ目のライブラリになってしまいます。</string>
+    <string name="decoy_gate_enough">アイテム数は十分です: %1$d（最低 %2$d）。</string>
+    <string name="decoy_gate_not_enough">アイテムが足りません。現在 %1$d で、最低 %2$d 必要です。選び直して、あと %3$d 以上追加してください。</string>
+    <plurals name="decoy_gate_spread">
+        <item quantity="other">期間は %1$d 週間です（最低 %2$d 週間）。</item>
+    </plurals>
+    <plurals name="decoy_gate_not_spread">
+        <item quantity="other">期間は %1$d 週間で、最低 %2$d 週間必要です。選び直して、もっと古い写真か、日付のない写真を追加してください。日付のない写真には、これまでの数か月の日付が付けられます。</item>
+    </plurals>
+    <plurals name="decoy_age_months">
+        <item quantity="other">この保管庫は最大 %1$d か月前からあるように見えます。</item>
+    </plurals>
+    <plurals name="decoy_age_install">
+        <item quantity="other">このアプリは %1$d 日前にインストールされたため、この保管庫がそれより古いのは不自然です。ファイル一覧を見れば、パスフレーズなしでインストール日がわかります。履歴はその日数分になり、それ以前は写真が補います。</item>
+    </plurals>
+    <string name="decoy_requirement_met">条件を満たしています</string>
+    <string name="decoy_requirement_not_met">条件を満たしていません</string>
+    <string name="decoy_name_title">名前を付けてロックする</string>
+    <string name="decoy_name_lead">この保管庫を開いた人が最初に目にするのがこの名前で、このパスフレーズが渡すことになるものです。</string>
+    <string name="decoy_name_hint">休暇の写真を入れた保管庫に付けるような、ありふれた名前にしてください。</string>
+    <string name="decoy_passphrase_label">ダミー保管庫のパスフレーズ</string>
+    <string name="decoy_passphrase_note">このパスフレーズは、あなた自身の保管庫を開くものとは別にする必要があります。ロック画面で入力すると、この保管庫だけが開きます。</string>
+    <string name="decoy_building">%1$s を作成中</string>
+    <string name="decoy_building_body">ストレージを準備してから写真をインポートしています。少し時間がかかります。中断しないでください。</string>
+    <string name="decoy_ready_title">作成の準備ができました</string>
+    <string name="decoy_ready_lead">まだ何も書き込まれていません。あなた自身のパスフレーズを確認すると開始します。</string>
+    <string name="decoy_confirm_passphrase">パスフレーズを確認</string>
+    <string name="decoy_fact_made">作成されるもの</string>
+    <plurals name="decoy_fact_made_body">
+        <item quantity="other">%1$s という名前の保管庫に、あなたの写真 %2$d 枚と、それ以前の数か月にわたる日付とロック解除の履歴が入ります。</item>
+    </plurals>
+    <string name="decoy_fact_this_vault">この保管庫はどうなるか</string>
+    <string name="decoy_fact_this_vault_body">何も起きません。あなた自身の保管庫はそのままで、これによって上書きされることはありません。保護のためにそのパスフレーズを求めているわけでもありません。</string>
+    <string name="decoy_fact_end_up">最後にたどり着く場所</string>
+    <string name="decoy_fact_end_up_body">最後のステップで新しい保管庫の中に入るので、そのパスフレーズを入力した人が何を目にするかを確認できます。終わったらここに戻ります。</string>
+    <string name="decoy_other_vaults">このデバイスにほかの保管庫があります</string>
+    <string name="decoy_other_vaults_hint">ロック画面で何かを開く 2 つ目のパスフレーズがある場合のみ。</string>
+    <plurals name="decoy_entries_added">
+        <item quantity="other">%1$d 件のエントリーを追加しました。</item>
+    </plurals>
+    <string name="decoy_handover_title">相手に見えるのはこれです</string>
+    <string name="decoy_handover_lead">ロック画面でこの保管庫のパスフレーズを入力すると、ここだけにたどり着き、ほかには何もありません。今、相手と同じ見え方で見ています。</string>
+    <string name="decoy_show_words">復元用の単語を表示</string>
+    <string name="decoy_fact_no_way_across">中からほかへ移る方法はありません</string>
+    <string name="decoy_fact_no_way_across_body">このパスフレーズを持つ人はこの保管庫にたどり着き、そこで止まります。あなた自身の保管庫があることさえわからず、開くこともできません。それこそがこの保管庫の目的です。</string>
+    <string name="decoy_fact_nothing_names">もう 1 つの保管庫を示すものはここにありません</string>
+    <string name="decoy_fact_nothing_names_body">この保管庫はあなた自身の保管庫の存在を知らず、この画面のどこにもその情報はありません。開いた人にとっては、これがデバイスのすべてです。</string>
+    <string name="decoy_fact_inside">中に入っているもの</string>
+    <plurals name="decoy_fact_inside_body">
+        <item quantity="other">写真 %1$d 枚とその撮影日、そして何か月も普通に使ってきたようなロック解除の履歴です。</item>
+    </plurals>
+    <string name="decoy_fact_back">その後、あなた自身の保管庫に戻ります</string>
+    <string name="decoy_fact_back_body">残っているのは復元用の単語を書き留めることだけです。その後この保管庫は閉じ、あなた自身の保管庫が元の場所で再び開きます。</string>
+    <string name="decoy_vaults_label">保管庫</string>
+    <string name="decoy_confirm_title">本人確認</string>
+    <string name="decoy_confirm_body">今開いている保管庫のパスフレーズを入力してください。これで許可されるのはダミー保管庫の作成だけです。</string>
+    <string name="decoy_confirm_wrong">それは今開いている保管庫のパスフレーズではありません。</string>
+    <string name="decoy_checking">確認中</string>
+    <string name="decoy_build">ダミー保管庫を作成</string>
+    <string name="decoy_preserve_title">このデバイスのほかの保管庫</string>
+    <string name="decoy_preserve_body">ロック画面で何かを開く 2 つ目のパスフレーズ（作成済みのダミー保管庫や復元した保管庫）がある場合のみです。あなたのリストにある保管庫は該当せず、危険にさらされることはありません。</string>
+    <string name="decoy_preserve_warning">アプリは開けない保管庫を見つけられないため、それを避けることもできません。パスフレーズをここに入力していないそのような保管庫は、新しい保管庫で上書きされる可能性があります。</string>
+    <string name="decoy_preserve_label">残す保管庫のパスフレーズ</string>
+    <string name="decoy_preserve_add">リストに追加</string>
+    <string name="decoy_preserve_empty">何も追加されていません。ほとんどの人は空のままで問題ありません。</string>
+    <string name="decoy_preserve_entry">パスフレーズ %1$d</string>
+    <string name="decoy_preserve_remove">パスフレーズ %1$d を削除</string>
+
+    <!-- Onboarding — the first-run steps -->
+    <string name="onboarding_welcome_title">ほかの誰にも開けない写真</string>
+    <string name="onboarding_welcome_lead">ここに入れたものはすべてこのデバイス上で暗号化され、このデバイスに留まります。アカウントもサーバーもなく、私たちがそれを見る方法もありません。このアプリはインターネットにまったく接続できません。</string>
+    <string name="onboarding_welcome_steps">設定は 8 つの短いステップで完了します。どれも必須ではなく、後から設定で変更できます。</string>
+    <string name="onboarding_get_started">始める</string>
+    <string name="onboarding_have_backup">復元するバックアップがあります</string>
+    <string name="onboarding_passphrase_lead">保管庫を開けるのはこれだけです。リセットはできません。</string>
+    <string name="onboarding_fact_no_reset">リセットもアカウントもありません</string>
+    <string name="onboarding_fact_no_reset_body">誰にも復元できません。私たちにも、ほかの誰にもです。それが目的であり、リスクでもあります。</string>
+    <string name="onboarding_fact_kit_next">次に復元キットが表示されます</string>
+    <string name="onboarding_fact_kit_next_body">パスフレーズを忘れたときにこの保管庫を開ける 24 個の単語です。これが唯一の別の入り口です。</string>
+    <string name="onboarding_kit_title">これを書き留めてください</string>
+    <string name="onboarding_kit_lead">パスフレーズを失ったときにこの保管庫を開ける 24 個の単語です。この後、メニューからあと 3 回表示できます。その後はこのアプリから完全に消えます。</string>
+    <string name="onboarding_fact_anyone">これらの単語を持つ人は誰でもこの保管庫を開けます</string>
+    <string name="onboarding_fact_anyone_body">変更も取り消しもできません。持ち物を調べる人が見ないような場所に紙を保管してください。</string>
+    <string name="onboarding_fact_backup_words">バックアップはパスフレーズではなく、これで復元します</string>
+    <string name="onboarding_fact_backup_words_body">後でクラウドフォルダにコピーを置いた場合、それを読めるのはこれらの単語だけです。</string>
+    <string name="onboarding_kit_type">書き留めたことを確認するため、「%1$s」と入力してください。</string>
+    <string name="onboarding_capture_title">侵入しようとした人を確認</string>
+    <string name="onboarding_capture_lead">ロック解除に失敗すると、スマートフォンを持っている人をこっそり記録します。</string>
+    <string name="onboarding_fact_failed_unlock">作動するのはロック解除に失敗したときだけです</string>
+    <string name="onboarding_fact_failed_unlock_body">ロック解除に成功したときは何も記録されず、何もこのデバイスから出ません。各撮影はあなたのパスフレーズでしか読めないよう封じ込められ、「侵入者の撮影」で待っています。</string>
+    <string name="onboarding_fact_permission">モードごとに権限を求めます</string>
+    <string name="onboarding_fact_permission_body">モードをオンにすると、Android はそのモードに必要なものだけを求めます。拒否するとそのモードはオフのままで、ほかは何も変わりません。</string>
+    <string name="onboarding_decoy_title">渡してもいい保管庫を用意する</string>
+    <string name="onboarding_decoy_lead">専用のパスフレーズを持つ 2 つ目の保管庫で、人に見られてもかまわないものを入れておきます。</string>
+    <string name="onboarding_fact_used_body">空の保管庫では誰もだませません。この保管庫には選んだ写真が入り、何か月も普通に使ってきたような日付と履歴が付きます。</string>
+    <string name="onboarding_fact_choose">写真はあなたが選びます</string>
+    <string name="onboarding_fact_choose_body">写真はこのデバイスにある、あなた自身のものです。この保管庫を渡した相手にはそれが見えるので、見せてもいいものを選んでください。</string>
+    <string name="onboarding_fact_trial">これで 30 日間の試用期間が始まります</string>
+    <string name="onboarding_fact_trial_body">ダミー保管庫を作ると実際の写真がインポートされ、試用期間は保管庫に最初に何かが追加された時点で始まります。自分のもので始めたい場合はスキップしてください。</string>
+    <string name="onboarding_backup_title">別の場所にコピーを残す</string>
+    <string name="onboarding_backup_lead">このスマートフォンを紛失したり壊れたりすると、コピーがない限り保管庫の中身もすべて失われます。</string>
+    <string name="onboarding_panic_title">ほかを閉じるパスフレーズ</string>
+    <string name="onboarding_panic_lead">ロック画面で入力すると、1 つの保管庫が開き、このデバイスのほかの保管庫はすべて永久に閉じられます。</string>
+    <string name="onboarding_panic_set_up">パニック用の認証情報を設定</string>
+    <string name="onboarding_fact_ordinary">普通のロック解除に見えます</string>
+    <string name="onboarding_fact_ordinary_body">同じ画面、同じ速さで、何も見えません。それが目的です。見ている人には何もわかりません。</string>
+    <string name="onboarding_fact_way_in_body">ほかの保管庫は読み取れないデータとしてこのデバイスに残り、24 語の復元キットで今後も開けます。それが取り戻す方法です。</string>
+    <string name="onboarding_identity_title">別のアプリに見せる</string>
+    <string name="onboarding_identity_lead">このアプリは、ホーム画面で電卓、ミュージックプレーヤー、ボイスレコーダーに見せかけることができます。</string>
+    <string name="onboarding_finish">設定を完了</string>
+    <string name="onboarding_choose_identity">アプリの表示を選ぶ</string>
+    <string name="onboarding_fact_disguise">見せかけは本物で、きちんと機能します</string>
+    <string name="onboarding_fact_disguise_body">ランチャーの項目も最近使ったアプリのカードも変わります。戻るときは、カバー上で自分で選んだジェスチャーを行います。</string>
+    <string name="onboarding_fact_hides">隠すのはアプリで、ファイルではありません</string>
+    <string name="onboarding_fact_hides_body">このデバイスのストレージを読める人や、Android の設定を開いた人には、このアプリがあることがわかります。保管庫を開けるのは、今までどおりパスフレーズか設定済みの生体認証だけです。</string>
+    <string name="onboarding_fact_rehearse">ジェスチャーを 2 回練習します</string>
+    <string name="onboarding_fact_rehearse_body">1 回目は記録のため、2 回目は記憶から。再現できない合図では、保管庫は開けません。</string>
+
+    <!-- Intruder capture — the modes -->
+    <string name="capture_mode_photo">写真</string>
+    <string name="capture_mode_audio">音声</string>
+    <string name="capture_mode_video">動画</string>
+    <string name="capture_mode_photo_line">前面カメラで静止画を 1 枚</string>
+    <string name="capture_mode_audio_line">マイクで短いクリップ</string>
+    <string name="capture_mode_video_line">音声付きの短いクリップ</string>
+    <string name="capture_no_front_camera">このデバイスには前面カメラがありません。</string>
+    <string name="capture_sheet_lead">ロック解除に失敗した後に記録されます。</string>
+    <string name="capture_sheet_photo">前面カメラの静止画。</string>
+    <string name="capture_sheet_audio">マイクで数秒間。</string>
+    <string name="capture_sheet_video">カメラと音声で数秒間。</string>
+    <string name="capture_sheet_no_front">このデバイスには前面カメラがないため、写真と動画は使用できません。</string>
+    <!-- Intruder capture — the home screen's timeline, its flows and its notices -->
+    <string name="intruder_capture_settings">撮影の設定</string>
+    <string name="intruder_today">今日</string>
+    <string name="intruder_yesterday">昨日</string>
+    <string name="intruder_empty_off_title">撮影はありません</string>
+    <string name="intruder_empty_off_body">モードをオンにすると、ロック解除に失敗した人をスマートフォンが静かに記録します。</string>
+    <string name="intruder_empty_off_action">記録する内容を選ぶ</string>
+    <string name="intruder_empty_on_title">まだ撮影はありません</string>
+    <string name="intruder_empty_on_body">%1$s がオンです。ロック解除に失敗すると、ここに撮影が表示されます。</string>
+    <string name="intruder_empty_on_action">記録する内容を変更</string>
+    <string name="intruder_left_moved">%1$s に移動済み</string>
+    <string name="intruder_left_exported">書き出し済み</string>
+    <string name="intruder_left_deleted">削除済み</string>
+    <string name="intruder_row_description">%1$s。%2$s、%3$s。</string>
+    <string name="intruder_row_description_left">%1$s。%2$s、%3$s。%4$s。</string>
+    <string name="intruder_move_to_vault">保管庫に移動</string>
+    <string name="intruder_export">書き出す</string>
+    <plurals name="intruder_capture_count">
+        <item quantity="other">%1$d 件の撮影</item>
+    </plurals>
+    <string name="intruder_move_failed">これらの撮影を移動できませんでした。何も変更されていません。</string>
+    <plurals name="intruder_delete_title">
+        <item quantity="other">%1$d 件の撮影を完全に削除しますか？</item>
+    </plurals>
+    <plurals name="intruder_delete_body">
+        <item quantity="other">撮影は破棄され、元に戻せません。タイムラインの行は残ります。</item>
+    </plurals>
+    <plurals name="intruder_export_title">
+        <item quantity="other">%1$d 件の撮影を書き出す</item>
+    </plurals>
+    <plurals name="intruder_export_body">
+        <item quantity="other">%1$d 件の撮影を復号して書き出し、確認してから「侵入者の撮影」から削除します。タイムラインの行は残ります。</item>
+    </plurals>
+    <string name="intruder_export_checked">各ファイルは読み戻して照合してから、暗号化されたコピーが削除されます。一致しないものは「侵入者の撮影」に残り、マニフェストに記載されます。</string>
+    <string name="intruder_export_wrong_passphrase">これは、この保管庫リストを開くパスフレーズではありません。</string>
+    <string name="intruder_export_progress_left">%1$d / %2$d を書き出し済み、残り %3$d</string>
+    <string name="intruder_export_busy">書き出しています</string>
+    <string name="intruder_blank">真っ暗でした</string>
+    <string name="intruder_silent">無音でした</string>
+    <string name="intruder_permission_camera_off">カメラの権限がオフになりました</string>
+    <string name="intruder_permission_camera_on">カメラの権限がオンに戻りました</string>
+    <string name="intruder_permission_microphone_off">マイクの権限がオフになりました</string>
+    <string name="intruder_permission_microphone_on">マイクの権限がオンに戻りました</string>
+    <string name="intruder_permission_stopped">%1$s に検知 · %2$s を停止</string>
+    <string name="intruder_permission_resumed">%1$s に検知 · %2$s の記録を再開</string>
+    <string name="intruder_permission_noticed">%1$s に検知</string>
+    <string name="capture_banner_camera_one">%1$s は記録されていません。カメラの権限がオフです。</string>
+    <string name="capture_banner_camera_many">%1$s は記録されていません。カメラの権限がオフです。</string>
+    <string name="capture_banner_microphone_one">%1$s は記録されていません。マイクの権限がオフです。</string>
+    <string name="capture_banner_microphone_many">%1$s は記録されていません。マイクの権限がオフです。</string>
+    <string name="capture_turn_back_on">オンに戻す</string>
+    <string name="capture_sheet_no_camera">記録されていません · カメラの権限がオフ</string>
+    <string name="capture_sheet_no_microphone">記録されていません · マイクの権限がオフ</string>
+    <string name="capture_auto_reset">このアプリを数か月使わないと、Android が権限を削除することがあり、撮影が止まります。</string>
+    <string name="capture_keep_permissions">権限を保持</string>
+    <string name="intruder_subtitle_description">保管庫: %1$s</string>
+
+    <!-- Recovery kit — showing, re-showing and entering the 24 words -->
+    <string name="kit_acknowledgement">理解しました</string>
+    <string name="kit_title_list">あなたの復元キット</string>
+    <string name="kit_title_vault">%1$s の復元キット</string>
+    <string name="kit_title_short">復元キット</string>
+    <string name="kit_body_list">パスフレーズを忘れた場合、この 24 個の単語が、パスフレーズで開く保管庫に戻る唯一の方法です。順番どおりに書き留め、その紙を安全な場所に保管してください。\n\nこれらの単語を持つ人は誰でも、後から追加するものも含めてそれらの保管庫を開けます。専用のパスフレーズを設定した保管庫は含まれず、専用のキットがあります。これらの単語は変更も取り消しもできません。</string>
+    <string name="kit_body_list_backup">この保管庫をクラウドフォルダにバックアップした場合、復元に使うのはパスフレーズではなくこれらの単語です。このデバイスとこのページを一緒に失うと、バックアップはあなたを含め誰にも開けなくなります。</string>
+    <string name="kit_body_vault">今設定したパスフレーズを忘れた場合、この 24 個の単語が %1$s に戻る唯一の方法です。順番どおりに書き留め、その紙を安全な場所に保管してください。\n\n保管庫リストを開くパスフレーズではこれは開けず、そのリストの復元キットでも開けません。パスフレーズとこのページの両方を失うと、%1$s の中身はすべて永久に失われます。\n\nこれらの単語を持つ人は誰でも %1$s を開けます。変更も取り消しもできません。</string>
+    <string name="kit_type_acknowledgement">書き留めたこと、そしてパスフレーズはリセットできないことを理解したことを確認するため、「%1$s」と入力してください。</string>
+    <string name="kit_print">印刷</string>
+    <string name="kit_last_view">最後の表示です。もう表示できません。</string>
+    <plurals name="kit_views_left_after">
+        <item quantity="other">今回の後、あと %1$d 回表示できます。</item>
+    </plurals>
+    <string name="kit_remaining_views">続行した後、メニューからあと 3 回表示できます。3 回目の後はもう表示できず、書き留めたコピーが唯一のものになります。</string>
+    <string name="drawer_kit">復元キット \u0020· \u0020%1$s</string>
+    <string name="kit_cannot_show">もう表示できません</string>
+    <plurals name="kit_views_left">
+        <item quantity="other">あと %1$d 回表示可能</item>
+    </plurals>
+    <string name="kit_exhausted">復元キットは表示できる回数をすべて使いました。このアプリではもう表示できません。書き留めたコピーを安全な場所に保管してください。</string>
+    <string name="kit_enter_list">表示するにはパスフレーズを入力してください。</string>
+    <string name="kit_enter_vault">表示するには %1$s のパスフレーズを入力してください。</string>
+    <string name="kit_last_time">復元キットを表示できるのはこれが最後です。次の画面を離れるともう表示できないので、24 個の単語をすべて書き留めたことを確認してください。%1$s</string>
+    <plurals name="kit_views_more">
+        <item quantity="other">復元キットはあと %1$d 回表示できます。今表示すると 1 回使い、残りは %2$d 回になります。%3$s</item>
+    </plurals>
+    <string name="kit_wrong_list">そのパスフレーズではこのリストを開けません。</string>
+    <string name="kit_wrong_vault">そのパスフレーズではこの保管庫を開けません。</string>
+    <string name="kit_passphrase_for">%1$s のパスフレーズ</string>
+    <string name="kit_open_failed">復元キットを開けませんでした。もう一度お試しください。</string>
+    <string name="kit_show">復元キットを表示</string>
+    <string name="kit_words_open_nothing">これらの単語では、このデバイスの保管庫は開きません。</string>
+    <string name="kit_new_passphrase_title">新しいパスフレーズを決める</string>
+    <string name="kit_enter_title">キットを入力</string>
+    <string name="kit_enter_lead">復元キットの 24 個の単語を、1 つのボックスに 1 語ずつ入力してください。</string>
+    <string name="kit_add_backup_file">バックアップファイルを追加</string>
+    <string name="kit_lost_files">ファイルも失いましたか？クラウドアプリや SD カードに保存したバックアップを選ぶと、ファイルも戻ります。</string>
+    <string name="kit_sd_backup">SD カードのバックアップ</string>
+    <string name="kit_backup_file">バックアップファイル</string>
+    <string name="kit_new_passphrase_restoring">このスマートフォンで保管庫を開くのに使うパスフレーズを決めてください。24 個の単語は変わりません。紙は保管しておいてください。</string>
+    <string name="kit_new_passphrase_lead">復元キットを確認できました。今後保管庫を開くのに使うパスフレーズを決めてください。古いパスフレーズは使えなくなります。24 個の単語は変わりません。紙は保管しておいてください。</string>
+    <string name="kit_passphrase_in_use">そのパスフレーズはすでにこのスマートフォンで何かを開きます。別のものを選んでください。</string>
+    <string name="kit_new_passphrase_label">新しいパスフレーズ</string>
+    <string name="kit_mismatch">2 つの入力が一致しません。</string>
+    <string name="kit_setting_passphrase">パスフレーズを設定中</string>
+    <string name="kit_set_passphrase">パスフレーズを設定</string>
+    <string name="kit_recover_title">保管庫を復旧</string>
+    <string name="kit_recover_lead">保管庫専用の復元キットの 24 個の単語を、1 つのボックスに 1 語ずつ入力してください。その保管庫は今使ったパスフレーズでこのリストから開くようになります（すでにリストにある場合は、自身のパスフレーズを求めなくなります）。そのため、それらの単語はもう必要ありません。\n\nこれでファイルが戻るわけではありません。保管庫のストレージがすでにこのデバイスにある必要があります。</string>
+    <string name="kit_recover_name">このリストでの名前</string>
+    <string name="kit_recover_name_hint">保管庫の名前は元のリストに保存されているため、ここで名前を付ける必要があります。</string>
+    <string name="kit_recovering">復旧中</string>
+    <string name="kit_recover_action">保管庫を復旧</string>
+    <string name="kit_not_a_word">単語ではありません</string>
+    <string name="kit_word">単語 %1$d</string>
+    <string name="kit_word_wrong">単語 %1$d、24 個の単語に含まれていません</string>
+    <plurals name="kit_words_to_check">
+        <item quantity="other">あと %1$d 語の確認が必要です。</item>
+    </plurals>
+    <string name="kit_checksum_failed">すべて正しい単語ですが、組み合わせが一致しません。順番が間違っている可能性があります。キットと順番どおりに照らし合わせてください。</string>
+
+    <!-- Vault list — the list, a new vault, editing a vault, a vault's own passphrase -->
+    <string name="vault_icon_home">家</string>
+    <string name="vault_icon_family">家族</string>
+    <string name="vault_icon_person">人</string>
+    <string name="vault_icon_child">子ども</string>
+    <string name="vault_icon_favourite">お気に入り</string>
+    <string name="vault_icon_pets">ペット</string>
+    <string name="vault_icon_work">仕事</string>
+    <string name="vault_icon_id">身分証</string>
+    <string name="vault_icon_bank">銀行</string>
+    <string name="vault_icon_savings">貯金</string>
+    <string name="vault_icon_receipts">領収書</string>
+    <string name="vault_icon_documents">書類</string>
+    <string name="vault_icon_medical">医療</string>
+    <string name="vault_icon_school">学校</string>
+    <string name="vault_icon_travel">旅行</string>
+    <string name="vault_icon_car">車</string>
+    <string name="vault_icon_camera">カメラ</string>
+    <string name="vault_icon_music">音楽</string>
+    <string name="vault_icon_books">本</string>
+    <string name="vault_icon_celebration">お祝い</string>
+    <string name="vault_icon_star">星</string>
+    <string name="vault_icon_diamond">ダイヤモンド</string>
+    <string name="vault_icon_shopping">買い物</string>
+    <string name="vault_icon_archive">アーカイブ</string>
+    <string name="vault_list_lock">ロック</string>
+    <string name="vault_new">新しい保管庫</string>
+    <string name="first_vault_name">マイ保管庫</string>
+    <string name="vault_list_lead">1 つのパスフレーズで、このリストとそこにあるすべてが開きます。</string>
+    <string name="vault_list_lead_locked">1 つのパスフレーズでこのリストが開きます。「ロック中」の保管庫には専用のパスフレーズが必要です。</string>
+    <string name="vault_list_empty">このリストに保管庫はありません。</string>
+    <string name="vault_list_empty_body">ここで作成するものはすべて、今使ったパスフレーズで開きます。</string>
+    <string name="vault_list_create">保管庫を作成</string>
+    <string name="vault_row_locked">ロック中 - 専用のパスフレーズあり</string>
+    <string name="vault_row_list_passphrase">このリストのパスフレーズで開きます</string>
+    <string name="vault_row_options">%1$s のオプション</string>
+    <string name="vault_edit">保管庫を編集</string>
+    <string name="vault_flow_name_title">保管庫に名前を付ける</string>
+    <string name="vault_flow_name_lead">この名前とバッジが保管庫リストに表示されます。</string>
+    <string name="vault_flow_opens_title">%1$s の開き方</string>
+    <string name="vault_flow_opens_lead">パスフレーズは後で「保管庫を編集」から追加、変更、削除できます。</string>
+    <string name="vault_opens_list">保管庫リストで開く</string>
+    <string name="vault_opens_list_detail">すでに使ったパスフレーズで、リストから直接開きます。</string>
+    <string name="vault_opens_own">専用のパスフレーズで開く</string>
+    <string name="vault_opens_own_detail">専用のパスフレーズでしか開けません。専用の復元キットと専用の侵入者の撮影が付きます。</string>
+    <string name="vault_flow_passphrase_title">%1$s のパスフレーズを決める</string>
+    <string name="vault_flow_passphrase_lead">%1$s を開けるのはこのパスフレーズだけになります。保管庫リストのパスフレーズでも、リストの復元キットでも開けないため、%1$s 専用の復元キットが作られます。</string>
+    <string name="vault_flow_capture_title">%1$s を開こうとした人を確認</string>
+    <string name="vault_flow_capture_lead">%1$s のパスフレーズが間違っていると、スマートフォンを持っている人を気付かれずに記録します。</string>
+    <string name="vault_capture_fact">見られるのは %1$s だけ</string>
+    <string name="vault_capture_fact_body">撮影はすべて %1$s 用に封印され、その中のメニューの「侵入者の撮影」で待機します。保管庫リストには何も表示されません。</string>
+    <string name="vault_discard_new_title">この保管庫を破棄しますか？</string>
+    <string name="vault_discard_new_body">まだ何も作成されていません。</string>
+    <string name="vault_discard_add_title">このパスフレーズを破棄しますか？</string>
+    <string name="vault_discard_add_body">%1$s は引き続き保管庫リストのパスフレーズで開きます。</string>
+    <string name="vault_capture_not_enrolled">%1$s の侵入者の撮影はオンになりませんでした。メニューの「侵入者の撮影」からオンにしてください。</string>
+    <string name="vault_passphrase_label">この保管庫のパスフレーズ</string>
+    <string name="vault_creating">作成中…</string>
+    <string name="vault_open_named">%1$s を開く</string>
+    <string name="vault_has_own_passphrase">この保管庫には専用のパスフレーズがあります。</string>
+    <string name="vault_open_wrong">そのパスフレーズでは %1$s は開きませんでした。</string>
+    <string name="vault_opening">開いています</string>
+    <string name="vault_open">保管庫を開く</string>
+    <string name="vault_colour">色</string>
+    <string name="vault_icon">アイコン</string>
+    <string name="vault_icon_letter">文字</string>
+    <!-- A sample of a letter, shown on the Letter icon before the vault has a name. -->
+    <!-- The name an imported vault is given on the list. From then on it is the vault's own name. -->
+    <string name="imported_vault">インポートした保管庫</string>
+
+    <!-- Vault grid — destinations, filters, sorting and the add line -->
+    <string name="add_photos_or_videos">写真や動画を追加</string>
+    <string name="add_files">ファイルを追加</string>
+    <string name="destination_media">メディア</string>
+    <string name="destination_files">ファイル</string>
+    <string name="destination_notes">ノート</string>
+    <string name="destination_memos">ボイスメモ</string>
+    <string name="added_to">%1$sに追加しました。</string>
+    <string name="media_filter_all">すべて</string>
+    <string name="media_filter_photos">写真</string>
+    <string name="media_filter_videos">動画</string>
+    <string name="sort_newest">新しい順</string>
+    <string name="sort_oldest">古い順</string>
+    <string name="sort_recently_added">追加日が新しい順</string>
+    <string name="sort_first_added">追加日が古い順</string>
+    <string name="sort_name_az">名前（A～Z）</string>
+    <string name="sort_name_za">名前（Z～A）</string>
+    <string name="sort_last_edited">最終編集日</string>
+    <string name="media_filter_show_all">すべて表示</string>
+    <string name="media_filter_show_photos">写真を表示</string>
+    <string name="media_filter_show_videos">動画を表示</string>
+    <string name="view_as_list">リスト表示</string>
+    <string name="view_as_grid">グリッド表示</string>
+
+    <!-- Vault grid — the bar, selection, the add button and empty states -->
+    <string name="grid_selected">%1$d 件選択</string>
+    <string name="folder_options">フォルダのオプション</string>
+    <plurals name="item_count">
+        <item quantity="other">%1$d 個のアイテム</item>
+    </plurals>
+    <string name="sort_current">現在使用中</string>
+    <string name="sort_alphabetical">数値順ではなく文字順</string>
+    <string name="folder_new">新しいフォルダ</string>
+    <string name="grid_destination_settings">%1$sの設定</string>
+    <string name="grid_trash_and_settings">ゴミ箱と設定</string>
+    <string name="fab_camera">カメラ</string>
+    <string name="fab_voice_memo">ボイスメモ</string>
+    <string name="fab_new_note">新しいノート</string>
+    <string name="fab_actions">操作</string>
+    <string name="fab_close_actions">操作を閉じる</string>
+    <string name="fab_no_camera">このデバイスにはありません</string>
+    <string name="select_all">すべて選択</string>
+    <string name="move_to_folder">フォルダに移動</string>
+    <string name="remove_from_folder">フォルダから削除</string>
+    <string name="share_securely">安全に共有</string>
+    <string name="unvault_selected">選択したものを保管庫から出す</string>
+    <string name="delete_selected">選択したものを削除</string>
+    <string name="restore_selected">選択したものを復元</string>
+    <string name="delete_selected_forever">選択したものを完全に削除</string>
+    <string name="leave_selection">選択を終了</string>
+    <string name="all_vaults">すべての保管庫</string>
+    <string name="select">選択</string>
+    <string name="pinned">固定済み</string>
+    <string name="kind_video">動画</string>
+    <string name="kind_audio">音声</string>
+    <string name="kind_file">ファイル</string>
+    <string name="empty_media">この保管庫は空です。</string>
+    <string name="empty_media_line">追加した写真や動画は、ストレージに書き込まれる前に暗号化されます。</string>
+    <string name="empty_files">ファイルはまだありません。</string>
+    <string name="empty_files_line">ドキュメントや、このアプリで開けないその他のものは、ここに暗号化して保管されます。</string>
+    <string name="empty_notes">ノートはまだありません。</string>
+    <string name="empty_notes_line">書いたノートはこの保管庫に保存され、外に出ることはありません。</string>
+    <string name="empty_memos">録音はまだありません。</string>
+    <string name="empty_memos_line">録音したボイスメモは、書き込まれると同時に暗号化されます。</string>
+    <string name="empty_add_photos">写真を追加</string>
+    <string name="empty_add_media">メディアを追加</string>
+    <string name="empty_create_note">ノートを作成</string>
+    <string name="empty_create_memo">ボイスメモを作成</string>
+    <string name="search">検索</string>
+    <string name="search_no_match">一致するものはありません。</string>
+    <string name="search_no_match_line">名前、フォルダ、タグを検索します。</string>
+    <string name="folder_empty">このフォルダには何もありません。</string>
+    <string name="folder_empty_line">ここにインポートするか、保管庫のどこからでもアイテムを移動してください。</string>
+    <string name="trash_empty">ゴミ箱は空です。</string>
+    <string name="trash_empty_line">削除したアイテムはここで %1$d 日間待機し、その後破棄されます。</string>
+    <string name="section_edited">%1$s に編集</string>
+    <string name="section_added">%1$s に追加</string>
+
+    <!-- Viewer — one item, full screen -->
+    <string name="viewer_thumbnail_set">サムネイルを %1$s に設定しました。</string>
+    <string name="viewer_frame_unusable">このフレームは使用できませんでした。</string>
+    <string name="viewer_rotate">回転</string>
+    <string name="viewer_edit_image">画像を編集</string>
+    <string name="viewer_opening">開いています…</string>
+    <string name="viewer_could_not_open">このアイテムを開けませんでした。</string>
+    <string name="viewer_export_item">このアイテムをエクスポート</string>
+    <plurals name="viewer_skip_forward">
+        <item quantity="other">%1$d 秒進む</item>
+    </plurals>
+    <plurals name="viewer_skip_back">
+        <item quantity="other">%1$d 秒戻る</item>
+    </plurals>
+    <string name="viewer_set_folder_cover">フォルダのカバーに設定</string>
+    <string name="viewer_use_frame">このフレームをサムネイルに使用</string>
+
+    <!-- Settings rows — a choice revealed in place -->
+    <string name="reveal_choose">%1$sを選択</string>
+    <string name="reveal_close">%1$sを閉じる</string>
+    <string name="reveal_shown">%1$sを表示中</string>
+    <string name="reveal_hidden">%1$sを非表示</string>
+    <string name="reveal_speed">速度</string>
+    <string name="reveal_speeds">速度</string>
+    <string name="reveal_length">長さ</string>
+    <string name="reveal_lengths">長さ</string>
+    <string name="reveal_way">方法</string>
+    <string name="reveal_ways">方法</string>
+    <string name="reveal_quality">音質</string>
+    <string name="reveal_qualities">音質</string>
+
+    <!-- Slideshow -->
+    <string name="slideshow_speed_quick">速め</string>
+    <string name="slideshow_speed_usual">いつものペース</string>
+    <string name="slideshow_speed_slow">1 枚ずつじっくり</string>
+    <string name="slideshow_end">スライドショーを終了</string>
+    <string name="slideshow_play">スライドショーを再生</string>
+    <string name="slideshow_pause">スライドショーを一時停止</string>
+    <string name="slideshow_options">スライドショーのオプション</string>
+    <string name="slideshow_options_lead">これらを開いている間スライドショーは待機し、閉じると再開します。</string>
+    <string name="slideshow_speed_footnote">各写真を表示する時間です。動画は最後まで再生されます。</string>
+    <string name="slideshow_repeat">リピート</string>
+    <string name="slideshow_repeat_on">オン · 最後のアイテムの後、最初からもう一度始まります。</string>
+    <string name="slideshow_repeat_off">オフ · 最後のアイテムでスライドショーが終わります。</string>
+    <string name="slideshow_shuffle">シャッフル</string>
+    <string name="slideshow_shuffle_on">オン · すべてのアイテムがランダムな順番で 1 回ずつ表示されてから、繰り返されます。</string>
+    <string name="slideshow_shuffle_off">オフ · リストの順番どおりに表示されます。</string>
+
+    <!-- Folders -->
+    <string name="colour_none">色なし</string>
+    <string name="colour_red">赤</string>
+    <string name="colour_amber">琥珀色</string>
+    <string name="colour_teal">青緑</string>
+    <string name="colour_blue">青</string>
+    <string name="colour_pink">ピンク</string>
+    <string name="folder_rename">フォルダ名を変更</string>
+    <string name="folder_create">作成</string>
+    <string name="folder_move">移動</string>
+    <string name="folder_cover">カバー</string>
+    <string name="folder_delete">フォルダを削除</string>
+    <string name="folder_delete_named">「%1$s」が削除されます。</string>
+    <string name="folder_delete_moves_to">中身はすべて「%1$s」に移動します。何も削除されず、ゴミ箱にも入りません。</string>
+    <string name="folder_delete_moves_home">中身はすべてホーム画面に移動します。何も削除されず、ゴミ箱にも入りません。</string>
+    <string name="folder_cover_recent">最新のアイテムを使用</string>
+    <string name="folder_cover_empty">このフォルダにはまだ表示するものがありません。</string>
+    <string name="folder_cover_current">現在のカバー</string>
+    <string name="picker_move_folder">「%1$s」を移動</string>
+    <plurals name="picker_move_items">
+        <item quantity="other">%1$d 個のアイテムを移動</item>
+    </plurals>
+    <string name="picker_folder_lead">フォルダ内のものはすべて一緒に移動します。</string>
+    <string name="picker_items_lead">アイテムが入るフォルダは 1 つまでなので、移動すると今のフォルダから置き換わります。</string>
+    <string name="picker_mixed_kinds">メディア、ファイル、ノート、ボイスメモはそれぞれ専用のフォルダを持ちます。フォルダに移動するには、1 種類のアイテムだけを選択してください。</string>
+    <string name="picker_home">ホーム画面</string>
+    <string name="picker_up">上へ</string>
+    <string name="picker_where_now">現在の場所</string>
+    <string name="picker_move_here">ここに移動</string>
+    <string name="picker_move_into">「%1$s」に移動</string>
+    <string name="picker_move_home">ホーム画面に移動</string>
+    <string name="colour_yellow">黄</string>
+    <string name="colour_white">白</string>
+    <string name="colour_black">黒</string>
+
+    <!-- Rename, delete and destroy -->
+    <string name="rename_item">アイテム名を変更</string>
+    <string name="rename_lead">これはアイテムをエクスポートするときの名前です。拡張子はそのまま残ります。拡張子によって、アイテムの開き方とエクスポート先が決まります。</string>
+    <string name="rename_refused">名前は 1 文字以上で、ドットだけにはできず、スラッシュを含めることもできません。拡張子を含めて %1$d 文字以下にしてください。</string>
+    <string name="delete_one_forever">%1$s を完全に削除しますか？</string>
+    <plurals name="delete_many_forever">
+        <item quantity="other">%1$d 個のアイテムを完全に削除しますか？</item>
+    </plurals>
+    <string name="delete_one">%1$s を削除しますか？</string>
+    <plurals name="delete_many">
+        <item quantity="other">%1$d 個のアイテムを削除しますか？</item>
+    </plurals>
+    <string name="delete_body_one_forever">この保管庫のコピーは破棄されます。復元することはできません。</string>
+    <string name="delete_body_many_forever">この保管庫のコピーは破棄されます。復元することはできません。</string>
+    <string name="delete_body_trash">ゴミ箱に移動しました。%1$d 日後に完全に削除されます。</string>
+    <string name="delete_forever">完全に削除</string>
+    <string name="keep">残す</string>
+    <string name="destroy_title">「%1$s」を破棄しますか？</string>
+    <string name="destroy_body">この保管庫の写真、動画、ノート、フォルダはすべて消えます。ゴミ箱には入らず、復元することもできません。</string>
+    <string name="destroy_others_safe">ほかの保管庫には影響ありません。</string>
+    <string name="destroy_backup_file">バックアップファイルも削除されます。そうしないと、復元キットでこの保管庫の完全なコピーが開けてしまうからです。クラウドサービスが独自のゴミ箱やバージョン履歴に残しているコピーには、このアプリは手が届きません。</string>
+    <string name="destroy_backup_folder">バックアップフォルダも空になります。そうしないと、復元キットでこの保管庫の完全なコピーが開けてしまうからです。クラウドサービスが独自のゴミ箱やバージョン履歴に残しているコピーには、このアプリは手が届きません。</string>
+    <string name="destroy_give_back">ファイルを戻してから破棄</string>
+    <string name="destroy_everything">中身をすべて破棄</string>
+    <string name="destroy_keep">保管庫を残す</string>
+    <string name="destroy_gate_own">この操作は元に戻せません。まず、%1$s を開くパスフレーズを入力してください。保管庫リストのものではなく、この保管庫自身のパスフレーズです。</string>
+    <string name="destroy_gate_list">この操作は元に戻せません。まず、保管庫リストのパスフレーズを入力してください。</string>
+    <string name="destroy_gate_lost">パスフレーズを忘れた場合は、この保管庫自身の24語で復旧できます。保管庫リストでメニューを開き、「復元キットで保管庫を復旧」を選んでから、そこで消去してください。</string>
+    <string name="destroy_continue">続ける</string>
+    <string name="destroy_checking">確認中…</string>
+    <string name="destroy_return_then">すべてのファイルが取り出されて確認されると、%1$s は消去されます。</string>
+
+    <!-- Destination settings — Media, Notes and Memos -->
+    <string name="skip_short">短く</string>
+    <string name="skip_usual">いつもの幅</string>
+    <string name="skip_longer">長めに</string>
+    <string name="skip_scene">1 シーン分</string>
+    <string name="orientation_auto">自動</string>
+    <string name="orientation_auto_detail">動画はスマートフォンの向きに合わせて回転します</string>
+    <string name="orientation_landscape">横向き</string>
+    <string name="orientation_landscape_detail">スマートフォンの持ち方にかかわらず、動画は横向きで開きます</string>
+    <string name="speed_0_5">0.5×</string>
+    <string name="speed_0_5_detail">半分の速度</string>
+    <string name="speed_0_75">0.75×</string>
+    <string name="speed_0_75_detail">少し遅く</string>
+    <string name="speed_normal">標準</string>
+    <string name="speed_normal_detail">録画したときのまま</string>
+    <string name="speed_1_25">1.25×</string>
+    <string name="speed_1_25_detail">少し速く</string>
+    <string name="speed_1_5">1.5×</string>
+    <string name="speed_1_5_detail">1.5 倍の速さ</string>
+    <string name="speed_2">2×</string>
+    <string name="speed_2_detail">2 倍速</string>
+    <string name="quality_standard">標準</string>
+    <string name="quality_standard_detail">64 kbps · 1 分あたり約 0.5 MB</string>
+    <string name="quality_high">高</string>
+    <string name="quality_high_detail">128 kbps · 1 分あたり約 1 MB</string>
+    <string name="quality_highest">最高</string>
+    <string name="quality_highest_detail">256 kbps · 1 分あたり約 2 MB</string>
+    <string name="media_settings_intro">写真や動画を開いたときの表示と再生の方法です。</string>
+    <string name="media_settings_viewing">表示中</string>
+    <string name="media_keep_on">表示中は画面をオンのままにする</string>
+    <string name="media_keep_on_on">オン · 写真や動画を開いている間は画面がオンのままになり、保管庫も開いたままになります。</string>
+    <string name="media_keep_on_off">オフ · スマートフォンの通常のタイマーで画面がオフになり、同時に保管庫もロックされます。</string>
+    <string name="media_brightness">表示中は明るさを最大にする</string>
+    <string name="media_brightness_on">オン · 写真や動画を最大の明るさで開きます。閉じると元の明るさに戻ります。</string>
+    <string name="media_brightness_off">オフ · 写真や動画をスマートフォンの明るさで開きます。</string>
+    <string name="media_stretch">低解像度の写真を拡大</string>
+    <string name="media_stretch_on">オン · 画面より小さい写真を画面いっぱいに拡大します。</string>
+    <string name="media_stretch_off">オフ · 画面より小さい写真を元のサイズで表示します。</string>
+    <string name="media_quality">最高の表示品質</string>
+    <string name="media_quality_on">オン · 写真をフル解像度で開き、ズームしても細部まで見えます。メモリとバッテリーを多く使います。</string>
+    <string name="media_quality_off">オフ · 写真を画面の解像度で開きます。ズームすると細部が見えにくくなります。</string>
+    <string name="playback_speed">再生速度</string>
+    <string name="media_speed_footnote">音の高さは変わりません。</string>
+    <string name="media_resume">動画の続きから再生</string>
+    <string name="media_resume_on">オン · 前回停止したところから動画を再生します。</string>
+    <string name="media_resume_off">オフ · 動画は最初から再生され、停止した位置は保存されません。</string>
+    <string name="media_repeat">動画をリピート</string>
+    <string name="media_repeat_on">オン · 動画が終わると最初から再生します。</string>
+    <string name="media_repeat_off">オフ · 動画は最後で停止します。</string>
+    <string name="media_skip">ダブルタップでスキップ</string>
+    <string name="media_skip_footnote">動画の右側をダブルタップすると進み、左側をダブルタップすると戻ります。</string>
+    <string name="media_orientation">動画の向き</string>
+    <string name="notes_settings_intro">これらはすべての保管庫のすべてのノートに適用されます。</string>
+    <string name="notes_checklists">チェックリスト</string>
+    <string name="notes_move_checked">チェックした項目を下に移動</string>
+    <string name="notes_move_checked_on">オン · 項目にチェックを入れると、リスト内でチェックしていない項目の下に移動します。チェックを外すと上に戻ります。</string>
+    <string name="notes_move_checked_off">オフ · チェックした項目はその場に残ります。</string>
+    <string name="notes_keyboard">キーボード</string>
+    <string name="notes_incognito">シークレットキーボード</string>
+    <string name="notes_incognito_on">オン · キーボードに、ノートの単語を学習しないよう求めます。ほとんどのキーボードは従いますが、従わないものもあります。</string>
+    <string name="notes_incognito_off">オフ · キーボードがノートの単語を学習し、ほかのアプリで候補として表示することがあります。</string>
+    <string name="memos_settings_intro">ボイスメモの録音方法と、開いたときの再生方法です。</string>
+    <string name="memos_quality">録音品質</string>
+    <string name="memos_quality_footnote">ボイスメモは録音開始時の品質のままです。変更は次の録音から適用されます。</string>
+    <string name="memos_stereo">ステレオ録音</string>
+    <string name="memos_stereo_on">オン · ボイスメモを 2 チャンネルで録音し、サイズは約 2 倍になります。対応していないスマートフォンではモノラルで録音されます。</string>
+    <string name="memos_stereo_off">オフ · ボイスメモを 1 チャンネルで録音します。</string>
+    <string name="memos_bluetooth">Bluetooth マイクを使用</string>
+    <string name="memos_bluetooth_on">オン · 接続中の Bluetooth ヘッドセットで、通話品質かつモノラルで録音します。品質とステレオの設定は適用されません。接続されていない場合は、スマートフォンのマイクで録音します。</string>
+    <string name="memos_bluetooth_off">オフ · スマートフォンのマイクで録音します。Bluetooth ヘッドセットは通話品質かつモノラルで、品質やステレオの設定なしで録音します。</string>
+    <string name="memos_playback">再生</string>
+    <string name="memos_speed_footnote">音の高さは変わりません。動画はこの設定ではなく「メディア」の速度に従います。</string>
+    <string name="memos_skip_silence">無音部分をスキップ</string>
+    <string name="memos_skip_silence_on">オン · ボイスメモの再生中、無音部分をスキップします。</string>
+    <string name="memos_skip_silence_off">オフ · 無音部分も含めて再生します。</string>
+
+    <!-- Notes -->
+    <string name="note_title">タイトル</string>
+    <string name="note_body">ノート</string>
+    <string name="note_edit">ノートを編集</string>
+    <string name="note_placeholder">書き始める</string>
+    <string name="note_too_long">このノートは %1$d バイトで、上限は %2$d バイトです。上限は文字数ではなくバイト数なので、アクセント付きの文字、絵文字、ラテン文字以外の文字は 1 文字が 1 バイトより多く数えられます。</string>
+    <string name="note_pin">固定</string>
+    <string name="note_unpin">固定を解除</string>
+    <string name="note_delete">ノートを削除</string>
+    <string name="format_checklist">チェックリスト</string>
+    <string name="format_bullet">箇条書き</string>
+    <string name="format_numbered">番号付きリスト</string>
+    <string name="format_heading">見出し</string>
+    <string name="format_bold">太字</string>
+    <string name="format_italic">斜体</string>
+    <string name="format_strike">取り消し線</string>
+    <string name="note_completed">完了: %1$s</string>
+    <string name="note_attached_image">添付画像</string>
+    <string name="note_attachment_missing">この添付ファイルはもう保管庫にありません。</string>
+    <string name="note_attachment_missing_label">見つからない添付ファイル %1$s</string>
+
+    <!-- Image editor -->
+    <!-- Aspect ratios: the numbers are the same in every language; write them the way the language writes a ratio. -->
+    <string name="aspect_free">自由</string>
+    <string name="aspect_1_1">1:1</string>
+    <string name="aspect_4_3">4:3</string>
+    <string name="aspect_3_2">3:2</string>
+    <string name="aspect_16_9">16:9</string>
+    <string name="filter_original">オリジナル</string>
+    <string name="filter_mono">モノクロ</string>
+    <string name="filter_warm">暖色</string>
+    <string name="filter_cool">寒色</string>
+    <string name="filter_fade">フェード</string>
+    <string name="filter_punch">鮮やか</string>
+    <string name="width_fine">細</string>
+    <string name="width_medium">中</string>
+    <string name="width_bold">太</string>
+    <string name="editor_save_note">保存すると新しいアイテムが追加され、元のものは残ります。</string>
+    <string name="editor_saving">保存中…</string>
+    <string name="editor_save_copy">コピーを保存</string>
+    <string name="editor_discard_title">この編集を破棄しますか？</string>
+    <string name="editor_discard_body">画像は元の状態に戻ります。ほかは何も変わりません。</string>
+    <string name="editor_discard">破棄</string>
+    <string name="editor_keep_editing">編集を続ける</string>
+    <string name="editor_discard_edits">編集を破棄</string>
+    <string name="editor_title">編集</string>
+    <string name="tool_crop">切り抜き</string>
+    <string name="tool_straighten">傾き補正</string>
+    <string name="tool_filters">フィルタ</string>
+    <string name="tool_light">明るさ</string>
+    <string name="tool_markup">書き込み</string>
+    <string name="editor_crop_hint">四隅か、枠そのものをドラッグします。</string>
+    <string name="editor_rotate_left">左に回転</string>
+    <string name="editor_rotate_right">右に回転</string>
+    <string name="editor_flip_horizontal">左右反転</string>
+    <string name="editor_flip_vertical">上下反転</string>
+    <string name="editor_straighten_value">傾き補正 \u0020· \u0020%1$s°</string>
+    <string name="editor_strength">強さ</string>
+    <string name="editor_brightness">明るさ</string>
+    <string name="editor_contrast">コントラスト</string>
+    <string name="editor_saturation">彩度</string>
+    <string name="editor_warmth">色温度</string>
+    <string name="editor_erase_hint">線をタップすると消えます。</string>
+    <string name="editor_draw_hint">画像の上をドラッグして描きます。</string>
+    <string name="editor_eraser">消しゴム</string>
+    <string name="editor_reset">リセット</string>
+
+    <!-- Voice memo -->
+    <string name="memo_recorded">録音済み</string>
+    <string name="memo_permission_body">録音にはマイクが必要です。ここで録音したものはデバイスの外に出ません。保管庫に直接書き込まれ、この権限はそのためだけに使われます。ほかの目的でマイクがオンになることはありません。</string>
+    <string name="memo_speak">話すと、そのままこの保管庫に入ります</string>
+    <string name="memo_trial">ボイスメモを保存すると 30 日間の試用期間が始まります。期間は保管庫に最初に何かが入った時点から始まり、これがその最初になります。</string>
+    <string name="memo_allow_microphone">マイクを許可</string>
+    <string name="memo_save">保管庫に保存</string>
+    <string name="memo_position">この録音内の位置</string>
+    <string name="memo_minutes_seconds">%1$s %2$s</string>
+    <string name="memo_recording_length">録音中、%1$s</string>
+    <string name="memo_recorded_length">録音済み、%1$s</string>
+    <string name="memo_nothing_yet">まだ何も録音されていません</string>
+    <string name="memo_discard_title">この録音を破棄しますか？</string>
+    <string name="memo_discard_body">この録音は保存されていないため、移動すると失われます。保管庫にすでにあるものには影響ありません。</string>
+    <string name="memo_keep_recording">録音を続ける</string>
+    <string name="memo_already_running">すでに録音中です。</string>
+    <string name="memo_could_not_record">保管庫は今、録音を受け付けられませんでした。</string>
+    <string name="memo_mic_failed">マイクを起動できませんでした。</string>
+
+    <!-- Camera -->
+    <string name="camera_recording_failed">保管庫は録画を受け付けられませんでした。</string>
+    <string name="camera_permission_body">カメラで撮影するには権限が必要です。ここで撮影したものはギャラリーに入りません。保管庫に直接書き込まれ、この権限はそのためだけに使われます。</string>
+    <string name="camera_allow">カメラを許可</string>
+    <string name="camera_close">カメラを閉じる</string>
+    <string name="camera_switch_back">背面カメラに切り替え</string>
+    <string name="camera_switch_front">前面カメラに切り替え</string>
+    <string name="camera_take_photo">写真を撮る</string>
+    <string name="camera_open_receipt">保管庫で開く</string>
+    <string name="camera_saving">撮影したものを保管庫に保存しています</string>
+    <string name="camera_receipt">最後の撮影、保管庫に保存済み</string>
+    <string name="camera_none">このデバイスにはカメラがありません。</string>
+    <string name="camera_no_sizes">このカメラは使用できるサイズを報告していません。</string>
+    <string name="camera_no_still">このカメラには静止画のサイズがありません。</string>
+    <string name="camera_taken">カメラはほかのアプリに使用されています。</string>
+    <string name="camera_not_opened">カメラを開けませんでした。</string>
+    <string name="camera_photo_failed">写真を撮れませんでした。</string>
+    <string name="camera_recording_refused">このデバイスでは録画を開始できませんでした。</string>
+    <string name="camera_preview_failed">カメラのプレビューを開始できませんでした。</string>
+
+    <!-- Backup and restore -->
+    <string name="backup_turn_on">バックアップをオンにする</string>
+    <string name="backup_choose_where">バックアップ先を選ぶ</string>
+    <string name="backup_now">今すぐバックアップ</string>
+    <string name="backup_backed_up_to">バックアップ先</string>
+    <string name="backup_how_it_works">バックアップのしくみ</string>
+    <string name="backup_stop">バックアップを停止</string>
+    <string name="backup_caption_off">コピーする前にこのスマートフォンで暗号化します。</string>
+    <string name="backup_caption_file">変更した数分後と、この保管庫をロックしたときに、保管庫全体をコピーします。</string>
+    <string name="backup_caption_folder">変更のたびと、この保管庫をロックしたときにコピーします。</string>
+    <string name="backup_last_copied">最終コピー %1$s · %2$s</string>
+    <string name="backup_is_off">バックアップはオフです</string>
+    <string name="backup_only_here">この保管庫はこのスマートフォンにしかありません · %1$s</string>
+    <string name="backup_checking">フォルダを確認しています…</string>
+    <string name="backup_up_to_date">最新の状態です</string>
+    <plurals name="backup_changes_to_copy">
+        <item quantity="other">コピー待ちの変更 %1$d 件</item>
+    </plurals>
+    <string name="backup_copying">コピー中…</string>
+    <string name="backup_progress">%1$s / %2$s</string>
+    <plurals name="backup_files_failed">
+        <item quantity="other">%1$d 個のファイルをコピーできませんでした</item>
+    </plurals>
+    <string name="backup_partial_line">次回もう一度試します。</string>
+    <string name="backup_unreachable_file">バックアップファイルにアクセスできません</string>
+    <string name="backup_unreachable_folder">フォルダにアクセスできません</string>
+    <string name="backup_unreachable_line">削除されたか、保存先のアプリからログアウトした可能性があります。</string>
+    <string name="backup_no_space">空き容量が足りません</string>
+    <string name="backup_no_space_line">バックアップを渡すには、あと %1$s の空き容量が必要です。</string>
+    <string name="backup_just_now">たった今</string>
+    <string name="backup_before_title">バックアップをオンにする前に</string>
+    <string name="backup_before_words">復元には 24 個の単語が必要です</string>
+    <string name="backup_before_words_body">パスフレーズではバックアップを開けません。このスマートフォンと単語の両方を失うと、あなたを含め誰にも開けなくなります。</string>
+    <string name="backup_before_provider">サービス提供元にはバックアップのサイズと変更日時が見えます</string>
+    <string name="backup_before_provider_body">名前、日付、アルバム、ファイルの中身が見えることはありません。</string>
+    <string name="backup_before_one_vault">このバックアップはこの保管庫専用です</string>
+    <string name="backup_before_one_vault_body">保管庫ごとに個別のバックアップが必要です。</string>
+    <string name="backup_back_up_to">バックアップ先</string>
+    <string name="backup_no_destinations">このスマートフォンにはクラウドアプリも SD カードもありません。クラウドサービスのアプリをインストールしてログインし、ここに戻ってください。</string>
+    <string name="backup_dest_cloud">1 つのバックアップファイルを変更後に更新</string>
+    <string name="backup_dest_volume">フォルダを変更のたびに更新</string>
+    <string name="backup_how_copied">コピーされるもの</string>
+    <string name="backup_how_copied_body">このスマートフォンで暗号化したこの保管庫のファイルと、復元キットで開く保管庫の暗号化されたリストです。パスフレーズと、それで開くファイルはこのスマートフォンに残ります。</string>
+    <string name="backup_how_when">コピーのタイミング</string>
+    <string name="backup_how_when_body">変更のたびに、何も押さずにコピーされます。SD カードのフォルダは数秒以内に更新され、変更されたものだけがコピーされます。クラウドアプリのバックアップファイルには保管庫全体が入るため、変更を止めてから数分後、またはロックしたときにすぐ書き直されます。一度も開かない保管庫はコピーされません。</string>
+    <string name="backup_how_restoring">復元</string>
+    <string name="backup_how_restoring_body">バックアップはパスフレーズではなく 24 個の単語で復元します。このスマートフォンとその単語の両方を失うと、あなたを含め誰もバックアップを読めなくなります。</string>
+    <string name="backup_how_provider">サービス提供元に見えるもの</string>
+    <string name="backup_how_provider_body">クラウドアプリに見えるのは 1 つのファイルのサイズと変更日時だけです。中身は封印されているため、ファイルの数や大きさもわかりません。SD カードのフォルダでは、ファイルの数、一定の単位に切り上げた各ファイルのサイズ、それぞれの変更日時が見えます。16 MB を超えるアイテムはまとまって見え、そのパターンからこのアプリのバックアップだと特定される可能性があります。どちらにも、名前、日付、アルバム、ファイルの中身は見えません。</string>
+    <string name="backup_how_per_vault">保管庫ごとに 1 つのバックアップ</string>
+    <string name="backup_how_per_vault_body">保管庫ごとに個別のバックアップが必要です。どのバックアップにも同じ暗号化された保管庫リストが入っているため、2 つを見られる人には、それらが同じ持ち主のものだとわかります。</string>
+    <string name="backup_how_destinations">クラウドアプリと SD カード</string>
+    <string name="backup_how_destinations_body">クラウドアプリには保管庫全体を入れた 1 つのファイルが送られ、サービス提供元にはそのサイズと変更日時しか見えないよう封印されます。毎回全体が書き直されます。SD カードには、変更されたものだけをコピーするフォルダが作られます。このスマートフォン自体のストレージは選べません。そこにあるコピーはスマートフォンと一緒に失われるからです。</string>
+    <string name="backup_how_deleting">削除と停止</string>
+    <string name="backup_how_deleting_body">ここで削除したものは、次のコピーでバックアップからも削除されます。クラウドサービスがゴミ箱やバージョン履歴に残しているコピーには、このアプリは手が届きません。コピーが中断された場合の以前のバックアップファイルも同じです。バックアップを停止しても、バックアップはそのまま残ります。</string>
+    <string name="backup_stop_title">この保管庫のバックアップを停止しますか？</string>
+    <string name="backup_stop_body">作成済みのバックアップはそのまま残ります。不要な場合は、サービス提供元で削除してください。</string>
+    <string name="backup_keep">バックアップを続ける</string>
+    <string name="backup_on_sd_card">バックアップは SD カードにあります</string>
+    <string name="restore_into_list">このリストにある保管庫のバックアップ（クラウドアプリのファイルか SD カードのフォルダ）を選んでください。このリストに戻ります。</string>
+    <string name="restore_lead">クラウドアプリに保存したバックアップファイルか、SD カードのフォルダを選んでください。復元キットの 24 個の単語が必要です。パスフレーズではバックアップを開けません。</string>
+    <string name="restore_choose_file">バックアップファイルを選ぶ</string>
+    <string name="restore_copying">ファイルをコピー中… %1$d / %2$d</string>
+    <string name="import_title">保管庫をインポート</string>
+    <string name="import_lead">.vault ファイル、またはクラウドアプリや SD カードに保存したバックアップから保管庫を戻します。</string>
+    <string name="import_choose_file">ファイルを選ぶ</string>
+    <string name="import_vault_file">.vault ファイル</string>
+    <string name="import_list_full">このリストはいっぱいです。保管庫を 1 つ削除して空きを作ってから、もう一度インポートしてください。</string>
+    <string name="import_failed">開けませんでした。パスフレーズが間違っているか、このアプリで読める .vault ファイルではありません。</string>
+    <string name="import_passphrase_label">このファイルのパスフレーズ</string>
+    <string name="import_importing">インポート中</string>
+    <string name="import_action">保管庫をインポート</string>
+    <string name="import_backup_here">これはこのリストにある保管庫のバックアップです。</string>
+    <string name="import_restore_vault">保管庫を復元</string>
+    <string name="import_other_list">このバックアップは別の保管庫リストのものです。そのリストの復元キットの 24 個の単語を入力してください。</string>
+    <string name="import_own_list">これはこのリストとは別の、独立した保管庫リストとして戻り、専用のパスフレーズで開きます。24 個の単語は変わりません。</string>
+    <string name="import_no_room">このスマートフォンには、これ以上保管庫リストを追加する空きがありません。</string>
+    <string name="import_restore_list">保管庫リストを復元</string>
+    <string name="import_copying">ファイルをコピー中…</string>
+    <string name="import_vault_restored">保管庫を復元しました</string>
+    <string name="import_list_restored">保管庫リストを復元しました</string>
+    <string name="import_vault_restored_body">元の保管庫リストに戻りました。表示するには、そのリストをパスフレーズで開いてください。</string>
+    <string name="import_list_restored_body">開くには、アプリをロックしてそのパスフレーズを入力してください。</string>
+
+    <!-- Sizes and units -->
+    <string name="size_bytes">%1$d B</string>
+    <string name="size_kb">%1$s kB</string>
+    <string name="size_mb">%1$s MB</string>
+    <string name="size_gb">%1$s GB</string>
+    <string name="size_tb">%1$s TB</string>
+    <string name="size_pb">%1$s PB</string>
+
+    <!-- Unvault and the encrypted archive -->
+    <plurals name="unvault_items">
+        <item quantity="other">%1$d 個のアイテムを保管庫から出す</item>
+    </plurals>
+    <plurals name="unvault_selected_body">
+        <item quantity="other">選択した %1$d 個のアイテムを復号して書き出し、確認してから保管庫から削除します。選択していないものはすべてそのまま残ります。</item>
+    </plurals>
+    <plurals name="unvault_all_body">
+        <item quantity="other">この保管庫の %1$d 個のアイテムをすべて復号して書き出し、確認してから保管庫から削除します。完了すると保管庫は空になり、ファイルは普通のファイルに戻ります。</item>
+    </plurals>
+    <string name="unvault_checked">各ファイルは読み戻して照合してから、暗号化されたコピーが削除されます。一致しないものは保管庫に残り、マニフェストに記載されます。</string>
+    <string name="unvault_where">書き出し先</string>
+    <string name="unvault_gallery">写真と動画</string>
+    <string name="unvault_folder_chosen">選択したフォルダ</string>
+    <string name="unvault_choose_folder">フォルダを選ぶ</string>
+    <string name="unvault_remove_details">写真の詳細情報を削除</string>
+    <string name="unvault_details_kept">エクスポートした写真には、位置情報を含め、元の情報がすべて残ります。</string>
+    <string name="unvault_passphrase_needed">続けるにはパスフレーズを入力してください。生体認証では実行できません。</string>
+    <string name="unvault_passphrase_needed_own">続けるには、この保管庫自身のパスフレーズを入力してください。保管庫リストのパスフレーズや生体認証では実行できません。</string>
+    <string name="unvault_wrong_passphrase">この保管庫は開きませんでした。</string>
+    <string name="unvault_progress">%1$d / %2$d を書き出し済み</string>
+    <string name="unvault_progress_left">%1$d / %2$d を書き出し済み、保管庫に残り %3$d</string>
+    <string name="unvault_busy">保管庫から出しています</string>
+    <string name="archive_title">新しいデバイスに移行しますか？</string>
+    <string name="archive_body">新しいスマートフォンで開ける暗号化された .vault ファイルを 1 つ保存します。ファイル自体のパスフレーズを決めてください。保管庫を開くパスフレーズとは別のもので、もう一方のデバイスで必要になります。この保管庫が空になることはなく、ゴミ箱のアイテムは含まれません。</string>
+    <string name="archive_passphrase_label">ファイルのパスフレーズ</string>
+    <string name="archive_save">暗号化されたアーカイブを保存</string>
+
+    <!-- Sharing -->
+    <string name="lifespan_day">24 時間</string>
+    <string name="lifespan_week">7 日間</string>
+    <string name="lifespan_month">30 日間</string>
+    <string name="share_trial_ended">試用期間が終了しました</string>
+    <string name="share_trial_ended_body">共有を送信するには 1 回限りの購入が必要です。送られてきた共有を開くこと、自分のものを開く、見る、エクスポートすることは引き続き無料です。</string>
+    <string name="share_lead_contact">%1$s さんのスマートフォンでしか開けない暗号化ファイルを 1 つ作成します。伝えるコードはありません。</string>
+    <string name="share_lead_code">暗号化ファイル 1 つと、4 語のコードを作成します。受け取った人が開くには、このアプリとコードが必要です。</string>
+    <string name="share_who">開ける人</string>
+    <string name="share_contact_detail">%1$s さんのスマートフォンで開きます。コード不要</string>
+    <string name="share_anyone">コードを知っている人</string>
+    <string name="share_anyone_detail">安全性は低くなります。ファイルと単語の両方を持つ人なら誰でも開けます。</string>
+    <string name="share_how_long">開ける期間</string>
+    <string name="share_no_limit">制限なし</string>
+    <string name="share_no_limit_detail">いつでも開けます</string>
+    <string name="share_open_once">1 回だけ開く</string>
+    <string name="share_open_once_detail">1 回開いたら、二度と開けません</string>
+    <string name="share_expires">期限付き</string>
+    <string name="share_expires_detail">%1$s まで開けます</string>
+    <string name="share_limits_contact">これらの制限は %1$s さんのスマートフォン上のアプリが守り、ほかのスマートフォンではファイルを開けません。ファイルを送信した後は取り消せません。</string>
+    <string name="share_limits_code">これらの制限は、ファイルを開くスマートフォン上のアプリが守ります。ファイルを送信した後は取り消せません。</string>
+    <string name="share_photo_carries">写真に含まれる情報</string>
+    <string name="share_remove_details">詳細情報を削除</string>
+    <string name="share_as_is">そのまま送信</string>
+    <string name="share_as_is_detail">位置情報、日付、カメラ情報も一緒に送られます</string>
+    <string name="share_sealing">封印中</string>
+    <string name="share_try_again">再試行</string>
+    <string name="share_create">共有を作成</string>
+    <string name="share_less_secure">連絡先に送るより安全性が低い方法です</string>
+    <string name="share_risk_any_phone">ファイルと 4 つの単語を持つ人なら誰でも、どのスマートフォンでも開けます。</string>
+    <string name="share_risk_once">「1 回だけ開く」はスマートフォンごとに 1 回です。転送されると、また開けます。</string>
+    <string name="share_risk_same_chat">ファイルと同じチャットで単語を送ると、両方を渡すことになります。</string>
+    <string name="share_risk_guessing">ファイルのコピーを持っている人は、何度でも単語を推測し続けることができます。</string>
+    <string name="share_pair_first">1 人だけと共有するには、先にその人とペアリングしてください。</string>
+    <string name="share_pair">ペアリングする</string>
+    <string name="share_code_title">コード</string>
+    <string name="share_code_label">共有コード: %1$s</string>
+    <string name="share_code_separately">コードはファイルとは別の方法で送ってください。</string>
+    <string name="share_code_both">両方を持つ人は誰でも開けます。ファイルと同じチャットにコードを入力すると、両方を一度に渡すことになります。</string>
+    <string name="share_code_once">このコードは 1 回しか表示されず、保存されません。今コピーしてください。</string>
+    <string name="share_send_file">ファイルを送信…</string>
+    <string name="share_copy_code">コードをコピー</string>
+    <string name="share_sealed_to">%1$s さん宛てに封印済み</string>
+    <string name="share_sealed_body">これを開けるのは %1$s さんだけです。ファイルはその人のスマートフォン宛てに封印されています。送るコードはありません。</string>
+    <string name="share_save_device">デバイスに保存</string>
+    <string name="share_saved">保存しました。送信に使うアプリで「ファイル」から添付してください。</string>
+    <string name="share_save_failed">ファイルを保存できませんでした。もう一度試すか、代わりに送信してください。</string>
+    <string name="share_save_hint">保存してから「ファイル」で添付することもできます。その場合、送信に使うアプリには、どのアプリで作られたかがわかりません。</string>
+    <string name="share_refused_trash">ゴミ箱のアイテムは共有できません。</string>
+    <string name="share_refused_no_length">この動画の長さを読み取れないため、共有できません。</string>
+    <string name="share_refused_too_long">%1$d 秒を超える動画は共有できません。</string>
+
+    <!-- Opening a share -->
+    <string name="share_open_title">共有を開く</string>
+    <string name="share_open_reading">ファイルを読み取っています</string>
+    <string name="share_open_enter_code">コード付きで送られた場合は、入力してください。</string>
+    <string name="share_open_code_hint">送信者から、ファイルとは別の方法で 4 つの単語を受け取っているはずです。</string>
+    <string name="share_open_failed">この共有を開けませんでした。</string>
+    <string name="share_open_check">4 つの単語と、送られてきたファイルで間違いないかを確認してください。</string>
+    <string name="share_open_action">共有を開く</string>
+    <string name="share_open_no_contacts">このスマートフォンは連絡先を読み取れないため、このスマートフォン宛てに封印された共有はここでは開けません。</string>
+    <string name="share_open_contacts">連絡先を開く</string>
+    <string name="share_open_view">表示</string>
+    <string name="share_open_keep">この保管庫に保存</string>
+    <string name="share_open_keep_needs_purchase">共有を保存するには 1 回限りの購入が必要です。移動すると何も保存されません。</string>
+    <string name="share_open_leave">保存せずに移動すると、何も保存されません。</string>
+    <string name="share_open_cannot_keep">この共有は保存できません。移動すると何も保存されません。</string>
+    <string name="share_open_sealed_here">この共有はこのスマートフォン宛てに封印されています。開くのにコードは不要です。</string>
+    <string name="share_open_open">開く</string>
+    <string name="share_open_newer">この共有はより新しいバージョンのアプリで作成されました。開くには、このアプリをアップデートしてください。</string>
+    <string name="share_open_already_opened">この共有は 1 回だけ開ける設定で、すでに開かれています。</string>
+    <string name="share_open_expired">この共有は %1$s に期限切れになりました。</string>
+    <string name="share_open_code_correct">コードは正しいです。この制限はこのスマートフォン上のアプリが守り、送信者が解除することはできません。</string>
+    <string name="share_open_limit_once">送信者は 1 回だけ開ける設定にしています。この制限はこのスマートフォン上のアプリが守ります。</string>
+    <string name="share_open_limit_expiry">送信者は %1$s 以降開けない設定にしています。この制限はこのスマートフォン上のアプリが守ります。</string>
+
+    <!-- Contacts and pairing -->
+    <string name="contacts_waiting">待機中</string>
+    <string name="contacts_invite_sent">招待を送信済み - 返信待ち</string>
+    <string name="contacts_reply_sent">返信を送信済み - 確認待ち</string>
+    <string name="contacts_confirmation_ready">確認ファイルを送信できます</string>
+    <string name="contacts_add">連絡先を追加</string>
+    <string name="contacts_together">対面で</string>
+    <string name="contacts_together_detail">お互いのコードをスキャンします。最も強力なペアリング方法です。</string>
+    <string name="contacts_not_together">離れて</string>
+    <string name="contacts_not_together_detail">招待ファイルと 4 つの単語を送ります。</string>
+    <string name="contacts_have_invite">招待を受け取った</string>
+    <string name="contacts_have_invite_detail">送られてきたファイルを開き、相手の 4 つの単語を入力します。</string>
+    <string name="contacts_empty">連絡先はまだありません。対面で、または招待を送って誰かとペアリングすると、その人にコードなしでファイルを送れるようになります。</string>
+    <string name="contacts_remove_named">%1$s さんを削除</string>
+    <string name="contacts_unreadable">このスマートフォンは連絡先を読み取れません。</string>
+    <string name="contacts_unreadable_body">連絡先リストは、このデバイスが持っていた鍵に結び付けられており、その鍵がなくなっています。別のスマートフォンに復元すると、このような状態になります。リスト自体は変わっていませんが、ここではそれを開く方法がありません。\n\nやり直すと、このスマートフォンに新しいペアリングコードが割り当てられます。ペアリングしていた人は全員、もう一度スキャンする必要があります。</string>
+    <string name="contacts_new_identity">新しい ID で始める</string>
+    <string name="contacts_new_identity_title">新しい ID で始めますか？</string>
+    <string name="contacts_new_identity_body">読み取れない連絡先リストは削除され、このスマートフォンに新しいペアリングコードが割り当てられます。ペアリングしていた人は全員、もう一度スキャンする必要があります。</string>
+    <string name="contacts_start_again">やり直す</string>
+    <string name="contacts_remove_title">%1$s さんを削除しますか？</string>
+    <string name="contacts_remove_body">すでに送ったものはそのままです。もう一度ペアリングすることもできます。</string>
+    <string name="pairing_title">連絡先とペアリング</string>
+    <string name="pairing_saved">%1$s さんを保存しました。次は相手にあなたのコードをスキャンしてもらってください。</string>
+    <string name="pairing_show">これを相手のスマートフォンに見せてから、相手のコードをスキャンしてください。お互いのコードをスキャンする必要があります。</string>
+    <string name="pairing_in_person">対面でのスキャンが最も強力なペアリング方法です。誰かにファイルを送るまで、このスマートフォンから何も出ません。</string>
+    <string name="pairing_scan">相手のコードをスキャン</string>
+    <string name="pairing_your_code">あなたのペアリングコード</string>
+    <string name="pairing_camera_permission">コードを読み取るにはカメラの権限が必要です。カメラに映ったものは記録されません。フレームは読み取ったら破棄され、この権限はそのためだけに使われます。</string>
+    <string name="pairing_point">相手のスマートフォンのコードにカメラを向けてください。</string>
+    <string name="pairing_camera_looking">カメラ、ペアリングコードを探しています</string>
+    <string name="pairing_who">これは誰ですか？名前はあなただけのもので、このスマートフォンに保存され、どこにも送信されません。</string>
+    <string name="pairing_save">連絡先を保存</string>
+    <string name="remote_invite_title">招待する</string>
+    <string name="remote_answer_title">招待に応答</string>
+    <string name="remote_important">重要</string>
+    <string name="remote_name_too_long">名前が長すぎます。短くしてください。</string>
+    <string name="remote_name_yours">名前はあなただけのもので、このスマートフォンに残ります。</string>
+    <string name="remote_who_inviting">誰を招待しますか？</string>
+    <string name="remote_make_invite">招待を作成</string>
+    <string name="remote_invite_ready">招待の準備ができました</string>
+    <string name="remote_invite_send">%1$s さんに招待ファイルを送ってください。その後、この 4 つの単語を別の方法で伝えてください。通話中か対面で伝えます。</string>
+    <string name="remote_your_words">あなたの 4 つの単語: %1$s</string>
+    <string name="remote_invite_strict">ファイルとこれらの単語を持つ人は誰でも、この連絡先になれます。単語は %1$s さんにだけ伝え、ファイルと同じチャットでは絶対に送らないでください。</string>
+    <string name="remote_open_reply">%1$s さんの返信を開く</string>
+    <string name="remote_send_invite_again">招待ファイルを再送信</string>
+    <string name="remote_waiting_reply_today">%1$s さんの返信を待っています。この招待は %2$s に終了します。</string>
+    <string name="remote_waiting_reply_tomorrow">%1$s さんの返信を待っています。この招待は明日の %2$s に終了します。</string>
+    <string name="remote_send_invite">招待ファイルを送信</string>
+    <string name="remote_cancel_invite">招待をキャンセル</string>
+    <string name="remote_now_contact">%1$s さんが連絡先になりました。</string>
+    <string name="remote_send_confirmation_body">相手もあなたを追加できるよう、この確認ファイルを送ってください。</string>
+    <string name="remote_send_confirmation_again">確認ファイルを再送信</string>
+    <string name="remote_send_confirmation">確認ファイルを送信</string>
+    <string name="remote_open_invite">招待ファイルを開く</string>
+    <string name="remote_who_sent">送ってきたのは誰ですか？</string>
+    <string name="remote_their_words">相手の 4 つの単語</string>
+    <string name="remote_know_sender">送信者がわかっている場合のみ続けてください。招待を作成した人が連絡先になります。</string>
+    <string name="remote_make_reply">返信を作成</string>
+    <string name="remote_send_reply_title">返信を送信</string>
+    <string name="remote_send_reply_body">%1$s さんにこの返信ファイルを送ってください。</string>
+    <string name="remote_open_confirmation">%1$s さんの確認ファイルを開く</string>
+    <string name="remote_send_reply_again">返信ファイルを再送信</string>
+    <string name="remote_waiting_confirmation_today">%1$s さんの確認を待っています。%2$s に終了します。</string>
+    <string name="remote_waiting_confirmation_tomorrow">%1$s さんの確認を待っています。明日の %2$s に終了します。</string>
+    <string name="remote_send_reply">返信ファイルを送信</string>
+    <string name="remote_ended">この招待は終了しました</string>
+    <string name="remote_ended_reply">その返信が一致しなかったため、この招待は終了しました。4 つの単語が正確に入力されたか、お互いに最新バージョンのアプリを使っているかを確認してください。</string>
+    <string name="remote_ended_this">終了しました</string>
+    <string name="remote_ended_confirmation">その確認ファイルが一致しなかったため、終了しました。%1$s さんに新しい招待を作成してもらい、4 つの単語を一緒に確認してください。</string>
+    <string name="remote_ended_expired">この招待は終了しました。招待の有効期間は 24 時間です。</string>
+    <string name="remote_ended_already">この招待はすでに終了しています。</string>
+    <string name="remote_own_invite">これはあなた自身の招待です</string>
+    <string name="remote_own_invite_body">これはこのスマートフォン自身の招待です。</string>
+    <string name="remote_unreadable_body">連絡先リストは、このデバイスがもう持っていない鍵に結び付けられています。対処方法は「連絡先」に表示されます。</string>
+    <string name="remote_new_invite">新しい招待を作成</string>
+
+    <!-- Removing the originals from the gallery -->
+    <string name="originals_title">ギャラリーから元のファイルを削除しますか？</string>
+    <string name="originals_removed">元のファイルをギャラリーから削除しました。</string>
+    <plurals name="originals_photos">
+        <item quantity="other">写真 %1$d 枚</item>
+    </plurals>
+    <plurals name="originals_videos">
+        <item quantity="other">動画 %1$d 本</item>
+    </plurals>
+    <plurals name="originals_in_vault">
+        <item quantity="other">%1$sがこの保管庫に入りました。Android から確認を求められます。</item>
+    </plurals>
+    <plurals name="originals_stay">
+        <item quantity="other">ほかの %1$d 件はここから削除できないため、ギャラリーに残ります。</item>
+    </plurals>
+
+    <!-- Lock screen warnings -->
+    <string name="warning_rooted">このデバイスは root 化されているようです。root 権限を持つほかのアプリが、保管庫を開いている間そのメモリを読み取れます。</string>
+    <string name="warning_debuggable">これはデバッグ可能なビルドです。保管庫を開いている間、USB 経由でメモリを読み取られる可能性があります。</string>
+    <string name="warning_debugger">現在、このアプリにデバッガが接続されています。</string>
+    <plurals name="warning_accessibility">
+        <item quantity="other">ユーザー補助サービスが %1$d 個実行中です。このようなサービスは、ここで開いたものも含め、画面に表示されている内容を読み取れます。</item>
+    </plurals>
+
+    <!-- Covers — the calculator, the music player and the voice recorder -->
+    <string name="calc_divide_by_zero">0 で割ることはできません</string>
+    <string name="calc_undefined">未定義</string>
+    <string name="calc_infinity">無限大</string>
+    <string name="calc_invalid_format">無効な形式</string>
+    <string name="pattern_draw">パターンを描いてください</string>
+    <string name="pattern_wrong">パターンが違います</string>
+    <string name="music_unknown_track">不明な曲</string>
+    <string name="music_unknown_artist">不明なアーティスト</string>
+    <string name="music_unknown_album">不明なアルバム</string>
+    <string name="music_tracks">曲</string>
+    <string name="music_albums">アルバム</string>
+    <string name="music_artists">アーティスト</string>
+    <string name="music_shuffle_all">すべてシャッフル</string>
+    <plurals name="music_track_count">
+        <item quantity="other">%1$d 曲</item>
+    </plurals>
+    <string name="music_close_player">プレーヤーを閉じる</string>
+    <string name="music_nothing_playing">再生中の曲はありません</string>
+    <string name="music_shuffle_on">シャッフル オン</string>
+    <string name="music_shuffle_off">シャッフル オフ</string>
+    <string name="music_previous">前へ</string>
+    <string name="music_next">次へ</string>
+    <string name="music_repeat_one">1 曲リピート</string>
+    <string name="music_repeat_all">全曲リピート</string>
+    <string name="music_repeat_off">リピート オフ</string>
+    <string name="music_tap_to_open">タップしてプレーヤーを開く</string>
+    <string name="music_loading">ライブラリを読み込んでいます…</string>
+    <string name="music_none">このデバイスに音楽はありません</string>
+    <string name="music_none_line">追加した曲がここに表示されます。</string>
+    <string name="music_access_off">音楽へのアクセスがオフです</string>
+    <string name="music_access_off_line">このデバイスの曲を再生するには、設定で「音楽とオーディオ」をオンにしてください。</string>
+    <string name="recorder_default_title">録音 %1$s</string>
+    <plurals name="recorder_count">
+        <item quantity="other">%1$d 件の録音 · %2$s</item>
+    </plurals>
+    <string name="recorder_search">録音を検索</string>
+    <string name="recorder_hide_controls">コントロールを非表示</string>
+    <string name="recorder_show_controls">コントロールを表示</string>
+    <string name="recorder_paused">一時停止中</string>
+    <string name="recorder_resume">再開</string>
+    <string name="recorder_delete_title">「%1$s」を削除しますか？</string>
+    <string name="recorder_delete_body">この録音はこのデバイスから削除されます。</string>
+    <string name="recorder_none">録音はまだありません</string>
+    <string name="recorder_mic_off">マイクへのアクセスがオフです</string>
+    <string name="recorder_none_line">録音ボタンを押して録音します。</string>
+    <string name="recorder_mic_off_line">録音するには、設定で「マイク」をオンにしてください。</string>
+    <string name="recorder_no_match">「%1$s」に一致する録音はありません</string>
+    <string name="recorder_paused_length">一時停止中、%1$s</string>
+
+    <!-- The unlock digest — what happened since the last unlock -->
+    <string name="digest_altered">このイベントログはエントリー %1$d で改ざんされました。</string>
+    <string name="digest_not_opened_since">%1$s 以降開かれていません。</string>
+    <plurals name="digest_recoveries">
+        <item quantity="other">復元キットが %1$d 回使われてこの保管庫が開かれました。</item>
+    </plurals>
+    <plurals name="digest_failed">
+        <item quantity="other">ロック解除に %1$d 回失敗しました。</item>
+    </plurals>
+    <plurals name="digest_imported">
+        <item quantity="other">%1$d 個のアイテムをインポートしました。</item>
+    </plurals>
+    <plurals name="digest_deleted">
+        <item quantity="other">元のファイルを %1$d 個削除しました。</item>
+    </plurals>
+    <string name="digest_biometric">生体認証の登録内容が変更されたため、生体認証によるロック解除が無効になりました。</string>
+    <string name="digest_dev_options">このデバイスで開発者向けオプションまたは USB デバッグが有効になりました。</string>
+    <string name="digest_root">このデバイスの root 状態が変わりました。</string>
+    <string name="digest_data_cleared">このアプリのデータが消去されたようです。</string>
+    <string name="digest_new_device">この保管庫は、設定したときとは別のデバイスで動作しています。</string>
+    <string name="digest_clock">このデバイスの時計が過去に戻されました。</string>
+    <string name="vault_passphrase_heading">パスフレーズ</string>
+    <string name="vault_passphrase_state_list">保管庫リストのパスフレーズで開きます。</string>
+    <string name="vault_passphrase_state_own">専用のパスフレーズでのみ開きます。</string>
+    <string name="vault_passphrase_add">パスフレーズを追加</string>
+    <string name="vault_passphrase_add_supporting">そのパスフレーズでのみ開くようになります</string>
+    <string name="vault_passphrase_change">パスフレーズを変更</string>
+    <string name="vault_passphrase_remove">パスフレーズを削除</string>
+    <string name="vault_passphrase_remove_supporting">保管庫リストのパスフレーズで開くようになります</string>
+    <string name="vault_passphrase_added">パスフレーズを追加しました。</string>
+    <string name="vault_passphrase_changed">パスフレーズを変更しました。</string>
+    <string name="vault_passphrase_removed">パスフレーズを削除しました。</string>
+    <string name="vault_passphrase_add_lead">追加すると、%1$s を開けるのはこのパスフレーズだけになります。保管庫リストのパスフレーズでも、リストの復元キットでも開けなくなるため、%1$s 専用の復元キットが作られます。</string>
+    <string name="vault_passphrase_list_label">保管庫リストのパスフレーズ</string>
+    <string name="vault_passphrase_list_supporting">このアプリの保管庫リストを開くパスフレーズです。</string>
+    <string name="vault_passphrase_list_empty">保管庫リストを開くパスフレーズを入力してください。</string>
+    <string name="vault_passphrase_new_again">新しいパスフレーズ(確認)</string>
+    <string name="vault_passphrase_backups_heading">以前のバックアップ</string>
+    <string name="vault_passphrase_add_backups">これまでに保存したバックアップでは、%1$s は引き続き保管庫リストのパスフレーズで開きます。</string>
+    <string name="vault_passphrase_add_button">パスフレーズを追加</string>
+    <string name="vault_passphrase_adding">追加中…</string>
+    <string name="vault_passphrase_change_lead">%1$s の復元キットは変わらず、その 24 語で引き続き開けます。保管庫リストのパスフレーズでは引き続き開けません。</string>
+    <string name="vault_passphrase_current_label">現在のパスフレーズ</string>
+    <string name="vault_passphrase_current_empty">この保管庫の現在のパスフレーズを入力してください。</string>
+    <string name="vault_passphrase_change_backups">これまでに保存したバックアップでは、%1$s は以前のパスフレーズで開きます。</string>
+    <string name="vault_passphrase_changing">変更中…</string>
+    <string name="vault_passphrase_remove_opens">保管庫リストのパスフレーズで開きます</string>
+    <string name="vault_passphrase_remove_opens_body">%1$s は専用のパスフレーズなしで、リストから直接開くようになります。</string>
+    <string name="vault_passphrase_remove_kit">リストの復元キットで復元できます</string>
+    <string name="vault_passphrase_remove_kit_body">リストの 24 語で %1$s を復元できます。保管庫専用の 24 語も引き続き使え、取り消すことはできません。</string>
+    <string name="vault_passphrase_remove_captures">侵入者の撮影はホームに移ります</string>
+    <string name="vault_passphrase_remove_captures_body">この保管庫の記録はホーム画面の「侵入者の撮影」に統合され、保管庫専用の撮影の設定はオフになります。</string>
+    <string name="vault_passphrase_removing">削除中…</string>
+    <plurals name="kit_remaining_views_fewer">
+        <item quantity="other">続行した後、メニューからあと %1$d 回表示できます。その後はもう表示できず、書き留めたコピーが唯一のものになります。</item>
+    </plurals>
+    <string name="kit_remaining_views_none">このアプリはすでに表示できる回数を使い切っているため、続行した後はもう表示できません。書き留めたコピーが唯一のものになります。</string>
+    <!-- `third-party-notices`. The Open-source licences row and its two screens. -->
+    <string name="licences_title">オープンソース ライセンス</string>
+    <plurals name="licences_drawer_line">
+        <item quantity="other">%1$d 件のライブラリとそのライセンス</item>
+    </plurals>
+    <string name="licences_lead">%1$s は以下のライブラリを使って作られています。それぞれ独自のライセンスのもとで使用しており、その内容を下に示します。</string>
+    <string name="licences_open_action">ライセンスを開く</string>
+    <string name="licences_version">バージョン %1$s</string>
+    <string name="licences_source">ソース</string>
+    <string name="licences_licence">ライセンス</string>
+</resources>

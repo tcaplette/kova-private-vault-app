@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Adaptive-icon foreground for the application itself, never a launcher identity —
+  DESIGN.md §9, `cover-fingerprint-pattern`.
+
+  Material Symbols "home_repair_service", filled, on the 108dp adaptive canvas, scaled 2.5x and
+  centred so its content stays inside the 66dp safe zone. It is no identity's icon, and was kept
+  when the application label became `Kova`, because Android draws the application icon where no
+  alias icon reaches: the biometric prompt's header on Android 15
+  and later, and Settings → Apps. Left as the vault's icon, it put the vault's glyph over a music
+  player the moment the fingerprint sheet appeared.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:scaleX="2.5"
+        android:scaleY="2.5"
+        android:translateX="24"
+        android:translateY="24">
+        <path
+            android:fillColor="#9AA7B5"
+            android:pathData="M18,16h-2v-1H8v1H6v-1H2v5h20v-5h-4V16zM20,8h-3V6c0,-1.1 -0.9,-2 -2,-2H9C7.9,4 7,4.9 7,6v2H4c-1.1,0 -2,0.9 -2,2v4h4v-2h2v2h8v-2h2v2h4v-4C22,8.9 21.1,8 20,8zM15,8H9V6h6V8z" />
+    </group>
+</vector>

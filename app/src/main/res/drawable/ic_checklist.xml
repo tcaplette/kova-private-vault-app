@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Checklist — `note-format-bar`. Two ticked rules.
+
+  Drawn here rather than taken from Material Symbols: the set's own `checklist` puts
+  one tick above one empty row, which reads as a list half done rather than as the
+  act of making one. Two ticks and two rules say "a list you work through", which is
+  what the control writes.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="@android:color/white"
+        android:pathData="M3.5,7.2L2.1,8.6L5.3,11.8L11,6.1L9.6,4.7L5.3,9zM13,7h8v2h-8zM3.5,15.2L2.1,16.6L5.3,19.8L11,14.1L9.6,12.7L5.3,17zM13,15h8v2h-8z" />
+</vector>

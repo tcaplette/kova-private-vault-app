@@ -1,0 +1,13 @@
+{
+  "uniqueId": "org.libsodium:libsodium",
+  "artifactVersion": "1.0.20",
+  "name": "libsodium",
+  "description": "The native cryptography library bundled inside lazysodium-android.",
+  "website": "https://libsodium.org",
+  "licenses": [
+    "ISC-libsodium"
+  ],
+  "scm": {
+    "url": "https://github.com/jedisct1/libsodium"
+  }
+}

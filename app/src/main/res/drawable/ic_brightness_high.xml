@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Material Symbols "brightness_high", outlined — DESIGN.md §9, added by media-settings for the Media
+  settings sheet's "Full brightness while viewing" row, and used nowhere else.
+
+  A vector drawable rather than material-icons-core, which is not on the Compose classpath and
+  would be a new dependency plus an I1 clearance for a handful of glyphs. See ic_play_circle.xml,
+  the first of these. Drawn in the Symbols' own 960 grid, moved down by its height.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+    <group android:translateY="960">
+        <path
+            android:fillColor="@android:color/white"
+            android:pathData="M480-28 346-160H160v-186L28-480l132-134v-186h186l134-132 134 132h186v186l132 134-132 134v186H614L480-28Zm141.5-310.5Q680-397 680-480t-58.5-141.5Q563-680 480-680t-141.5 58.5Q280-563 280-480t58.5 141.5Q397-280 480-280t141.5-58.5ZM480-480Zm0 340 100-100h140v-140l100-100-100-100v-140H580L480-820 380-720H240v140L140-480l100 100v140h140l100 100Zm0-340Z" />
+    </group>
+</vector>

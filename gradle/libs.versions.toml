@@ -1,0 +1,92 @@
+[versions]
+agp = "9.3.1"
+kotlin = "2.4.10"
+composeBom = "2026.06.01"
+activityCompose = "1.11.0"
+# Crypto: lazysodium, chosen in P0-4. androidTest scope until P1-2.
+lazysodium = "5.2.0"
+jna = "5.19.1"
+androidxTestJunit = "1.3.0"
+junit = "4.13.2"
+androidxTestRunner = "1.7.0"
+# Android Test Orchestrator — one process per test. androidTest scope only.
+androidxTestOrchestrator = "1.6.1"
+work = "2.11.2"
+# Player (P1-8). Cleared against I1 in P0-7: contributes ACCESS_NETWORK_STATE and
+# WAKE_LOCK, neither forbidden. The first is stripped in the manifest anyway.
+media3 = "1.11.0"
+# Biometric unlock (P1-9). Cleared against I1 in P0-7 at exactly this version:
+# contributes USE_BIOMETRIC and USE_FINGERPRINT, neither forbidden. The second is
+# stripped in the manifest — minSdk 30 cannot reach the API it governs.
+biometric = "1.1.0"
+# Billing (P1-16). NOT cleared by P0-7 — P0-2 measured the opposite: at this exact
+# version the library declares INTERNET, ACCESS_NETWORK_STATE and
+# com.android.vending.BILLING, and :app:checkDebugPermissions failed the build on
+# the first of those. It ships only with INTERNET stripped in the manifest and the
+# purchase flow re-proven on the stripped build. P1-16 task 1 is that proof.
+billing = "9.1.0"
+# Not a new dependency: androidx.biometric 1.1.0 already pulls androidx.fragment,
+# at 1.2.x. registerForActivityResult on a FragmentActivity requires 1.3.0+, so
+# this pins the version that is already in the graph rather than adding a library.
+fragment = "1.8.9"
+# QR generation and decoding for pairing (P4-4). A plain offline Java JAR: no
+# AndroidManifest, so it can contribute no permission, and no network call of any
+# kind — measured, not assumed, by the clearance run in P4-4 task 1.
+zxing = "3.5.3"
+# Passphrase strength estimation (`passphrase-strength-meter`). The Java port of
+# Dropbox's zxcvbn, which is what OWASP names and what NIST SP 800-63B-4's blocklist
+# requirement is met with offline. A plain Java JAR on zxing's terms: 109 entries, no
+# AndroidManifest, so no permission can reach the merged manifest — the clearance run
+# in this change's task 1.3 measured the application variant's list unchanged at 10.
+# The jar is 503,012 bytes compressed, 1,013,330 uncompressed. Measured APK cost, two
+# clean builds either side of this line: 49,281,523 B without, 49,772,660 B with —
+# +491,137 B (+479.6 KiB), which lands under the jar's own compressed size because the
+# six unused locale bundles are excluded in app/build.gradle.kts. They are excluded
+# because the app has no localisation and a dependency must not be the one component
+# that quietly does.
+zxcvbn = "1.9.0"
+# X-Wing for contact shares and the pairing identity (`share-format-v2`): ML-KEM-768,
+# SHA-3/SHAKE and RFC 7748 X25519, reached only from XWing.kt. A plain Java JAR with no
+# AndroidManifest. It ships FILTERED — the allowlist sits beside its use in
+# app/build.gradle.kts (`BC_KEEP_*`) — so BouncyCastle's Argon2 and ChaCha20/Poly1305
+# never reach the APK and libsodium stays the only source of both
+# (`checkDebugBouncyCastle` enforces it).
+# Clearance at ship scope, version 1.79, 2026-10-06: :app:checkDebugPermissions read
+# the application variant's merged manifest at 13 permissions before the line and the
+# same 13 after it — zero delta, as a manifest-less JAR must give.
+# APK cost, two clean debug builds either side of this line: 50,275,395 B without,
+# 50,619,459 B with — +344,064 B (+336.0 KiB). The filtered jar is 154 classes,
+# 473,952 B uncompressed, against the full jar's ~8.5 MB.
+bouncycastle = "1.79"
+
+[libraries]
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+
+# --- test + crypto spike ---
+androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestJunit" }
+# JVM unit-test scope only. Ships in no APK, contributes no permission — the design
+# token checks are pure arithmetic over constants and need no emulator.
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
+androidx-test-orchestrator = { group = "androidx.test", name = "orchestrator", version.ref = "androidxTestOrchestrator" }
+# P2-6. androidTest scope only — see the note at its use site in app/build.gradle.kts.
+androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+lazysodium-android = { group = "com.goterl", name = "lazysodium-android", version.ref = "lazysodium" }
+jna = { group = "net.java.dev.jna", name = "jna", version.ref = "jna" }
+work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
+media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
+biometric = { group = "androidx.biometric", name = "biometric", version.ref = "biometric" }
+androidx-fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
+billing-ktx = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "billing" }
+zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
+zxcvbn = { group = "com.nulab-inc", name = "zxcvbn", version.ref = "zxcvbn" }
+bouncycastle-bcprov = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "bouncycastle" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

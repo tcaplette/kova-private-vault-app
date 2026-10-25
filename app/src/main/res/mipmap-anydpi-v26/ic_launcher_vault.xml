@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Launcher identity "vault" — launcher-icon-artwork. Its own ground, foreground and
+     themed-icon layer, all from icon/src/vault.svg. -->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/ic_launcher_vault_bg" />
+    <foreground android:drawable="@drawable/ic_launcher_vault_fg" />
+    <monochrome android:drawable="@drawable/ic_launcher_vault_mono" />
+</adaptive-icon>

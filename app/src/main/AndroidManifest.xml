@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+      Invariant I1 forbids INTERNET, and that is the whole of what it forbids —
+      OUTLINE.md's invariant table names no other permission. Every granting
+      permission below was added by the task that needed it, is justified where it
+      is declared, and is exercised by something this app actually runs.
+
+      :app:checkDebugPermissions enforces this against the MERGED manifest on every
+      debug build: INTERNET fails it, and so does every READ_MEDIA_* except
+      READ_MEDIA_AUDIO, which `music-recorder-covers` declares by name for the music
+      player cover.
+    -->
+
+    <!--
+      WorkManager declares this so it can reschedule jobs after a reboot. This app
+      cannot use it: an import needs the VMK, the VMK exists only in memory while
+      the vault is unlocked, and after a reboot the vault is locked. Work revived
+      at boot could do nothing but fail.
+
+      A permission the app cannot exercise is a permission that should not be
+      declared — the manifest is the one claim about this app that anyone can check
+      without trusting us. (P1-7)
+    -->
+    <uses-permission
+        android:name="android.permission.RECEIVE_BOOT_COMPLETED"
+        tools:node="remove" />
+
+    <!--
+      WorkManager and media3 both declare this. The app cannot exercise it: I1
+      forbids INTERNET, so there is no network to have a state, and nothing here
+      can act on what the answer would be.
+
+      Removing it is safe but not free of consequence, and the consequence runs
+      the wrong way. WorkManager does not throw without this permission — it
+      catches the SecurityException and returns NetworkState(isConnected=false)
+      permanently. So a work request that ever sets a network constraint would
+      never become eligible to run: no crash, no error, just an operation stuck
+      in ENQUEUED forever. :app:checkDebugWorkConstraints fails the build if any
+      app class asks for one. (P1-8)
+    -->
+    <uses-permission
+        android:name="android.permission.ACCESS_NETWORK_STATE"
+        tools:node="remove" />
+
+    <!--
+      Play Billing declares this. I1 forbids it outright, and this is the one
+      permission on the list that is not a judgement call: the whole product claim
+      is that the app cannot send anything anywhere, and INTERNET is what anyone
+      checking that claim reads first.
+
+      The app cannot exercise it and neither does Billing's purchase flow. A
+      purchase is bindService IPC to com.android.vending — the Play Store app owns
+      the network side of it, under its own permissions, in its own process. The
+      declaration is a manifest-merger artifact of a library that also supports
+      configurations this app does not use.
+
+      "Should work" is not a measurement, so P1-16 task 1 measured it on this build
+      with this directive in place: connection, product query and a completed
+      purchase, all recorded in OUTLINE.md P1-16 against billing-ktx 9.1.0. If a
+      future version of the library genuinely needs the socket, the purchase stops
+      working and the model changes — the permission does not come back. (P1-16)
+    -->
+    <uses-permission
+        android:name="android.permission.INTERNET"
+        tools:node="remove" />
+
+    <!--
+      Imports run as foreground work so the process is not reclaimed mid-import.
+      That is not a nicety: PickVisualMedia's read grant is process-scoped, so an
+      import that outlives its process cannot reopen its own source, whatever the
+      resume logic does (measured in P1-8.5, SecurityException on the picker URI).
+
+      Without this a multi-GB import is lost to the user swiping the app away.
+      The type is literal — this is data sync, into the vault. Android 15 caps
+      dataSync foreground services at six hours a day; imports are minutes.
+      (P1-8.6)
+    -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+
+    <!--
+      Intruder capture (P2-4). The two permissions the OUTLINE.md line names, and
+      the first this app declares that are neither stripped nor infrastructure: they
+      are requested at runtime only when a capture mode is turned on, one at a time,
+      never bundled and never at onboarding. Both are exercised — a still from the
+      front camera, a clip from the microphone, sealed into a vault on a failed
+      unlock — so unlike the four above they carry no tools:node="remove".
+
+      Neither is forbidden: I1 bars INTERNET, and :app:checkDebugPermissions passes
+      with these present. The core product runs
+      unchanged with all capture modes off and both permissions denied, which is the
+      Verify. The store listing must say what they are for, the same obligation
+      FOREGROUND_SERVICE_DATA_SYNC carries.
+    -->
+    <uses-permission
+        android:name="android.permission.CAMERA"
+        tools:ignore="PermissionImpliesUnsupportedChromeOsHardware" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!--
+      A memo keeps recording when the screen turns off (destination-settings-and-slideshow D6).
+      Android lets an app keep the microphone with nothing of it on screen only inside a
+      foreground service of type microphone, started while the app is visible, and that
+      service must post a notification: FOREGROUND_SERVICE and its microphone type for the
+      first, POST_NOTIFICATIONS — asked the first time a memo is recorded, never before — for
+      the second. Refusing it does not stop the recording; the shade just has no Stop.
+
+      MODIFY_AUDIO_SETTINGS is what "Use Bluetooth microphone" needs to route a headset's
+      microphone: setCommunicationDevice from API 31, startBluetoothSco on 30. A normal
+      permission, granted at install, with no dialog; used only while that setting is on and a
+      memo is recording, and released when it stops.
+    -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+    <!--
+      The music player cover (`music-recorder-covers`). It reads the device's own
+      audio library through MediaStore, which is what that cover is: a player that
+      opens onto a folder picker is not what any shipped player does, and the first
+      screen is the one an observer is most likely to see.
+
+      READ_MEDIA_AUDIO exists from API 33. minSdk is 30, so API 30-32 reach
+      MediaStore through READ_EXTERNAL_STORAGE, capped so it is never requested on a
+      platform that has the narrow permission.
+
+      Requested at runtime only from identity setup, inside the vault, never from a
+      live cover: a system permission dialog reads the APPLICATION label, which is
+      the vault's real name and which no alias label reaches (FORMAT.md §10).
+
+      Neither is forbidden: I1 bars INTERNET, and :app:checkDebugPermissions permits
+      READ_MEDIA_AUDIO by exact name while still failing on every other
+      READ_MEDIA_*. The core product runs unchanged with the music identity never
+      chosen and both denied. The store listing must say what they are for, the same
+      obligation CAMERA and RECORD_AUDIO already carry.
+    -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!--
+      androidx.biometric declares this alongside USE_BIOMETRIC. It governs the
+      pre-API-28 FingerprintManager path only, and minSdk is 30 — this app cannot
+      reach the code that would exercise it, on any device it runs on.
+
+      Same rule as the two above: a permission the app cannot exercise is a
+      permission it does not declare. The manifest is the one claim about this app
+      that anyone can check without trusting us, and a legacy fingerprint
+      permission on a biometric vault is exactly the kind of entry that makes the
+      rest of the list less believable. USE_BIOMETRIC stays — it is the one the
+      app actually uses. (P1-9)
+    -->
+    <uses-permission
+        android:name="android.permission.USE_FINGERPRINT"
+        tools:node="remove" />
+
+    <!--
+      `backup-to-cloud-apps`. The "Back up to" list names the cloud apps on this
+      device — every app publishing a DocumentsProvider — and on API 30+ package
+      visibility hides them unless the app says which intent it looks for. This is
+      a query, not a permission: it grants nothing, and INTERNET stays removed
+      above. Every byte a backup sends still goes through that app, under its own
+      permissions, in its own process.
+    -->
+    <queries>
+        <intent>
+            <action android:name="android.content.action.DOCUMENTS_PROVIDER" />
+        </intent>
+    </queries>
+
+    <application
+        android:name=".VaultApplication"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:icon="@mipmap/ic_launcher_toolbox"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Vault">
+
+        <!--
+          Not exported and carrying no intent filter. The launcher entries are the
+          three aliases below, which is what makes "exactly one enabled" a rule that
+          can be asserted: leaving the honest identity as a filter on this activity
+          would make the one component that cannot be disabled a permanent second
+          entry the moment any alias was on. (P2-22)
+
+          `landscape-rotation`. A turn is not a launch and not a departure, so the
+          activity handles it in place and Compose re-lays itself out. Recreating on a
+          turn stopped the old instance (auto-lock counted that as leaving), re-raised
+          the cover in `onCreate`, and dropped the open item with its player.
+          `uiMode` is deliberately absent: night mode still recreates. Nothing may be
+          resolved once in `onCreate` and assumed to hold for one orientation.
+
+          `app-languages` D3. A language change is handled in place for the same reason:
+          a recreate would raise the cover in `onCreate` and drop every screen's state, so
+          choosing a language on the Language sheet would land a cover-identity user on the
+          calculator. `layoutDirection` rides with `locale` because the platform changes the
+          two together.
+        -->
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|locale|layoutDirection"
+            android:exported="false" />
+
+        <!--
+          Launcher identity — P2-22. Three aliases on MainActivity, exactly one
+          enabled at any instant, switched at runtime by LauncherIdentity through
+          PackageManager.setComponentEnabledSetting and reconciled from the stored
+          preference at every start.
+
+          What these are: a choice of the name and icon on a launcher entry that
+          opens the vault's ordinary unlock screen. What these are not: a disguise
+          that the app then acts out. No alias declares any filter but MAIN/LAUNCHER,
+          none accepts an intent from another app, and no gesture, tap count or
+          arithmetic sequence authenticates anywhere behind them — the passphrase
+          against the slot array remains the only thing that opens anything. A
+          functional cover app behind one of these is P2-24's to add, under P2-24's
+          terms; adding one here would be the mechanism `Do not build` rejects.
+
+          android:enabled below is the shipped starting point and not a value any
+          code reads: LauncherIdentity.reconcile compares against it so that a fresh
+          install converges with no component write at all.
+        -->
+        <activity-alias
+            android:name=".alias.Vault"
+            android:targetActivity=".MainActivity"
+            android:exported="true"
+            android:enabled="true"
+            android:icon="@mipmap/ic_launcher_vault"
+            android:label="@string/identity_vault">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!--
+          The three covers. Same shape as the alias above and the same rules:
+          exported with the LAUNCHER filter and no other, enabled="false" as a
+          starting point that only LauncherIdentity.reconcile reads, no uses-feature.
+
+          What is different is what they open. These three route to a cover front end
+          — a working scientific calculator, a music player over the device's own
+          audio, a voice recorder — whose user-chosen trigger leaves it for the
+          vault's ordinary unlock screen. **No gesture behind
+          them authenticates.** The passphrase against the slot array is still the
+          only thing a gesture leads to, and a gesture that became the credential
+          would be the ~15-bit secret `Do not build` refuses. There is no way past
+          the unlock screen from a cover: the hold that brings up the music player's
+          and voice recorder's dots only shows them (`cover-hold-dots`).
+
+          A cover identity cannot be enabled until its trigger is chosen, and an
+          identity whose trigger is missing reconciles back to the vault's own — see
+          LauncherIdentity.resolved.
+        -->
+        <activity-alias
+            android:name=".alias.Calculator"
+            android:targetActivity=".MainActivity"
+            android:exported="true"
+            android:enabled="false"
+            android:icon="@mipmap/ic_launcher_calculator"
+            android:label="@string/identity_calculator">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".alias.Music"
+            android:targetActivity=".MainActivity"
+            android:exported="true"
+            android:enabled="false"
+            android:icon="@mipmap/ic_launcher_music"
+            android:label="@string/identity_musicplayer">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".alias.Recorder"
+            android:targetActivity=".MainActivity"
+            android:exported="true"
+            android:enabled="false"
+            android:icon="@mipmap/ic_launcher_recorder"
+            android:label="@string/identity_voicerecorder">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- WorkManager declares this service; the type is ours to supply. -->
+        <!--
+            The recording's foreground service — destination-settings-and-slideshow D6. Not
+            exported: only this app starts it, and its Stop arrives as this app's own
+            PendingIntent.
+        -->
+        <service
+            android:name=".MemoRecordingService"
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
+
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
+
+        <!--
+            P4-2. Serves one directory — `filesDir/shares/` — so a share container can
+            be handed to a messenger by content URI.
+
+            `exported="false"` with `grantUriPermissions="true"` is the whole security
+            posture: no other app can reach this provider on its own, and one reaches a
+            single container only because `ACTION_SEND` handed it a read grant for that
+            URI. `manifest-hardening`'s "no exported service, receiver, or provider" is
+            satisfied as written, and this registers no intent filter — receiving is
+            P4-3's, not this change's.
+        -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.shares"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/share_paths" />
+        </provider>
+
+    </application>
+
+</manifest>

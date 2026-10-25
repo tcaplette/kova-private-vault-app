@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Material Symbols "stop", outlined — DESIGN.md §9, added by destination-settings-and-slideshow for
+  the recording notification's Stop action, and used nowhere else. Drawn in the Symbols' own 960 grid, moved down by its height.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+    <group android:translateY="960">
+        <path
+            android:fillColor="@android:color/white"
+            android:pathData="M320-640v320-320Zm-80 400v-480h480v480H240Zm80-80h320v-320H320v320Z" />
+    </group>
+</vector>

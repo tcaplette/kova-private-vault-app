@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Material Symbols "skip previous", outlined — DESIGN.md §9, added by `music-recorder-covers`
+  for the music player cover's transport. Vector drawable, no icon dependency.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M6,6h2v12H6zM9.5,12l8.5,6V6z" />
+</vector>

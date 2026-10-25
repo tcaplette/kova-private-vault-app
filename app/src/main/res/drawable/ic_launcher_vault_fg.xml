@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The foreground layer of the "vault" launcher icon, generated from
+     icon/src/vault.svg (launcher-icon-artwork). Change the SVG, not this file. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:pathData="M23,54 a31,31 0 1,0 62,0 a31,31 0 1,0 -62,0 Z"
+        android:fillColor="#1E3A5F" />
+    <path
+        android:pathData="M27.5,54 a26.5,26.5 0 1,0 53,0 a26.5,26.5 0 1,0 -53,0 Z"
+        android:strokeColor="#2E5283"
+        android:strokeWidth="2.5" />
+    <path
+        android:pathData="M81.9,54 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z"
+        android:fillColor="#7F9CC4" />
+    <path
+        android:pathData="M78.0147,68.5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z"
+        android:fillColor="#7F9CC4" />
+    <path
+        android:pathData="M67.4,79.1147 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z"
+        android:fillColor="#7F9CC4" />
+    <path
+        android:pathData="M52.9,83 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z"
+        android:fillColor="#7F9CC4" />
+    <path
+        android:pathData="M38.4,79.1147 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z"
+        android:fillColor="#7F9CC4" />
+    <path
+        android:pathData="M27.7853,68.5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z"
+        android:fillColor="#7F9CC4" />
+    <path
+        android:pathData="M23.9,54 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z"
+        android:fillColor="#7F9CC4" />
+    <path
+        android:pathData="M27.7853,39.5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z"
+        android:fillColor="#7F9CC4" />
+    <path
+        android:pathData="M38.4,28.8853 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z"
+        android:fillColor="#7F9CC4" />
+    <path
+        android:pathData="M52.9,25 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z"
+        android:fillColor="#7F9CC4" />
+    <path
+        android:pathData="M67.4,28.8853 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z"
+        android:fillColor="#7F9CC4" />
+    <path
+        android:pathData="M78.0147,39.5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z"
+        android:fillColor="#7F9CC4" />
+    <path
+        android:pathData="M38.00,37.00 L38.00,71.00 A3,3 0 0,0 44.00,71.00 L44.00,37.00 A3,3 0 0,0 38.00,37.00 Z"
+        android:fillColor="#CBD5E1" />
+    <path
+        android:pathData="M45.69,56.48 L70.69,39.48 A3,3 0 0,0 67.31,34.52 L42.31,51.52 A3,3 0 0,0 45.69,56.48 Z"
+        android:fillColor="#CBD5E1" />
+    <path
+        android:pathData="M42.31,56.48 L67.31,73.48 A3,3 0 0,0 70.69,68.52 L45.69,51.52 A3,3 0 0,0 42.31,56.48 Z"
+        android:fillColor="#CBD5E1" />
+    <path
+        android:pathData="M52,54 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0 Z"
+        android:fillColor="#059669" />
+</vector>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The application icon's background — P2-22, then `cover-fingerprint-pattern`.
+
+  `surfaceContainerLow` from DESIGN.md §4. It was once the ground all four launcher
+  identities shared; `launcher-icon-artwork` gave each identity its own, because covers
+  that share a ground read as one app's set. The application icon keeps this one.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#12181F"
+        android:pathData="M0,0h108v108h-108z" />
+</vector>

@@ -1,0 +1,1819 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      The app's text — `app-languages`. Every string a person reads is here, grouped by the
+      screen it appears on, with a comment heading each group. The eight translations keep
+      this file's key order so a reviewer can read them side by side.
+
+      Left in code on purpose, in every language (`app-languages` D4):
+      - Log lines, exception and require() messages: read in logcat and crash reports,
+        never on a screen.
+      - Data written into files and read back by code: the export manifest and its
+        reasons, export stamps and EXIF/XMP fields, file and folder names the app finds
+        again by name (the gallery's "Vault" export folder, a received share's "Shared item" fallback name),
+        container and blob names, preference keys and MIME types.
+      - The recovery and share-code words: the BIP-39 English list in res/raw. A kit
+        written down under one language has to open the vault under another.
+      - The calculator's notation (sin, cos, tan, ln, log, π, e, EXP, AC, DEL, INV,
+        DEG/RAD) and the language names on the Language sheet, which are each language's
+        own name for itself.
+      - The debug-only Crash log screen and its drawer row, which ship in no release build.
+    -->
+
+    <!--
+      The application label: "Kova", the owner's name for the app (2026-10-25). It
+      replaced "Toolbox", an agent-drafted category name nobody chose. It is the same
+      in every locale.
+
+      This is what notifications, Settings > Apps, the app-info page, storage,
+      battery, the permission manager and every runtime permission dialog read. An
+      activity-alias label does not reach it and no runtime API overrides it, so
+      whatever stands here is what a cover identity says about itself the moment any
+      of those surfaces appears. With "Vault" here, granting the recorder its
+      microphone read "Allow Vault to record audio?" over a voice recorder, which is
+      why it must never be "Vault" or any identity's name.
+
+      P2-22 left this as "Vault" on two arguments. The first — that a label other than
+      an alias's imposes a build-time choice on every install including the honest
+      default — is true, and is the price: a user who never wears a cover sees "Vault"
+      on their home screen (the alias label, unchanged) and this word in Settings. The
+      second — that it would desync the label from the name the Play listing is
+      approved under — is simply wrong. The Play Console title is a separate field
+      from android:label; the two differ routinely and nothing couples them.
+    -->
+    <string name="app_name">Kova</string>
+
+    <!--
+      Launcher identity labels — P2-22. These are the words the launcher and recents
+      show, in the device's language (`app-languages` D5); LauncherIdentity names these
+      same resources, and LauncherIdentityScanTest fails the build if the two disagree.
+    -->
+    <string name="identity_vault">Coffre</string>
+
+    <!--
+      P2-24's cover identities. Ordinary names for ordinary apps: the cover has to be
+      a believable instance of the thing it claims to be, and a clever name is the
+      first thing that makes somebody look twice.
+    -->
+    <string name="identity_calculator">Calculatrice</string>
+    <string name="identity_musicplayer">Musique</string>
+    <string name="identity_voicerecorder">Dictaphone</string>
+
+    <!-- Language — the drawer row and the Language sheet -->
+    <!-- Not a phrase: the tag of the language this file is written in. Each translation
+         names its own (ja, ko, pt-BR, …). System default's line reads it to say which
+         language the device's setting resolves to. -->
+    <string name="language_resource_tag">fr</string>
+    <string name="language_german">Allemand</string>
+    <string name="language_english">Anglais</string>
+    <string name="language_spanish">Espagnol</string>
+    <string name="language_french">Français</string>
+    <string name="language_portuguese_brazil">Portugais (Brésil)</string>
+    <string name="language_japanese">Japonais</string>
+    <string name="language_korean">Coréen</string>
+    <string name="language_chinese_simplified">Chinois simplifié</string>
+    <string name="language_chinese_traditional">Chinois traditionnel</string>
+    <string name="language_title">Langue</string>
+    <string name="language_system_default">Langue du système</string>
+    <string name="language_explainer">Modifie uniquement la langue de cette application. La langue de votre téléphone ne change pas.</string>
+    <string name="language_suggested">Suggestions</string>
+    <string name="language_all">Toutes les langues</string>
+    <string name="language_system_default_detail">%1$s — suit votre téléphone</string>
+    <string name="language_changed">Langue définie sur %1$s</string>
+    <string name="drawer_language">Langue \u0020· \u0020%1$s</string>
+
+    <!-- Messages — unlock, backup, restore and vault lifecycle (MainActivity) -->
+    <string name="backup_incomplete">Ce fichier de sauvegarde est incomplet. Il provient peut-être d\'une sauvegarde qui ne s\'est pas terminée.</string>
+    <string name="backup_unreadable">Impossible de lire la sauvegarde. Vérifiez que l\'application qui la contient est connectée.</string>
+    <string name="backup_other_list">Cette sauvegarde provient d\'une autre liste de coffres. Utilisez « Importer un coffre depuis un fichier » pour la récupérer.</string>
+    <string name="bio_invalidated">Le déverrouillage biométrique est désactivé, car vos données biométriques ont changé. Utilisez votre phrase secrète.</string>
+    <string name="bio_after_migration">Le déverrouillage biométrique est désactivé après cette mise à jour. Réactivez-le dans les Paramètres.</string>
+    <string name="vault_newer_version">Ce coffre a été ouvert en dernier par une version plus récente de l\'application. Vos fichiers sont en sécurité et rien n\'a été modifié. Mettez l\'application à jour pour l\'ouvrir.</string>
+    <string name="vault_index_relinked">L\'index de ce coffre a dû être relié de nouveau après une erreur. Tout a été retrouvé, rien n\'a été perdu.</string>
+    <string name="vault_index_unreadable">Impossible d\'ouvrir ce coffre. Son index est manquant ou endommagé, et la recherche dans les fichiers du coffre n\'en a pas trouvé d\'autre. Votre kit de récupération peut le restaurer.</string>
+    <string name="capture_not_saved">Impossible d\'enregistrer cette capture dans le coffre.</string>
+    <string name="backup_folder_on_phone">Ce dossier se trouve sur ce téléphone. Une sauvegarde à cet endroit disparaît avec le téléphone. Choisissez une application cloud ou une carte SD.</string>
+    <string name="restore_device_not_empty">Cet appareil contient déjà un coffre. Une sauvegarde ne peut être restaurée que sur un appareil vide.</string>
+    <string name="restore_open_vaults_first">Ouvrez d\'abord vos coffres.</string>
+    <string name="restore_file_not_opened">Impossible d\'ouvrir le fichier de sauvegarde.</string>
+    <string name="restore_file_unreadable">Impossible de lire le fichier de sauvegarde. Vérifiez que l\'application qui le contient est connectée.</string>
+    <string name="restore_no_backup_in_folder">Aucune sauvegarde trouvée dans ce dossier.</string>
+    <string name="capture_mode_permission_denied">Ce mode a besoin de l\'autorisation qu\'il vient de demander. Il est désactivé.</string>
+    <string name="decoy_trial_notice">Créer un coffre leurre importe de vraies photos, et l\'essai de 30 jours commence dès que quelque chose est ajouté à un coffre. Remettez cela à plus tard si vous préférez le commencer avec vos propres contenus.</string>
+    <string name="vault_list_not_saved">Impossible d\'enregistrer.</string>
+    <string name="editor_could_not_open">Impossible d\'ouvrir cet élément pour le modifier.</string>
+    <string name="folder_name_length">Le nom d\'un dossier doit comporter entre 1 et %1$d caractères.</string>
+    <string name="folder_name_duplicate">Un dossier porte déjà ce nom ici.</string>
+    <string name="folder_cycle">Un dossier ne peut pas se trouver dans lui-même.</string>
+    <string name="vault_destroy_failed">Impossible de supprimer « %1$s ». Rien de son contenu n\'a été perdu.</string>
+    <string name="share_create_failed">Impossible de créer le partage. L\'espace disponible sur l\'appareil est peut-être insuffisant.</string>
+    <string name="setup_vault_not_created">Impossible de créer le coffre. Réessayez.</string>
+    <string name="decoy_choose_photos_first">Choisissez d\'abord les photos.</string>
+    <string name="decoy_set_passphrase_first">Définissez d\'abord la phrase secrète du leurre.</string>
+    <string name="decoy_passphrase_in_use">Cette phrase secrète ouvre déjà un coffre sur cet appareil. Revenez en arrière et choisissez-en une autre.</string>
+    <string name="decoy_no_room">Il n\'y a pas de place pour un autre coffre sur cet appareil.</string>
+    <string name="decoy_passphrase_needed">Cet appareil contient déjà un leurre, et en configurer un maintenant pourrait l\'écraser. Revenez en arrière et saisissez aussi la phrase secrète du leurre.</string>
+    <string name="decoy_not_created">Aucun coffre n\'a été créé.</string>
+    <string name="recovery_words_wrong_backup">Ces mots n\'ouvrent pas cette sauvegarde.</string>
+    <string name="import_words_wrong_backup">Ces mots n\'ouvrent pas cette sauvegarde.</string>
+    <string name="recovery_list_not_here">La liste de coffres de cette sauvegarde ne se trouve pas sur ce téléphone. Déverrouillez, puis choisissez « Importer un coffre depuis un fichier » dans le menu.</string>
+    <string name="this_vault">ce coffre</string>
+    <string name="that_vault">Ce coffre</string>
+    <string name="backup_open_vault_first_file">Ouvrez d\'abord le coffre que vous souhaitez sauvegarder. Une sauvegarde contient un seul coffre.</string>
+    <string name="backup_open_vault_first_folder">Ouvrez d\'abord le coffre que vous souhaitez sauvegarder. Un dossier contient un seul coffre.</string>
+    <string name="backup_folder_another_vault">Ce dossier contient déjà un autre coffre de cet appareil. Chaque coffre a besoin de son propre dossier : y sauvegarder supprimerait son contenu.</string>
+    <string name="backup_folder_another_install">Ce dossier contient déjà une autre sauvegarde. Choisissez un dossier vide, ou un dossier rempli par ce coffre : y sauvegarder supprimerait son contenu.</string>
+    <plurals name="vault_destroy_items_left">
+        <item quantity="one">%1$d élément n\'a pas pu être exporté, ce coffre a donc été conservé. Tout ce qu\'il contient encore est intact.</item>
+        <item quantity="many">%1$d éléments n\'ont pas pu être exportés, ce coffre a donc été conservé. Tout ce qu\'il contient encore est intact.</item>
+        <item quantity="other">%1$d éléments n\'ont pas pu être exportés, ce coffre a donc été conservé. Tout ce qu\'il contient encore est intact.</item>
+    </plurals>
+    <string name="kit_print_job">Kit de récupération du coffre</string>
+    <string name="panic_wrong_passphrase">Cette phrase secrète n\'ouvre pas cette liste de coffres.</string>
+    <string name="panic_wrong_phrase">Ce n\'est pas votre phrase de panique.</string>
+    <string name="panic_too_close">Trop proche de votre phrase secrète : une seule faute de frappe pourrait la déclencher. Choisissez autre chose.</string>
+    <string name="panic_in_use">Cette phrase ouvre déjà une liste de coffres. Choisissez-en une autre.</string>
+    <string name="panic_no_room">Il n\'y a pas de place pour une autre phrase sur cet appareil.</string>
+    <string name="panic_cleared">Votre ancienne phrase de panique ne fonctionne plus ici, elle est donc désactivée. Définissez-en une nouvelle.</string>
+    <string name="panic_not_saved">L\'enregistrement a échoué. Réessayez.</string>
+    <string name="pairing_not_a_code">Ce n\'est pas un code d\'association.</string>
+    <string name="pairing_newer_app">Ce code a été créé par une version plus récente de l\'application. Mettez-la à jour pour le scanner.</string>
+    <string name="pairing_own_code">C\'est le code de ce téléphone.</string>
+    <string name="pairing_already_known">Vous avez déjà ce contact, sous le nom %1$s.</string>
+    <string name="remote_not_an_invite">Ce n\'est pas un fichier d\'invitation.</string>
+    <string name="remote_wrong_reply">Ce fichier n\'est pas la réponse de %1$s à cette invitation.</string>
+    <string name="remote_wrong_confirmation">Ce fichier n\'est pas la confirmation de %1$s.</string>
+    <string name="memo_notifications_off">Les notifications sont désactivées, le bouton « Arrêter » n\'apparaîtra donc pas dans le volet des notifications.</string>
+    <string name="memo_too_short">C\'était trop court pour être conservé.</string>
+    <string name="vault_list_full">Cette liste est pleine. Supprimez un coffre pour faire de la place.</string>
+    <string name="vault_not_created">Impossible de créer ce coffre.</string>
+    <string name="vault_not_opened">Impossible d\'ouvrir ce coffre.</string>
+    <string name="bio_prompt_unlock_title">Déverrouiller le coffre</string>
+    <string name="bio_prompt_use_passphrase">Utiliser la phrase secrète</string>
+    <string name="purchase_unavailable">L\'achat n\'est pas disponible sur cet appareil pour le moment (code %1$d). Ce que vous avez déjà n\'est pas affecté.</string>
+    <plurals name="imports_failed">
+        <item quantity="one">%1$d importation n\'a pas abouti. Rien n\'a été ajouté. Réessayez.</item>
+        <item quantity="many">%1$d importations n\'ont pas abouti. Rien n\'a été ajouté. Réessayez.</item>
+        <item quantity="other">%1$d importations n\'ont pas abouti. Rien n\'a été ajouté. Réessayez.</item>
+    </plurals>
+
+    <!-- Notifications — the foreground work and the recording -->
+    <string name="notification_working">En cours</string>
+    <string name="notification_channel_import">Importation</string>
+    <string name="notification_channel_archive">Archive</string>
+    <string name="notification_channel_export">Exportation</string>
+    <string name="notification_channel_recording">Enregistrement</string>
+    <string name="notification_recording">Enregistrement</string>
+    <string name="notification_stop">Arrêter</string>
+
+    <!-- The printed recovery kit -->
+    <string name="kit_print_heading">Kit de récupération du coffre</string>
+    <string name="kit_print_line_1">Ces 24 mots ouvrent ce coffre. Conservez cette page en lieu sûr.</string>
+    <string name="kit_print_line_2">Ils ne peuvent être ni modifiés ni annulés.</string>
+
+    <!-- Biometric unlock — the screen, the drawer row and the first-run step -->
+    <string name="bio_name">Déverrouillage biométrique</string>
+    <string name="bio_lead">Un accès plus rapide qui ne remplace jamais votre phrase secrète.</string>
+    <string name="bio_row_fingerprint">Déverrouillage par empreinte digitale</string>
+    <string name="bio_row_face">Déverrouillage par reconnaissance faciale</string>
+    <string name="bio_row_both">Déverrouillage par visage et empreinte digitale</string>
+    <string name="bio_on">Activé</string>
+    <string name="bio_off">Désactivé</string>
+    <string name="bio_line_not_set_up">Pas encore configuré. Appuyez pour le configurer dans les paramètres de l\'appareil.</string>
+    <string name="bio_line_not_available_now">Indisponible pour le moment : le capteur ne répond pas.</string>
+    <string name="bio_line_needs_update">Nécessite une mise à jour de sécurité du fabricant de l\'appareil avant que le coffre puisse l\'utiliser.</string>
+    <string name="bio_unsupported">Non compatible avec cet appareil.</string>
+    <string name="bio_unsupported_face">Non compatible avec cet appareil. Sa reconnaissance faciale n\'est pas assez sûre pour protéger des données chiffrées.</string>
+    <string name="bio_unsupported_fingerprint">Non compatible avec cet appareil. Son lecteur d\'empreinte digitale n\'est pas assez sûr pour protéger des données chiffrées.</string>
+    <string name="bio_drawer_not_set_up">Non configuré</string>
+    <string name="bio_drawer_not_available_now">Indisponible pour le moment</string>
+    <string name="bio_drawer_needs_update">Mise à jour de sécurité requise</string>
+    <string name="bio_drawer_not_supported">Non compatible avec cet appareil</string>
+    <string name="bio_fact_how">Comment ouvrir le coffre</string>
+    <string name="bio_fact_how_fingerprint">Lorsque le coffre est verrouillé, Android demande votre empreinte digitale. Touchez le capteur et le coffre s\'ouvre.</string>
+    <string name="bio_fact_how_face">Lorsque le coffre est verrouillé, Android demande votre visage. Regardez l\'écran, puis appuyez pour confirmer : un simple regard n\'ouvre jamais le coffre.</string>
+    <string name="bio_fact_how_both">Lorsque le coffre est verrouillé, Android attend à la fois votre visage et votre empreinte digitale. Touchez le capteur, ou regardez l\'écran et appuyez pour confirmer : le premier utilisé ouvre le coffre.</string>
+    <string name="bio_fact_how_unnamed">Lorsque le coffre est verrouillé, Android demande la donnée biométrique configurée sur cet appareil.</string>
+    <string name="bio_fact_fingerprint_only">Pour n\'utiliser que votre empreinte digitale</string>
+    <string name="bio_fact_fingerprint_only_body">C\'est Android qui décide quelles données biométriques les applications peuvent utiliser, pas cette application. Dans les paramètres de l\'appareil, ouvrez Déverrouillage par reconnaissance faciale et désactivez son utilisation dans les applications : seule votre empreinte digitale ouvrira alors le coffre.</string>
+    <string name="bio_fact_turns_off">Il se désactive si vos données biométriques changent</string>
+    <string name="bio_fact_turns_off_fingerprint">Ajouter ou supprimer une empreinte digitale dans les paramètres de l\'appareil désactive cette fonction. Déverrouillez avec votre phrase secrète, puis réactivez-la depuis « Déverrouillage biométrique » dans le menu.</string>
+    <string name="bio_fact_turns_off_face">Ajouter ou supprimer un visage dans les paramètres de l\'appareil désactive cette fonction. Déverrouillez avec votre phrase secrète, puis réactivez-la depuis « Déverrouillage biométrique » dans le menu.</string>
+    <string name="bio_fact_turns_off_both">Ajouter ou supprimer un visage ou une empreinte digitale dans les paramètres de l\'appareil désactive cette fonction. Déverrouillez avec votre phrase secrète, puis réactivez-la depuis « Déverrouillage biométrique » dans le menu.</string>
+    <string name="bio_fact_turns_off_unnamed">Ajouter ou supprimer une donnée biométrique dans les paramètres de l\'appareil désactive cette fonction. Déverrouillez avec votre phrase secrète, puis réactivez-la depuis « Déverrouillage biométrique » dans le menu.</string>
+    <string name="bio_fact_passphrase">Votre phrase secrète ouvre toujours le coffre</string>
+    <string name="bio_fact_passphrase_body">Le déverrouillage biométrique est un deuxième accès, jamais un remplacement. Si vous oubliez votre phrase secrète, il ne vous permettra pas d\'entrer. Votre kit de récupération, si.</string>
+    <string name="bio_button_fallback">Utiliser la biométrie</string>
+    <string name="bio_enable_title">Activer le déverrouillage biométrique</string>
+
+    <!-- Calculator cover — how it opens -->
+    <string name="method_sequence">Séquence de touches</string>
+    <string name="method_sequence_line">Tapez votre séquence, puis maintenez =.</string>
+    <string name="method_sequence_pattern">Séquence de touches, puis schéma</string>
+    <string name="method_sequence_pattern_line">Tapez votre séquence et maintenez =, puis tracez votre schéma sur les points qui apparaissent.</string>
+    <string name="method_hold_pattern">Appui long, puis schéma</string>
+    <string name="method_hold_pattern_line">Maintenez appuyé 2 secondes l\'endroit de votre choix, puis tracez votre schéma sur les points qui apparaissent.</string>
+    <string name="method_choose_lead">Choisissez comment ouvrir l\'écran de la phrase secrète depuis cette icône. Vous le configurerez ensuite.</string>
+
+    <!-- Intruder capture — where an attempt failed -->
+    <string name="capture_where_music">Lecteur de musique</string>
+    <string name="capture_where_recorder">Dictaphone</string>
+    <string name="capture_where_calculator">Calculatrice</string>
+    <string name="capture_where_cover">Façade</string>
+    <string name="capture_where_pattern">%1$s : schéma incorrect</string>
+    <string name="capture_where_pattern_dots">%1$s : schéma incorrect sur les points affichés</string>
+    <string name="capture_where_pattern_lockout">%1$s : schéma tenté pendant le blocage</string>
+    <string name="capture_where_pattern_lockout_dots">%1$s : schéma tenté pendant le blocage sur les points affichés</string>
+    <string name="capture_where_wrong_fingerprint">Écran de déverrouillage : empreinte incorrecte</string>
+    <string name="capture_where_wrong_face">Écran de déverrouillage : visage incorrect</string>
+    <string name="capture_where_wrong_both">Écran de déverrouillage : visage ou empreinte incorrects</string>
+    <string name="capture_where_wrong_biometric">Écran de déverrouillage : donnée biométrique incorrecte</string>
+    <string name="capture_where_wrong_passphrase">Écran de déverrouillage : phrase secrète incorrecte</string>
+    <string name="capture_where_vault_passphrase">Phrase secrète du coffre : phrase incorrecte</string>
+
+    <!-- Passphrase strength — the meter under every passphrase field -->
+    <string name="strength_add_another_word">Ajoutez un ou deux mots. Les mots inhabituels sont les plus efficaces.</string>
+    <string name="strength_default_suggestions_use_few_words">Utilisez plusieurs mots qui n\'ont rien à voir entre eux.</string>
+    <string name="strength_default_suggestions_no_need_symbols">Les symboles, chiffres et majuscules ne sont pas nécessaires ici : c\'est la longueur qui compte.</string>
+    <string name="strength_dictionary_warning_passwords_top10">Il s\'agit de l\'un des dix mots de passe les plus utilisés.</string>
+    <string name="strength_dictionary_warning_passwords_top100">Il s\'agit de l\'un des cent mots de passe les plus utilisés.</string>
+    <string name="strength_dictionary_warning_passwords_very_common">C\'est un mot de passe très courant, qui serait deviné rapidement.</string>
+    <string name="strength_dictionary_warning_passwords_similar">Cela ressemble à un mot de passe déjà très utilisé.</string>
+    <string name="strength_dictionary_warning_english_wikipedia_itself">Un mot seul est vite deviné.</string>
+    <string name="strength_dictionary_warning_etc_names_themselves">Un nom seul est vite deviné.</string>
+    <string name="strength_dictionary_warning_etc_names_common">Les noms courants sont vite devinés.</string>
+    <string name="strength_dictionary_suggestions_capitalization">Une majuscule au début n\'apporte presque rien. Ajoutez plutôt un mot.</string>
+    <string name="strength_dictionary_suggestions_all_uppercase">Tout en majuscules est presque aussi facile à deviner que tout en minuscules.</string>
+    <string name="strength_dictionary_suggestions_reversed">Écrire un mot à l\'envers ne le rend guère plus difficile à deviner.</string>
+    <string name="strength_dictionary_suggestions_l33t">Remplacer des lettres par des caractères ressemblants, comme 4 pour a, est déjà prévu.</string>
+    <string name="strength_spatial_warning_straight_rows_of_keys">Une rangée de touches à la suite est l\'une des premières choses essayées.</string>
+    <string name="strength_spatial_warning_short_keyboard_patterns">Les motifs courts tracés sur le clavier sont vite devinés.</string>
+    <string name="strength_spatial_suggestions_use_longer_keyboard_pattern">Utilisez des mots plutôt qu\'une forme tracée sur le clavier.</string>
+    <string name="strength_repeat_warning_like_aaa">Un caractère répété se devine aussi vite qu\'un seul caractère.</string>
+    <string name="strength_repeat_warning_like_abcabcabc">Un bloc répété est à peine plus difficile à deviner que le bloc seul.</string>
+    <string name="strength_repeat_suggestions_avoid_repeated_words">Répéter un mot ou une lettre n\'apporte presque rien. Ajoutez un autre mot.</string>
+    <string name="strength_sequence_warning_like_abcor6543">Les suites comme abc ou 6543 sont devinées immédiatement.</string>
+    <string name="strength_sequence_suggestions_avoid_sequences">Évitez les lettres ou les chiffres qui se suivent.</string>
+    <string name="strength_regex_warning_recent_years">Les années récentes font partie des premières choses essayées.</string>
+    <string name="strength_regex_suggestions_avoid_recent_years">N\'utilisez pas d\'années, surtout celles qui comptent pour vous.</string>
+    <string name="strength_date_warning_dates">Les dates se devinent vite, même celles que vous seul connaissez.</string>
+    <string name="strength_date_suggestions_avoid_dates">N\'utilisez pas de dates, surtout celles qui comptent pour vous.</string>
+    <string name="strength_very_weak">Très faible</string>
+    <string name="strength_weak">Faible</string>
+    <string name="strength_fair">Moyenne</string>
+    <string name="strength_almost">Presque</string>
+    <string name="strength_strong_enough">Suffisamment robuste</string>
+    <string name="strength_count">%1$d caractères sur %2$d</string>
+    <string name="passphrase_requirement">Au moins %1$d caractères. Quelques mots inhabituels valent mieux qu\'un seul mot compliqué.</string>
+    <string name="passphrase_too_weak">Cette phrase secrète est trop facile à deviner. Ajoutez un ou deux mots.</string>
+
+    <!-- First vault and the lock screen -->
+    <string name="passphrase_label">Phrase secrète</string>
+    <string name="passphrase_again_label">Saisissez-la à nouveau</string>
+    <string name="passphrase_mismatch">Les deux saisies ne correspondent pas.</string>
+    <string name="setup_title">Choisissez une phrase secrète</string>
+    <string name="setup_lead">Elle ne peut pas être réinitialisée. Vous verrez ensuite un kit de récupération de 24 mots, qui est le seul autre moyen d\'accéder à ce coffre. Perdez les deux, et tout son contenu disparaît définitivement.</string>
+    <string name="setup_preparing">Préparation du stockage</string>
+    <string name="setup_create">Créer le coffre</string>
+    <string name="setup_restore_backup">Restaurer une sauvegarde</string>
+    <string name="unlock_welcome">Bon retour</string>
+    <string name="unlock_lead">Saisissez votre phrase secrète pour ouvrir ce coffre.</string>
+    <string name="unlock_failed">Aucun coffre ne s\'est ouvert.</string>
+    <string name="unlock_action">Déverrouiller</string>
+    <string name="unlock_forgot">Phrase secrète oubliée ?</string>
+    <string name="unlock_busy">Déverrouillage</string>
+    <string name="passphrase_hide">Masquer la phrase secrète</string>
+    <string name="passphrase_show">Afficher la phrase secrète</string>
+    <string name="passphrase_match">Les deux saisies correspondent</string>
+
+    <!-- Photo details — the sheet, and the export and share lines -->
+    <string name="photo_details_privacy">Confidentialité</string>
+    <string name="photo_details_custom">Personnalisé</string>
+    <!-- Joining a list: "%1$s" is everything before the last item, already joined with list_separator. -->
+    <string name="list_separator">,\u0020</string>
+    <string name="list_and">%1$s et %2$s</string>
+    <string name="list_or">%1$s ou %2$s</string>
+    <string name="exif_noun_location">lieu</string>
+    <string name="exif_noun_camera">modèle d\'appareil</string>
+    <string name="exif_noun_the_date">horodatage</string>
+    <string name="exif_noun_date">horodatage</string>
+    <string name="exif_noun_software">historique des modifications</string>
+    <string name="exif_export_names_only">Seuls les noms, légendes et commentaires sont retirés des photos JPEG exportées. Les autres formats sont écrits sans modification.</string>
+    <plurals name="exif_export_removed">
+        <item quantity="one">%1$s est retiré des photos JPEG exportées.</item>
+        <item quantity="many">%1$s sont retirés des photos JPEG exportées.</item>
+        <item quantity="other">%1$s sont retirés des photos JPEG exportées.</item>
+    </plurals>
+    <plurals name="exif_export_kept">
+        <item quantity="one">%1$s est conservé.</item>
+        <item quantity="many">%1$s sont conservés.</item>
+        <item quantity="other">%1$s sont conservés.</item>
+    </plurals>
+    <plurals name="exif_export_kept_sorted">
+        <item quantity="one">%1$s est conservé, pour que votre galerie puisse toujours les trier.</item>
+        <item quantity="many">%1$s sont conservés, pour que votre galerie puisse toujours les trier.</item>
+        <item quantity="other">%1$s sont conservés, pour que votre galerie puisse toujours les trier.</item>
+    </plurals>
+    <string name="exif_export_summary">%1$s Les autres formats sont écrits sans modification.</string>
+    <string name="exif_share_names_only">Seulement les noms, légendes et commentaires.</string>
+    <string name="exif_share_removed">Sans %1$s.</string>
+    <string name="exif_share_kept">Conserve %1$s.</string>
+    <string name="photo_details_title">Détails des photos</string>
+    <string name="photo_details_lead">Choisissez ce qui est retiré d\'une photo avant qu\'elle quitte le coffre.</string>
+    <string name="photo_details_privacy_row">Confidentialité (recommandé)</string>
+    <string name="photo_details_privacy_detail">Retire le lieu, les infos de l\'appareil photo et l\'historique des modifications</string>
+    <string name="photo_details_custom_detail">Choisissez ce qui est retiré.</string>
+    <string name="photo_details_remove_heading">Retirer</string>
+    <string name="photo_details_removed">Retiré</string>
+    <string name="photo_details_kept">Conservé</string>
+    <string name="photo_details_import_heading">À l\'importation</string>
+    <string name="photo_details_import_row">Retirer des photos que vous importez</string>
+    <string name="photo_details_import_on">Activé · Impossible d\'annuler une fois la photo importée.</string>
+    <string name="photo_details_footer">Photos JPEG uniquement : les autres formats restent exactement tels quels. Chaque retrait supprime aussi les noms, légendes, commentaires, personnes identifiées et tout ce que l\'application ne reconnaît pas, et conserve ce dont la photo a besoin pour s\'afficher correctement, y compris le mouvement et le HDR.</string>
+    <string name="photo_details_location">Lieu</string>
+    <string name="photo_details_location_covers">Position GPS, altitude et orientation</string>
+    <string name="photo_details_camera">Infos de l\'appareil photo</string>
+    <string name="photo_details_camera_covers">Marque, modèle, objectif, numéros de série et réglages</string>
+    <string name="photo_details_date">Date et heure</string>
+    <string name="photo_details_date_covers">Quand elle a été prise et modifiée pour la dernière fois</string>
+    <string name="photo_details_software">Logiciel et historique des modifications</string>
+    <string name="photo_details_software_covers">Les applications qui l\'ont créée ou modifiée</string>
+
+    <!-- Drawer — appearance -->
+    <string name="appearance">Apparence</string>
+    <string name="appearance_system">Système</string>
+    <string name="appearance_light">Clair</string>
+    <string name="appearance_dark">Sombre</string>
+
+    <!-- Drawer — the vault's rows and the install's -->
+    <string name="drawer_trash">Corbeille</string>
+    <string name="drawer_backup">Sauvegarde</string>
+    <string name="drawer_intruder_capture">Capture des intrus</string>
+    <string name="drawer_open_share">Ouvrir un partage…</string>
+    <string name="drawer_unvault_everything">Tout sortir du coffre</string>
+    <string name="drawer_destroy_vault">Détruire le coffre</string>
+    <string name="drawer_purchase">Achat \u0020· \u0020%1$s</string>
+    <string name="drawer_app_identity">Identité de l\'application \u0020· \u0020%1$s</string>
+    <string name="drawer_face_down">Verrouillage face cachée</string>
+    <string name="face_down_no_sensor">Cet appareil n\'a pas de capteur de mouvement : il ne peut donc pas savoir quand il est posé face cachée.</string>
+    <string name="face_down_lead">Retournez votre téléphone et posez-le pour verrouiller le coffre.</string>
+    <string name="face_down_switch">Utiliser le verrouillage face cachée</string>
+    <string name="face_down_lock_after">Verrouiller après</string>
+    <string name="face_down_immediately">Immédiatement</string>
+    <string name="face_down_locks_at_once">Se verrouille aussitôt</string>
+    <string name="face_down_locks_after">Se verrouille après %1$s</string>
+    <string name="face_down_timeout_line">Votre écran s\'éteint après %1$s, ce qui verrouille le coffre en premier.</string>
+    <plurals name="face_down_seconds">
+        <item quantity="one">%1$d seconde</item>
+        <item quantity="many">%1$d secondes</item>
+        <item quantity="other">%1$d secondes</item>
+    </plurals>
+    <plurals name="face_down_minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="many">%1$d minutes</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
+    <string name="drawer_decoy">Coffre leurre</string>
+    <string name="drawer_decoy_set_up">Configuré. Il n\'est pas possible d\'en créer un second.</string>
+    <string name="drawer_set_up_decoy">Configurer un coffre leurre</string>
+    <string name="drawer_panic">Identifiant de panique</string>
+    <string name="drawer_photo_details">Détails des photos \u0020· \u0020%1$s</string>
+    <string name="drawer_contacts">Contacts</string>
+    <string name="drawer_recover_vault">Récupérer un coffre avec son kit</string>
+    <string name="drawer_restore_vault">Restaurer un coffre depuis une sauvegarde</string>
+    <string name="drawer_import_vault">Importer un coffre depuis un fichier</string>
+    <string name="drawer_capture_waiting">Une capture d\'intrus vous attend</string>
+
+    <!-- Purchase — the screen, the drawer row and the trial -->
+    <string name="trial_blocked">Votre essai est terminé. Ouvrir, consulter et exporter tout le contenu de vos coffres reste sans restriction. Achetez l\'application une fois, dans Achat dans le menu, pour en ajouter davantage.</string>
+    <plurals name="trial_reminder">
+        <item quantity="one">Il vous reste %1$d jour d\'essai. Ouvrir, consulter et exporter restent sans restriction dans tous les cas.</item>
+        <item quantity="many">Il vous reste %1$d jours d\'essai. Ouvrir, consulter et exporter restent sans restriction dans tous les cas.</item>
+        <item quantity="other">Il vous reste %1$d jours d\'essai. Ouvrir, consulter et exporter restent sans restriction dans tous les cas.</item>
+    </plurals>
+    <string name="purchase_title">Achat</string>
+    <plurals name="purchase_days_from_first">
+        <item quantity="one">%1$d jour, à partir du premier élément ajouté</item>
+        <item quantity="many">%1$d jours, à partir du premier élément ajouté</item>
+        <item quantity="other">%1$d jours, à partir du premier élément ajouté</item>
+    </plurals>
+    <plurals name="purchase_days_left">
+        <item quantity="one">%1$d jour restant</item>
+        <item quantity="many">%1$d jours restants</item>
+        <item quantity="other">%1$d jours restants</item>
+    </plurals>
+    <string name="purchase_owned_body">Ajouter du contenu à vos coffres, créer des coffres et envoyer des partages sont sans restriction. L\'achat est associé à votre compte Google et revient si vous réinstallez l\'application.</string>
+    <string name="purchase_pending_body">Google Play attend la validation de votre paiement. Tout se débloque à ce moment-là. Inutile de garder cet écran ouvert.</string>
+    <string name="purchase_trial_body">À la fin de l\'essai, l\'ajout de contenu à un coffre, la création de coffres et l\'envoi de partages s\'arrêtent. Ouvrir, consulter et exporter tout ce qui se trouve déjà dans vos coffres, et ouvrir les partages qu\'on vous envoie, ne s\'arrêtent jamais, que vous ayez payé ou non.</string>
+    <string name="purchase_one_payment">Un seul paiement. Pas d\'abonnement, rien n\'est renouvelé.</string>
+    <string name="purchase_buy_for">Acheter pour %1$s</string>
+    <string name="purchase_buy">Acheter</string>
+    <string name="purchase_state_owned">Acheté</string>
+    <string name="purchase_state_pending">Paiement en attente</string>
+    <string name="purchase_state_not_started">Essai non commencé</string>
+    <plurals name="purchase_state_trial_left">
+        <item quantity="one">Essai, %1$d jour restant</item>
+        <item quantity="many">Essai, %1$d jours restants</item>
+        <item quantity="other">Essai, %1$d jours restants</item>
+    </plurals>
+    <string name="purchase_state_trial">Essai</string>
+    <string name="purchase_state_ended">Essai terminé</string>
+
+    <!-- App identity — the screen and the sheet that commits a choice -->
+    <string name="identity_screen_title">Identité de l\'application</string>
+    <string name="identity_screen_lead">Choisissez le nom et l\'icône que cette application affiche dans le lanceur et dans les applications récentes. Toutes ouvrent ce coffre, et aucune ne l\'ouvre sans votre phrase secrète ou une donnée biométrique que vous avez configurée.</string>
+    <string name="identity_current">Affichée actuellement</string>
+    <string name="identity_opens_vault">Ouvre directement le coffre</string>
+    <string name="identity_opens_calculator">Ouvre d\'abord une calculatrice</string>
+    <string name="identity_opens_calculator_setup">Ouvre d\'abord une calculatrice. À configurer</string>
+    <string name="identity_opens_music">Ouvre d\'abord un lecteur de musique</string>
+    <string name="identity_opens_music_setup">Ouvre d\'abord un lecteur de musique. À configurer</string>
+    <string name="identity_opens_recorder">Ouvre d\'abord un dictaphone</string>
+    <string name="identity_opens_recorder_setup">Ouvre d\'abord un dictaphone. À configurer</string>
+    <string name="identity_calculator_weak">La plus faible des façades : son geste est une courte séquence de touches.</string>
+    <string name="identity_calculator_weak_unset">Avec une simple séquence de touches, c\'est la plus faible des façades.</string>
+    <string name="identity_boundary_title">Ce qu\'une identité ne change pas</string>
+    <string name="identity_boundary_body">Les Paramètres d\'Android, la page d\'informations de l\'application et toute notification pendant une importation affichent toujours cette application sous son vrai nom. Une identité change le lanceur et les applications récentes, rien d\'autre.</string>
+    <string name="identity_commit_body">Ce changement supprime tout raccourci épinglé et tout emplacement de l\'application sur l\'écran d\'accueil. Vous pourrez la replacer ensuite.</string>
+    <string name="identity_rationale_music">Un lecteur de musique qui ne voit pas votre musique n\'est pas crédible : il s\'ouvrirait sur une bibliothèque vide. Cette icône a besoin d\'accéder aux fichiers audio de cet appareil.</string>
+    <string name="identity_rationale_recorder">Un dictaphone qui ne peut pas utiliser le micro n\'est pas crédible : son bouton d\'enregistrement ne ferait rien. Cette icône a besoin d\'accéder au micro.</string>
+    <string name="identity_blocked_music">Android ne redemandera pas depuis l\'application. L\'accès aux fichiers audio peut être modifié dans la page des paramètres de cette application, sous Autorisations.</string>
+    <string name="identity_blocked_recorder">Android ne redemandera pas depuis l\'application. L\'accès au micro peut être modifié dans la page des paramètres de cette application, sous Autorisations.</string>
+    <string name="identity_use_icon">Utiliser cette icône</string>
+    <string name="identity_set_up">Configurer</string>
+    <string name="identity_ask_again">Redemander</string>
+    <string name="identity_open_settings">Ouvrir les paramètres</string>
+
+    <!-- Shared words -->
+    <string name="state_expanded">Développé</string>
+    <string name="state_collapsed">Réduit</string>
+    <string name="action_continue">Continuer</string>
+    <string name="action_done">OK</string>
+    <string name="action_save">Enregistrer</string>
+    <string name="action_back">Retour</string>
+    <string name="action_cancel">Annuler</string>
+    <string name="action_remove">Retirer</string>
+    <string name="action_not_now">Pas maintenant</string>
+    <string name="menu">Menu</string>
+    <string name="action_saving">Enregistrement</string>
+    <string name="rename">Renommer</string>
+    <string name="delete">Supprimer</string>
+    <string name="more">Plus</string>
+    <string name="pause">Pause</string>
+    <string name="play">Lire</string>
+    <string name="seek">Rechercher une position</string>
+    <string name="slideshow">Diaporama</string>
+    <string name="speed">Vitesse</string>
+    <plurals name="seconds">
+        <item quantity="one">%1$d seconde</item>
+        <item quantity="many">%1$d secondes</item>
+        <item quantity="other">%1$d secondes</item>
+    </plurals>
+    <string name="undo">Annuler</string>
+    <string name="redo">Rétablir</string>
+    <string name="export">Exporter</string>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="many">%1$d minutes</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
+    <string name="start_recording">Démarrer l\'enregistrement</string>
+    <string name="stop_recording">Arrêter l\'enregistrement</string>
+    <string name="warning">Avertissement</string>
+
+    <!-- Cover setup — recording how a cover opens -->
+    <string name="setup_cover_choose_title">Comment voulez-vous l\'ouvrir ?</string>
+    <string name="setup_cover_draw_shape">Tracez maintenant votre forme</string>
+    <string name="setup_cover_record">Enregistrez votre geste</string>
+    <string name="setup_cover_draw_again">Tracez-la à nouveau</string>
+    <string name="setup_cover_do_again">Recommencez</string>
+    <string name="setup_cover_mismatch_title">Ce n\'était pas le même geste</string>
+    <string name="setup_cover_hold_title">Choisissez où maintenir le doigt</string>
+    <string name="setup_cover_hold_again_title">Maintenez à nouveau</string>
+    <string name="setup_cover_hold_mismatch_title">Ce n\'était pas le même endroit</string>
+    <string name="setup_cover_hold_mismatch">Le deuxième appui était à un autre endroit, aucun des deux n\'a donc été conservé.</string>
+    <string name="setup_cover_start_over">Recommencer</string>
+    <string name="setup_cover_done_title">Tout est prêt</string>
+    <string name="setup_cover_hold_line">Maintenez le doigt n\'importe où sur l\'écran pendant 2 secondes. C\'est cet endroit qui fait apparaître les points, quel que soit ce qui s\'y affiche.</string>
+    <string name="setup_cover_hold_again_line">Maintenez à nouveau le même endroit.</string>
+    <string name="setup_cover_hold_early_line">Continuez d\'appuyer pendant 2 secondes.</string>
+    <string name="setup_cover_too_short">C\'était trop court. Un geste nécessite au moins %1$s.</string>
+    <string name="setup_cover_so_far">%1$s pour l\'instant. Encore %2$d.</string>
+    <string name="setup_cover_at_cap">%1$s : le maximum mémorisable. %2$s</string>
+    <string name="setup_cover_enough">%1$s. %2$s</string>
+    <string name="setup_cover_keys_again">Appuyez à nouveau sur les mêmes touches. Appuyez sur « AC » pour recommencer.</string>
+    <string name="setup_cover_keys">Appuyez sur les touches que vous voulez utiliser : cela peut être un calcul ordinaire. Chaque touche compte, y compris « DEL ». Vous vous êtes trompé de touche ? Appuyez sur « AC » pour recommencer.</string>
+    <string name="setup_cover_shape_again">Tracez à nouveau la même forme.</string>
+    <string name="setup_cover_shape_music">Tracez une forme reliant au moins cinq des neuf points, dans un ordre dont vous vous souviendrez. Elle ne sera plus affichée une fois cet écran fermé.</string>
+    <string name="setup_cover_shape_recorder">Tracez une forme reliant au moins cinq des neuf points, dans un ordre dont vous vous souviendrez. Aucun enregistrement fait ici n\'est conservé.</string>
+    <string name="setup_cover_finish_keys">Maintenez « = » pour terminer.</string>
+    <string name="setup_cover_finish_shape">Levez le doigt pour terminer.</string>
+    <plurals name="setup_cover_key_count">
+        <item quantity="one">%1$d touche</item>
+        <item quantity="many">%1$d touches</item>
+        <item quantity="other">%1$d touches</item>
+    </plurals>
+    <plurals name="setup_cover_node_count">
+        <item quantity="one">%1$d point</item>
+        <item quantity="many">%1$d points</item>
+        <item quantity="other">%1$d points</item>
+    </plurals>
+    <string name="setup_cover_mismatch_sequence">La deuxième séquence ne correspondait pas à la première, aucune des deux n\'a donc été conservée. Recommencer est la seule réponse sûre : garder la première laisserait un deuxième essai chanceux choisir entre deux gestes dont vous ne vous souvenez qu\'à moitié, et vous vous entraîneriez vers une cible que vous ne voyez pas.</string>
+    <string name="setup_cover_mismatch_pattern">Le deuxième schéma ne correspondait pas au premier, aucun des deux n\'a donc été conservé. Recommencer est la seule réponse sûre : garder le premier laisserait un deuxième essai chanceux choisir entre deux gestes dont vous ne vous souvenez qu\'à moitié, et vous vous entraîneriez vers une cible que vous ne voyez pas.</string>
+    <string name="setup_cover_sequence_kept">Votre séquence est conservée. Seule la forme est à refaire.</string>
+    <string name="setup_cover_spot_kept">Votre endroit est conservé. Seule la forme est à refaire.</string>
+    <string name="setup_cover_nothing_changed">Rien n\'a changé. Votre lanceur affiche toujours la même icône qu\'avant.</string>
+    <string name="setup_cover_done_vault">Cette icône ouvre l\'écran qui demande votre phrase secrète.</string>
+    <string name="setup_cover_done_route">Pour accéder à l\'écran de la phrase secrète depuis cette icône :</string>
+    <string name="setup_cover_done_hidden_dots">Votre forme fonctionne aussi à tout moment sur les points masqués.</string>
+    <plurals name="setup_cover_route_keys_shape">
+        <item quantity="one">Appuyez sur %1$s sur la calculatrice, puis maintenez « = » : les points apparaissent. Tracez-y votre forme : %2$d point.</item>
+        <item quantity="many">Appuyez sur %1$s sur la calculatrice, puis maintenez « = » : les points apparaissent. Tracez-y votre forme : %2$d points.</item>
+        <item quantity="other">Appuyez sur %1$s sur la calculatrice, puis maintenez « = » : les points apparaissent. Tracez-y votre forme : %2$d points.</item>
+    </plurals>
+    <string name="setup_cover_wrong_key">Si vous vous trompez de touche, appuyez sur « AC » et recommencez.</string>
+    <string name="setup_cover_remember">Personne ne peut retrouver ce geste pour vous, et l\'application ne vous le montrera plus. Si vous préférez ne pas compter sur votre mémoire, revenez à l\'icône du coffre depuis le menu tant que vous le pouvez encore.</string>
+    <string name="setup_cover_route_keys">Appuyez sur %1$s sur la calculatrice, puis maintenez « = ». Si vous vous trompez de touche, appuyez sur « AC » et recommencez.</string>
+    <plurals name="setup_cover_route_shape">
+        <item quantity="one">Tracez sur l\'écran la forme choisie (%1$d point), puis levez le doigt.</item>
+        <item quantity="many">Tracez sur l\'écran la forme choisie (%1$d points), puis levez le doigt.</item>
+        <item quantity="other">Tracez sur l\'écran la forme choisie (%1$d points), puis levez le doigt.</item>
+    </plurals>
+    <plurals name="setup_cover_route_hold">
+        <item quantity="one">Maintenez l\'endroit choisi (%1$s) pendant 2 secondes : les points apparaissent. Tracez-y votre forme : %2$d point.</item>
+        <item quantity="many">Maintenez l\'endroit choisi (%1$s) pendant 2 secondes : les points apparaissent. Tracez-y votre forme : %2$d points.</item>
+        <item quantity="other">Maintenez l\'endroit choisi (%1$s) pendant 2 secondes : les points apparaissent. Tracez-y votre forme : %2$d points.</item>
+    </plurals>
+    <string name="hold_place">%1$s, %2$s</string>
+    <string name="hold_row_top">Rangée du haut</string>
+    <string name="hold_row_second">Deuxième rangée</string>
+    <string name="hold_row_third">Troisième rangée</string>
+    <string name="hold_row_bottom">Rangée du bas</string>
+    <string name="hold_column_left">gauche</string>
+    <string name="hold_column_centre">centre</string>
+    <string name="hold_column_right">droite</string>
+
+    <!-- Panic credential -->
+    <string name="panic_status_on">L\'identifiant de panique est activé</string>
+    <string name="panic_status_off">L\'identifiant de panique est désactivé</string>
+    <string name="panic_fact_survives">Cette liste de coffres est préservée</string>
+    <string name="panic_fact_survives_body">Saisie sur l\'écran de verrouillage, votre phrase de panique ouvre cette liste de coffres comme d\'habitude, et tous les coffres qui n\'y figurent pas ne s\'ouvrent plus jamais sur cet appareil.</string>
+    <string name="panic_fact_way_in">Elle détruit l\'accès, pas les fichiers</string>
+    <string name="panic_fact_way_in_body">Les autres coffres restent sur cet appareil sous forme de données illisibles. Leurs kits de récupération de 24 mots les ouvrent toujours.</string>
+    <string name="panic_fact_silent">Rien ne confirme qu\'elle a fonctionné</string>
+    <string name="panic_fact_silent_body">Toute personne qui regarde voit un déverrouillage ordinaire.</string>
+    <string name="panic_fact_backup">Elle vide aussi votre dossier de sauvegarde</string>
+    <string name="panic_fact_backup_body">Les copies que votre fournisseur cloud conserve dans sa propre corbeille ou son historique des versions sont hors de portée de cette application.</string>
+    <string name="panic_change">Modifier la phrase de panique</string>
+    <string name="panic_turn_it_off">La désactiver</string>
+    <string name="panic_turn_off_title">Désactiver la phrase de panique</string>
+    <string name="panic_turn_off">Désactiver</string>
+    <string name="panic_set_title">Définir une phrase de panique</string>
+    <string name="panic_your_passphrase">Votre phrase secrète</string>
+    <string name="panic_passphrase_hint">Celle qui a ouvert cette liste de coffres.</string>
+    <string name="panic_phrase_label">Phrase de panique</string>
+    <string name="panic_turn_on">Activer</string>
+    <string name="panic_forgot_title">Effacer une phrase de panique oubliée</string>
+    <string name="panic_forgot_body">Votre phrase secrète désactive la phrase de panique. Vous pourrez en définir une nouvelle ensuite.</string>
+    <string name="panic_clear">Effacer la phrase de panique</string>
+    <string name="panic_current_label">Phrase de panique actuelle</string>
+    <string name="panic_forgot">Phrase de panique oubliée ?</string>
+    <string name="panic_new_label">Nouvelle phrase de panique</string>
+    <string name="panic_phrase_requirement">%1$s Elle ne doit ressembler à aucune de vos phrases secrètes : seule la phrase secrète de cette liste peut être vérifiée.</string>
+    <string name="panic_label_again">%1$s (confirmation)</string>
+
+    <!-- Vault names -->
+    <string name="vault_name_label">Nom</string>
+    <string name="vault_name_empty">Donnez un nom au coffre.</string>
+    <string name="vault_name_too_long">Ce nom est trop long pour ce coffre.</string>
+
+    <!-- Decoy — building a vault you can hand over -->
+    <string name="decoy_captured_during_setup">capturée pendant la création de ce coffre : une photo prise aujourd\'hui n\'a pas sa place dans un coffre censé avoir plusieurs mois</string>
+    <string name="decoy_step">Étape %1$d sur %2$d</string>
+    <string name="decoy_leave">Quitter la configuration du leurre</string>
+    <string name="decoy_intro_title">Un coffre que vous pouvez remettre</string>
+    <string name="decoy_intro_lead">Un coffre ordinaire avec sa propre phrase secrète, contenant des choses que cela ne vous dérangerait pas que quelqu\'un voie.</string>
+    <string name="decoy_start">Commencer</string>
+    <string name="decoy_fact_used">Il doit sembler utilisé</string>
+    <string name="decoy_fact_used_body">Un coffre vide ne trompe personne. Celui-ci reçoit les photos que vous choisissez, ainsi que des dates et un historique qui ressemblent à des mois d\'utilisation ordinaire.</string>
+    <string name="decoy_fact_photos">Les photos sont les vôtres</string>
+    <string name="decoy_fact_photos_body">Elles proviennent de cet appareil. Rien n\'est fourni avec l\'application, car un contenu fourni serait identique sur chaque téléphone qui l\'a. La personne à qui vous remettez ce coffre verra ces photos : choisissez donc celles que vous acceptez de montrer.</string>
+    <string name="decoy_fact_own">Votre coffre reste où il est</string>
+    <string name="decoy_fact_own_body">Cela crée un second coffre à côté. Rien de ce qui se trouve déjà sur cet appareil n\'est déplacé, modifié ou supprimé, et le coffre ouvert en ce moment ne peut pas être affecté.</string>
+    <string name="decoy_fact_cost">Ce que cela coûte</string>
+    <string name="decoy_photos_title">Choisissez les photos</string>
+    <string name="decoy_photos_lead">Entre %1$d et %2$d, réparties sur au moins %3$d semaines.</string>
+    <string name="decoy_choose_to_continue">Choisissez des photos pour continuer</string>
+    <string name="decoy_not_plausible">Pas encore un ensemble crédible</string>
+    <string name="decoy_choose_photos">Choisir des photos</string>
+    <string name="decoy_choose_again">Choisir à nouveau</string>
+    <string name="decoy_nothing_chosen">Rien n\'est choisi pour l\'instant. Le sélecteur affiche votre photothèque ; l\'application ne la lit pas et ne voit jamais ce que vous ne choisissez pas.</string>
+    <plurals name="decoy_summary_in">
+        <item quantity="one">%1$d y sera ajoutée.</item>
+        <item quantity="many">%1$d y seront ajoutées.</item>
+        <item quantity="other">%1$d y seront ajoutées.</item>
+    </plurals>
+    <plurals name="decoy_summary_kept">
+        <item quantity="one">%1$d garde sa date de prise de vue</item>
+        <item quantity="many">%1$d gardent leur date de prise de vue</item>
+        <item quantity="other">%1$d gardent leur date de prise de vue</item>
+    </plurals>
+    <plurals name="decoy_summary_assigned">
+        <item quantity="one">%1$d n\'a pas de date et en reçoit une</item>
+        <item quantity="many">%1$d n\'ont pas de date et en reçoivent une</item>
+        <item quantity="other">%1$d n\'ont pas de date et en reçoivent une</item>
+    </plurals>
+    <string name="decoy_summary_dates">%1$s.</string>
+    <string name="decoy_summary_dates_assigned">%1$s, %2$s.</string>
+    <plurals name="decoy_summary_declined">
+        <item quantity="one">%1$d écartée : %2$s.</item>
+        <item quantity="many">%1$d écartées : %2$s.</item>
+        <item quantity="other">%1$d écartées : %2$s.</item>
+    </plurals>
+    <string name="decoy_summary_truncated">Seules les %1$d premières ont été prises : au-delà, ce n\'est plus un leurre, c\'est une seconde photothèque.</string>
+    <string name="decoy_gate_enough">Éléments suffisants : %1$d, le minimum étant %2$d.</string>
+    <string name="decoy_gate_not_enough">Pas assez d\'éléments. Vous en avez %1$d et le minimum est %2$d : choisissez à nouveau et ajoutez-en au moins %3$d.</string>
+    <plurals name="decoy_gate_spread">
+        <item quantity="one">Elles couvrent %1$d semaine, le minimum étant %2$d.</item>
+        <item quantity="many">Elles couvrent %1$d semaines, le minimum étant %2$d.</item>
+        <item quantity="other">Elles couvrent %1$d semaines, le minimum étant %2$d.</item>
+    </plurals>
+    <plurals name="decoy_gate_not_spread">
+        <item quantity="one">Elles couvrent %1$d semaine et le minimum est %2$d. Choisissez à nouveau et ajoutez des photos plus anciennes, ou sans date propre : celles-ci reçoivent une date des mois précédents.</item>
+        <item quantity="many">Elles couvrent %1$d semaines et le minimum est %2$d. Choisissez à nouveau et ajoutez des photos plus anciennes, ou sans date propre : celles-ci reçoivent une date des mois précédents.</item>
+        <item quantity="other">Elles couvrent %1$d semaines et le minimum est %2$d. Choisissez à nouveau et ajoutez des photos plus anciennes, ou sans date propre : celles-ci reçoivent une date des mois précédents.</item>
+    </plurals>
+    <plurals name="decoy_age_months">
+        <item quantity="one">Ce coffre semblera avoir jusqu\'à %1$d mois.</item>
+        <item quantity="many">Ce coffre semblera avoir jusqu\'à %1$d mois.</item>
+        <item quantity="other">Ce coffre semblera avoir jusqu\'à %1$d mois.</item>
+    </plurals>
+    <plurals name="decoy_age_install">
+        <item quantity="one">Cette application a été installée il y a %1$d jour, ce coffre ne peut donc pas sembler plus ancien : une liste de fichiers montre la date d\'installation sans aucune phrase secrète. Son historique couvrira ces jours ; les photos se chargent du reste.</item>
+        <item quantity="many">Cette application a été installée il y a %1$d jours, ce coffre ne peut donc pas sembler plus ancien : une liste de fichiers montre la date d\'installation sans aucune phrase secrète. Son historique couvrira ces jours ; les photos se chargent du reste.</item>
+        <item quantity="other">Cette application a été installée il y a %1$d jours, ce coffre ne peut donc pas sembler plus ancien : une liste de fichiers montre la date d\'installation sans aucune phrase secrète. Son historique couvrira ces jours ; les photos se chargent du reste.</item>
+    </plurals>
+    <string name="decoy_requirement_met">Condition remplie</string>
+    <string name="decoy_requirement_not_met">Condition non remplie</string>
+    <string name="decoy_name_title">Nommez-le et verrouillez-le</string>
+    <string name="decoy_name_lead">Ce nom est la première chose que verra quiconque ouvre ce coffre, et cette phrase secrète est celle que vous remettriez.</string>
+    <string name="decoy_name_hint">Choisissez quelque chose d\'ordinaire : le genre de nom qu\'aurait un coffre de photos de vacances.</string>
+    <string name="decoy_passphrase_label">Phrase secrète du leurre</string>
+    <string name="decoy_passphrase_note">Cette phrase secrète doit être différente de celle qui ouvre votre propre coffre. La saisir sur l\'écran de verrouillage ouvre ce coffre et rien d\'autre.</string>
+    <string name="decoy_building">Création de %1$s</string>
+    <string name="decoy_building_body">Préparation du stockage, puis importation des photos. Cela prend un moment et ne doit pas être interrompu.</string>
+    <string name="decoy_ready_title">Prêt à créer</string>
+    <string name="decoy_ready_lead">Rien n\'a encore été écrit. C\'est la confirmation de votre propre phrase secrète qui lance la création.</string>
+    <string name="decoy_confirm_passphrase">Confirmez votre phrase secrète</string>
+    <string name="decoy_fact_made">Ce qui est créé</string>
+    <plurals name="decoy_fact_made_body">
+        <item quantity="one">Un coffre nommé %1$s, contenant %2$d de vos photos, avec des dates et un historique de déverrouillage répartis sur les mois précédents.</item>
+        <item quantity="many">Un coffre nommé %1$s, contenant %2$d de vos photos, avec des dates et un historique de déverrouillage répartis sur les mois précédents.</item>
+        <item quantity="other">Un coffre nommé %1$s, contenant %2$d de vos photos, avec des dates et un historique de déverrouillage répartis sur les mois précédents.</item>
+    </plurals>
+    <string name="decoy_fact_this_vault">Ce qu\'il advient de ce coffre</string>
+    <string name="decoy_fact_this_vault_body">Rien. Votre propre coffre reste intact : il ne peut pas être écrasé par cette opération, et sa phrase secrète ne vous est pas demandée pour le protéger.</string>
+    <string name="decoy_fact_end_up">Où vous arrivez</string>
+    <string name="decoy_fact_end_up_body">La dernière étape vous place dans le nouveau coffre, pour que vous voyiez ce que trouverait quiconque saisit sa phrase secrète. Vous revenez ici quand vous avez terminé.</string>
+    <string name="decoy_other_vaults">J\'ai d\'autres coffres sur cet appareil</string>
+    <string name="decoy_other_vaults_hint">Seulement si vous avez une seconde phrase secrète qui ouvre quelque chose sur l\'écran de verrouillage.</string>
+    <plurals name="decoy_entries_added">
+        <item quantity="one">%1$d entrée ajoutée.</item>
+        <item quantity="many">%1$d entrées ajoutées.</item>
+        <item quantity="other">%1$d entrées ajoutées.</item>
+    </plurals>
+    <string name="decoy_handover_title">Voici ce que la personne verra</string>
+    <string name="decoy_handover_lead">Saisir la phrase secrète de ce coffre sur l\'écran de verrouillage mène exactement ici, et nulle part ailleurs. Vous le voyez comme la personne le verrait.</string>
+    <string name="decoy_show_words">Afficher les mots de récupération</string>
+    <string name="decoy_fact_no_way_across">Impossible de passer ailleurs depuis ce coffre</string>
+    <string name="decoy_fact_no_way_across_body">Quiconque détient cette phrase secrète arrive dans ce coffre et s\'y arrête. Cette personne ne peut pas voir que le vôtre existe, encore moins l\'ouvrir : c\'est tout l\'intérêt.</string>
+    <string name="decoy_fact_nothing_names">Rien ici ne mentionne l\'autre coffre</string>
+    <string name="decoy_fact_nothing_names_body">Ce coffre ne sait pas que le vôtre existe, et rien sur cet écran non plus. Pour quiconque l\'ouvre, c\'est tout l\'appareil.</string>
+    <string name="decoy_fact_inside">Ce qu\'il contient</string>
+    <plurals name="decoy_fact_inside_body">
+        <item quantity="one">%1$d photo, avec sa date de prise de vue, et un historique de déverrouillage qui ressemble à des mois d\'utilisation ordinaire.</item>
+        <item quantity="many">%1$d photos, avec leurs dates de prise de vue, et un historique de déverrouillage qui ressemble à des mois d\'utilisation ordinaire.</item>
+        <item quantity="other">%1$d photos, avec leurs dates de prise de vue, et un historique de déverrouillage qui ressemble à des mois d\'utilisation ordinaire.</item>
+    </plurals>
+    <string name="decoy_fact_back">Puis vous revenez à votre propre coffre</string>
+    <string name="decoy_fact_back_body">Il ne reste plus qu\'à noter les mots de récupération. Ensuite, ce coffre se ferme et le vôtre se rouvre, là où vous étiez.</string>
+    <string name="decoy_vaults_label">Coffres</string>
+    <string name="decoy_confirm_title">Confirmez votre identité</string>
+    <string name="decoy_confirm_body">Saisissez la phrase secrète du coffre ouvert. Cela autorise la création du leurre, et rien d\'autre.</string>
+    <string name="decoy_confirm_wrong">Ce n\'est pas la phrase secrète du coffre ouvert.</string>
+    <string name="decoy_checking">Vérification</string>
+    <string name="decoy_build">Créer le leurre</string>
+    <string name="decoy_preserve_title">Autres coffres sur cet appareil</string>
+    <string name="decoy_preserve_body">Uniquement pour une seconde phrase secrète qui ouvre quelque chose sur l\'écran de verrouillage : un leurre que vous avez déjà créé, ou un coffre que vous avez restauré. Les coffres de votre propre liste ne sont pas concernés et ne risquent jamais rien.</string>
+    <string name="decoy_preserve_warning">L\'application ne peut pas trouver un coffre qu\'elle ne peut pas ouvrir, elle ne peut donc pas non plus l\'éviter. Tout coffre de ce type dont la phrase secrète n\'est pas saisie ici risque d\'être écrasé par le nouveau.</string>
+    <string name="decoy_preserve_label">Phrase secrète d\'un coffre à conserver</string>
+    <string name="decoy_preserve_add">Ajouter à la liste</string>
+    <string name="decoy_preserve_empty">Rien n\'a été ajouté. Laisser vide convient à la plupart des gens.</string>
+    <string name="decoy_preserve_entry">Phrase secrète %1$d</string>
+    <string name="decoy_preserve_remove">Retirer la phrase secrète %1$d</string>
+
+    <!-- Onboarding — the first-run steps -->
+    <string name="onboarding_welcome_title">Des photos que personne d\'autre ne peut ouvrir</string>
+    <string name="onboarding_welcome_lead">Tout ce que vous placez ici est chiffré sur cet appareil et y reste. Pas de compte, pas de serveur, et aucun moyen pour nous d\'en voir quoi que ce soit : cette application ne peut pas du tout accéder à Internet.</string>
+    <string name="onboarding_welcome_steps">La configuration comporte huit courtes étapes. Aucune n\'est obligatoire, et vous pourrez changer d\'avis plus tard dans les Paramètres.</string>
+    <string name="onboarding_get_started">Commencer</string>
+    <string name="onboarding_have_backup">J\'ai une sauvegarde à restaurer</string>
+    <string name="onboarding_passphrase_lead">C\'est la seule chose qui ouvre votre coffre. Elle ne peut pas être réinitialisée.</string>
+    <string name="onboarding_fact_no_reset">Pas de réinitialisation, pas de compte</string>
+    <string name="onboarding_fact_no_reset_body">Personne ne peut la retrouver pour vous : ni nous, ni personne. C\'est le principe, et c\'est aussi le risque.</string>
+    <string name="onboarding_fact_kit_next">Vous recevez ensuite un kit de récupération</string>
+    <string name="onboarding_fact_kit_next_body">Vingt-quatre mots qui ouvrent ce coffre si vous oubliez la phrase secrète. C\'est le seul autre moyen d\'y accéder.</string>
+    <string name="onboarding_kit_title">Notez ces mots</string>
+    <string name="onboarding_kit_lead">Vingt-quatre mots qui ouvrent ce coffre si la phrase secrète est un jour perdue. Ensuite, vous pourrez les afficher encore 3 fois depuis le menu. Puis ils disparaîtront définitivement de cette application.</string>
+    <string name="onboarding_fact_anyone">Quiconque détient ces mots peut ouvrir ce coffre</string>
+    <string name="onboarding_fact_anyone_body">Ils ne peuvent être ni modifiés ni annulés. Rangez le papier là où quelqu\'un qui fouille vos affaires ne chercherait pas.</string>
+    <string name="onboarding_fact_backup_words">Une sauvegarde se restaure avec ces mots, pas avec votre phrase secrète</string>
+    <string name="onboarding_fact_backup_words_body">Si vous conservez plus tard une copie dans un dossier cloud, ces mots seront la seule chose capable de la lire.</string>
+    <string name="onboarding_kit_type">Saisissez « %1$s » pour confirmer que vous les avez notés.</string>
+    <string name="onboarding_capture_title">Voyez qui a tenté d\'entrer</string>
+    <string name="onboarding_capture_lead">Après un échec de déverrouillage, le téléphone enregistre discrètement la personne qui le tient.</string>
+    <string name="onboarding_fact_failed_unlock">Ne se déclenche qu\'après un échec de déverrouillage</string>
+    <string name="onboarding_fact_failed_unlock_body">Rien n\'est enregistré quand un déverrouillage réussit, et rien ne quitte cet appareil : chaque capture est scellée pour que seule votre phrase secrète puisse la lire, et vous attend dans Capture des intrus.</string>
+    <string name="onboarding_fact_permission">Chaque mode demande sa propre autorisation</string>
+    <string name="onboarding_fact_permission_body">Activez-en un et Android demande exactement ce dont ce mode a besoin. Refusez, et le mode reste désactivé ; rien d\'autre ne change.</string>
+    <string name="onboarding_decoy_title">Ayez un coffre que vous pouvez remettre</string>
+    <string name="onboarding_decoy_lead">Un second coffre, avec sa propre phrase secrète, contenant des choses que cela ne vous dérangerait pas que quelqu\'un voie.</string>
+    <string name="onboarding_fact_used_body">Un coffre vide ne trompe personne. Celui-ci reçoit les photos que vous choisissez, avec des dates et un historique qui ressemblent à des mois d\'utilisation ordinaire.</string>
+    <string name="onboarding_fact_choose">Vous choisissez les photos</string>
+    <string name="onboarding_fact_choose_body">Elles proviennent de cet appareil et sont les vôtres. La personne à qui vous remettez ce coffre les verra : choisissez donc celles que vous acceptez de montrer.</string>
+    <string name="onboarding_fact_trial">Cela démarre votre essai de 30 jours</string>
+    <string name="onboarding_fact_trial_body">Créer un leurre importe de vraies photos, et l\'essai commence dès que quelque chose est ajouté à un coffre. Passez cette étape si vous préférez le commencer avec vos propres contenus.</string>
+    <string name="onboarding_backup_title">Gardez une copie ailleurs</string>
+    <string name="onboarding_backup_lead">Si ce téléphone est perdu ou cassé, tout le contenu du coffre disparaît avec lui, sauf s\'il existe une copie.</string>
+    <string name="onboarding_panic_title">Une phrase secrète qui ferme les autres</string>
+    <string name="onboarding_panic_lead">Saisie sur l\'écran de verrouillage, elle ouvre un coffre et ferme définitivement tous les autres sur cet appareil.</string>
+    <string name="onboarding_panic_set_up">Configurer un identifiant de panique</string>
+    <string name="onboarding_fact_ordinary">Cela ressemble à un déverrouillage ordinaire</string>
+    <string name="onboarding_fact_ordinary_body">Même écran, même rapidité, rien à voir. C\'est le principe : quiconque regarde n\'apprend rien.</string>
+    <string name="onboarding_fact_way_in_body">Les autres coffres restent sur cet appareil sous forme de données illisibles, et leurs kits de récupération de 24 mots les ouvrent toujours. C\'est ainsi que vous les récupérez.</string>
+    <string name="onboarding_identity_title">Faites-la passer pour autre chose</string>
+    <string name="onboarding_identity_lead">L\'application peut prendre l\'apparence d\'une calculatrice, d\'un lecteur de musique ou d\'un dictaphone sur votre écran d\'accueil.</string>
+    <string name="onboarding_finish">Terminer la configuration</string>
+    <string name="onboarding_choose_identity">Choisir une identité</string>
+    <string name="onboarding_fact_disguise">Le déguisement est réel, et il fonctionne</string>
+    <string name="onboarding_fact_disguise_body">L\'entrée du lanceur et la carte des applications récentes changent toutes les deux. Vous revenez dans l\'application en effectuant sur la façade un geste que vous choisissez.</string>
+    <string name="onboarding_fact_hides">Elle cache l\'application, pas les fichiers</string>
+    <string name="onboarding_fact_hides_body">Quiconque peut lire le stockage de cet appareil, ou ouvre les Paramètres d\'Android, peut toujours voir que l\'application est là. Votre phrase secrète, ou une donnée biométrique que vous avez configurée, reste la seule chose qui ouvre un coffre.</string>
+    <string name="onboarding_fact_rehearse">Vous répéterez le geste deux fois</string>
+    <string name="onboarding_fact_rehearse_body">Une fois pour l\'enregistrer, une fois de mémoire. Un déclencheur que vous ne pouvez pas reproduire, c\'est un coffre que vous ne pouvez pas ouvrir.</string>
+
+    <!-- Intruder capture — the modes -->
+    <string name="capture_mode_photo">Photo</string>
+    <string name="capture_mode_audio">Audio</string>
+    <string name="capture_mode_video">Vidéo</string>
+    <string name="capture_mode_photo_line">Une photo prise avec la caméra frontale</string>
+    <string name="capture_mode_audio_line">Un court extrait du micro</string>
+    <string name="capture_mode_video_line">Une courte vidéo avec le son</string>
+    <string name="capture_no_front_camera">Cet appareil n\'a pas de caméra frontale.</string>
+    <string name="capture_sheet_lead">Enregistrée après un échec de déverrouillage.</string>
+    <string name="capture_sheet_photo">Une photo prise avec la caméra frontale.</string>
+    <string name="capture_sheet_audio">Quelques secondes du micro.</string>
+    <string name="capture_sheet_video">Quelques secondes d\'image et de son.</string>
+    <string name="capture_sheet_no_front">Cet appareil n\'a pas de caméra frontale : la photo et la vidéo ne sont donc pas disponibles.</string>
+    <!-- Intruder capture — the home screen's timeline, its flows and its notices -->
+    <string name="intruder_capture_settings">Paramètres de capture</string>
+    <string name="intruder_today">Aujourd\'hui</string>
+    <string name="intruder_yesterday">Hier</string>
+    <string name="intruder_empty_off_title">Aucune capture</string>
+    <string name="intruder_empty_off_body">Activez un mode et le téléphone enregistre discrètement quiconque échoue à le déverrouiller.</string>
+    <string name="intruder_empty_off_action">Choisir quoi enregistrer</string>
+    <string name="intruder_empty_on_title">Aucune capture pour l\'instant</string>
+    <string name="intruder_empty_on_body">%1$s activé. Une capture apparaît ici après un échec de déverrouillage.</string>
+    <string name="intruder_empty_on_action">Changer ce qui est enregistré</string>
+    <string name="intruder_left_moved">Déplacée dans %1$s</string>
+    <string name="intruder_left_exported">Exportée</string>
+    <string name="intruder_left_deleted">Supprimée</string>
+    <string name="intruder_row_description">%1$s. %2$s, %3$s.</string>
+    <string name="intruder_row_description_left">%1$s. %2$s, %3$s. %4$s.</string>
+    <string name="intruder_move_to_vault">Déplacer dans un coffre</string>
+    <string name="intruder_export">Exporter</string>
+    <plurals name="intruder_capture_count">
+        <item quantity="one">%1$d capture</item>
+        <item quantity="many">%1$d captures</item>
+        <item quantity="other">%1$d captures</item>
+    </plurals>
+    <string name="intruder_move_failed">Ces captures n\'ont pas pu être déplacées. Rien n\'a été modifié.</string>
+    <plurals name="intruder_delete_title">
+        <item quantity="one">Supprimer définitivement %1$d capture ?</item>
+        <item quantity="many">Supprimer définitivement %1$d captures ?</item>
+        <item quantity="other">Supprimer définitivement %1$d captures ?</item>
+    </plurals>
+    <plurals name="intruder_delete_body">
+        <item quantity="one">La capture est détruite et ne peut pas être restaurée. Sa ligne reste dans la chronologie.</item>
+        <item quantity="many">Les captures sont détruites et ne peuvent pas être restaurées. Leurs lignes restent dans la chronologie.</item>
+        <item quantity="other">Les captures sont détruites et ne peuvent pas être restaurées. Leurs lignes restent dans la chronologie.</item>
+    </plurals>
+    <plurals name="intruder_export_title">
+        <item quantity="one">Exporter %1$d capture</item>
+        <item quantity="many">Exporter %1$d captures</item>
+        <item quantity="other">Exporter %1$d captures</item>
+    </plurals>
+    <plurals name="intruder_export_body">
+        <item quantity="one">La capture est déchiffrée, écrite, vérifiée, puis retirée de Capture des intrus. Sa ligne reste dans la chronologie.</item>
+        <item quantity="many">Les %1$d captures sont déchiffrées, écrites, vérifiées, puis retirées de Capture des intrus. Leurs lignes restent dans la chronologie.</item>
+        <item quantity="other">Les %1$d captures sont déchiffrées, écrites, vérifiées, puis retirées de Capture des intrus. Leurs lignes restent dans la chronologie.</item>
+    </plurals>
+    <string name="intruder_export_checked">Chaque fichier est relu et comparé avant que sa copie chiffrée soit supprimée. Tout ce qui ne correspond pas reste dans Capture des intrus et figure dans le manifeste.</string>
+    <string name="intruder_export_wrong_passphrase">Ce n\'est pas la phrase secrète qui ouvre cette liste de coffres.</string>
+    <string name="intruder_export_progress_left">%1$d sur %2$d sorties, %3$d encore conservées</string>
+    <string name="intruder_export_busy">Exportation en cours</string>
+    <string name="intruder_blank">Image noire</string>
+    <string name="intruder_silent">Son muet</string>
+    <string name="intruder_permission_camera_off">Autorisation de la caméra désactivée</string>
+    <string name="intruder_permission_camera_on">Autorisation de la caméra réactivée</string>
+    <string name="intruder_permission_microphone_off">Autorisation du micro désactivée</string>
+    <string name="intruder_permission_microphone_on">Autorisation du micro réactivée</string>
+    <string name="intruder_permission_stopped">Constaté à %1$s · %2$s arrêté</string>
+    <string name="intruder_permission_resumed">Constaté à %1$s · %2$s enregistre de nouveau</string>
+    <string name="intruder_permission_noticed">Constaté à %1$s</string>
+    <string name="capture_banner_camera_one">%1$s n\'enregistre pas. L\'autorisation de la caméra est désactivée.</string>
+    <string name="capture_banner_camera_many">%1$s n\'enregistrent pas. L\'autorisation de la caméra est désactivée.</string>
+    <string name="capture_banner_microphone_one">%1$s n\'enregistre pas. L\'autorisation du micro est désactivée.</string>
+    <string name="capture_banner_microphone_many">%1$s n\'enregistrent pas. L\'autorisation du micro est désactivée.</string>
+    <string name="capture_turn_back_on">Réactiver</string>
+    <string name="capture_sheet_no_camera">N\'enregistre pas · autorisation de la caméra désactivée</string>
+    <string name="capture_sheet_no_microphone">N\'enregistre pas · autorisation du micro désactivée</string>
+    <string name="capture_auto_reset">Android peut retirer les autorisations de cette appli si elle n\'est pas utilisée pendant quelques mois, ce qui arrêterait la capture.</string>
+    <string name="capture_keep_permissions">Garder les autorisations</string>
+    <string name="intruder_subtitle_description">Coffre : %1$s</string>
+
+    <!-- Recovery kit — showing, re-showing and entering the 24 words -->
+    <string name="kit_acknowledgement">J\'ai compris</string>
+    <string name="kit_title_list">Votre kit de récupération</string>
+    <string name="kit_title_vault">Kit de récupération de %1$s</string>
+    <string name="kit_title_short">Kit de récupération</string>
+    <string name="kit_body_list">Ces 24 mots sont le seul moyen d\'accéder à nouveau aux coffres qu\'ouvre votre phrase secrète, si vous l\'oubliez. Notez-les dans l\'ordre et rangez le papier en lieu sûr.\n\nQuiconque possède ces mots peut ouvrir ces coffres, y compris ceux que vous ajouterez plus tard. Un coffre auquel vous donnez sa propre phrase secrète n\'en fait pas partie : il a son propre kit. Ces mots ne peuvent être ni modifiés ni annulés.</string>
+    <string name="kit_body_list_backup">Si vous sauvegardez un jour ce coffre dans un dossier cloud, ce sont ces mots qui le restaurent, et non votre phrase secrète. Perdez cet appareil et cette page en même temps, et personne ne pourra ouvrir la sauvegarde, pas même vous.</string>
+    <string name="kit_body_vault">Ces 24 mots sont le seul moyen d\'accéder à nouveau à %1$s si vous oubliez la phrase secrète que vous venez de définir. Notez-les dans l\'ordre et rangez le papier en lieu sûr.\n\nLa phrase secrète qui ouvre votre liste de coffres n\'ouvrira pas celui-ci, pas plus que le kit de récupération de cette liste. Perdez la phrase secrète et cette page, et tout le contenu de %1$s disparaît définitivement.\n\nQuiconque possède ces mots peut ouvrir %1$s. Ils ne peuvent être ni modifiés ni annulés.</string>
+    <string name="kit_type_acknowledgement">Saisissez « %1$s » pour confirmer que vous les avez notés et que vous savez que la phrase secrète ne peut pas être réinitialisée.</string>
+    <string name="kit_print">Imprimer</string>
+    <string name="kit_last_view">Dernier affichage : il ne pourra plus être affiché.</string>
+    <plurals name="kit_views_left_after">
+        <item quantity="one">Encore %1$d affichage après celui-ci.</item>
+        <item quantity="many">Encore %1$d affichages après celui-ci.</item>
+        <item quantity="other">Encore %1$d affichages après celui-ci.</item>
+    </plurals>
+    <string name="kit_remaining_views">Après avoir continué, vous pourrez les afficher encore 3 fois depuis le menu. Après le troisième, ils ne pourront plus être affichés, et la copie que vous aurez notée sera la seule.</string>
+    <string name="drawer_kit">Kit de récupération \u0020· \u0020%1$s</string>
+    <string name="kit_cannot_show">Ne peut plus être affiché</string>
+    <plurals name="kit_views_left">
+        <item quantity="one">%1$d affichage restant</item>
+        <item quantity="many">%1$d affichages restants</item>
+        <item quantity="other">%1$d affichages restants</item>
+    </plurals>
+    <string name="kit_exhausted">Votre kit de récupération a été affiché le nombre maximal de fois. Cette application ne peut plus l\'afficher. Conservez en lieu sûr la copie que vous avez notée.</string>
+    <string name="kit_enter_list">Saisissez votre phrase secrète pour l\'afficher.</string>
+    <string name="kit_enter_vault">Saisissez la phrase secrète de %1$s pour l\'afficher.</string>
+    <string name="kit_last_time">C\'est la dernière fois que votre kit de récupération peut être affiché. Une fois que vous aurez quitté l\'écran suivant, il ne pourra plus l\'être : assurez-vous d\'avoir noté les 24 mots. %1$s</string>
+    <plurals name="kit_views_more">
+        <item quantity="one">Vous pouvez afficher votre kit de récupération encore %1$d fois. L\'afficher maintenant en utilise une, il en restera %2$d. %3$s</item>
+        <item quantity="many">Vous pouvez afficher votre kit de récupération encore %1$d fois. L\'afficher maintenant en utilise une, il en restera %2$d. %3$s</item>
+        <item quantity="other">Vous pouvez afficher votre kit de récupération encore %1$d fois. L\'afficher maintenant en utilise une, il en restera %2$d. %3$s</item>
+    </plurals>
+    <string name="kit_wrong_list">Cette phrase secrète n\'ouvre pas cette liste.</string>
+    <string name="kit_wrong_vault">Cette phrase secrète n\'ouvre pas ce coffre.</string>
+    <string name="kit_passphrase_for">Phrase secrète de %1$s</string>
+    <string name="kit_open_failed">Impossible d\'ouvrir votre kit de récupération. Réessayez.</string>
+    <string name="kit_show">Afficher le kit de récupération</string>
+    <string name="kit_words_open_nothing">Ces mots n\'ouvrent aucun coffre sur cet appareil.</string>
+    <string name="kit_new_passphrase_title">Choisissez une nouvelle phrase secrète</string>
+    <string name="kit_enter_title">Saisissez votre kit</string>
+    <string name="kit_enter_lead">Saisissez les 24 mots de votre kit de récupération, un par case.</string>
+    <string name="kit_add_backup_file">Ajouter un fichier de sauvegarde</string>
+    <string name="kit_lost_files">Vous avez aussi perdu des fichiers ? Choisissez la sauvegarde enregistrée dans votre application cloud ou sur votre carte SD, et ils reviendront aussi.</string>
+    <string name="kit_sd_backup">Sauvegarde sur carte SD</string>
+    <string name="kit_backup_file">Fichier de sauvegarde</string>
+    <string name="kit_new_passphrase_restoring">Choisissez la phrase secrète que ce téléphone utilisera pour ouvrir vos coffres. Vos 24 mots ne changent pas. Gardez le papier.</string>
+    <string name="kit_new_passphrase_lead">Votre kit de récupération est valide. Choisissez la phrase secrète que vous utiliserez désormais pour ouvrir vos coffres : l\'ancienne ne fonctionnera plus. Vos 24 mots ne changent pas. Gardez le papier.</string>
+    <string name="kit_passphrase_in_use">Cette phrase secrète ouvre déjà quelque chose sur ce téléphone. Choisissez-en une autre.</string>
+    <string name="kit_new_passphrase_label">Nouvelle phrase secrète</string>
+    <string name="kit_mismatch">Les deux saisies ne correspondent pas.</string>
+    <string name="kit_setting_passphrase">Définition de la phrase secrète</string>
+    <string name="kit_set_passphrase">Définir la phrase secrète</string>
+    <string name="kit_recover_title">Récupérer un coffre</string>
+    <string name="kit_recover_lead">Saisissez les 24 mots du kit de récupération propre à un coffre, un par case. Il s\'ouvre depuis cette liste avec la phrase secrète que vous venez d\'utiliser — s\'il y figure déjà, il cesse de demander la sienne : vous n\'aurez plus besoin de ces mots.\n\nCela ne restaure pas les fichiers : le stockage du coffre doit déjà se trouver sur cet appareil.</string>
+    <string name="kit_recover_name">Nommez-le dans cette liste</string>
+    <string name="kit_recover_name_hint">Le nom d\'un coffre est enregistré dans la liste où il se trouvait : celui-ci a donc besoin d\'un nom ici.</string>
+    <string name="kit_recovering">Récupération</string>
+    <string name="kit_recover_action">Récupérer le coffre</string>
+    <string name="kit_not_a_word">pas un mot valide</string>
+    <string name="kit_word">Mot %1$d</string>
+    <string name="kit_word_wrong">Mot %1$d, ne fait pas partie des 24 mots</string>
+    <plurals name="kit_words_to_check">
+        <item quantity="one">Encore %1$d mot à vérifier.</item>
+        <item quantity="many">Encore %1$d mots à vérifier.</item>
+        <item quantity="other">Encore %1$d mots à vérifier.</item>
+    </plurals>
+    <string name="kit_checksum_failed">Ce sont tous de vrais mots, mais l\'ensemble ne concorde pas : l\'ordre est probablement erroné. Comparez-les à votre kit, dans l\'ordre.</string>
+
+    <!-- Vault list — the list, a new vault, editing a vault, a vault's own passphrase -->
+    <string name="vault_icon_home">Maison</string>
+    <string name="vault_icon_family">Famille</string>
+    <string name="vault_icon_person">Personne</string>
+    <string name="vault_icon_child">Enfant</string>
+    <string name="vault_icon_favourite">Favori</string>
+    <string name="vault_icon_pets">Animaux</string>
+    <string name="vault_icon_work">Travail</string>
+    <string name="vault_icon_id">Pièce d\'identité</string>
+    <string name="vault_icon_bank">Banque</string>
+    <string name="vault_icon_savings">Épargne</string>
+    <string name="vault_icon_receipts">Reçus</string>
+    <string name="vault_icon_documents">Documents</string>
+    <string name="vault_icon_medical">Santé</string>
+    <string name="vault_icon_school">École</string>
+    <string name="vault_icon_travel">Voyage</string>
+    <string name="vault_icon_car">Voiture</string>
+    <string name="vault_icon_camera">Appareil photo</string>
+    <string name="vault_icon_music">Musique</string>
+    <string name="vault_icon_books">Livres</string>
+    <string name="vault_icon_celebration">Fête</string>
+    <string name="vault_icon_star">Étoile</string>
+    <string name="vault_icon_diamond">Diamant</string>
+    <string name="vault_icon_shopping">Achats</string>
+    <string name="vault_icon_archive">Archives</string>
+    <string name="vault_list_lock">Verrouiller</string>
+    <string name="vault_new">Nouveau coffre</string>
+    <string name="first_vault_name">Mon coffre</string>
+    <string name="vault_list_lead">Une phrase secrète ouvre cette liste et tout ce qu\'elle contient.</string>
+    <string name="vault_list_lead_locked">Une phrase secrète ouvre cette liste. Les coffres marqués Verrouillé ont besoin de la leur.</string>
+    <string name="vault_list_empty">Aucun coffre dans cette liste.</string>
+    <string name="vault_list_empty_body">Tout ce que vous créez ici s\'ouvre avec la phrase secrète que vous venez d\'utiliser.</string>
+    <string name="vault_list_create">Créer un coffre</string>
+    <string name="vault_row_locked">Verrouillé : a sa propre phrase secrète</string>
+    <string name="vault_row_list_passphrase">S\'ouvre avec la phrase secrète de cette liste</string>
+    <string name="vault_row_options">Options de %1$s</string>
+    <string name="vault_edit">Modifier le coffre</string>
+    <string name="vault_flow_name_title">Nommez votre coffre</string>
+    <string name="vault_flow_name_lead">Vous verrez ce nom et ce badge dans votre liste de coffres.</string>
+    <string name="vault_flow_opens_title">Comment %1$s doit-il s\'ouvrir ?</string>
+    <string name="vault_flow_opens_lead">Vous pourrez ajouter, modifier ou supprimer une phrase secrète plus tard depuis Modifier le coffre.</string>
+    <string name="vault_opens_list">Avec votre liste de coffres</string>
+    <string name="vault_opens_list_detail">S\'ouvre directement depuis la liste, avec la phrase secrète que vous avez déjà utilisée.</string>
+    <string name="vault_opens_own">Avec sa propre phrase secrète</string>
+    <string name="vault_opens_own_detail">Seule sa propre phrase secrète l\'ouvre. Il reçoit son propre kit de récupération et sa propre capture des intrus.</string>
+    <string name="vault_flow_passphrase_title">Choisissez une phrase secrète pour %1$s</string>
+    <string name="vault_flow_passphrase_lead">Seule cette phrase secrète ouvrira %1$s. Celle de votre liste de coffres ne l\'ouvrira pas, pas plus que le kit de récupération de la liste : %1$s reçoit donc son propre kit de récupération.</string>
+    <string name="vault_flow_capture_title">Voyez qui tente d\'ouvrir %1$s</string>
+    <string name="vault_flow_capture_lead">Après une mauvaise phrase secrète pour %1$s, le téléphone enregistre discrètement la personne qui le tient.</string>
+    <string name="vault_capture_fact">Seul %1$s peut les voir</string>
+    <string name="vault_capture_fact_body">Chaque capture est scellée pour %1$s et attend à l\'intérieur, sous Capture des intrus dans son menu. Rien dans votre liste de coffres ne les montre.</string>
+    <string name="vault_discard_new_title">Abandonner ce coffre ?</string>
+    <string name="vault_discard_new_body">Rien n\'a encore été créé.</string>
+    <string name="vault_discard_add_title">Abandonner cette phrase secrète ?</string>
+    <string name="vault_discard_add_body">%1$s s\'ouvre toujours avec la phrase secrète de votre liste de coffres.</string>
+    <string name="vault_capture_not_enrolled">La capture des intrus n\'a pas été activée pour %1$s. Activez-la depuis Capture des intrus dans son menu.</string>
+    <string name="vault_passphrase_label">Phrase secrète de ce coffre</string>
+    <string name="vault_creating">Création…</string>
+    <string name="vault_open_named">Ouvrir %1$s</string>
+    <string name="vault_has_own_passphrase">Ce coffre a sa propre phrase secrète.</string>
+    <string name="vault_open_wrong">Cette phrase secrète n\'a pas ouvert %1$s.</string>
+    <string name="vault_opening">Ouverture</string>
+    <string name="vault_open">Ouvrir le coffre</string>
+    <string name="vault_colour">Couleur</string>
+    <string name="vault_icon">Icône</string>
+    <string name="vault_icon_letter">Lettre</string>
+    <!-- A sample of a letter, shown on the Letter icon before the vault has a name. -->
+    <!-- The name an imported vault is given on the list. From then on it is the vault's own name. -->
+    <string name="imported_vault">Coffre importé</string>
+
+    <!-- Vault grid — destinations, filters, sorting and the add line -->
+    <string name="add_photos_or_videos">Ajouter des photos ou des vidéos</string>
+    <string name="add_files">Ajouter des fichiers</string>
+    <string name="destination_media">Médias</string>
+    <string name="destination_files">Fichiers</string>
+    <string name="destination_notes">Notes</string>
+    <string name="destination_memos">Mémos vocaux</string>
+    <string name="added_to">Ajouté à %1$s.</string>
+    <string name="media_filter_all">Tout</string>
+    <string name="media_filter_photos">Photos</string>
+    <string name="media_filter_videos">Vidéos</string>
+    <string name="sort_newest">Plus récents d\'abord</string>
+    <string name="sort_oldest">Plus anciens d\'abord</string>
+    <string name="sort_recently_added">Ajoutés récemment d\'abord</string>
+    <string name="sort_first_added">Ajoutés en premier d\'abord</string>
+    <string name="sort_name_az">Nom de A à Z</string>
+    <string name="sort_name_za">Nom de Z à A</string>
+    <string name="sort_last_edited">Dernière modification</string>
+    <string name="media_filter_show_all">Tout afficher</string>
+    <string name="media_filter_show_photos">Afficher les photos</string>
+    <string name="media_filter_show_videos">Afficher les vidéos</string>
+    <string name="view_as_list">Afficher sous forme de liste</string>
+    <string name="view_as_grid">Afficher sous forme de grille</string>
+
+    <!-- Vault grid — the bar, selection, the add button and empty states -->
+    <string name="grid_selected">%1$d sélectionné(s)</string>
+    <string name="folder_options">Options du dossier</string>
+    <plurals name="item_count">
+        <item quantity="one">%1$d élément</item>
+        <item quantity="many">%1$d éléments</item>
+        <item quantity="other">%1$d éléments</item>
+    </plurals>
+    <string name="sort_current">Utilisé actuellement</string>
+    <string name="sort_alphabetical">Alphabétique, non numérique</string>
+    <string name="folder_new">Nouveau dossier</string>
+    <string name="grid_destination_settings">Paramètres : %1$s</string>
+    <string name="grid_trash_and_settings">Corbeille et paramètres</string>
+    <string name="fab_camera">Appareil photo</string>
+    <string name="fab_voice_memo">Mémo vocal</string>
+    <string name="fab_new_note">Nouvelle note</string>
+    <string name="fab_actions">Actions</string>
+    <string name="fab_close_actions">Fermer les actions</string>
+    <string name="fab_no_camera">Non disponible sur cet appareil</string>
+    <string name="select_all">Tout sélectionner</string>
+    <string name="move_to_folder">Déplacer vers un dossier</string>
+    <string name="remove_from_folder">Retirer du dossier</string>
+    <string name="share_securely">Partager de façon sécurisée</string>
+    <string name="unvault_selected">Sortir la sélection du coffre</string>
+    <string name="delete_selected">Supprimer la sélection</string>
+    <string name="restore_selected">Restaurer la sélection</string>
+    <string name="delete_selected_forever">Supprimer définitivement la sélection</string>
+    <string name="leave_selection">Quitter la sélection</string>
+    <string name="all_vaults">Tous les coffres</string>
+    <string name="select">Sélectionner</string>
+    <string name="pinned">Épinglées</string>
+    <string name="kind_video">Vidéo</string>
+    <string name="kind_audio">Audio</string>
+    <string name="kind_file">Fichier</string>
+    <string name="empty_media">Ce coffre est vide.</string>
+    <string name="empty_media_line">Les photos et vidéos que vous ajoutez sont chiffrées avant d\'atteindre le stockage.</string>
+    <string name="empty_files">Aucun fichier pour l\'instant.</string>
+    <string name="empty_files_line">Les documents et tout ce que cette application ne peut pas ouvrir sont conservés ici, chiffrés.</string>
+    <string name="empty_notes">Aucune note pour l\'instant.</string>
+    <string name="empty_notes_line">Les notes que vous écrivez sont stockées dans ce coffre et n\'en sortent jamais.</string>
+    <string name="empty_memos">Aucun enregistrement pour l\'instant.</string>
+    <string name="empty_memos_line">Les mémos vocaux que vous enregistrez sont chiffrés au fur et à mesure.</string>
+    <string name="empty_add_photos">Ajouter des photos</string>
+    <string name="empty_add_media">Ajouter des médias</string>
+    <string name="empty_create_note">Créer une note</string>
+    <string name="empty_create_memo">Créer un mémo</string>
+    <string name="search">Rechercher</string>
+    <string name="search_no_match">Aucun résultat.</string>
+    <string name="search_no_match_line">La recherche porte sur les noms, les dossiers et les tags.</string>
+    <string name="folder_empty">Ce dossier est vide.</string>
+    <string name="folder_empty_line">Importez-y des éléments, ou déplacez-en depuis n\'importe quel endroit du coffre.</string>
+    <string name="trash_empty">La corbeille est vide.</string>
+    <string name="trash_empty_line">Les éléments supprimés restent ici %1$d jours, puis sont détruits.</string>
+    <string name="section_edited">Modifié le %1$s</string>
+    <string name="section_added">Ajouté le %1$s</string>
+
+    <!-- Viewer — one item, full screen -->
+    <string name="viewer_thumbnail_set">Miniature définie à %1$s.</string>
+    <string name="viewer_frame_unusable">Impossible d\'utiliser cette image.</string>
+    <string name="viewer_rotate">Faire pivoter</string>
+    <string name="viewer_edit_image">Modifier l\'image</string>
+    <string name="viewer_opening">Ouverture…</string>
+    <string name="viewer_could_not_open">Impossible d\'ouvrir cet élément.</string>
+    <string name="viewer_export_item">Exporter cet élément</string>
+    <plurals name="viewer_skip_forward">
+        <item quantity="one">Avancer de %1$d seconde</item>
+        <item quantity="many">Avancer de %1$d secondes</item>
+        <item quantity="other">Avancer de %1$d secondes</item>
+    </plurals>
+    <plurals name="viewer_skip_back">
+        <item quantity="one">Reculer de %1$d seconde</item>
+        <item quantity="many">Reculer de %1$d secondes</item>
+        <item quantity="other">Reculer de %1$d secondes</item>
+    </plurals>
+    <string name="viewer_set_folder_cover">Définir comme couverture du dossier</string>
+    <string name="viewer_use_frame">Utiliser cette image comme miniature</string>
+
+    <!-- Settings rows — a choice revealed in place -->
+    <string name="reveal_choose">Choisir %1$s</string>
+    <string name="reveal_close">Fermer %1$s</string>
+    <string name="reveal_shown">%1$s : visibles</string>
+    <string name="reveal_hidden">%1$s : masqués</string>
+    <string name="reveal_speed">une vitesse</string>
+    <string name="reveal_speeds">les vitesses</string>
+    <string name="reveal_length">une durée</string>
+    <string name="reveal_lengths">les durées</string>
+    <string name="reveal_way">un mode</string>
+    <string name="reveal_ways">les modes</string>
+    <string name="reveal_quality">une qualité</string>
+    <string name="reveal_qualities">les qualités</string>
+
+    <!-- Slideshow -->
+    <string name="slideshow_speed_quick">Rapide</string>
+    <string name="slideshow_speed_usual">Le rythme habituel</string>
+    <string name="slideshow_speed_slow">Le temps de regarder chacune</string>
+    <string name="slideshow_end">Arrêter le diaporama</string>
+    <string name="slideshow_play">Lancer le diaporama</string>
+    <string name="slideshow_pause">Mettre le diaporama en pause</string>
+    <string name="slideshow_options">Options du diaporama</string>
+    <string name="slideshow_options_lead">Le diaporama attend tant que ces options sont ouvertes, et reprend quand vous les fermez.</string>
+    <string name="slideshow_speed_footnote">Durée d\'affichage de chaque photo. Les vidéos sont lues jusqu\'au bout.</string>
+    <string name="slideshow_repeat">Répéter</string>
+    <string name="slideshow_repeat_on">Activé · Après le dernier élément, le diaporama recommence au premier.</string>
+    <string name="slideshow_repeat_off">Désactivé · Le diaporama s\'arrête après le dernier élément.</string>
+    <string name="slideshow_shuffle">Lecture aléatoire</string>
+    <string name="slideshow_shuffle_on">Activé · Chaque élément s\'affiche une fois, dans un ordre aléatoire, avant qu\'un élément ne réapparaisse.</string>
+    <string name="slideshow_shuffle_off">Désactivé · Les éléments s\'affichent dans l\'ordre de votre liste.</string>
+
+    <!-- Folders -->
+    <string name="colour_none">Aucune couleur</string>
+    <string name="colour_red">Rouge</string>
+    <string name="colour_amber">Ambre</string>
+    <string name="colour_teal">Bleu canard</string>
+    <string name="colour_blue">Bleu</string>
+    <string name="colour_pink">Rose</string>
+    <string name="folder_rename">Renommer le dossier</string>
+    <string name="folder_create">Créer</string>
+    <string name="folder_move">Déplacer</string>
+    <string name="folder_cover">Couverture</string>
+    <string name="folder_delete">Supprimer le dossier</string>
+    <string name="folder_delete_named">« %1$s » sera supprimé.</string>
+    <string name="folder_delete_moves_to">Tout son contenu est déplacé vers « %1$s ». Rien n\'est supprimé et rien ne part à la corbeille.</string>
+    <string name="folder_delete_moves_home">Tout son contenu est déplacé vers l\'écran d\'accueil. Rien n\'est supprimé et rien ne part à la corbeille.</string>
+    <string name="folder_cover_recent">Utiliser l\'élément le plus récent</string>
+    <string name="folder_cover_empty">Rien à afficher dans ce dossier pour l\'instant.</string>
+    <string name="folder_cover_current">Couverture actuelle</string>
+    <string name="picker_move_folder">Déplacer « %1$s »</string>
+    <plurals name="picker_move_items">
+        <item quantity="one">Déplacer %1$d élément</item>
+        <item quantity="many">Déplacer %1$d éléments</item>
+        <item quantity="other">Déplacer %1$d éléments</item>
+    </plurals>
+    <string name="picker_folder_lead">Tout le contenu du dossier est déplacé avec lui.</string>
+    <string name="picker_items_lead">Un élément se trouve dans un seul dossier au plus : le déplacer remplace donc son dossier actuel.</string>
+    <string name="picker_mixed_kinds">Médias, fichiers, notes et mémos vocaux ont chacun leurs propres dossiers. Pour déplacer dans un dossier, sélectionnez des éléments d\'un seul type.</string>
+    <string name="picker_home">Écran d\'accueil</string>
+    <string name="picker_up">Remonter</string>
+    <string name="picker_where_now">emplacement actuel</string>
+    <string name="picker_move_here">Déplacer ici</string>
+    <string name="picker_move_into">Déplacer dans « %1$s »</string>
+    <string name="picker_move_home">Déplacer vers l\'écran d\'accueil</string>
+    <string name="colour_yellow">Jaune</string>
+    <string name="colour_white">Blanc</string>
+    <string name="colour_black">Noir</string>
+
+    <!-- Rename, delete and destroy -->
+    <string name="rename_item">Renommer l\'élément</string>
+    <string name="rename_lead">C\'est le nom sous lequel l\'élément est exporté. L\'extension reste telle quelle : c\'est elle qui détermine comment l\'élément s\'ouvre et où il est exporté.</string>
+    <string name="rename_refused">Un nom doit comporter au moins un caractère, ne peut pas être composé uniquement de points, ne peut pas contenir de barre oblique et fait au plus %1$d caractères, extension comprise.</string>
+    <string name="delete_one_forever">Supprimer définitivement %1$s ?</string>
+    <plurals name="delete_many_forever">
+        <item quantity="one">Supprimer définitivement %1$d élément ?</item>
+        <item quantity="many">Supprimer définitivement %1$d éléments ?</item>
+        <item quantity="other">Supprimer définitivement %1$d éléments ?</item>
+    </plurals>
+    <string name="delete_one">Supprimer %1$s ?</string>
+    <plurals name="delete_many">
+        <item quantity="one">Supprimer %1$d élément ?</item>
+        <item quantity="many">Supprimer %1$d éléments ?</item>
+        <item quantity="other">Supprimer %1$d éléments ?</item>
+    </plurals>
+    <string name="delete_body_one_forever">La copie dans ce coffre est détruite. Elle ne peut pas être récupérée.</string>
+    <string name="delete_body_many_forever">Les copies dans ce coffre sont détruites. Elles ne peuvent pas être récupérées.</string>
+    <string name="delete_body_trash">Déplacé dans la corbeille. Supprimé définitivement après %1$d jours.</string>
+    <string name="delete_forever">Supprimer définitivement</string>
+    <string name="keep">Conserver</string>
+    <string name="destroy_title">Détruire « %1$s » ?</string>
+    <string name="destroy_body">Tout le contenu de ce coffre disparaît : chaque photo, vidéo, note et dossier. Rien ne part à la corbeille et rien ne peut être récupéré.</string>
+    <string name="destroy_others_safe">Vos autres coffres ne sont pas affectés.</string>
+    <string name="destroy_backup_file">Son fichier de sauvegarde est également supprimé : sinon, votre kit de récupération ouvrirait encore une copie complète de ce coffre. Les copies que votre fournisseur conserve dans sa propre corbeille ou son historique des versions sont hors de portée de cette application.</string>
+    <string name="destroy_backup_folder">Son dossier de sauvegarde est également vidé : sinon, votre kit de récupération ouvrirait encore une copie complète de ce coffre. Les copies que votre fournisseur conserve dans sa propre corbeille ou son historique des versions sont hors de portée de cette application.</string>
+    <string name="destroy_give_back">Me rendre mes fichiers, puis détruire</string>
+    <string name="destroy_everything">Détruire tout son contenu</string>
+    <string name="destroy_keep">Conserver le coffre</string>
+    <string name="destroy_gate_own">Cette action est irréversible. Saisissez d\'abord la phrase secrète qui ouvre %1$s — la sienne, pas celle de votre liste de coffres.</string>
+    <string name="destroy_gate_list">Cette action est irréversible. Saisissez d\'abord la phrase secrète de votre liste de coffres.</string>
+    <string name="destroy_gate_lost">Phrase secrète perdue ? Les 24 mots propres à ce coffre le font revenir. Dans la liste de coffres, ouvrez le menu, choisissez « Récupérer un coffre avec son kit », puis détruisez-le depuis là.</string>
+    <string name="destroy_continue">Continuer</string>
+    <string name="destroy_checking">Vérification…</string>
+    <string name="destroy_return_then">Une fois chaque fichier sorti et vérifié, %1$s est détruit.</string>
+
+    <!-- Destination settings — Media, Notes and Memos -->
+    <string name="skip_short">Un saut court</string>
+    <string name="skip_usual">Le saut habituel</string>
+    <string name="skip_longer">Un saut plus long</string>
+    <string name="skip_scene">Passer une scène</string>
+    <string name="orientation_auto">Automatique</string>
+    <string name="orientation_auto_detail">Les vidéos pivotent avec votre téléphone</string>
+    <string name="orientation_landscape">Paysage</string>
+    <string name="orientation_landscape_detail">Les vidéos s\'ouvrent à l\'horizontale, quelle que soit la façon dont vous tenez votre téléphone</string>
+    <string name="speed_0_5">0,5×</string>
+    <string name="speed_0_5_detail">Moitié de la vitesse</string>
+    <string name="speed_0_75">0,75×</string>
+    <string name="speed_0_75_detail">Un peu plus lent</string>
+    <string name="speed_normal">Normale</string>
+    <string name="speed_normal_detail">Comme à l\'enregistrement</string>
+    <string name="speed_1_25">1,25×</string>
+    <string name="speed_1_25_detail">Un peu plus rapide</string>
+    <string name="speed_1_5">1,5×</string>
+    <string name="speed_1_5_detail">Une fois et demie plus rapide</string>
+    <string name="speed_2">2×</string>
+    <string name="speed_2_detail">Vitesse doublée</string>
+    <string name="quality_standard">Standard</string>
+    <string name="quality_standard_detail">64 kbit/s · environ 0,5 Mo par minute</string>
+    <string name="quality_high">Élevée</string>
+    <string name="quality_high_detail">128 kbit/s · environ 1 Mo par minute</string>
+    <string name="quality_highest">Maximale</string>
+    <string name="quality_highest_detail">256 kbit/s · environ 2 Mo par minute</string>
+    <string name="media_settings_intro">Comment les photos et vidéos s\'affichent et sont lues quand vous les ouvrez.</string>
+    <string name="media_settings_viewing">Pendant la consultation</string>
+    <string name="media_keep_on">Garder l\'écran allumé pendant la consultation</string>
+    <string name="media_keep_on_on">Activé · L\'écran reste allumé tant qu\'une photo ou une vidéo est ouverte, et le coffre reste ouvert avec lui.</string>
+    <string name="media_keep_on_off">Désactivé · L\'écran s\'éteint selon le délai habituel de votre téléphone, et le coffre se verrouille avec lui.</string>
+    <string name="media_brightness">Luminosité maximale pendant la consultation</string>
+    <string name="media_brightness_on">Activé · Les photos et vidéos s\'ouvrent à la luminosité maximale. Votre luminosité revient quand vous les fermez.</string>
+    <string name="media_brightness_off">Désactivé · Les photos et vidéos s\'ouvrent avec la luminosité de votre téléphone.</string>
+    <string name="media_stretch">Agrandir les photos basse résolution</string>
+    <string name="media_stretch_on">Activé · Une photo plus petite que l\'écran est agrandie pour le remplir.</string>
+    <string name="media_stretch_off">Désactivé · Une photo plus petite que l\'écran s\'affiche à sa taille réelle.</string>
+    <string name="media_quality">Qualité d\'affichage maximale</string>
+    <string name="media_quality_on">Activé · Les photos s\'ouvrent en pleine résolution, pour voir les détails en zoomant. Utilise plus de mémoire et de batterie.</string>
+    <string name="media_quality_off">Désactivé · Les photos s\'ouvrent à la résolution de l\'écran. Le zoom montre moins de détails.</string>
+    <string name="playback_speed">Vitesse de lecture</string>
+    <string name="media_speed_footnote">La hauteur du son reste la même.</string>
+    <string name="media_resume">Reprendre les vidéos</string>
+    <string name="media_resume_on">Activé · Une vidéo reprend là où vous l\'avez arrêtée.</string>
+    <string name="media_resume_off">Désactivé · Les vidéos commencent au début, et l\'endroit où vous vous arrêtez n\'est pas conservé.</string>
+    <string name="media_repeat">Répéter la vidéo</string>
+    <string name="media_repeat_on">Activé · Une vidéo recommence depuis le début à la fin de sa lecture.</string>
+    <string name="media_repeat_off">Désactivé · Une vidéo s\'arrête à la fin.</string>
+    <string name="media_skip">Appuyer deux fois pour avancer ou reculer</string>
+    <string name="media_skip_footnote">Appuyez deux fois sur le côté droit d\'une vidéo pour avancer, et sur le côté gauche pour reculer.</string>
+    <string name="media_orientation">Orientation des vidéos</string>
+    <string name="notes_settings_intro">Ces réglages s\'appliquent à toutes les notes, dans tous les coffres.</string>
+    <string name="notes_checklists">Listes de cases à cocher</string>
+    <string name="notes_move_checked">Déplacer les éléments cochés en bas</string>
+    <string name="notes_move_checked_on">Activé · Cocher un élément le place sous les éléments non cochés de sa liste. Le décocher le fait remonter.</string>
+    <string name="notes_move_checked_off">Désactivé · Les éléments cochés restent où ils sont.</string>
+    <string name="notes_keyboard">Clavier</string>
+    <string name="notes_incognito">Clavier en mode navigation privée</string>
+    <string name="notes_incognito_on">Activé · Votre clavier est invité à ne pas apprendre les mots de vos notes. La plupart des claviers le respectent ; certains peut-être pas.</string>
+    <string name="notes_incognito_off">Désactivé · Votre clavier peut apprendre les mots de vos notes et les suggérer dans d\'autres applications.</string>
+    <string name="memos_settings_intro">Comment les mémos sont enregistrés, et comment ils sont lus quand vous les ouvrez.</string>
+    <string name="memos_quality">Qualité d\'enregistrement</string>
+    <string name="memos_quality_footnote">Un mémo garde la qualité avec laquelle il a commencé. Un changement s\'applique à partir du suivant.</string>
+    <string name="memos_stereo">Enregistrement stéréo</string>
+    <string name="memos_stereo_on">Activé · Les mémos sont enregistrés sur deux canaux, pour une taille environ deux fois plus grande. Un téléphone qui ne le permet pas enregistre en mono.</string>
+    <string name="memos_stereo_off">Désactivé · Les mémos sont enregistrés sur un seul canal.</string>
+    <string name="memos_bluetooth">Utiliser un micro Bluetooth</string>
+    <string name="memos_bluetooth_on">Activé · Un casque Bluetooth connecté enregistre le mémo, en qualité d\'appel et en mono : la qualité et la stéréo ne s\'y appliquent pas. Sans casque connecté, c\'est le micro de votre téléphone qui enregistre.</string>
+    <string name="memos_bluetooth_off">Désactivé · Le micro de votre téléphone enregistre les mémos. Un casque Bluetooth enregistre en qualité d\'appel et en mono, sans qualité ni stéréo.</string>
+    <string name="memos_playback">Lecture</string>
+    <string name="memos_speed_footnote">La hauteur du son reste la même. Les vidéos suivent la vitesse définie dans Médias, pas celle-ci.</string>
+    <string name="memos_skip_silence">Ignorer les silences</string>
+    <string name="memos_skip_silence_on">Activé · Les passages silencieux sont ignorés pendant la lecture d\'un mémo.</string>
+    <string name="memos_skip_silence_off">Désactivé · Les mémos sont lus avec leurs silences.</string>
+
+    <!-- Notes -->
+    <string name="note_title">Titre</string>
+    <string name="note_body">Note</string>
+    <string name="note_edit">Modifier la note</string>
+    <string name="note_placeholder">Commencez à écrire</string>
+    <string name="note_too_long">Cette note fait %1$d octets et la limite est de %2$d. La limite est en octets et non en caractères : les lettres accentuées, les emoji et les écritures non latines comptent chacun pour plus d\'un.</string>
+    <string name="note_pin">Épingler</string>
+    <string name="note_unpin">Désépingler</string>
+    <string name="note_delete">Supprimer la note</string>
+    <string name="format_checklist">Liste de cases à cocher</string>
+    <string name="format_bullet">Liste à puces</string>
+    <string name="format_numbered">Liste numérotée</string>
+    <string name="format_heading">Titre</string>
+    <string name="format_bold">Gras</string>
+    <string name="format_italic">Italique</string>
+    <string name="format_strike">Barré</string>
+    <string name="note_completed">Terminé : %1$s</string>
+    <string name="note_attached_image">Image jointe</string>
+    <string name="note_attachment_missing">Cette pièce jointe n\'est plus dans le coffre.</string>
+    <string name="note_attachment_missing_label">Pièce jointe manquante %1$s</string>
+
+    <!-- Image editor -->
+    <!-- Aspect ratios: the numbers are the same in every language; write them the way the language writes a ratio. -->
+    <string name="aspect_free">Libre</string>
+    <string name="aspect_1_1">1:1</string>
+    <string name="aspect_4_3">4:3</string>
+    <string name="aspect_3_2">3:2</string>
+    <string name="aspect_16_9">16:9</string>
+    <string name="filter_original">Original</string>
+    <string name="filter_mono">N&amp;B</string>
+    <string name="filter_warm">Chaud</string>
+    <string name="filter_cool">Froid</string>
+    <string name="filter_fade">Délavé</string>
+    <string name="filter_punch">Éclatant</string>
+    <string name="width_fine">Fin</string>
+    <string name="width_medium">Moyen</string>
+    <string name="width_bold">Épais</string>
+    <string name="editor_save_note">L\'enregistrement ajoute un nouvel élément et conserve l\'original.</string>
+    <string name="editor_saving">Enregistrement…</string>
+    <string name="editor_save_copy">Enregistrer une copie</string>
+    <string name="editor_discard_title">Abandonner ces modifications ?</string>
+    <string name="editor_discard_body">L\'image redevient comme avant. Rien d\'autre ne change.</string>
+    <string name="editor_discard">Abandonner</string>
+    <string name="editor_keep_editing">Continuer à modifier</string>
+    <string name="editor_discard_edits">Abandonner les modifications</string>
+    <string name="editor_title">Modifier</string>
+    <string name="tool_crop">Recadrer</string>
+    <string name="tool_straighten">Redresser</string>
+    <string name="tool_filters">Filtres</string>
+    <string name="tool_light">Lumière</string>
+    <string name="tool_markup">Annoter</string>
+    <string name="editor_crop_hint">Faites glisser les coins ou le cadre lui-même.</string>
+    <string name="editor_rotate_left">Faire pivoter vers la gauche</string>
+    <string name="editor_rotate_right">Faire pivoter vers la droite</string>
+    <string name="editor_flip_horizontal">Retourner horizontalement</string>
+    <string name="editor_flip_vertical">Retourner verticalement</string>
+    <string name="editor_straighten_value">Redresser \u0020· \u0020%1$s°</string>
+    <string name="editor_strength">Intensité</string>
+    <string name="editor_brightness">Luminosité</string>
+    <string name="editor_contrast">Contraste</string>
+    <string name="editor_saturation">Saturation</string>
+    <string name="editor_warmth">Chaleur</string>
+    <string name="editor_erase_hint">Touchez un trait pour le supprimer.</string>
+    <string name="editor_draw_hint">Faites glisser sur l\'image pour dessiner.</string>
+    <string name="editor_eraser">Gomme</string>
+    <string name="editor_reset">Réinitialiser</string>
+
+    <!-- Voice memo -->
+    <string name="memo_recorded">Enregistré</string>
+    <string name="memo_permission_body">L\'enregistrement a besoin du micro. Rien de ce qui est enregistré ici ne quitte l\'appareil : tout est écrit directement dans le coffre, et cette autorisation ne sert qu\'à cela. Elle n\'active le micro pour rien d\'autre.</string>
+    <string name="memo_speak">Parlez, et tout va directement dans ce coffre</string>
+    <string name="memo_trial">Enregistrer un mémo démarre votre essai de 30 jours. Le décompte commence avec le premier élément ajouté à un coffre, et ce serait celui-ci.</string>
+    <string name="memo_allow_microphone">Autoriser le micro</string>
+    <string name="memo_save">Enregistrer dans le coffre</string>
+    <string name="memo_position">Position dans cet enregistrement</string>
+    <string name="memo_minutes_seconds">%1$s %2$s</string>
+    <string name="memo_recording_length">Enregistrement, %1$s</string>
+    <string name="memo_recorded_length">Enregistré, %1$s</string>
+    <string name="memo_nothing_yet">Rien n\'a encore été enregistré</string>
+    <string name="memo_discard_title">Abandonner cet enregistrement ?</string>
+    <string name="memo_discard_body">L\'enregistrement n\'a pas été sauvegardé, et partir le fait perdre. Rien de ce qui se trouve déjà dans le coffre n\'est affecté.</string>
+    <string name="memo_keep_recording">Continuer l\'enregistrement</string>
+    <string name="memo_already_running">Un enregistrement est déjà en cours.</string>
+    <string name="memo_could_not_record">Le coffre n\'a pas pu recevoir d\'enregistrement pour le moment.</string>
+    <string name="memo_mic_failed">Impossible de démarrer le micro.</string>
+
+    <!-- Camera -->
+    <string name="camera_recording_failed">Le coffre n\'a pas pu recevoir d\'enregistrement.</string>
+    <string name="camera_permission_body">L\'appareil photo a besoin d\'une autorisation pour capturer quoi que ce soit. Rien de ce qui est capturé ici ne va dans la galerie : tout est écrit directement dans le coffre, et cette autorisation ne sert qu\'à cela.</string>
+    <string name="camera_allow">Autoriser l\'appareil photo</string>
+    <string name="camera_close">Fermer l\'appareil photo</string>
+    <string name="camera_switch_back">Passer à la caméra arrière</string>
+    <string name="camera_switch_front">Passer à la caméra frontale</string>
+    <string name="camera_take_photo">Prendre une photo</string>
+    <string name="camera_open_receipt">L\'ouvrir dans le coffre</string>
+    <string name="camera_saving">Enregistrement de la capture dans le coffre</string>
+    <string name="camera_receipt">Dernière capture, enregistrée dans le coffre</string>
+    <string name="camera_none">Cet appareil n\'a pas d\'appareil photo.</string>
+    <string name="camera_no_sizes">Cet appareil photo n\'indique aucune taille utilisable.</string>
+    <string name="camera_no_still">Cet appareil photo ne propose aucune taille de photo.</string>
+    <string name="camera_taken">L\'appareil photo est utilisé par autre chose.</string>
+    <string name="camera_not_opened">Impossible d\'ouvrir l\'appareil photo.</string>
+    <string name="camera_photo_failed">Impossible de prendre la photo.</string>
+    <string name="camera_recording_refused">Cet appareil n\'a pas voulu démarrer d\'enregistrement.</string>
+    <string name="camera_preview_failed">L\'appareil photo n\'a pas voulu démarrer d\'aperçu.</string>
+
+    <!-- Backup and restore -->
+    <string name="backup_turn_on">Activer la sauvegarde</string>
+    <string name="backup_choose_where">Choisir où sauvegarder</string>
+    <string name="backup_now">Sauvegarder maintenant</string>
+    <string name="backup_backed_up_to">Sauvegardé dans</string>
+    <string name="backup_how_it_works">Fonctionnement de la sauvegarde</string>
+    <string name="backup_stop">Arrêter la sauvegarde</string>
+    <string name="backup_caption_off">Chiffré sur ce téléphone avant d\'être copié.</string>
+    <string name="backup_caption_file">Copie l\'intégralité du coffre quelques minutes après vos modifications, et quand vous verrouillez ce coffre.</string>
+    <string name="backup_caption_folder">Copie après chaque modification, et quand vous verrouillez ce coffre.</string>
+    <string name="backup_last_copied">Dernière copie %1$s · %2$s</string>
+    <string name="backup_is_off">La sauvegarde est désactivée</string>
+    <string name="backup_only_here">Ce coffre n\'existe que sur ce téléphone · %1$s</string>
+    <string name="backup_checking">Vérification du dossier…</string>
+    <string name="backup_up_to_date">À jour</string>
+    <plurals name="backup_changes_to_copy">
+        <item quantity="one">%1$d modification à copier</item>
+        <item quantity="many">%1$d modifications à copier</item>
+        <item quantity="other">%1$d modifications à copier</item>
+    </plurals>
+    <string name="backup_copying">Copie en cours…</string>
+    <string name="backup_progress">%1$s sur %2$s</string>
+    <plurals name="backup_files_failed">
+        <item quantity="one">%1$d fichier n\'a pas été copié</item>
+        <item quantity="many">%1$d fichiers n\'ont pas été copiés</item>
+        <item quantity="other">%1$d fichiers n\'ont pas été copiés</item>
+    </plurals>
+    <string name="backup_partial_line">Une nouvelle tentative aura lieu la prochaine fois.</string>
+    <string name="backup_unreachable_file">Impossible d\'accéder au fichier de sauvegarde</string>
+    <string name="backup_unreachable_folder">Impossible d\'accéder au dossier</string>
+    <string name="backup_unreachable_line">Il a peut-être été supprimé, ou l\'application qui le contient a été déconnectée.</string>
+    <string name="backup_no_space">Espace insuffisant</string>
+    <string name="backup_no_space_line">Il faut %1$s d\'espace libre en plus pour transmettre la sauvegarde.</string>
+    <string name="backup_just_now">à l\'instant</string>
+    <string name="backup_before_title">Avant d\'activer la sauvegarde</string>
+    <string name="backup_before_words">La restauration nécessite vos 24 mots</string>
+    <string name="backup_before_words_body">Votre phrase secrète ne peut pas ouvrir une sauvegarde. Si ce téléphone et les mots sont tous deux perdus, personne ne peut l\'ouvrir, pas même vous.</string>
+    <string name="backup_before_provider">Le fournisseur voit la taille de la sauvegarde et quand elle a changé</string>
+    <string name="backup_before_provider_body">Jamais un nom, une date, un album ni le contenu d\'un fichier.</string>
+    <string name="backup_before_one_vault">Cette sauvegarde ne concerne que ce coffre</string>
+    <string name="backup_before_one_vault_body">Chaque coffre a besoin de sa propre sauvegarde.</string>
+    <string name="backup_back_up_to">Sauvegarder dans</string>
+    <string name="backup_no_destinations">Aucune application cloud ni carte SD sur ce téléphone. Installez l\'application de votre fournisseur cloud, connectez-vous, puis revenez ici.</string>
+    <string name="backup_dest_cloud">Un fichier de sauvegarde, mis à jour après les modifications</string>
+    <string name="backup_dest_volume">Un dossier, mis à jour après chaque modification</string>
+    <string name="backup_how_copied">Ce qui est copié</string>
+    <string name="backup_how_copied_body">Les fichiers de ce coffre, chiffrés sur ce téléphone, et la liste chiffrée des coffres qu\'ouvre votre kit de récupération. Votre phrase secrète et le fichier qu\'elle déverrouille restent sur ce téléphone.</string>
+    <string name="backup_how_when">Quand la copie a lieu</string>
+    <string name="backup_how_when_body">Après chaque modification, sans rien avoir à faire. Un dossier sur carte SD est mis à jour en quelques secondes et ne copie que ce qui a changé. Le fichier de sauvegarde d\'une application cloud contient tout le coffre : il est donc réécrit quelques minutes après vos dernières modifications, ou immédiatement quand vous verrouillez. Un coffre que vous n\'ouvrez jamais n\'est jamais copié.</string>
+    <string name="backup_how_restoring">Restauration</string>
+    <string name="backup_how_restoring_body">Une sauvegarde se restaure avec vos 24 mots, et non avec votre phrase secrète. Si ce téléphone et ces mots sont tous deux perdus, personne ne peut lire la sauvegarde, pas même vous.</string>
+    <string name="backup_how_provider">Ce que le fournisseur peut voir</string>
+    <string name="backup_how_provider_body">Une application cloud voit un seul fichier : sa taille et la date de sa modification. Son contenu est scellé : elle ne peut donc ni compter ni mesurer vos fichiers. Un dossier sur carte SD montre combien de fichiers il y a, la taille de chacun arrondie à un palier fixe, et quand chacun a changé ; les éléments de plus de 16 Mo apparaissent groupés, et ce schéma pourrait les identifier comme la sauvegarde de cette application. Aucun des deux ne voit un nom, une date, un album ni quoi que ce soit dans un fichier.</string>
+    <string name="backup_how_per_vault">Une sauvegarde par coffre</string>
+    <string name="backup_how_per_vault_body">Chaque coffre a besoin de sa propre sauvegarde. Chaque sauvegarde contient aussi la même liste chiffrée de coffres : quelqu\'un qui peut en voir deux peut donc savoir qu\'elles vont ensemble.</string>
+    <string name="backup_how_destinations">Applications cloud et cartes SD</string>
+    <string name="backup_how_destinations_body">Une application cloud reçoit un seul fichier contenant tout le coffre, scellé pour que le fournisseur ne voie que sa taille et la date de sa modification. Il est entièrement réécrit à chaque fois. Une carte SD reçoit un dossier qui ne copie que ce qui a changé. Le stockage interne de ce téléphone n\'est pas proposé : une copie à cet endroit disparaît avec le téléphone.</string>
+    <string name="backup_how_deleting">Suppression et arrêt</string>
+    <string name="backup_how_deleting_body">Ce que vous supprimez ici est retiré de la sauvegarde lors de la copie suivante. Les copies que votre fournisseur conserve dans sa corbeille ou son historique des versions sont hors de portée de cette application, y compris un ancien fichier de sauvegarde si une copie a été interrompue. Arrêter la sauvegarde laisse la sauvegarde où elle est.</string>
+    <string name="backup_stop_title">Arrêter la sauvegarde de ce coffre ?</string>
+    <string name="backup_stop_body">La sauvegarde déjà effectuée reste où elle est. Supprimez-la via votre fournisseur si vous voulez qu\'elle disparaisse.</string>
+    <string name="backup_keep">Continuer la sauvegarde</string>
+    <string name="backup_on_sd_card">La sauvegarde est sur une carte SD</string>
+    <string name="restore_into_list">Choisissez la sauvegarde d\'un coffre de cette liste : le fichier dans votre application cloud, ou le dossier sur votre carte SD. Il revient dans cette liste.</string>
+    <string name="restore_lead">Choisissez le fichier de sauvegarde enregistré dans votre application cloud, ou le dossier sur votre carte SD. Vous aurez besoin des 24 mots de votre kit de récupération : votre phrase secrète ne peut pas ouvrir une sauvegarde.</string>
+    <string name="restore_choose_file">Choisir le fichier de sauvegarde</string>
+    <string name="restore_copying">Copie des fichiers… %1$d sur %2$d</string>
+    <string name="import_title">Importer un coffre</string>
+    <string name="import_lead">Récupérez un coffre depuis un fichier .vault, ou depuis une sauvegarde enregistrée dans votre application cloud ou sur une carte SD.</string>
+    <string name="import_choose_file">Choisir un fichier</string>
+    <string name="import_vault_file">Fichier .vault</string>
+    <string name="import_list_full">Cette liste est pleine. Retirez-en un coffre pour faire de la place, puis réessayez l\'importation.</string>
+    <string name="import_failed">L\'ouverture a échoué. Soit la phrase secrète est incorrecte, soit ce n\'est pas un fichier .vault que cette application peut lire.</string>
+    <string name="import_passphrase_label">Phrase secrète de ce fichier</string>
+    <string name="import_importing">Importation</string>
+    <string name="import_action">Importer le coffre</string>
+    <string name="import_backup_here">Il s\'agit d\'une sauvegarde d\'un coffre de cette liste.</string>
+    <string name="import_restore_vault">Restaurer le coffre</string>
+    <string name="import_other_list">Cette sauvegarde provient d\'une autre liste de coffres. Saisissez les 24 mots du kit de récupération de cette liste.</string>
+    <string name="import_own_list">Elle revient sous forme de liste de coffres distincte de celle-ci, qui s\'ouvre avec sa propre phrase secrète. Ses 24 mots ne changent pas.</string>
+    <string name="import_no_room">Il n\'y a pas de place pour une autre liste de coffres sur ce téléphone.</string>
+    <string name="import_restore_list">Restaurer la liste de coffres</string>
+    <string name="import_copying">Copie des fichiers…</string>
+    <string name="import_vault_restored">Coffre restauré</string>
+    <string name="import_list_restored">Liste de coffres restaurée</string>
+    <string name="import_vault_restored_body">Il est de retour dans sa liste de coffres. Ouvrez cette liste avec sa phrase secrète pour le voir.</string>
+    <string name="import_list_restored_body">Verrouillez l\'application et saisissez sa phrase secrète pour l\'ouvrir.</string>
+
+    <!-- Sizes and units -->
+    <string name="size_bytes">%1$d o</string>
+    <string name="size_kb">%1$s ko</string>
+    <string name="size_mb">%1$s Mo</string>
+    <string name="size_gb">%1$s Go</string>
+    <string name="size_tb">%1$s To</string>
+    <string name="size_pb">%1$s Po</string>
+
+    <!-- Unvault and the encrypted archive -->
+    <plurals name="unvault_items">
+        <item quantity="one">Sortir %1$d élément du coffre</item>
+        <item quantity="many">Sortir %1$d éléments du coffre</item>
+        <item quantity="other">Sortir %1$d éléments du coffre</item>
+    </plurals>
+    <plurals name="unvault_selected_body">
+        <item quantity="one">L\'élément sélectionné (%1$d) est déchiffré, exporté, vérifié, puis retiré du coffre. Tout ce que vous n\'avez pas sélectionné reste en place.</item>
+        <item quantity="many">Les %1$d éléments sélectionnés sont déchiffrés, exportés, vérifiés, puis retirés du coffre. Tout ce que vous n\'avez pas sélectionné reste en place.</item>
+        <item quantity="other">Les %1$d éléments sélectionnés sont déchiffrés, exportés, vérifiés, puis retirés du coffre. Tout ce que vous n\'avez pas sélectionné reste en place.</item>
+    </plurals>
+    <plurals name="unvault_all_body">
+        <item quantity="one">L\'élément de ce coffre (%1$d) est déchiffré, exporté, vérifié, puis retiré du coffre. Une fois l\'opération terminée, le coffre est vide et vos fichiers redeviennent des fichiers ordinaires.</item>
+        <item quantity="many">Les %1$d éléments de ce coffre sont tous déchiffrés, exportés, vérifiés, puis retirés du coffre. Une fois l\'opération terminée, le coffre est vide et vos fichiers redeviennent des fichiers ordinaires.</item>
+        <item quantity="other">Les %1$d éléments de ce coffre sont tous déchiffrés, exportés, vérifiés, puis retirés du coffre. Une fois l\'opération terminée, le coffre est vide et vos fichiers redeviennent des fichiers ordinaires.</item>
+    </plurals>
+    <string name="unvault_checked">Chaque fichier est relu et comparé avant que sa copie chiffrée soit supprimée. Tout ce qui ne correspond pas reste dans le coffre et figure dans le manifeste.</string>
+    <string name="unvault_where">Destination</string>
+    <string name="unvault_gallery">Photos et vidéos</string>
+    <string name="unvault_folder_chosen">Dossier choisi</string>
+    <string name="unvault_choose_folder">Choisir un dossier</string>
+    <string name="unvault_remove_details">Retirer les détails des photos</string>
+    <string name="unvault_details_kept">Les photos exportées conservent tout ce qu\'elles contiennent, y compris leur lieu.</string>
+    <string name="unvault_passphrase_needed">Saisissez votre phrase secrète pour continuer. Le déverrouillage biométrique ne suffit pas ici.</string>
+    <string name="unvault_passphrase_needed_own">Saisissez la phrase secrète propre à ce coffre pour continuer. Celle de votre liste de coffres et le déverrouillage biométrique ne suffisent pas ici.</string>
+    <string name="unvault_wrong_passphrase">Cela n\'a pas ouvert ce coffre.</string>
+    <string name="unvault_progress">%1$d sur %2$d sortis</string>
+    <string name="unvault_progress_left">%1$d sur %2$d sortis, %3$d encore dans le coffre</string>
+    <string name="unvault_busy">Sortie du coffre en cours</string>
+    <string name="archive_title">Vous changez d\'appareil ?</string>
+    <string name="archive_body">Enregistrez un fichier .vault chiffré que vous pourrez ouvrir sur le nouveau téléphone. Choisissez une phrase secrète pour le fichier lui-même : ce n\'est pas celle qui ouvre vos coffres, et vous en aurez besoin sur l\'autre appareil. Cela ne vide pas ce coffre, et les éléments de la corbeille ne sont pas inclus.</string>
+    <string name="archive_passphrase_label">Phrase secrète du fichier</string>
+    <string name="archive_save">Enregistrer l\'archive chiffrée</string>
+
+    <!-- Sharing -->
+    <string name="lifespan_day">24 heures</string>
+    <string name="lifespan_week">7 jours</string>
+    <string name="lifespan_month">30 jours</string>
+    <string name="share_trial_ended">Votre essai est terminé</string>
+    <string name="share_trial_ended_body">Envoyer un partage nécessite l\'achat unique. Ouvrir les partages qu\'on vous envoie, et ouvrir, consulter et exporter vos propres contenus, restent gratuits.</string>
+    <string name="share_lead_contact">Cela crée un fichier chiffré que seul le téléphone de %1$s peut ouvrir. Il n\'y a pas de code à transmettre.</string>
+    <string name="share_lead_code">Cela crée un fichier chiffré et un code de quatre mots. Le destinataire a besoin de cette application et du code pour l\'ouvrir.</string>
+    <string name="share_who">Qui peut l\'ouvrir</string>
+    <string name="share_contact_detail">S\'ouvre sur le téléphone de %1$s, sans code</string>
+    <string name="share_anyone">Toute personne ayant le code</string>
+    <string name="share_anyone_detail">Moins sûr. Toute personne ayant le fichier et les mots peut l\'ouvrir.</string>
+    <string name="share_how_long">Pendant combien de temps il s\'ouvre</string>
+    <string name="share_no_limit">Sans limite</string>
+    <string name="share_no_limit_detail">S\'ouvre à tout moment</string>
+    <string name="share_open_once">Ouvrir une seule fois</string>
+    <string name="share_open_once_detail">S\'ouvre une fois, puis plus jamais</string>
+    <string name="share_expires">Expire</string>
+    <string name="share_expires_detail">S\'ouvre jusqu\'au %1$s</string>
+    <string name="share_limits_contact">Ces limites sont appliquées par l\'application sur le téléphone de %1$s, et aucun autre téléphone ne peut ouvrir le fichier. Une fois le fichier envoyé, vous ne pouvez plus le reprendre.</string>
+    <string name="share_limits_code">Ces limites sont appliquées par l\'application sur le téléphone qui l\'ouvre. Une fois le fichier envoyé, vous ne pouvez plus le reprendre.</string>
+    <string name="share_photo_carries">Ce que contient la photo</string>
+    <string name="share_remove_details">Retirer les détails</string>
+    <string name="share_as_is">L\'envoyer tel quel</string>
+    <string name="share_as_is_detail">Le lieu, la date et les infos de l\'appareil photo sont aussi envoyés</string>
+    <string name="share_sealing">Scellement</string>
+    <string name="share_try_again">Réessayer</string>
+    <string name="share_create">Créer le partage</string>
+    <string name="share_less_secure">Moins sûr qu\'un envoi à un contact</string>
+    <string name="share_risk_any_phone">Toute personne qui a le fichier et les quatre mots peut l\'ouvrir, sur n\'importe quel téléphone.</string>
+    <string name="share_risk_once">« Ouvrir une seule fois » signifie une fois par téléphone. Transmis à quelqu\'un d\'autre, il s\'ouvre à nouveau.</string>
+    <string name="share_risk_same_chat">Envoyer les mots dans la même conversation que le fichier revient à donner les deux.</string>
+    <string name="share_risk_guessing">Quiconque garde une copie du fichier peut continuer à essayer de deviner les mots, sans limite.</string>
+    <string name="share_pair_first">Pour partager avec une seule personne, associez-vous d\'abord avec elle.</string>
+    <string name="share_pair">S\'associer avec quelqu\'un</string>
+    <string name="share_code_title">Le code</string>
+    <string name="share_code_label">Code de partage : %1$s</string>
+    <string name="share_code_separately">Envoyez le code par un autre moyen que le fichier.</string>
+    <string name="share_code_both">Quiconque possède les deux peut l\'ouvrir. Un code saisi dans la même conversation que le fichier donne les deux d\'un coup.</string>
+    <string name="share_code_once">Ce code ne s\'affiche qu\'une fois et n\'est pas enregistré. Copiez-le maintenant.</string>
+    <string name="share_send_file">Envoyer le fichier…</string>
+    <string name="share_copy_code">Copier le code</string>
+    <string name="share_sealed_to">Scellé pour %1$s</string>
+    <string name="share_sealed_body">Seul %1$s peut l\'ouvrir. Le fichier est scellé pour son téléphone : aucun code à envoyer.</string>
+    <string name="share_save_device">Enregistrer sur l\'appareil</string>
+    <string name="share_saved">Enregistré. Joignez-le depuis Fichiers dans l\'application que vous utilisez pour l\'envoyer.</string>
+    <string name="share_save_failed">Impossible d\'enregistrer le fichier. Réessayez, ou envoyez-le directement.</string>
+    <string name="share_save_hint">Ou enregistrez-le et joignez-le depuis Fichiers. L\'application d\'envoi ne peut alors pas savoir quelle application l\'a créé.</string>
+    <string name="share_refused_trash">Les éléments de la corbeille ne peuvent pas être partagés.</string>
+    <string name="share_refused_no_length">La durée de cette vidéo est illisible : elle ne peut donc pas être partagée.</string>
+    <string name="share_refused_too_long">Les vidéos de plus de %1$d secondes ne peuvent pas être partagées.</string>
+
+    <!-- Opening a share -->
+    <string name="share_open_title">Ouvrir un partage</string>
+    <string name="share_open_reading">Lecture du fichier</string>
+    <string name="share_open_enter_code">S\'il a été envoyé avec un code, saisissez-le.</string>
+    <string name="share_open_code_hint">L\'expéditeur vous aura donné quatre mots par un autre moyen que le fichier.</string>
+    <string name="share_open_failed">Impossible d\'ouvrir ce partage.</string>
+    <string name="share_open_check">Vérifiez les quatre mots, et qu\'il s\'agit bien du fichier qui vous a été envoyé.</string>
+    <string name="share_open_action">Ouvrir le partage</string>
+    <string name="share_open_no_contacts">Ce téléphone ne peut pas lire ses contacts : un partage scellé pour lui ne peut donc pas être ouvert ici.</string>
+    <string name="share_open_contacts">Ouvrir les contacts</string>
+    <string name="share_open_view">Afficher</string>
+    <string name="share_open_keep">Conserver dans ce coffre</string>
+    <string name="share_open_keep_needs_purchase">Conserver des partages nécessite l\'achat unique. Quand vous partirez, rien ne sera enregistré.</string>
+    <string name="share_open_leave">Si vous partez sans le conserver, rien n\'est enregistré.</string>
+    <string name="share_open_cannot_keep">Ce partage ne peut pas être conservé. Quand vous partirez, rien ne sera enregistré.</string>
+    <string name="share_open_sealed_here">Ce partage a été scellé pour ce téléphone. Aucun code n\'est nécessaire pour l\'ouvrir.</string>
+    <string name="share_open_open">Ouvrir</string>
+    <string name="share_open_newer">Ce partage a été créé par une version plus récente de l\'application. Mettez cette application à jour pour l\'ouvrir.</string>
+    <string name="share_open_already_opened">Ce partage ne devait s\'ouvrir qu\'une fois, et il a déjà été ouvert.</string>
+    <string name="share_open_expired">Ce partage a expiré le %1$s.</string>
+    <string name="share_open_code_correct">Le code était correct. Cette limite est appliquée par l\'application sur ce téléphone, et l\'expéditeur ne peut pas la lever.</string>
+    <string name="share_open_limit_once">L\'expéditeur l\'a réglé pour ne s\'ouvrir qu\'une fois. Cette limite est appliquée par l\'application sur ce téléphone.</string>
+    <string name="share_open_limit_expiry">L\'expéditeur l\'a réglé pour ne plus s\'ouvrir à partir du %1$s. Cette limite est appliquée par l\'application sur ce téléphone.</string>
+
+    <!-- Contacts and pairing -->
+    <string name="contacts_waiting">En attente</string>
+    <string name="contacts_invite_sent">Invitation envoyée, en attente de réponse</string>
+    <string name="contacts_reply_sent">Réponse envoyée, en attente de confirmation</string>
+    <string name="contacts_confirmation_ready">Confirmation prête à envoyer</string>
+    <string name="contacts_add">Ajouter un contact</string>
+    <string name="contacts_together">Ensemble</string>
+    <string name="contacts_together_detail">Scannez vos codes mutuellement. La méthode d\'association la plus sûre.</string>
+    <string name="contacts_not_together">À distance</string>
+    <string name="contacts_not_together_detail">Envoyez un fichier d\'invitation et quatre mots.</string>
+    <string name="contacts_have_invite">J\'ai une invitation</string>
+    <string name="contacts_have_invite_detail">Ouvrez le fichier reçu et saisissez les quatre mots de l\'autre personne.</string>
+    <string name="contacts_empty">Aucun contact pour l\'instant. Associez-vous avec quelqu\'un, ensemble ou en lui envoyant une invitation, et vous pourrez ensuite lui envoyer un fichier sans code.</string>
+    <string name="contacts_remove_named">Retirer %1$s</string>
+    <string name="contacts_unreadable">Ce téléphone ne peut pas lire ses contacts.</string>
+    <string name="contacts_unreadable_body">La liste de contacts est verrouillée par une clé conservée sur cet appareil, et cette clé a disparu : c\'est ce que laisse une restauration sur un autre téléphone. La liste elle-même est intacte, mais rien ici ne peut l\'ouvrir.\n\nRecommencer donne à ce téléphone un nouveau code d\'association. Toutes les personnes associées devront le scanner à nouveau.</string>
+    <string name="contacts_new_identity">Créer une nouvelle identité</string>
+    <string name="contacts_new_identity_title">Créer une nouvelle identité ?</string>
+    <string name="contacts_new_identity_body">La liste de contacts illisible est supprimée et ce téléphone reçoit un nouveau code d\'association. Toutes les personnes associées devront le scanner à nouveau.</string>
+    <string name="contacts_start_again">Recommencer</string>
+    <string name="contacts_remove_title">Retirer %1$s ?</string>
+    <string name="contacts_remove_body">Ce que vous avez déjà envoyé reste envoyé. Vous pourrez vous associer à nouveau.</string>
+    <string name="pairing_title">Associer un contact</string>
+    <string name="pairing_saved">%1$s enregistré. Laissez maintenant cette personne scanner votre code.</string>
+    <string name="pairing_show">Montrez ceci à l\'autre téléphone, puis scannez le sien. Chacun doit scanner le code de l\'autre.</string>
+    <string name="pairing_in_person">Scanner en personne est la méthode d\'association la plus sûre. Rien de tout cela ne quitte ce téléphone tant que vous n\'envoyez pas de fichier à quelqu\'un.</string>
+    <string name="pairing_scan">Scanner son code</string>
+    <string name="pairing_your_code">Votre code d\'association</string>
+    <string name="pairing_camera_permission">L\'appareil photo a besoin d\'une autorisation pour lire un code. Rien de ce qu\'il voit n\'est enregistré : les images sont décodées puis supprimées, et cette autorisation ne sert qu\'à cela.</string>
+    <string name="pairing_point">Pointez l\'appareil vers le code de l\'autre téléphone.</string>
+    <string name="pairing_camera_looking">Appareil photo, à la recherche d\'un code d\'association</string>
+    <string name="pairing_who">Qui est-ce ? Ce nom n\'appartient qu\'à vous : il est stocké sur ce téléphone et n\'est jamais envoyé nulle part.</string>
+    <string name="pairing_save">Enregistrer le contact</string>
+    <string name="remote_invite_title">Inviter quelqu\'un</string>
+    <string name="remote_answer_title">Répondre à une invitation</string>
+    <string name="remote_important">Important</string>
+    <string name="remote_name_too_long">Ce nom est trop long. Essayez-en un plus court.</string>
+    <string name="remote_name_yours">Ce nom n\'appartient qu\'à vous et reste sur ce téléphone.</string>
+    <string name="remote_who_inviting">Qui invitez-vous ?</string>
+    <string name="remote_make_invite">Créer l\'invitation</string>
+    <string name="remote_invite_ready">Invitation prête</string>
+    <string name="remote_invite_send">Envoyez le fichier d\'invitation à %1$s. Puis donnez-lui ces quatre mots par un autre moyen : dites-les lors d\'un appel ou en personne.</string>
+    <string name="remote_your_words">Vos quatre mots : %1$s</string>
+    <string name="remote_invite_strict">Quiconque possède le fichier et ces mots peut devenir ce contact. Ne donnez les mots qu\'à %1$s, et jamais dans la même conversation que le fichier.</string>
+    <string name="remote_open_reply">Ouvrir la réponse de %1$s</string>
+    <string name="remote_send_invite_again">Renvoyer le fichier d\'invitation</string>
+    <string name="remote_waiting_reply_today">En attente de la réponse de %1$s. Cette invitation prend fin à %2$s.</string>
+    <string name="remote_waiting_reply_tomorrow">En attente de la réponse de %1$s. Cette invitation prend fin demain à %2$s.</string>
+    <string name="remote_send_invite">Envoyer le fichier d\'invitation</string>
+    <string name="remote_cancel_invite">Annuler l\'invitation</string>
+    <string name="remote_now_contact">%1$s fait désormais partie de vos contacts.</string>
+    <string name="remote_send_confirmation_body">Envoyez ce fichier de confirmation pour que l\'autre personne puisse vous ajouter elle aussi.</string>
+    <string name="remote_send_confirmation_again">Renvoyer le fichier de confirmation</string>
+    <string name="remote_send_confirmation">Envoyer le fichier de confirmation</string>
+    <string name="remote_open_invite">Ouvrir le fichier d\'invitation</string>
+    <string name="remote_who_sent">Qui l\'a envoyé ?</string>
+    <string name="remote_their_words">Les quatre mots de l\'autre personne</string>
+    <string name="remote_know_sender">Ne continuez que si vous savez qui a envoyé ceci. La personne qui a créé l\'invitation devient un contact.</string>
+    <string name="remote_make_reply">Créer la réponse</string>
+    <string name="remote_send_reply_title">Envoyez votre réponse</string>
+    <string name="remote_send_reply_body">Envoyez ce fichier de réponse à %1$s.</string>
+    <string name="remote_open_confirmation">Ouvrir la confirmation de %1$s</string>
+    <string name="remote_send_reply_again">Renvoyer le fichier de réponse</string>
+    <string name="remote_waiting_confirmation_today">En attente de la confirmation de %1$s. Cela prend fin à %2$s.</string>
+    <string name="remote_waiting_confirmation_tomorrow">En attente de la confirmation de %1$s. Cela prend fin demain à %2$s.</string>
+    <string name="remote_send_reply">Envoyer le fichier de réponse</string>
+    <string name="remote_ended">Cette invitation a pris fin</string>
+    <string name="remote_ended_reply">Cette réponse ne correspondait pas : l\'invitation a donc pris fin. Vérifiez que les quatre mots ont été saisis exactement et que vous avez tous les deux la dernière version de l\'application.</string>
+    <string name="remote_ended_this">C\'est terminé</string>
+    <string name="remote_ended_confirmation">Cette confirmation ne correspondait pas : la procédure a donc pris fin. Demandez à %1$s de créer une nouvelle invitation, et vérifiez ensemble les quatre mots.</string>
+    <string name="remote_ended_expired">Cette invitation a pris fin. Les invitations durent 24 heures.</string>
+    <string name="remote_ended_already">Cette invitation a déjà pris fin.</string>
+    <string name="remote_own_invite">C\'est votre propre invitation</string>
+    <string name="remote_own_invite_body">C\'est l\'invitation de ce téléphone.</string>
+    <string name="remote_unreadable_body">La liste de contacts est verrouillée par une clé que cet appareil n\'a plus. La section Contacts explique ce que vous pouvez faire.</string>
+    <string name="remote_new_invite">Créer une nouvelle invitation</string>
+
+    <!-- Removing the originals from the gallery -->
+    <string name="originals_title">Supprimer les originaux de votre galerie ?</string>
+    <string name="originals_removed">Les originaux ont été supprimés de votre galerie.</string>
+    <plurals name="originals_photos">
+        <item quantity="one">%1$d photo</item>
+        <item quantity="many">%1$d photos</item>
+        <item quantity="other">%1$d photos</item>
+    </plurals>
+    <plurals name="originals_videos">
+        <item quantity="one">%1$d vidéo</item>
+        <item quantity="many">%1$d vidéos</item>
+        <item quantity="other">%1$d vidéos</item>
+    </plurals>
+    <plurals name="originals_in_vault">
+        <item quantity="one">%1$s se trouve maintenant dans ce coffre. Android vous demandera de confirmer.</item>
+        <item quantity="many">%1$s se trouvent maintenant dans ce coffre. Android vous demandera de confirmer.</item>
+        <item quantity="other">%1$s se trouvent maintenant dans ce coffre. Android vous demandera de confirmer.</item>
+    </plurals>
+    <plurals name="originals_stay">
+        <item quantity="one">%1$d autre ne peut pas être supprimé d\'ici et restera dans votre galerie.</item>
+        <item quantity="many">%1$d autres ne peuvent pas être supprimés d\'ici et resteront dans votre galerie.</item>
+        <item quantity="other">%1$d autres ne peuvent pas être supprimés d\'ici et resteront dans votre galerie.</item>
+    </plurals>
+
+    <!-- Lock screen warnings -->
+    <string name="warning_rooted">Cet appareil semble rooté. Une autre application disposant des droits root peut lire la mémoire de ce coffre pendant qu\'il est ouvert.</string>
+    <string name="warning_debuggable">Il s\'agit d\'une version débogable. Sa mémoire peut être lue via USB pendant que le coffre est ouvert.</string>
+    <string name="warning_debugger">Un débogueur est actuellement connecté à cette application.</string>
+    <plurals name="warning_accessibility">
+        <item quantity="one">%1$d service d\'accessibilité est en cours d\'exécution. Un tel service peut lire ce qui s\'affiche à l\'écran, y compris tout ce que vous ouvrez ici.</item>
+        <item quantity="many">%1$d services d\'accessibilité sont en cours d\'exécution. Un tel service peut lire ce qui s\'affiche à l\'écran, y compris tout ce que vous ouvrez ici.</item>
+        <item quantity="other">%1$d services d\'accessibilité sont en cours d\'exécution. Un tel service peut lire ce qui s\'affiche à l\'écran, y compris tout ce que vous ouvrez ici.</item>
+    </plurals>
+
+    <!-- Covers — the calculator, the music player and the voice recorder -->
+    <string name="calc_divide_by_zero">Impossible de diviser par zéro</string>
+    <string name="calc_undefined">Indéfini</string>
+    <string name="calc_infinity">Infini</string>
+    <string name="calc_invalid_format">Format incorrect</string>
+    <string name="pattern_draw">Tracez votre schéma</string>
+    <string name="pattern_wrong">Schéma incorrect</string>
+    <string name="music_unknown_track">Titre inconnu</string>
+    <string name="music_unknown_artist">Artiste inconnu</string>
+    <string name="music_unknown_album">Album inconnu</string>
+    <string name="music_tracks">Titres</string>
+    <string name="music_albums">Albums</string>
+    <string name="music_artists">Artistes</string>
+    <string name="music_shuffle_all">Tout lire en aléatoire</string>
+    <plurals name="music_track_count">
+        <item quantity="one">%1$d titre</item>
+        <item quantity="many">%1$d titres</item>
+        <item quantity="other">%1$d titres</item>
+    </plurals>
+    <string name="music_close_player">Fermer le lecteur</string>
+    <string name="music_nothing_playing">Aucune lecture en cours</string>
+    <string name="music_shuffle_on">Lecture aléatoire activée</string>
+    <string name="music_shuffle_off">Lecture aléatoire désactivée</string>
+    <string name="music_previous">Précédent</string>
+    <string name="music_next">Suivant</string>
+    <string name="music_repeat_one">Répéter le titre</string>
+    <string name="music_repeat_all">Tout répéter</string>
+    <string name="music_repeat_off">Répétition désactivée</string>
+    <string name="music_tap_to_open">Appuyez pour ouvrir le lecteur</string>
+    <string name="music_loading">Chargement de la bibliothèque…</string>
+    <string name="music_none">Aucune musique sur cet appareil</string>
+    <string name="music_none_line">Les titres que vous ajoutez apparaîtront ici.</string>
+    <string name="music_access_off">L\'accès à la musique est désactivé</string>
+    <string name="music_access_off_line">Activez Musique et audio dans les Paramètres pour lire ce qui se trouve sur cet appareil.</string>
+    <string name="recorder_default_title">Enregistrement %1$s</string>
+    <plurals name="recorder_count">
+        <item quantity="one">%1$d enregistrement · %2$s</item>
+        <item quantity="many">%1$d enregistrements · %2$s</item>
+        <item quantity="other">%1$d enregistrements · %2$s</item>
+    </plurals>
+    <string name="recorder_search">Rechercher dans les enregistrements</string>
+    <string name="recorder_hide_controls">Masquer les commandes</string>
+    <string name="recorder_show_controls">Afficher les commandes</string>
+    <string name="recorder_paused">En pause</string>
+    <string name="recorder_resume">Reprendre</string>
+    <string name="recorder_delete_title">Supprimer « %1$s » ?</string>
+    <string name="recorder_delete_body">Cet enregistrement sera supprimé de cet appareil.</string>
+    <string name="recorder_none">Aucun enregistrement pour l\'instant</string>
+    <string name="recorder_mic_off">L\'accès au micro est désactivé</string>
+    <string name="recorder_none_line">Appuyez sur Enregistrer pour en créer un.</string>
+    <string name="recorder_mic_off_line">Activez Micro dans les Paramètres pour enregistrer.</string>
+    <string name="recorder_no_match">Aucun enregistrement ne correspond à « %1$s »</string>
+    <string name="recorder_paused_length">En pause, %1$s</string>
+
+    <!-- The unlock digest — what happened since the last unlock -->
+    <string name="digest_altered">Ce journal d\'événements a été modifié à l\'entrée %1$d.</string>
+    <string name="digest_not_opened_since">Pas ouvert depuis le %1$s.</string>
+    <plurals name="digest_recoveries">
+        <item quantity="one">%1$d kit de récupération a été utilisé pour ouvrir ce coffre.</item>
+        <item quantity="many">%1$d kits de récupération ont été utilisés pour ouvrir ce coffre.</item>
+        <item quantity="other">%1$d kits de récupération ont été utilisés pour ouvrir ce coffre.</item>
+    </plurals>
+    <plurals name="digest_failed">
+        <item quantity="one">%1$d tentative de déverrouillage a échoué.</item>
+        <item quantity="many">%1$d tentatives de déverrouillage ont échoué.</item>
+        <item quantity="other">%1$d tentatives de déverrouillage ont échoué.</item>
+    </plurals>
+    <plurals name="digest_imported">
+        <item quantity="one">%1$d élément importé.</item>
+        <item quantity="many">%1$d éléments importés.</item>
+        <item quantity="other">%1$d éléments importés.</item>
+    </plurals>
+    <plurals name="digest_deleted">
+        <item quantity="one">%1$d fichier source supprimé.</item>
+        <item quantity="many">%1$d fichiers sources supprimés.</item>
+        <item quantity="other">%1$d fichiers sources supprimés.</item>
+    </plurals>
+    <string name="digest_biometric">Le déverrouillage biométrique a été invalidé par une modification des données biométriques enregistrées.</string>
+    <string name="digest_dev_options">Les options pour les développeurs ou le débogage USB ont été activés sur cet appareil.</string>
+    <string name="digest_root">L\'état root de cet appareil a changé.</string>
+    <string name="digest_data_cleared">Les données de cette application semblent avoir été effacées.</string>
+    <string name="digest_new_device">Ce coffre fonctionne sur un autre appareil que celui sur lequel il a été configuré.</string>
+    <string name="digest_clock">L\'horloge de cet appareil a reculé.</string>
+    <string name="vault_passphrase_heading">Phrase secrète</string>
+    <string name="vault_passphrase_state_list">S\'ouvre avec la phrase secrète de votre liste de coffres.</string>
+    <string name="vault_passphrase_state_own">S\'ouvre uniquement avec sa propre phrase secrète.</string>
+    <string name="vault_passphrase_add">Ajouter une phrase secrète</string>
+    <string name="vault_passphrase_add_supporting">Seule cette phrase secrète l\'ouvrira</string>
+    <string name="vault_passphrase_change">Modifier la phrase secrète</string>
+    <string name="vault_passphrase_remove">Supprimer la phrase secrète</string>
+    <string name="vault_passphrase_remove_supporting">La phrase secrète de votre liste de coffres l\'ouvrira</string>
+    <string name="vault_passphrase_added">Phrase secrète ajoutée.</string>
+    <string name="vault_passphrase_changed">Phrase secrète modifiée.</string>
+    <string name="vault_passphrase_removed">Phrase secrète supprimée.</string>
+    <string name="vault_passphrase_add_lead">Une fois ajoutée, seule cette phrase secrète ouvre %1$s. Celle de votre liste de coffres ne l\'ouvrira plus, pas plus que le kit de récupération de la liste : %1$s reçoit donc son propre kit de récupération.</string>
+    <string name="vault_passphrase_list_label">Phrase secrète de la liste de coffres</string>
+    <string name="vault_passphrase_list_supporting">Celle qui ouvre la liste de coffres de cette application.</string>
+    <string name="vault_passphrase_list_empty">Saisissez la phrase secrète qui ouvre votre liste de coffres.</string>
+    <string name="vault_passphrase_new_again">Nouvelle phrase secrète, encore une fois</string>
+    <string name="vault_passphrase_backups_heading">Sauvegardes antérieures</string>
+    <string name="vault_passphrase_add_backups">Une sauvegarde enregistrée avant maintenant ouvre toujours %1$s avec la phrase secrète de votre liste de coffres.</string>
+    <string name="vault_passphrase_add_button">Ajouter la phrase secrète</string>
+    <string name="vault_passphrase_adding">Ajout…</string>
+    <string name="vault_passphrase_change_lead">Le kit de récupération de %1$s ne change pas, et ses 24 mots l\'ouvrent toujours. La phrase secrète de votre liste de coffres ne l\'ouvre toujours pas.</string>
+    <string name="vault_passphrase_current_label">Phrase secrète actuelle</string>
+    <string name="vault_passphrase_current_empty">Saisissez la phrase secrète actuelle de ce coffre.</string>
+    <string name="vault_passphrase_change_backups">Une sauvegarde enregistrée avant maintenant ouvre %1$s avec l\'ancienne phrase secrète.</string>
+    <string name="vault_passphrase_changing">Modification…</string>
+    <string name="vault_passphrase_remove_opens">La phrase secrète de votre liste de coffres l\'ouvre</string>
+    <string name="vault_passphrase_remove_opens_body">%1$s s\'ouvrira directement depuis la liste, sans phrase secrète propre.</string>
+    <string name="vault_passphrase_remove_kit">Le kit de récupération de votre liste le couvre</string>
+    <string name="vault_passphrase_remove_kit_body">Les 24 mots de la liste récupéreront %1$s. Ses propres 24 mots l\'ouvrent toujours aussi, et ne peuvent pas être annulés.</string>
+    <string name="vault_passphrase_remove_captures">Ses captures d\'intrus rejoignent l\'accueil</string>
+    <string name="vault_passphrase_remove_captures_body">Son historique rejoint Capture des intrus sur l\'écran d\'accueil, et ses propres paramètres de capture sont désactivés.</string>
+    <string name="vault_passphrase_removing">Suppression…</string>
+    <plurals name="kit_remaining_views_fewer">
+        <item quantity="one">Après avoir continué, vous pourrez les afficher encore %1$d fois depuis le menu. Ensuite, ils ne pourront plus être affichés, et la copie que vous aurez notée sera la seule.</item>
+        <item quantity="other">Après avoir continué, vous pourrez les afficher encore %1$d fois depuis le menu. Ensuite, ils ne pourront plus être affichés, et la copie que vous aurez notée sera la seule.</item>
+    </plurals>
+    <string name="kit_remaining_views_none">Cette application les a déjà affichés autant de fois que possible : après avoir continué, ils ne pourront plus être affichés. La copie que vous aurez notée sera la seule.</string>
+    <!-- `third-party-notices`. The Open-source licences row and its two screens. -->
+    <string name="licences_title">Licences open source</string>
+    <plurals name="licences_drawer_line">
+        <item quantity="one">%1$d bibliothèque et sa licence</item>
+        <item quantity="other">%1$d bibliothèques et leurs licences</item>
+    </plurals>
+    <string name="licences_lead">%1$s est construit avec ces bibliothèques. Chacune est utilisée sous sa propre licence, affichée ci-dessous.</string>
+    <string name="licences_open_action">ouvrir la licence</string>
+    <string name="licences_version">Version %1$s</string>
+    <string name="licences_source">Source</string>
+    <string name="licences_licence">Licence</string>
+</resources>

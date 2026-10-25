@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Material Symbols "inventory_2", outlined (wght 400, FILL 0, GRAD 0, opsz 24) — DESIGN.md §9, added by
+  `vault-list-refresh`.
+
+  One of the 24 vault icons (`VaultAppearance.ICONS`). Drawn only inside a vault's badge, never
+  as chrome.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M3 22V8.7H2V2H22V8.7H21V22ZM5 20H19V9H5ZM4 7H20V4H4ZM9 14H15V12H9ZM5 20V9V20Z" />
+</vector>

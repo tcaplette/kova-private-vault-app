@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The window themes, so a cold start does not flash before Compose draws.
+
+  The platform default this replaced (@android:style/Theme.Material.NoActionBar)
+  has a window background that is not the app's ground, which meant a light flash
+  on the launch path of a dark privacy app, every time.
+
+  P2-23 makes it two: the app has a light scheme now, and a light-mode user given
+  the dark ground gets exactly the flash this style exists to prevent, in the other
+  direction.
+
+  **No values-night variant, and the reason changed.** It used to be that DESIGN.md
+  §3 made the app dark-only and a night variant would imply there was a day one.
+  Now there is a day one — but a values-night qualifier resolves from the *system's*
+  night-mode flag, and the setting is System/Light/Dark. A user who forced Light on a
+  dark-system phone is exactly who cares, and a qualifier would hand them the dark
+  ground on every launch. MainActivity picks the theme with setTheme() before
+  super.onCreate, which is early enough for windowBackground and reads the app's own
+  preference rather than the platform's.
+
+  AppCompatDelegate.setDefaultNightMode is the usual way to do this and is not
+  available: androidx.appcompat is not on this project's classpath, and adding a
+  Gradle dependency plus an I1 clearance run to set a window background is not a
+  trade worth making.
+
+  P2-6 removed four items from this style: statusBarColor, navigationBarColor,
+  windowLightStatusBar and windowLightNavigationBar. All four are no-ops at
+  targetSdk 37 — Android 15 stopped honouring the bar colours under enforced
+  edge-to-edge — and a no-op that reads like configuration is how the next
+  person concludes bar colour is handled somewhere. The bars are transparent and
+  the app draws its own ground behind them; their *icon* colours are set in code
+  by enableEdgeToEdge, from the resolved scheme (P2-23). `DesignTokensTest` fails
+  if any of the four returns.
+
+  windowBackground stays: it is what actually prevents the cold-start flash, and
+  it is unaffected by edge-to-edge.
+-->
+<resources>
+    <style name="Theme.Vault" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/vault_ground</item>
+        <item name="android:colorBackground">@color/vault_ground</item>
+    </style>
+
+    <style name="Theme.Vault.Light" parent="Theme.Vault">
+        <item name="android:windowBackground">@color/vault_ground_light</item>
+        <item name="android:colorBackground">@color/vault_ground_light</item>
+    </style>
+</resources>

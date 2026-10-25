@@ -1,0 +1,13 @@
+{
+  "uniqueId": "rsms:inter",
+  "artifactVersion": "4.001",
+  "name": "Inter",
+  "description": "The interface typeface.",
+  "website": "https://rsms.me/inter/",
+  "licenses": [
+    "OFL-1.1-Inter"
+  ],
+  "scm": {
+    "url": "https://github.com/rsms/inter"
+  }
+}

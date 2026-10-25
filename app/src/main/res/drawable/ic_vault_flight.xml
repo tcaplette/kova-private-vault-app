@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Material Symbols "flight", outlined (wght 400, FILL 0, GRAD 0, opsz 24) — DESIGN.md §9, added by
+  `vault-list-refresh`.
+
+  One of the 24 vault icons (`VaultAppearance.ICONS`). Drawn only inside a vault's badge, never
+  as chrome.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M8.5 22V20.5L10.5 19V13.5L2 16V14L10.5 9V3.5Q10.5 2.875 10.938 2.438Q11.375 2 12 2Q12.625 2 13.062 2.438Q13.5 2.875 13.5 3.5V9L22 14V16L13.5 13.5V19L15.5 20.5V22L12 21Z" />
+</vector>

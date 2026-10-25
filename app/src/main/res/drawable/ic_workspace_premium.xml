@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Material Symbols "workspace premium", outlined — DESIGN.md §9, added by P2-6.
+
+  A vector drawable rather than material-icons-core, which is not on the Compose
+  classpath and would be a new dependency plus an I1 clearance for a handful of
+  glyphs. See ic_play_circle.xml, the first of these.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M9.68,13.69L12,11.93l2.31,1.76 -0.88,-2.85L15.75,9h-2.84L12,6.19 11.09,9L8.25,9l2.31,1.84 -0.88,2.85zM20,10c0,-4.42 -3.58,-8 -8,-8s-8,3.58 -8,8c0,2.03 0.76,3.87 2,5.28L6,23l6,-2 6,2 0,-7.72c1.24,-1.41 2,-3.25 2,-5.28zM12,4c3.31,0 6,2.69 6,6s-2.69,6 -6,6 -6,-2.69 -6,-6 2.69,-6 6,-6zM12,19l-4,1.02 0,-3.1C9.18,17.6 10.54,18 12,18s2.82,-0.4 4,-1.08l0,3.1L12,19z" />
+</vector>

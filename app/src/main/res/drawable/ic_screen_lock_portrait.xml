@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Material Symbols "screen_lock_portrait", outlined — DESIGN.md §9, added by P2-20.
+
+  The drawer's face-down auto-lock row, and nothing else in the sheet: two rows
+  under one glyph is the ambiguity §6.4 exists to prevent, which is why the camera
+  row did not take ic_photo_camera either.
+
+  A vector drawable rather than material-icons-core, which is not on the Compose
+  classpath and would be a new dependency plus an I1 clearance for a handful of
+  glyphs. See ic_play_circle.xml, the first of these.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M17,1H7C5.9,1 5,1.9 5,3v18c0,1.1 0.9,2 2,2h10c1.1,0 2,-0.9 2,-2V3C19,1.9 18.1,1 17,1zM17,19H7V5h10V19z" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M14.5,11V10c0,-1.38 -1.12,-2.5 -2.5,-2.5S9.5,8.62 9.5,10v1H9v4h6v-4H14.5zM10.5,10c0,-0.83 0.67,-1.5 1.5,-1.5s1.5,0.67 1.5,1.5v1h-3V10z" />
+</vector>

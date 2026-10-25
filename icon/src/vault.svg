@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Kova - the vault. A round vault door face-on; its locking bolts form a K around the hub.
+     108 x 108 adaptive canvas; the subject stays inside the 66 dp safe circle
+     centred at 54,54. The launcher vectors and the 512 px Play PNG are made from
+     this file. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="108" height="108" viewBox="0 0 108 108">
+  <g id="background">
+    <path d="M0,0 H108 V108 H0 Z" fill="#0F172A"/>
+  </g>
+  <g id="foreground">
+    <path d="M23,54 a31,31 0 1,0 62,0 a31,31 0 1,0 -62,0 Z" fill="#1E3A5F"/>
+    <path d="M27.5,54 a26.5,26.5 0 1,0 53,0 a26.5,26.5 0 1,0 -53,0 Z" fill="none" stroke="#2E5283" stroke-width="2.5"/>
+    <path d="M81.9,54 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" fill="#7F9CC4"/>
+    <path d="M78.0147,68.5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" fill="#7F9CC4"/>
+    <path d="M67.4,79.1147 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" fill="#7F9CC4"/>
+    <path d="M52.9,83 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" fill="#7F9CC4"/>
+    <path d="M38.4,79.1147 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" fill="#7F9CC4"/>
+    <path d="M27.7853,68.5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" fill="#7F9CC4"/>
+    <path d="M23.9,54 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" fill="#7F9CC4"/>
+    <path d="M27.7853,39.5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" fill="#7F9CC4"/>
+    <path d="M38.4,28.8853 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" fill="#7F9CC4"/>
+    <path d="M52.9,25 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" fill="#7F9CC4"/>
+    <path d="M67.4,28.8853 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" fill="#7F9CC4"/>
+    <path d="M78.0147,39.5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" fill="#7F9CC4"/>
+    <path d="M38.00,37.00 L38.00,71.00 A3,3 0 0,0 44.00,71.00 L44.00,37.00 A3,3 0 0,0 38.00,37.00 Z" fill="#CBD5E1"/>
+    <path d="M45.69,56.48 L70.69,39.48 A3,3 0 0,0 67.31,34.52 L42.31,51.52 A3,3 0 0,0 45.69,56.48 Z" fill="#CBD5E1"/>
+    <path d="M42.31,56.48 L67.31,73.48 A3,3 0 0,0 70.69,68.52 L45.69,51.52 A3,3 0 0,0 42.31,56.48 Z" fill="#CBD5E1"/>
+    <path d="M52,54 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0 Z" fill="#059669"/>
+  </g>
+  <g id="monochrome" display="none">
+    <path d="M23,54 a31,31 0 1,0 62,0 a31,31 0 1,0 -62,0 Z M26.5,54 a27.5,27.5 0 1,0 55,0 a27.5,27.5 0 1,0 -55,0 Z" fill="#000000" fill-rule="evenodd"/>
+    <path d="M38.00,37.00 L38.00,71.00 A3,3 0 0,0 44.00,71.00 L44.00,37.00 A3,3 0 0,0 38.00,37.00 Z" fill="#000000"/>
+    <path d="M45.69,56.48 L70.69,39.48 A3,3 0 0,0 67.31,34.52 L42.31,51.52 A3,3 0 0,0 45.69,56.48 Z" fill="#000000"/>
+    <path d="M42.31,56.48 L67.31,73.48 A3,3 0 0,0 70.69,68.52 L45.69,51.52 A3,3 0 0,0 42.31,56.48 Z" fill="#000000"/>
+  </g>
+</svg>

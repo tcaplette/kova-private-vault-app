@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Material Symbols "qr_code", outlined — DESIGN.md §9, added by P4-4.
+
+  The *Contacts* row in app settings, and the pairing screen it opens. Deliberately
+  not `ic_share`: that glyph names handing a sealed container to another app, and
+  this one names the code two phones exchange before any container exists. Two acts,
+  two glyphs — §6.4's distinction. Vector drawable, no icon dependency.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M3,11h8L11,3L3,3v8zM5,5h4v4L5,9L5,5z" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M3,21h8v-8L3,13v8zM5,15h4v4L5,19v-4z" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M13,3v8h8L21,3h-8zM19,9h-4L15,5h4v4z" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M13,13h2v2h-2z" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M15,15h2v2h-2z" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M13,17h2v2h-2z" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M15,19h2v2h-2z" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M17,17h2v2h-2z" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M17,13h2v2h-2z" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M19,15h2v2h-2z" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M19,19h2v2h-2z" />
+</vector>

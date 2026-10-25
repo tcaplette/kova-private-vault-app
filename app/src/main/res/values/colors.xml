@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The app grounds, duplicated from DESIGN.md §4 / VaultPalette.
+
+  Compose cannot read an XML colour without a Context, and a window theme cannot
+  read a Kotlin constant, so these values necessarily exist twice. DesignTokensTest
+  asserts each window ground equals its own palette's surface — the duplication is
+  acceptable only because divergence fails a test, and P2-23 doubled both the
+  duplication and the assertion rather than one of them.
+-->
+<resources>
+    <color name="vault_ground">#0B0F14</color>
+    <color name="vault_ground_light">#F7F9FB</color>
+</resources>

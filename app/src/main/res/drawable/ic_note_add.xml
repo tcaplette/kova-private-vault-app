@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Material Symbols "note_add", outlined — DESIGN.md §9, added by P2-21.
+
+  The drawer's **New note** row, beside Camera's ic_add_a_photo and for its reason:
+  that row names an *action*, and an action's mark is the thing with the plus on it.
+  The kind's own mark is ic_sticky_note_2, on the tile.
+
+  A vector drawable rather than material-icons-core — see ic_play_circle.xml.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M14,2H6C4.9,2 4,2.9 4,4v16c0,1.1 0.9,2 2,2h12c1.1,0 2,-0.9 2,-2V8L14,2zM18,20H6V4h7v5h5V20z" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M12,11h-2v3H7v2h3v3h2v-3h3v-2h-3z" />
+</vector>

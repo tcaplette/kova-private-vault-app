@@ -1,0 +1,1763 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      The app's text — `app-languages`. Every string a person reads is here, grouped by the
+      screen it appears on, with a comment heading each group. The eight translations keep
+      this file's key order so a reviewer can read them side by side.
+
+      Left in code on purpose, in every language (`app-languages` D4):
+      - Log lines, exception and require() messages: read in logcat and crash reports,
+        never on a screen.
+      - Data written into files and read back by code: the export manifest and its
+        reasons, export stamps and EXIF/XMP fields, file and folder names the app finds
+        again by name (the gallery's "Vault" export folder, a received share's "Shared item" fallback name),
+        container and blob names, preference keys and MIME types.
+      - The recovery and share-code words: the BIP-39 English list in res/raw. A kit
+        written down under one language has to open the vault under another.
+      - The calculator's notation (sin, cos, tan, ln, log, π, e, EXP, AC, DEL, INV,
+        DEG/RAD) and the language names on the Language sheet, which are each language's
+        own name for itself.
+      - The debug-only Crash log screen and its drawer row, which ship in no release build.
+    -->
+
+    <!--
+      The application label: "Kova", the owner's name for the app (2026-10-25). It
+      replaced "Toolbox", an agent-drafted category name nobody chose. It is the same
+      in every locale.
+
+      This is what notifications, Settings > Apps, the app-info page, storage,
+      battery, the permission manager and every runtime permission dialog read. An
+      activity-alias label does not reach it and no runtime API overrides it, so
+      whatever stands here is what a cover identity says about itself the moment any
+      of those surfaces appears. With "Vault" here, granting the recorder its
+      microphone read "Allow Vault to record audio?" over a voice recorder, which is
+      why it must never be "Vault" or any identity's name.
+
+      P2-22 left this as "Vault" on two arguments. The first — that a label other than
+      an alias's imposes a build-time choice on every install including the honest
+      default — is true, and is the price: a user who never wears a cover sees "Vault"
+      on their home screen (the alias label, unchanged) and this word in Settings. The
+      second — that it would desync the label from the name the Play listing is
+      approved under — is simply wrong. The Play Console title is a separate field
+      from android:label; the two differ routinely and nothing couples them.
+    -->
+    <string name="app_name">Kova</string>
+
+    <!--
+      Launcher identity labels — P2-22. These are the words the launcher and recents
+      show, in the device's language (`app-languages` D5); LauncherIdentity names these
+      same resources, and LauncherIdentityScanTest fails the build if the two disagree.
+    -->
+    <string name="identity_vault">Vault</string>
+
+    <!--
+      P2-24's cover identities. Ordinary names for ordinary apps: the cover has to be
+      a believable instance of the thing it claims to be, and a clever name is the
+      first thing that makes somebody look twice.
+    -->
+    <string name="identity_calculator">Calculator</string>
+    <string name="identity_musicplayer">Music</string>
+    <string name="identity_voicerecorder">Voice Recorder</string>
+
+    <!-- Language — the drawer row and the Language sheet -->
+    <!-- Not a phrase: the tag of the language this file is written in. Each translation
+         names its own (ja, ko, pt-BR, …). System default's line reads it to say which
+         language the device's setting resolves to. -->
+    <string name="language_resource_tag">en-US</string>
+    <string name="language_german">German</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Spanish</string>
+    <string name="language_french">French</string>
+    <string name="language_portuguese_brazil">Portuguese (Brazil)</string>
+    <string name="language_japanese">Japanese</string>
+    <string name="language_korean">Korean</string>
+    <string name="language_chinese_simplified">Simplified Chinese</string>
+    <string name="language_chinese_traditional">Traditional Chinese</string>
+    <string name="language_title">Language</string>
+    <string name="language_system_default">System default</string>
+    <string name="language_explainer">Changes the language of this app only. Your phone\'s language stays as it is.</string>
+    <string name="language_suggested">Suggested</string>
+    <string name="language_all">All languages</string>
+    <string name="language_system_default_detail">%1$s — follows your phone</string>
+    <string name="language_changed">Language changed to %1$s</string>
+    <string name="drawer_language">Language \u0020· \u0020%1$s</string>
+
+    <!-- Messages — unlock, backup, restore and vault lifecycle (MainActivity) -->
+    <string name="backup_incomplete">This backup file is incomplete — it may be from a backup that didn\'t finish.</string>
+    <string name="backup_unreadable">The backup could not be read. Check the app that holds it is signed in.</string>
+    <string name="backup_other_list">This backup is from another vault list. Use Import a vault from a file to bring it back.</string>
+    <string name="bio_invalidated">Biometric unlock is off because your biometric enrolment changed. Use your passphrase.</string>
+    <string name="bio_after_migration">Biometric unlock is off after this update. Turn it on again in Settings.</string>
+    <string name="vault_newer_version">This vault was last opened by a newer version of the app. Your files are safe and nothing has been changed. Update the app to open it.</string>
+    <string name="vault_index_relinked">This vault\'s index had to be relinked after a fault. Everything was found and nothing was lost.</string>
+    <string name="vault_index_unreadable">This vault could not be opened. Its index is missing or damaged, and searching the vault\'s files did not find another. Your recovery kit can restore it.</string>
+    <string name="capture_not_saved">That capture could not be saved to the vault.</string>
+    <string name="backup_folder_on_phone">That folder is on this phone. A backup here is lost with the phone — choose a cloud app or an SD card.</string>
+    <string name="restore_device_not_empty">This device already holds a vault. A backup can only be restored onto an empty one.</string>
+    <string name="restore_open_vaults_first">Open your vaults first.</string>
+    <string name="restore_file_not_opened">The backup file could not be opened.</string>
+    <string name="restore_file_unreadable">The backup file could not be read. Check the app that holds it is signed in.</string>
+    <string name="restore_no_backup_in_folder">No backup was found in that folder.</string>
+    <string name="capture_mode_permission_denied">That mode needs the permission it just asked for. It is off.</string>
+    <string name="decoy_trial_notice">Building a decoy imports real photographs, and the 30-day trial starts with the first thing added to a vault. Leave this for later if you would rather start it with your own things.</string>
+    <string name="vault_list_not_saved">That could not be saved.</string>
+    <string name="editor_could_not_open">This item could not be opened for editing.</string>
+    <string name="folder_name_length">A folder name needs at least one character and at most %1$d.</string>
+    <string name="folder_name_duplicate">There is already a folder with that name here.</string>
+    <string name="folder_cycle">A folder cannot go inside itself.</string>
+    <string name="vault_destroy_failed">“%1$s” could not be removed. Nothing in it was lost.</string>
+    <string name="share_create_failed">The share could not be created. There may not be enough space on the device.</string>
+    <string name="setup_vault_not_created">The vault could not be created. Try again.</string>
+    <string name="decoy_choose_photos_first">Choose the photos first.</string>
+    <string name="decoy_set_passphrase_first">Set the decoy\'s passphrase first.</string>
+    <string name="decoy_passphrase_in_use">That passphrase already opens a vault on this device. Go back and choose another.</string>
+    <string name="decoy_no_room">There is no room for another vault on this device.</string>
+    <string name="decoy_passphrase_needed">This device already has a decoy on it, and setting one up now could overwrite it. Go back and enter the decoy\'s passphrase as well.</string>
+    <string name="decoy_not_created">That did not create a vault.</string>
+    <string name="recovery_words_wrong_backup">These words don\'t open this backup.</string>
+    <string name="import_words_wrong_backup">Those words don\'t open this backup.</string>
+    <string name="recovery_list_not_here">This backup\'s vault list isn\'t on this phone. Unlock, then choose Import a vault from a file in the menu.</string>
+    <string name="this_vault">this vault</string>
+    <string name="that_vault">That vault</string>
+    <string name="backup_open_vault_first_file">Open the vault you want to back up first. A backup holds one vault.</string>
+    <string name="backup_open_vault_first_folder">Open the vault you want to back up first. A folder holds one vault.</string>
+    <string name="backup_folder_another_vault">That folder already holds another vault from this device. Each vault needs a folder of its own — backing up here would delete what is in it.</string>
+    <string name="backup_folder_another_install">That folder already holds another backup. Choose an empty folder, or one this vault filled — backing up here would delete what is in it.</string>
+    <plurals name="vault_destroy_items_left">
+        <item quantity="one">%1$d item could not be written out, so this vault was kept. Everything still in it is untouched.</item>
+        <item quantity="other">%1$d items could not be written out, so this vault was kept. Everything still in it is untouched.</item>
+    </plurals>
+    <string name="kit_print_job">Vault recovery kit</string>
+    <string name="panic_wrong_passphrase">That passphrase does not open this vault list.</string>
+    <string name="panic_wrong_phrase">That isn\'t your panic phrase.</string>
+    <string name="panic_too_close">Too close to your passphrase — one typo could trigger it. Choose something different.</string>
+    <string name="panic_in_use">That phrase already opens a vault list. Choose another.</string>
+    <string name="panic_no_room">No room for another phrase on this device.</string>
+    <string name="panic_cleared">Your old panic phrase no longer works here, so it is off. Set a new one.</string>
+    <string name="panic_not_saved">That did not save. Try again.</string>
+    <string name="pairing_not_a_code">That is not a pairing code.</string>
+    <string name="pairing_newer_app">This code was made by a newer version of the app. Update to scan it.</string>
+    <string name="pairing_own_code">That is this phone\'s own code.</string>
+    <string name="pairing_already_known">You already have this contact, as %1$s.</string>
+    <string name="remote_not_an_invite">This isn\'t an invite file.</string>
+    <string name="remote_wrong_reply">This file isn\'t %1$s\'s reply to this invite.</string>
+    <string name="remote_wrong_confirmation">This file isn\'t %1$s\'s confirmation.</string>
+    <string name="memo_notifications_off">Notifications are off, so Stop will not be in the notification shade.</string>
+    <string name="memo_too_short">That was too short to keep.</string>
+    <string name="vault_list_full">This list is full. Remove a vault to make room.</string>
+    <string name="vault_not_created">That vault could not be created.</string>
+    <string name="vault_not_opened">That vault could not be opened.</string>
+    <string name="bio_prompt_unlock_title">Unlock vault</string>
+    <string name="bio_prompt_use_passphrase">Use passphrase</string>
+    <string name="purchase_unavailable">The purchase is not available from this device right now (code %1$d). Nothing you already have is affected.</string>
+    <plurals name="imports_failed">
+        <item quantity="one">%1$d import did not complete. Nothing was added. Try again.</item>
+        <item quantity="other">%1$d imports did not complete. Nothing was added. Try again.</item>
+    </plurals>
+
+    <!-- Notifications — the foreground work and the recording -->
+    <string name="notification_working">Working</string>
+    <string name="notification_channel_import">Import</string>
+    <string name="notification_channel_archive">Archive</string>
+    <string name="notification_channel_export">Export</string>
+    <string name="notification_channel_recording">Recording</string>
+    <string name="notification_recording">Recording</string>
+    <string name="notification_stop">Stop</string>
+
+    <!-- The printed recovery kit -->
+    <string name="kit_print_heading">Vault recovery kit</string>
+    <string name="kit_print_line_1">These 24 words open this vault. Keep this page safe.</string>
+    <string name="kit_print_line_2">They cannot be changed or cancelled.</string>
+
+    <!-- Biometric unlock — the screen, the drawer row and the first-run step -->
+    <string name="bio_name">Biometric unlock</string>
+    <string name="bio_lead">A faster way in that never replaces your passphrase.</string>
+    <string name="bio_row_fingerprint">Fingerprint unlock</string>
+    <string name="bio_row_face">Face unlock</string>
+    <string name="bio_row_both">Face &amp; fingerprint unlock</string>
+    <string name="bio_on">On</string>
+    <string name="bio_off">Off</string>
+    <string name="bio_line_not_set_up">Not set up yet. Tap to set it up in device settings.</string>
+    <string name="bio_line_not_available_now">Not available right now — the sensor isn\'t responding.</string>
+    <string name="bio_line_needs_update">Needs a security update from the device\'s maker before the vault can use it.</string>
+    <string name="bio_unsupported">Not supported on this device.</string>
+    <string name="bio_unsupported_face">Not supported on this device. Its face unlock isn\'t secure enough to protect encrypted data.</string>
+    <string name="bio_unsupported_fingerprint">Not supported on this device. Its fingerprint sensor isn\'t secure enough to protect encrypted data.</string>
+    <string name="bio_drawer_not_set_up">Not set up</string>
+    <string name="bio_drawer_not_available_now">Not available right now</string>
+    <string name="bio_drawer_needs_update">Needs a security update</string>
+    <string name="bio_drawer_not_supported">Not supported on this device</string>
+    <string name="bio_fact_how">How you open the vault</string>
+    <string name="bio_fact_how_fingerprint">When the vault is locked, Android asks for your fingerprint. Touch the sensor and the vault opens.</string>
+    <string name="bio_fact_how_face">When the vault is locked, Android asks for your face. Look at the screen, then tap to confirm — the vault never opens on a glance alone.</string>
+    <string name="bio_fact_how_both">When the vault is locked, Android listens for your face and your fingerprint at once. Touch the sensor, or look at the screen and tap to confirm — whichever you use first opens the vault.</string>
+    <string name="bio_fact_how_unnamed">When the vault is locked, Android asks for the biometric set up on this device.</string>
+    <string name="bio_fact_fingerprint_only">To use only your fingerprint</string>
+    <string name="bio_fact_fingerprint_only_body">Android decides which biometrics apps can use, not this app. In your device\'s settings, open Face Unlock and turn off using it in apps — then only your fingerprint opens the vault.</string>
+    <string name="bio_fact_turns_off">It turns off if your biometrics change</string>
+    <string name="bio_fact_turns_off_fingerprint">Adding or removing a fingerprint in your device\'s settings turns this off. Unlock with your passphrase, then turn it back on from Biometric unlock in the menu.</string>
+    <string name="bio_fact_turns_off_face">Adding or removing a face in your device\'s settings turns this off. Unlock with your passphrase, then turn it back on from Biometric unlock in the menu.</string>
+    <string name="bio_fact_turns_off_both">Adding or removing a face or fingerprint in your device\'s settings turns this off. Unlock with your passphrase, then turn it back on from Biometric unlock in the menu.</string>
+    <string name="bio_fact_turns_off_unnamed">Adding or removing a biometric in your device\'s settings turns this off. Unlock with your passphrase, then turn it back on from Biometric unlock in the menu.</string>
+    <string name="bio_fact_passphrase">Your passphrase always opens the vault</string>
+    <string name="bio_fact_passphrase_body">Biometric unlock is a second way in, never a replacement. If you forget your passphrase, it won\'t get you in — your recovery kit will.</string>
+    <string name="bio_button_fallback">Use biometrics</string>
+    <string name="bio_enable_title">Turn on biometric unlock</string>
+
+    <!-- Calculator cover — how it opens -->
+    <string name="method_sequence">Button sequence</string>
+    <string name="method_sequence_line">Type your sequence, then hold =.</string>
+    <string name="method_sequence_pattern">Button sequence, then pattern</string>
+    <string name="method_sequence_pattern_line">Type your sequence and hold =, then draw your pattern on the dots that appear.</string>
+    <string name="method_hold_pattern">Hold, then pattern</string>
+    <string name="method_hold_pattern_line">Hold a spot you choose for 2 seconds, then draw your pattern on the dots that appear.</string>
+    <string name="method_choose_lead">Pick how you will open the passphrase screen from this icon. You set it up next.</string>
+
+    <!-- Intruder capture — where an attempt failed -->
+    <string name="capture_where_music">Music player</string>
+    <string name="capture_where_recorder">Voice recorder</string>
+    <string name="capture_where_calculator">Calculator</string>
+    <string name="capture_where_cover">Cover</string>
+    <string name="capture_where_pattern">%1$s: wrong pattern</string>
+    <string name="capture_where_pattern_dots">%1$s: wrong pattern on the shown dots</string>
+    <string name="capture_where_pattern_lockout">%1$s: pattern tried during the lockout</string>
+    <string name="capture_where_pattern_lockout_dots">%1$s: pattern tried during the lockout on the shown dots</string>
+    <string name="capture_where_wrong_fingerprint">Unlock screen: wrong fingerprint</string>
+    <string name="capture_where_wrong_face">Unlock screen: wrong face</string>
+    <string name="capture_where_wrong_both">Unlock screen: wrong face or fingerprint</string>
+    <string name="capture_where_wrong_biometric">Unlock screen: wrong biometric</string>
+    <string name="capture_where_wrong_passphrase">Unlock screen: wrong passphrase</string>
+    <string name="capture_where_vault_passphrase">Vault passphrase: wrong passphrase</string>
+
+    <!-- Passphrase strength — the meter under every passphrase field -->
+    <string name="strength_add_another_word">Add another word or two. Unusual words help most.</string>
+    <string name="strength_default_suggestions_use_few_words">Use several words that don\'t belong together.</string>
+    <string name="strength_default_suggestions_no_need_symbols">Symbols, digits and capitals are not needed here — length is what counts.</string>
+    <string name="strength_dictionary_warning_passwords_top10">This is one of the ten most common passwords in use.</string>
+    <string name="strength_dictionary_warning_passwords_top100">This is one of the hundred most common passwords in use.</string>
+    <string name="strength_dictionary_warning_passwords_very_common">This is a very common password and would be guessed early.</string>
+    <string name="strength_dictionary_warning_passwords_similar">This is close to a password that is already widely used.</string>
+    <string name="strength_dictionary_warning_english_wikipedia_itself">A single word on its own is quick to guess.</string>
+    <string name="strength_dictionary_warning_etc_names_themselves">A name on its own is quick to guess.</string>
+    <string name="strength_dictionary_warning_etc_names_common">Common names are quick to guess.</string>
+    <string name="strength_dictionary_suggestions_capitalization">Capitals at the start add almost nothing. Add a word instead.</string>
+    <string name="strength_dictionary_suggestions_all_uppercase">All capitals is about as easy to guess as all lower case.</string>
+    <string name="strength_dictionary_suggestions_reversed">Spelling a word backwards is not much harder to guess.</string>
+    <string name="strength_dictionary_suggestions_l33t">Swapping letters for lookalikes, like 4 for a, is already expected.</string>
+    <string name="strength_spatial_warning_straight_rows_of_keys">A straight run of keys is one of the first things tried.</string>
+    <string name="strength_spatial_warning_short_keyboard_patterns">Short patterns traced on the keyboard are quick to guess.</string>
+    <string name="strength_spatial_suggestions_use_longer_keyboard_pattern">Use words rather than a shape traced on the keyboard.</string>
+    <string name="strength_repeat_warning_like_aaa">A repeated character is guessed as quickly as one character.</string>
+    <string name="strength_repeat_warning_like_abcabcabc">A repeated block is barely harder to guess than the block alone.</string>
+    <string name="strength_repeat_suggestions_avoid_repeated_words">Repeating a word or a letter adds very little. Add a different word.</string>
+    <string name="strength_sequence_warning_like_abcor6543">Runs like abc or 6543 are guessed immediately.</string>
+    <string name="strength_sequence_suggestions_avoid_sequences">Avoid runs of letters or numbers in order.</string>
+    <string name="strength_regex_warning_recent_years">Recent years are among the first things guessed.</string>
+    <string name="strength_regex_suggestions_avoid_recent_years">Leave out years, particularly ones that mean something to you.</string>
+    <string name="strength_date_warning_dates">Dates are quick to guess, even ones only you would know.</string>
+    <string name="strength_date_suggestions_avoid_dates">Leave out dates, particularly ones that mean something to you.</string>
+    <string name="strength_very_weak">Very weak</string>
+    <string name="strength_weak">Weak</string>
+    <string name="strength_fair">Fair</string>
+    <string name="strength_almost">Almost</string>
+    <string name="strength_strong_enough">Strong enough</string>
+    <string name="strength_count">%1$d of %2$d characters</string>
+    <string name="passphrase_requirement">At least %1$d characters. A few unusual words beat one complicated word.</string>
+    <string name="passphrase_too_weak">That passphrase is too easy to guess. Add another word or two.</string>
+
+    <!-- First vault and the lock screen -->
+    <string name="passphrase_label">Passphrase</string>
+    <string name="passphrase_again_label">Enter it again</string>
+    <string name="passphrase_mismatch">The two entries do not match.</string>
+    <string name="setup_title">Choose a passphrase</string>
+    <string name="setup_lead">It cannot be reset. Next you will be shown a 24-word recovery kit, which is the only other way into this vault. Lose both and everything in it is gone for good.</string>
+    <string name="setup_preparing">Preparing storage</string>
+    <string name="setup_create">Create vault</string>
+    <string name="setup_restore_backup">Restore from a backup</string>
+    <string name="unlock_welcome">Welcome back</string>
+    <string name="unlock_lead">Enter your passphrase to open this vault.</string>
+    <string name="unlock_failed">That did not open a vault.</string>
+    <string name="unlock_action">Unlock</string>
+    <string name="unlock_forgot">Forgot passphrase?</string>
+    <string name="unlock_busy">Unlocking</string>
+    <string name="passphrase_hide">Hide passphrase</string>
+    <string name="passphrase_show">Show passphrase</string>
+    <string name="passphrase_match">Both entries match</string>
+
+    <!-- Photo details — the sheet, and the export and share lines -->
+    <string name="photo_details_privacy">Privacy</string>
+    <string name="photo_details_custom">Custom</string>
+    <!-- Joining a list: "%1$s" is everything before the last item, already joined with list_separator. -->
+    <string name="list_separator">,\u0020</string>
+    <string name="list_and">%1$s and %2$s</string>
+    <string name="list_or">%1$s or %2$s</string>
+    <string name="exif_noun_location">location</string>
+    <string name="exif_noun_camera">camera info</string>
+    <string name="exif_noun_the_date">the date</string>
+    <string name="exif_noun_date">date</string>
+    <string name="exif_noun_software">edit history</string>
+    <string name="exif_export_names_only">Only names, captions and comments are removed from exported JPEG photos. Other formats are written unchanged.</string>
+    <plurals name="exif_export_removed">
+        <item quantity="one">%1$s is removed from exported JPEG photos.</item>
+        <item quantity="other">%1$s are removed from exported JPEG photos.</item>
+    </plurals>
+    <plurals name="exif_export_kept">
+        <item quantity="one">%1$s is kept.</item>
+        <item quantity="other">%1$s are kept.</item>
+    </plurals>
+    <plurals name="exif_export_kept_sorted">
+        <item quantity="one">%1$s is kept, so your gallery still sorts them.</item>
+        <item quantity="other">%1$s are kept, so your gallery still sorts them.</item>
+    </plurals>
+    <string name="exif_export_summary">%1$s Other formats are written unchanged.</string>
+    <string name="exif_share_names_only">Only names, captions and comments.</string>
+    <string name="exif_share_removed">No %1$s.</string>
+    <string name="exif_share_kept">Keeps %1$s.</string>
+    <string name="photo_details_title">Photo details</string>
+    <string name="photo_details_lead">Choose what\'s removed from a photo before it leaves the vault.</string>
+    <string name="photo_details_privacy_row">Privacy (recommended)</string>
+    <string name="photo_details_privacy_detail">Removes location, camera info and edit history</string>
+    <string name="photo_details_custom_detail">Choose what\'s removed.</string>
+    <string name="photo_details_remove_heading">Remove</string>
+    <string name="photo_details_removed">Removed</string>
+    <string name="photo_details_kept">Kept</string>
+    <string name="photo_details_import_heading">When you import</string>
+    <string name="photo_details_import_row">Remove from photos you import</string>
+    <string name="photo_details_import_on">On · Can\'t be undone for a photo once it\'s imported.</string>
+    <string name="photo_details_footer">JPEG photos only — other formats are left exactly as they are. Every strip also removes names, captions, comments, tagged people and anything the app doesn\'t recognise, and keeps what a photo needs to look right, including motion and HDR.</string>
+    <string name="photo_details_location">Location</string>
+    <string name="photo_details_location_covers">GPS position, altitude and direction</string>
+    <string name="photo_details_camera">Camera info</string>
+    <string name="photo_details_camera_covers">Make, model, lens, serial numbers and settings</string>
+    <string name="photo_details_date">Date and time</string>
+    <string name="photo_details_date_covers">When it was taken and last changed</string>
+    <string name="photo_details_software">Software and edit history</string>
+    <string name="photo_details_software_covers">The apps that made or edited it</string>
+
+    <!-- Drawer — appearance -->
+    <string name="appearance">Appearance</string>
+    <string name="appearance_system">System</string>
+    <string name="appearance_light">Light</string>
+    <string name="appearance_dark">Dark</string>
+
+    <!-- Drawer — the vault's rows and the install's -->
+    <string name="drawer_trash">Trash</string>
+    <string name="drawer_backup">Backup</string>
+    <string name="drawer_intruder_capture">Intruder capture</string>
+    <string name="drawer_open_share">Open a share…</string>
+    <string name="drawer_unvault_everything">Unvault Everything</string>
+    <string name="drawer_destroy_vault">Destroy Vault</string>
+    <string name="drawer_purchase">Purchase \u0020· \u0020%1$s</string>
+    <string name="drawer_app_identity">App identity \u0020· \u0020%1$s</string>
+    <string name="drawer_face_down">Face-down lock</string>
+    <string name="face_down_no_sensor">This device has no motion sensor, so it can\'t tell when it\'s face down.</string>
+    <string name="face_down_lead">Turn your phone over and set it down to lock the vault.</string>
+    <string name="face_down_switch">Use face-down lock</string>
+    <string name="face_down_lock_after">Lock after</string>
+    <string name="face_down_immediately">Immediately</string>
+    <string name="face_down_locks_at_once">Locks at once</string>
+    <string name="face_down_locks_after">Locks after %1$s</string>
+    <string name="face_down_timeout_line">Your screen turns off after %1$s, which locks the vault first.</string>
+    <plurals name="face_down_seconds">
+        <item quantity="one">%1$d second</item>
+        <item quantity="other">%1$d seconds</item>
+    </plurals>
+    <plurals name="face_down_minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
+    <string name="drawer_decoy">Decoy</string>
+    <string name="drawer_decoy_set_up">Set up — there is no second one to make.</string>
+    <string name="drawer_set_up_decoy">Set up a decoy</string>
+    <string name="drawer_panic">Panic credential</string>
+    <string name="drawer_photo_details">Photo details \u0020· \u0020%1$s</string>
+    <string name="drawer_contacts">Contacts</string>
+    <string name="drawer_recover_vault">Recover a vault with its kit</string>
+    <string name="drawer_restore_vault">Restore a vault from a backup</string>
+    <string name="drawer_import_vault">Import a vault from a file</string>
+    <string name="drawer_capture_waiting">An intruder capture is waiting</string>
+
+    <!-- Purchase — the screen, the drawer row and the trial -->
+    <string name="trial_blocked">Your trial has ended. Opening, viewing and exporting everything in your vaults stay unrestricted — buy the app once, under Purchase in the menu, to add more.</string>
+    <plurals name="trial_reminder">
+        <item quantity="one">%1$d day left in your trial. Opening, viewing and exporting stay unrestricted either way.</item>
+        <item quantity="other">%1$d days left in your trial. Opening, viewing and exporting stay unrestricted either way.</item>
+    </plurals>
+    <string name="purchase_title">Purchase</string>
+    <plurals name="purchase_days_from_first">
+        <item quantity="one">%1$d day, from the first thing you add</item>
+        <item quantity="other">%1$d days, from the first thing you add</item>
+    </plurals>
+    <plurals name="purchase_days_left">
+        <item quantity="one">%1$d day left</item>
+        <item quantity="other">%1$d days left</item>
+    </plurals>
+    <string name="purchase_owned_body">Adding to your vaults, creating vaults and sending shares are unrestricted. The purchase belongs to your Google account and comes back if you reinstall.</string>
+    <string name="purchase_pending_body">Google Play is waiting for your payment to clear. Everything unlocks when it does — you don\'t need to keep this screen open.</string>
+    <string name="purchase_trial_body">When the trial ends, adding to a vault, creating vaults and sending shares stop. Opening, viewing and exporting everything already in your vaults — and opening shares sent to you — never do, paid or unpaid.</string>
+    <string name="purchase_one_payment">One payment. No subscription, nothing renews.</string>
+    <string name="purchase_buy_for">Buy for %1$s</string>
+    <string name="purchase_buy">Buy</string>
+    <string name="purchase_state_owned">Owned</string>
+    <string name="purchase_state_pending">Payment pending</string>
+    <string name="purchase_state_not_started">Trial not started</string>
+    <plurals name="purchase_state_trial_left">
+        <item quantity="one">Trial, %1$d day left</item>
+        <item quantity="other">Trial, %1$d days left</item>
+    </plurals>
+    <string name="purchase_state_trial">Trial</string>
+    <string name="purchase_state_ended">Trial ended</string>
+
+    <!-- App identity — the screen and the sheet that commits a choice -->
+    <string name="identity_screen_title">App identity</string>
+    <string name="identity_screen_lead">Choose the name and icon this app shows in the launcher and in recent apps. Every one of them opens this vault, and none of them opens it without your passphrase or a biometric you have set up.</string>
+    <string name="identity_current">Currently shown</string>
+    <string name="identity_opens_vault">Opens the vault directly</string>
+    <string name="identity_opens_calculator">Opens a calculator first</string>
+    <string name="identity_opens_calculator_setup">Opens a calculator first — needs setting up</string>
+    <string name="identity_opens_music">Opens a music player first</string>
+    <string name="identity_opens_music_setup">Opens a music player first — needs setting up</string>
+    <string name="identity_opens_recorder">Opens a voice recorder first</string>
+    <string name="identity_opens_recorder_setup">Opens a voice recorder first — needs setting up</string>
+    <string name="identity_calculator_weak">The weakest of the covers — its gesture is a short sequence of keystrokes.</string>
+    <string name="identity_calculator_weak_unset">With a button sequence alone, it is the weakest of the covers.</string>
+    <string name="identity_boundary_title">What an identity does not change</string>
+    <string name="identity_boundary_body">Android\'s own Settings, the app-info page, and any notification while an import is running still show this app under its real name. An identity changes the launcher and recent apps, and nothing else.</string>
+    <string name="identity_commit_body">Changing this removes any pinned shortcut and any home-screen placement of the app. You can place it again afterwards.</string>
+    <string name="identity_rationale_music">A music player that cannot see your music is not a convincing one — it would open to an empty library. This icon needs access to the audio on this device.</string>
+    <string name="identity_rationale_recorder">A voice recorder that cannot use the microphone is not a convincing one — its record button would do nothing. This icon needs access to the microphone.</string>
+    <string name="identity_blocked_music">Android will not ask again from inside the app. Audio access can be changed from this app\'s own settings page, under its permissions.</string>
+    <string name="identity_blocked_recorder">Android will not ask again from inside the app. Microphone access can be changed from this app\'s own settings page, under its permissions.</string>
+    <string name="identity_use_icon">Use this icon</string>
+    <string name="identity_set_up">Set up</string>
+    <string name="identity_ask_again">Ask again</string>
+    <string name="identity_open_settings">Open settings</string>
+
+    <!-- Shared words -->
+    <string name="state_expanded">Expanded</string>
+    <string name="state_collapsed">Collapsed</string>
+    <string name="action_continue">Continue</string>
+    <string name="action_done">Done</string>
+    <string name="action_save">Save</string>
+    <string name="action_back">Back</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_not_now">Not now</string>
+    <string name="menu">Menu</string>
+    <string name="action_saving">Saving</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="more">More</string>
+    <string name="pause">Pause</string>
+    <string name="play">Play</string>
+    <string name="seek">Seek</string>
+    <string name="slideshow">Slideshow</string>
+    <string name="speed">Speed</string>
+    <plurals name="seconds">
+        <item quantity="one">%1$d second</item>
+        <item quantity="other">%1$d seconds</item>
+    </plurals>
+    <string name="undo">Undo</string>
+    <string name="redo">Redo</string>
+    <string name="export">Export</string>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
+    <string name="start_recording">Start recording</string>
+    <string name="stop_recording">Stop recording</string>
+    <string name="warning">Warning</string>
+
+    <!-- Cover setup — recording how a cover opens -->
+    <string name="setup_cover_choose_title">How do you want to open it?</string>
+    <string name="setup_cover_draw_shape">Now draw your shape</string>
+    <string name="setup_cover_record">Record your gesture</string>
+    <string name="setup_cover_draw_again">Draw it again</string>
+    <string name="setup_cover_do_again">Do it again</string>
+    <string name="setup_cover_mismatch_title">That was a different gesture</string>
+    <string name="setup_cover_hold_title">Choose where to hold</string>
+    <string name="setup_cover_hold_again_title">Hold it again</string>
+    <string name="setup_cover_hold_mismatch_title">That was a different spot</string>
+    <string name="setup_cover_hold_mismatch">The second hold was in a different spot, so neither was kept.</string>
+    <string name="setup_cover_start_over">Start over</string>
+    <string name="setup_cover_done_title">All set</string>
+    <string name="setup_cover_hold_line">Press and hold anywhere on the screen for 2 seconds. That spot is what brings up the dots — it works whatever is showing there.</string>
+    <string name="setup_cover_hold_again_line">Press and hold the same spot again.</string>
+    <string name="setup_cover_hold_early_line">Keep holding for 2 seconds.</string>
+    <string name="setup_cover_too_short">That was too short. A gesture needs at least %1$s.</string>
+    <string name="setup_cover_so_far">%1$s so far. %2$d more to go.</string>
+    <string name="setup_cover_at_cap">%1$s — the most this remembers. %2$s</string>
+    <string name="setup_cover_enough">%1$s. %2$s</string>
+    <string name="setup_cover_keys_again">Press the same keys again. Press “AC” to start again.</string>
+    <string name="setup_cover_keys">Press the keys you want to use — they can be an ordinary sum. Every key counts, including “DEL”. Pressed a wrong key? Press “AC” to start again.</string>
+    <string name="setup_cover_shape_again">Draw the same shape again.</string>
+    <string name="setup_cover_shape_music">Draw a shape connecting at least five of the nine points, in an order you will remember. It will not be shown once this screen closes.</string>
+    <string name="setup_cover_shape_recorder">Draw a shape connecting at least five of the nine points, in an order you will remember. No recording you make here is kept.</string>
+    <string name="setup_cover_finish_keys">Press and hold “=” to finish.</string>
+    <string name="setup_cover_finish_shape">Lift your finger to finish.</string>
+    <plurals name="setup_cover_key_count">
+        <item quantity="one">%1$d key</item>
+        <item quantity="other">%1$d keys</item>
+    </plurals>
+    <plurals name="setup_cover_node_count">
+        <item quantity="one">%1$d node</item>
+        <item quantity="other">%1$d nodes</item>
+    </plurals>
+    <string name="setup_cover_mismatch_sequence">The second sequence did not match the first, so neither was kept. Starting over is the only safe answer: keeping the first one would let a lucky second attempt choose between two gestures you half-remember, and you would be rehearsing against a target you cannot see.</string>
+    <string name="setup_cover_mismatch_pattern">The second pattern did not match the first, so neither was kept. Starting over is the only safe answer: keeping the first one would let a lucky second attempt choose between two gestures you half-remember, and you would be rehearsing against a target you cannot see.</string>
+    <string name="setup_cover_sequence_kept">Your sequence is kept — only the shape starts over.</string>
+    <string name="setup_cover_spot_kept">Your spot is kept — only the shape starts over.</string>
+    <string name="setup_cover_nothing_changed">Nothing has changed. Your launcher still shows the icon it showed before.</string>
+    <string name="setup_cover_done_vault">This icon opens the screen that asks for your passphrase.</string>
+    <string name="setup_cover_done_route">To reach the passphrase screen from this icon:</string>
+    <string name="setup_cover_done_hidden_dots">Your shape also works on the hidden dots at any time.</string>
+    <plurals name="setup_cover_route_keys_shape">
+        <item quantity="one">Press %1$s on the calculator, then press and hold “=”, and the dots appear. Draw your shape on them: %2$d point.</item>
+        <item quantity="other">Press %1$s on the calculator, then press and hold “=”, and the dots appear. Draw your shape on them: %2$d points.</item>
+    </plurals>
+    <string name="setup_cover_wrong_key">If you press a wrong key, press “AC” and start again.</string>
+    <string name="setup_cover_remember">Nobody can recover this gesture for you and the app will not show it to you again — if you would rather not rely on remembering it, switch back to the vault\'s own icon from the drawer while you still can.</string>
+    <string name="setup_cover_route_keys">Press %1$s on the calculator, then press and hold “=”. If you press a wrong key, press “AC” and start again.</string>
+    <plurals name="setup_cover_route_shape">
+        <item quantity="one">Draw the shape you chose across the screen — %1$d point — and lift your finger.</item>
+        <item quantity="other">Draw the shape you chose across the screen — %1$d points — and lift your finger.</item>
+    </plurals>
+    <plurals name="setup_cover_route_hold">
+        <item quantity="one">Press and hold the spot you chose — %1$s — for 2 seconds, and the dots appear. Draw your shape on them: %2$d point.</item>
+        <item quantity="other">Press and hold the spot you chose — %1$s — for 2 seconds, and the dots appear. Draw your shape on them: %2$d points.</item>
+    </plurals>
+    <string name="hold_place">%1$s, %2$s</string>
+    <string name="hold_row_top">Top row</string>
+    <string name="hold_row_second">Second row</string>
+    <string name="hold_row_third">Third row</string>
+    <string name="hold_row_bottom">Bottom row</string>
+    <string name="hold_column_left">left</string>
+    <string name="hold_column_centre">centre</string>
+    <string name="hold_column_right">right</string>
+
+    <!-- Panic credential -->
+    <string name="panic_status_on">Panic credential is on</string>
+    <string name="panic_status_off">Panic credential is off</string>
+    <string name="panic_fact_survives">This vault list survives</string>
+    <string name="panic_fact_survives_body">Typed at the lock screen, your panic phrase opens this vault list as usual, and every vault not on it stops opening on this device, permanently.</string>
+    <string name="panic_fact_way_in">It destroys the way in, not the files</string>
+    <string name="panic_fact_way_in_body">The other vaults stay on this device as unreadable data. Their 24-word recovery kits still open them.</string>
+    <string name="panic_fact_silent">Nothing confirms it worked</string>
+    <string name="panic_fact_silent_body">Whoever is watching sees an ordinary unlock.</string>
+    <string name="panic_fact_backup">It empties your backup folder too</string>
+    <string name="panic_fact_backup_body">Copies your cloud provider keeps in its own trash or version history are beyond this app\'s reach.</string>
+    <string name="panic_change">Change panic phrase</string>
+    <string name="panic_turn_it_off">Turn it off</string>
+    <string name="panic_turn_off_title">Turn off panic phrase</string>
+    <string name="panic_turn_off">Turn off</string>
+    <string name="panic_set_title">Set a panic phrase</string>
+    <string name="panic_your_passphrase">Your passphrase</string>
+    <string name="panic_passphrase_hint">The one that opened this vault list.</string>
+    <string name="panic_phrase_label">Panic phrase</string>
+    <string name="panic_turn_on">Turn on</string>
+    <string name="panic_forgot_title">Clear a forgotten panic phrase</string>
+    <string name="panic_forgot_body">Your passphrase turns the panic phrase off. You can set a new one afterwards.</string>
+    <string name="panic_clear">Clear panic phrase</string>
+    <string name="panic_current_label">Current panic phrase</string>
+    <string name="panic_forgot">Forgot your panic phrase?</string>
+    <string name="panic_new_label">New panic phrase</string>
+    <string name="panic_phrase_requirement">%1$s Not like any of your passphrases — only this list\'s passphrase can be checked.</string>
+    <string name="panic_label_again">%1$s again</string>
+
+    <!-- Vault names -->
+    <string name="vault_name_label">Name</string>
+    <string name="vault_name_empty">Give the vault a name.</string>
+    <string name="vault_name_too_long">That name is too long for this vault.</string>
+
+    <!-- Decoy — building a vault you can hand over -->
+    <string name="decoy_captured_during_setup">captured while this vault was being made — a photo taken today does not belong in a vault that is meant to read as months old</string>
+    <string name="decoy_step">Step %1$d of %2$d</string>
+    <string name="decoy_leave">Leave decoy setup</string>
+    <string name="decoy_intro_title">A vault you can hand over</string>
+    <string name="decoy_intro_lead">An ordinary vault with its own passphrase, holding things you would not mind someone seeing.</string>
+    <string name="decoy_start">Start</string>
+    <string name="decoy_fact_used">It has to look used</string>
+    <string name="decoy_fact_used_body">An empty vault fools nobody. This one gets photos you choose, and dates and a history that read like months of ordinary use.</string>
+    <string name="decoy_fact_photos">The photos are your own</string>
+    <string name="decoy_fact_photos_body">They come from this device. Nothing ships with the app, because content that shipped would be identical on every phone that has it. Whoever you hand this vault to sees these photographs, so choose ones you are willing to show.</string>
+    <string name="decoy_fact_own">Your own vault stays where it is</string>
+    <string name="decoy_fact_own_body">This makes a second vault beside it. Nothing already on this device is moved, changed or removed, and the vault you have open now cannot be affected by it.</string>
+    <string name="decoy_fact_cost">What this costs</string>
+    <string name="decoy_photos_title">Choose the photos</string>
+    <string name="decoy_photos_lead">Between %1$d and %2$d of them, spread over at least %3$d weeks.</string>
+    <string name="decoy_choose_to_continue">Choose photos to continue</string>
+    <string name="decoy_not_plausible">Not a plausible set yet</string>
+    <string name="decoy_choose_photos">Choose photos</string>
+    <string name="decoy_choose_again">Choose again</string>
+    <string name="decoy_nothing_chosen">Nothing chosen yet. The picker shows your photo library; the app does not read it and never sees what you do not pick.</string>
+    <plurals name="decoy_summary_in">
+        <item quantity="one">%1$d will go in.</item>
+        <item quantity="other">%1$d will go in.</item>
+    </plurals>
+    <plurals name="decoy_summary_kept">
+        <item quantity="one">%1$d keep the date they were taken</item>
+        <item quantity="other">%1$d keep the date they were taken</item>
+    </plurals>
+    <plurals name="decoy_summary_assigned">
+        <item quantity="one">%1$d have none and get one</item>
+        <item quantity="other">%1$d have none and get one</item>
+    </plurals>
+    <string name="decoy_summary_dates">%1$s.</string>
+    <string name="decoy_summary_dates_assigned">%1$s, %2$s.</string>
+    <plurals name="decoy_summary_declined">
+        <item quantity="one">%1$d left out: %2$s.</item>
+        <item quantity="other">%1$d left out: %2$s.</item>
+    </plurals>
+    <string name="decoy_summary_truncated">Only the first %1$d were taken — more than that is not a decoy, it is a second library.</string>
+    <string name="decoy_gate_enough">Enough items: %1$d, and %2$d is the minimum.</string>
+    <string name="decoy_gate_not_enough">Not enough items. You have %1$d and %2$d is the minimum — choose again and add at least %3$d more.</string>
+    <plurals name="decoy_gate_spread">
+        <item quantity="one">They cover %1$d week, and %2$d is the minimum.</item>
+        <item quantity="other">They cover %1$d weeks, and %2$d is the minimum.</item>
+    </plurals>
+    <plurals name="decoy_gate_not_spread">
+        <item quantity="one">They cover %1$d week and %2$d is the minimum. Choose again and add older photographs, or ones with no date of their own — those get a date from the months before now.</item>
+        <item quantity="other">They cover %1$d weeks and %2$d is the minimum. Choose again and add older photographs, or ones with no date of their own — those get a date from the months before now.</item>
+    </plurals>
+    <plurals name="decoy_age_months">
+        <item quantity="one">This vault will read as up to %1$d month old.</item>
+        <item quantity="other">This vault will read as up to %1$d months old.</item>
+    </plurals>
+    <plurals name="decoy_age_install">
+        <item quantity="one">This app was installed %1$d day ago, so this vault cannot plausibly be older than that — a file listing shows the install date without any passphrase. Its history will cover those days; the photographs carry the rest.</item>
+        <item quantity="other">This app was installed %1$d days ago, so this vault cannot plausibly be older than that — a file listing shows the install date without any passphrase. Its history will cover those days; the photographs carry the rest.</item>
+    </plurals>
+    <string name="decoy_requirement_met">Requirement met</string>
+    <string name="decoy_requirement_not_met">Requirement not met</string>
+    <string name="decoy_name_title">Name it and lock it</string>
+    <string name="decoy_name_lead">This name is the first thing anyone opening this vault will see, and this passphrase is the one you would hand over.</string>
+    <string name="decoy_name_hint">Choose something ordinary — the kind of name a vault of holiday photographs would have.</string>
+    <string name="decoy_passphrase_label">Passphrase for the decoy</string>
+    <string name="decoy_passphrase_note">This passphrase must be different from the one that opens your own vault. Entering it at the lock screen opens this vault and nothing else.</string>
+    <string name="decoy_building">Building %1$s</string>
+    <string name="decoy_building_body">Preparing storage, then importing the photographs. This takes a moment and must not be interrupted.</string>
+    <string name="decoy_ready_title">Ready to build</string>
+    <string name="decoy_ready_lead">Nothing has been written yet. Confirming your own passphrase is what starts it.</string>
+    <string name="decoy_confirm_passphrase">Confirm your passphrase</string>
+    <string name="decoy_fact_made">What gets made</string>
+    <plurals name="decoy_fact_made_body">
+        <item quantity="one">A vault called %1$s, holding %2$d of your photographs, with dates and an unlock history spread across the months behind them.</item>
+        <item quantity="other">A vault called %1$s, holding %2$d of your photographs, with dates and an unlock history spread across the months behind them.</item>
+    </plurals>
+    <string name="decoy_fact_this_vault">What happens to this vault</string>
+    <string name="decoy_fact_this_vault_body">Nothing. Your own vault is untouched — it cannot be overwritten by this, and you are not being asked for its passphrase in order to protect it.</string>
+    <string name="decoy_fact_end_up">Where you end up</string>
+    <string name="decoy_fact_end_up_body">The last step drops you inside the new vault, so you can see what someone entering its passphrase would find. You come back here when you are done.</string>
+    <string name="decoy_other_vaults">I have other vaults on this device</string>
+    <string name="decoy_other_vaults_hint">Only if you have a second passphrase that opens something at the lock screen.</string>
+    <plurals name="decoy_entries_added">
+        <item quantity="one">%1$d entry added.</item>
+        <item quantity="other">%1$d entries added.</item>
+    </plurals>
+    <string name="decoy_handover_title">This is what they will see</string>
+    <string name="decoy_handover_lead">Entering this vault\'s passphrase at the lock screen reaches exactly this and nothing else. You are looking at it as they would.</string>
+    <string name="decoy_show_words">Show the recovery words</string>
+    <string name="decoy_fact_no_way_across">There is no way across from inside it</string>
+    <string name="decoy_fact_no_way_across_body">Whoever holds this passphrase reaches this vault and stops there. They cannot see that your own exists, let alone open it — which is the whole point of it.</string>
+    <string name="decoy_fact_nothing_names">There is nothing here that names the other one</string>
+    <string name="decoy_fact_nothing_names_body">This vault does not know your own exists, and neither does anything on this screen. To anyone who opens it, this is the whole device.</string>
+    <string name="decoy_fact_inside">What is inside it</string>
+    <plurals name="decoy_fact_inside_body">
+        <item quantity="one">%1$d photograph, with the dates they were taken, and an unlock history that reads as months of ordinary use.</item>
+        <item quantity="other">%1$d photographs, with the dates they were taken, and an unlock history that reads as months of ordinary use.</item>
+    </plurals>
+    <string name="decoy_fact_back">Then you go back to your own vault</string>
+    <string name="decoy_fact_back_body">Writing down the recovery words is the last thing left. After that this vault closes and your own opens again, where you were.</string>
+    <string name="decoy_vaults_label">Vaults</string>
+    <string name="decoy_confirm_title">Confirm it is you</string>
+    <string name="decoy_confirm_body">Enter the passphrase of the vault you have open. This authorises building the decoy and nothing else.</string>
+    <string name="decoy_confirm_wrong">That is not the passphrase of the vault you have open.</string>
+    <string name="decoy_checking">Checking</string>
+    <string name="decoy_build">Build the decoy</string>
+    <string name="decoy_preserve_title">Other vaults on this device</string>
+    <string name="decoy_preserve_body">Only for a second passphrase that opens something at the lock screen — a decoy you already built, or a vault you restored. Vaults on your own list are not this, and are never at risk.</string>
+    <string name="decoy_preserve_warning">The app cannot find a vault it cannot open, so it cannot avoid one either. Any such vault whose passphrase is not entered here may be overwritten by the new one.</string>
+    <string name="decoy_preserve_label">Passphrase of a vault to keep</string>
+    <string name="decoy_preserve_add">Add to the list</string>
+    <string name="decoy_preserve_empty">Nothing added. Leaving it empty is right for most people.</string>
+    <string name="decoy_preserve_entry">Passphrase %1$d</string>
+    <string name="decoy_preserve_remove">Remove passphrase %1$d</string>
+
+    <!-- Onboarding — the first-run steps -->
+    <string name="onboarding_welcome_title">Photos nobody else can open</string>
+    <string name="onboarding_welcome_lead">Everything you put in here is encrypted on this device and stays on it. There is no account, no server, and no way for us to see any of it — this app cannot reach the internet at all.</string>
+    <string name="onboarding_welcome_steps">Setting up takes eight short steps. None of them are required, and you can change your mind later in Settings.</string>
+    <string name="onboarding_get_started">Get started</string>
+    <string name="onboarding_have_backup">I have a backup to restore</string>
+    <string name="onboarding_passphrase_lead">This is the only thing that opens your vault. It cannot be reset.</string>
+    <string name="onboarding_fact_no_reset">There is no reset and no account</string>
+    <string name="onboarding_fact_no_reset_body">Nobody can recover this for you — not us, not anyone. That is the point, and it is also the risk.</string>
+    <string name="onboarding_fact_kit_next">You get a recovery kit next</string>
+    <string name="onboarding_fact_kit_next_body">Twenty-four words that open this vault if you forget the passphrase. It is the only other way in.</string>
+    <string name="onboarding_kit_title">Write these down</string>
+    <string name="onboarding_kit_lead">Twenty-four words that open this vault if the passphrase is ever lost. After this, you can view them 3 more times from the menu. Then they\'re gone from this app for good.</string>
+    <string name="onboarding_fact_anyone">Anyone holding these words can open this vault</string>
+    <string name="onboarding_fact_anyone_body">They cannot be changed or cancelled. Keep the paper somewhere a person going through your things would not look.</string>
+    <string name="onboarding_fact_backup_words">A backup is restored with these, not your passphrase</string>
+    <string name="onboarding_fact_backup_words_body">If you later keep a copy in a cloud folder, these words are the only thing that can read it.</string>
+    <string name="onboarding_kit_type">Type \"%1$s\" to confirm you have written them down.</string>
+    <string name="onboarding_capture_title">See who tried to get in</string>
+    <string name="onboarding_capture_lead">After a failed unlock, the phone quietly records whoever is holding it.</string>
+    <string name="onboarding_fact_failed_unlock">It only runs on a failed unlock</string>
+    <string name="onboarding_fact_failed_unlock_body">Nothing is recorded when an unlock succeeds, and nothing leaves this device — each capture is sealed so only your passphrase can read it, and waits for you under Intruder capture.</string>
+    <string name="onboarding_fact_permission">Each mode asks for its own permission</string>
+    <string name="onboarding_fact_permission_body">Turn one on and Android asks for exactly what that mode needs. Deny it and the mode stays off; nothing else changes.</string>
+    <string name="onboarding_decoy_title">Have a vault you can hand over</string>
+    <string name="onboarding_decoy_lead">A second vault, with its own passphrase, holding things you would not mind someone seeing.</string>
+    <string name="onboarding_fact_used_body">An empty vault fools nobody. This one gets photos you choose, with dates and a history that read like months of ordinary use.</string>
+    <string name="onboarding_fact_choose">You choose the photos</string>
+    <string name="onboarding_fact_choose_body">They come from this device and they are your own. Whoever you hand this vault to sees them, so choose ones you are willing to show.</string>
+    <string name="onboarding_fact_trial">This starts your 30-day trial</string>
+    <string name="onboarding_fact_trial_body">Building a decoy imports real photos, and the trial starts with the first thing added to a vault. Skip this if you would rather start it with your own things.</string>
+    <string name="onboarding_backup_title">Keep a copy somewhere else</string>
+    <string name="onboarding_backup_lead">If this phone is lost or broken, everything in the vault goes with it — unless there is a copy.</string>
+    <string name="onboarding_panic_title">A passphrase that closes the others</string>
+    <string name="onboarding_panic_lead">Typed at the lock screen, it opens one vault and permanently shuts every other one on this device.</string>
+    <string name="onboarding_panic_set_up">Set up a panic credential</string>
+    <string name="onboarding_fact_ordinary">It looks like an ordinary unlock</string>
+    <string name="onboarding_fact_ordinary_body">Same screen, same speed, nothing to see. That is the point — anyone watching learns nothing.</string>
+    <string name="onboarding_fact_way_in_body">The other vaults stay on this device as unreadable data, and their 24-word recovery kits still open them. That is how you get them back.</string>
+    <string name="onboarding_identity_title">Make it look like something else</string>
+    <string name="onboarding_identity_lead">The app can wear a calculator, a music player or a voice recorder on your home screen.</string>
+    <string name="onboarding_finish">Finish setup</string>
+    <string name="onboarding_choose_identity">Choose an identity</string>
+    <string name="onboarding_fact_disguise">The disguise is real, and it works</string>
+    <string name="onboarding_fact_disguise_body">The launcher entry and the recents card both change. You get back in by performing a gesture you choose on the cover itself.</string>
+    <string name="onboarding_fact_hides">It hides the app, not the files</string>
+    <string name="onboarding_fact_hides_body">Anyone who can read this device\'s storage, or who opens Android\'s own Settings, can still tell the app is here. Your passphrase — or a biometric you have set up — is still the only thing that opens a vault.</string>
+    <string name="onboarding_fact_rehearse">You will rehearse the gesture twice</string>
+    <string name="onboarding_fact_rehearse_body">Once to record it, once from memory. A trigger you cannot repeat is a vault you cannot open.</string>
+
+    <!-- Intruder capture — the modes -->
+    <string name="capture_mode_photo">Photo</string>
+    <string name="capture_mode_audio">Audio</string>
+    <string name="capture_mode_video">Video</string>
+    <string name="capture_mode_photo_line">One still from the front camera</string>
+    <string name="capture_mode_audio_line">A short clip from the microphone</string>
+    <string name="capture_mode_video_line">A short clip with sound</string>
+    <string name="capture_no_front_camera">This device has no front camera.</string>
+    <string name="capture_sheet_lead">Recorded after a failed unlock.</string>
+    <string name="capture_sheet_photo">A still from the front camera.</string>
+    <string name="capture_sheet_audio">A few seconds from the microphone.</string>
+    <string name="capture_sheet_video">A few seconds of camera and sound.</string>
+    <string name="capture_sheet_no_front">This device has no front camera, so photo and video are unavailable.</string>
+
+    <!-- Intruder capture — the home screen's timeline, its flows and its notices -->
+    <string name="intruder_capture_settings">Capture settings</string>
+    <string name="intruder_today">Today</string>
+    <string name="intruder_yesterday">Yesterday</string>
+    <string name="intruder_empty_off_title">Nothing captured</string>
+    <string name="intruder_empty_off_body">Turn on a mode and the phone quietly records whoever fails to unlock it.</string>
+    <string name="intruder_empty_off_action">Choose what to record</string>
+    <string name="intruder_empty_on_title">Nothing captured yet</string>
+    <string name="intruder_empty_on_body">%1$s on. A capture appears here after a failed unlock.</string>
+    <string name="intruder_empty_on_action">Change what is recorded</string>
+    <string name="intruder_left_moved">Moved to %1$s</string>
+    <string name="intruder_left_exported">Exported</string>
+    <string name="intruder_left_deleted">Deleted</string>
+    <string name="intruder_row_description">%1$s. %2$s, %3$s.</string>
+    <string name="intruder_row_description_left">%1$s. %2$s, %3$s. %4$s.</string>
+    <string name="intruder_move_to_vault">Move to vault</string>
+    <string name="intruder_export">Export</string>
+    <plurals name="intruder_capture_count">
+        <item quantity="one">%1$d capture</item>
+        <item quantity="other">%1$d captures</item>
+    </plurals>
+    <string name="intruder_move_failed">Those captures could not be moved. Nothing was changed.</string>
+    <plurals name="intruder_delete_title">
+        <item quantity="one">Delete %1$d capture forever?</item>
+        <item quantity="other">Delete %1$d captures forever?</item>
+    </plurals>
+    <plurals name="intruder_delete_body">
+        <item quantity="one">The capture is destroyed and cannot be restored. Its line stays on the timeline.</item>
+        <item quantity="other">The captures are destroyed and cannot be restored. Their lines stay on the timeline.</item>
+    </plurals>
+    <plurals name="intruder_export_title">
+        <item quantity="one">Export %1$d capture</item>
+        <item quantity="other">Export %1$d captures</item>
+    </plurals>
+    <plurals name="intruder_export_body">
+        <item quantity="one">The capture is decrypted, written out, checked, and then removed from Intruder capture. Its line stays on the timeline.</item>
+        <item quantity="other">The %1$d captures are decrypted, written out, checked, and then removed from Intruder capture. Their lines stay on the timeline.</item>
+    </plurals>
+    <string name="intruder_export_checked">Each file is read back and compared before its encrypted copy is deleted. Anything that does not match stays in Intruder capture and is listed in the manifest.</string>
+    <string name="intruder_export_wrong_passphrase">That is not the passphrase that opens this list of vaults.</string>
+    <string name="intruder_export_progress_left">%1$d of %2$d out, %3$d still held</string>
+    <string name="intruder_export_busy">Exporting</string>
+    <string name="intruder_blank">Came out blank</string>
+    <string name="intruder_silent">Came out silent</string>
+    <string name="intruder_permission_camera_off">Camera permission turned off</string>
+    <string name="intruder_permission_camera_on">Camera permission turned back on</string>
+    <string name="intruder_permission_microphone_off">Microphone permission turned off</string>
+    <string name="intruder_permission_microphone_on">Microphone permission turned back on</string>
+    <string name="intruder_permission_stopped">Noticed %1$s · %2$s stopped</string>
+    <string name="intruder_permission_resumed">Noticed %1$s · %2$s recording again</string>
+    <string name="intruder_permission_noticed">Noticed %1$s</string>
+    <string name="capture_banner_camera_one">%1$s is not recording. The camera permission is off.</string>
+    <string name="capture_banner_camera_many">%1$s are not recording. The camera permission is off.</string>
+    <string name="capture_banner_microphone_one">%1$s is not recording. The microphone permission is off.</string>
+    <string name="capture_banner_microphone_many">%1$s are not recording. The microphone permission is off.</string>
+    <string name="capture_turn_back_on">Turn back on</string>
+    <string name="capture_sheet_no_camera">Not recording · camera permission off</string>
+    <string name="capture_sheet_no_microphone">Not recording · microphone permission off</string>
+    <string name="capture_auto_reset">Android may remove this app\'s permissions if it goes unused for a few months, which would stop capture.</string>
+    <string name="capture_keep_permissions">Keep permissions</string>
+    <string name="intruder_subtitle_description">Vault: %1$s</string>
+
+    <!-- Recovery kit — showing, re-showing and entering the 24 words -->
+    <string name="kit_acknowledgement">I understand</string>
+    <string name="kit_title_list">Your recovery kit</string>
+    <string name="kit_title_vault">Recovery kit for %1$s</string>
+    <string name="kit_title_short">Recovery kit</string>
+    <string name="kit_body_list">These 24 words are the only way back into the vaults your passphrase opens, if you forget it. Write them down in order and keep the paper somewhere safe.\n\nAnyone who has these words can open those vaults, including any you add later. A vault you give its own passphrase is not among them — it has a kit of its own. These words cannot be changed or cancelled.</string>
+    <string name="kit_body_list_backup">If you ever back this vault up to a cloud folder, these words are what restore it — not your passphrase. Lose this device and this page together and the backup cannot be opened by anyone, including you.</string>
+    <string name="kit_body_vault">These 24 words are the only way back into %1$s if you forget the passphrase you just set. Write them down in order and keep the paper somewhere safe.\n\nThe passphrase that opens your vault list will not open this one, and neither will the recovery kit for that list. Lose both the passphrase and this page and everything in %1$s is gone for good.\n\nAnyone who has these words can open %1$s. They cannot be changed or cancelled.</string>
+    <string name="kit_type_acknowledgement">Type \"%1$s\" to confirm you have written them down and know the passphrase cannot be reset.</string>
+    <string name="kit_print">Print</string>
+    <string name="kit_last_view">Last view — this can\'t be shown again.</string>
+    <plurals name="kit_views_left_after">
+        <item quantity="one">%1$d view left after this one.</item>
+        <item quantity="other">%1$d views left after this one.</item>
+    </plurals>
+    <string name="kit_remaining_views">After you continue, you can view them 3 more times from the menu. After the third they can\'t be shown again, and the copy you write down will be the only one.</string>
+    <string name="drawer_kit">Recovery kit \u0020· \u0020%1$s</string>
+    <string name="kit_cannot_show">Can\'t be shown again</string>
+    <plurals name="kit_views_left">
+        <item quantity="one">%1$d view left</item>
+        <item quantity="other">%1$d views left</item>
+    </plurals>
+    <string name="kit_exhausted">Your recovery kit has been shown as many times as it can be. This app can\'t show it again. Keep the copy you wrote down somewhere safe.</string>
+    <string name="kit_enter_list">Enter your passphrase to show it.</string>
+    <string name="kit_enter_vault">Enter the passphrase for %1$s to show it.</string>
+    <string name="kit_last_time">This is the last time your recovery kit can be shown. Once you leave the next screen it can\'t be shown again, so make sure all 24 words are written down. %1$s</string>
+    <plurals name="kit_views_more">
+        <item quantity="one">You can view your recovery kit %1$d more time. Viewing it now uses one, leaving %2$d. %3$s</item>
+        <item quantity="other">You can view your recovery kit %1$d more times. Viewing it now uses one, leaving %2$d. %3$s</item>
+    </plurals>
+    <string name="kit_wrong_list">That passphrase doesn\'t open this list.</string>
+    <string name="kit_wrong_vault">That passphrase doesn\'t open this vault.</string>
+    <string name="kit_passphrase_for">Passphrase for %1$s</string>
+    <string name="kit_open_failed">Your recovery kit couldn\'t be opened. Try again.</string>
+    <string name="kit_show">Show recovery kit</string>
+    <string name="kit_words_open_nothing">Those words do not open a vault on this device.</string>
+    <string name="kit_new_passphrase_title">Choose a new passphrase</string>
+    <string name="kit_enter_title">Enter your kit</string>
+    <string name="kit_enter_lead">Type the 24 words from your recovery kit, one to a box.</string>
+    <string name="kit_add_backup_file">Add a backup file</string>
+    <string name="kit_lost_files">Lost files too? Choose the backup you saved to your cloud app or SD card and they come back as well.</string>
+    <string name="kit_sd_backup">SD card backup</string>
+    <string name="kit_backup_file">Backup file</string>
+    <string name="kit_new_passphrase_restoring">Choose the passphrase this phone will use to open your vaults. Your 24 words don\'t change. Keep the paper.</string>
+    <string name="kit_new_passphrase_lead">Your recovery kit checks out. Choose the passphrase you\'ll use to open your vaults from now on — your old one stops working. Your 24 words don\'t change. Keep the paper.</string>
+    <string name="kit_passphrase_in_use">That passphrase already opens something on this phone. Choose a different one.</string>
+    <string name="kit_new_passphrase_label">New passphrase</string>
+    <string name="kit_mismatch">The two entries don\'t match.</string>
+    <string name="kit_setting_passphrase">Setting passphrase</string>
+    <string name="kit_set_passphrase">Set passphrase</string>
+    <string name="kit_recover_title">Recover a vault</string>
+    <string name="kit_recover_lead">Type the 24 words from a vault\'s own recovery kit, one to a box. It opens from this list with the passphrase you just used — if it is already on the list, it stops asking for its own — so you will not need those words again.\n\nThis does not bring back files — the vault\'s storage has to already be on this device.</string>
+    <string name="kit_recover_name">Name it on this list</string>
+    <string name="kit_recover_name_hint">A vault\'s name lives on the list it was on, so this one needs a name here.</string>
+    <string name="kit_recovering">Recovering</string>
+    <string name="kit_recover_action">Recover vault</string>
+    <string name="kit_not_a_word">not a word</string>
+    <string name="kit_word">Word %1$d</string>
+    <string name="kit_word_wrong">Word %1$d, not one of the 24 words</string>
+    <plurals name="kit_words_to_check">
+        <item quantity="one">%1$d word still to check.</item>
+        <item quantity="other">%1$d words still to check.</item>
+    </plurals>
+    <string name="kit_checksum_failed">These are all real words, but the set does not check out — the order is probably wrong. Check them against your kit in order.</string>
+
+    <!-- Vault list — the list, a new vault, editing a vault, a vault's own passphrase -->
+    <string name="vault_icon_home">Home</string>
+    <string name="vault_icon_family">Family</string>
+    <string name="vault_icon_person">Person</string>
+    <string name="vault_icon_child">Child</string>
+    <string name="vault_icon_favourite">Favourite</string>
+    <string name="vault_icon_pets">Pets</string>
+    <string name="vault_icon_work">Work</string>
+    <string name="vault_icon_id">ID</string>
+    <string name="vault_icon_bank">Bank</string>
+    <string name="vault_icon_savings">Savings</string>
+    <string name="vault_icon_receipts">Receipts</string>
+    <string name="vault_icon_documents">Documents</string>
+    <string name="vault_icon_medical">Medical</string>
+    <string name="vault_icon_school">School</string>
+    <string name="vault_icon_travel">Travel</string>
+    <string name="vault_icon_car">Car</string>
+    <string name="vault_icon_camera">Camera</string>
+    <string name="vault_icon_music">Music</string>
+    <string name="vault_icon_books">Books</string>
+    <string name="vault_icon_celebration">Celebration</string>
+    <string name="vault_icon_star">Star</string>
+    <string name="vault_icon_diamond">Diamond</string>
+    <string name="vault_icon_shopping">Shopping</string>
+    <string name="vault_icon_archive">Archive</string>
+    <string name="vault_list_lock">Lock</string>
+    <string name="vault_new">New vault</string>
+    <string name="first_vault_name">My vault</string>
+    <string name="vault_list_lead">One passphrase opens this list and everything on it.</string>
+    <string name="vault_list_lead_locked">One passphrase opens this list. Vaults marked Locked need their own.</string>
+    <string name="vault_list_empty">No vaults on this list.</string>
+    <string name="vault_list_empty_body">Everything you create here is opened by the passphrase you just used.</string>
+    <string name="vault_list_create">Create a vault</string>
+    <string name="vault_row_locked">Locked — has its own passphrase</string>
+    <string name="vault_row_list_passphrase">Opens with this list\'s passphrase</string>
+    <string name="vault_row_options">Options for %1$s</string>
+    <string name="vault_edit">Edit vault</string>
+    <string name="vault_flow_name_title">Name your vault</string>
+    <string name="vault_flow_name_lead">You\'ll see this name and badge on your vault list.</string>
+    <string name="vault_flow_opens_title">How should %1$s open?</string>
+    <string name="vault_flow_opens_lead">You can add, change or remove a passphrase later from Edit vault.</string>
+    <string name="vault_opens_list">With your vault list</string>
+    <string name="vault_opens_list_detail">Opens straight from the list, with the passphrase you already used.</string>
+    <string name="vault_opens_own">With its own passphrase</string>
+    <string name="vault_opens_own_detail">Only its own passphrase opens it. It gets its own recovery kit and its own intruder capture.</string>
+    <string name="vault_flow_passphrase_title">Choose a passphrase for %1$s</string>
+    <string name="vault_flow_passphrase_lead">Only this passphrase will open %1$s. Your vault list\'s passphrase won\'t, and neither will the list\'s recovery kit — so %1$s gets a recovery kit of its own.</string>
+    <string name="vault_flow_capture_title">See who tries to open %1$s</string>
+    <string name="vault_flow_capture_lead">After a wrong passphrase for %1$s, the phone quietly records whoever is holding it.</string>
+    <string name="vault_capture_fact">Only %1$s can see them</string>
+    <string name="vault_capture_fact_body">Each capture is sealed to %1$s and waits inside it, under Intruder capture in its menu. Nothing on your vault list shows them.</string>
+    <string name="vault_discard_new_title">Discard this vault?</string>
+    <string name="vault_discard_new_body">Nothing has been created yet.</string>
+    <string name="vault_discard_add_title">Discard this passphrase?</string>
+    <string name="vault_discard_add_body">%1$s still opens with your vault list\'s passphrase.</string>
+    <string name="vault_capture_not_enrolled">Intruder capture wasn\'t turned on for %1$s. Turn it on from Intruder capture in its menu.</string>
+    <string name="vault_passphrase_label">Passphrase for this vault</string>
+    <string name="vault_creating">Creating…</string>
+    <string name="vault_open_named">Open %1$s</string>
+    <string name="vault_has_own_passphrase">This vault has its own passphrase.</string>
+    <string name="vault_open_wrong">That passphrase did not open %1$s.</string>
+    <string name="vault_opening">Opening</string>
+    <string name="vault_open">Open vault</string>
+    <string name="vault_colour">Colour</string>
+    <string name="vault_icon">Icon</string>
+    <string name="vault_icon_letter">Letter</string>
+    <!-- A sample of a letter, shown on the Letter icon before the vault has a name. -->
+    <string name="vault_icon_letter_sample" translatable="false">Aa</string>
+    <!-- The name an imported vault is given on the list. From then on it is the vault's own name. -->
+    <string name="imported_vault">Imported vault</string>
+
+    <!-- Vault grid — destinations, filters, sorting and the add line -->
+    <string name="add_photos_or_videos">Add photos or videos</string>
+    <string name="add_files">Add files</string>
+    <string name="destination_media">Media</string>
+    <string name="destination_files">Files</string>
+    <string name="destination_notes">Notes</string>
+    <string name="destination_memos">Memos</string>
+    <string name="added_to">Added to %1$s.</string>
+    <string name="media_filter_all">All</string>
+    <string name="media_filter_photos">Photos</string>
+    <string name="media_filter_videos">Videos</string>
+    <string name="sort_newest">Newest first</string>
+    <string name="sort_oldest">Oldest first</string>
+    <string name="sort_recently_added">Recently added first</string>
+    <string name="sort_first_added">First added first</string>
+    <string name="sort_name_az">Name A–Z</string>
+    <string name="sort_name_za">Name Z–A</string>
+    <string name="sort_last_edited">Last edited</string>
+    <string name="media_filter_show_all">Show all</string>
+    <string name="media_filter_show_photos">Show photos</string>
+    <string name="media_filter_show_videos">Show videos</string>
+    <string name="view_as_list">Show as list</string>
+    <string name="view_as_grid">Show as grid</string>
+
+    <!-- Vault grid — the bar, selection, the add button and empty states -->
+    <string name="grid_selected">%1$d selected</string>
+    <string name="folder_options">Folder options</string>
+    <plurals name="item_count">
+        <item quantity="one">%1$d item</item>
+        <item quantity="other">%1$d items</item>
+    </plurals>
+    <string name="sort_current">Currently used</string>
+    <string name="sort_alphabetical">Alphabetical, not numeric</string>
+    <string name="folder_new">New folder</string>
+    <string name="grid_destination_settings">%1$s settings</string>
+    <string name="grid_trash_and_settings">Trash and settings</string>
+    <string name="fab_camera">Camera</string>
+    <string name="fab_voice_memo">Voice memo</string>
+    <string name="fab_new_note">New note</string>
+    <string name="fab_actions">Actions</string>
+    <string name="fab_close_actions">Close actions</string>
+    <string name="fab_no_camera">Not on this device</string>
+    <string name="select_all">Select all</string>
+    <string name="move_to_folder">Move to folder</string>
+    <string name="remove_from_folder">Remove from folder</string>
+    <string name="share_securely">Share securely</string>
+    <string name="unvault_selected">Unvault selected</string>
+    <string name="delete_selected">Delete selected</string>
+    <string name="restore_selected">Restore selected</string>
+    <string name="delete_selected_forever">Delete selected forever</string>
+    <string name="leave_selection">Leave selection</string>
+    <string name="all_vaults">All vaults</string>
+    <string name="select">Select</string>
+    <string name="pinned">Pinned</string>
+    <string name="kind_video">Video</string>
+    <string name="kind_audio">Audio</string>
+    <string name="kind_file">File</string>
+    <string name="empty_media">This vault is empty.</string>
+    <string name="empty_media_line">Photos and video you add are encrypted before they touch storage.</string>
+    <string name="empty_files">No files yet.</string>
+    <string name="empty_files_line">Documents and anything else this app cannot open are kept here, encrypted.</string>
+    <string name="empty_notes">No notes yet.</string>
+    <string name="empty_notes_line">Notes you write are stored in this vault and never leave it.</string>
+    <string name="empty_memos">No recordings yet.</string>
+    <string name="empty_memos_line">Voice memos you record are encrypted as they are written.</string>
+    <string name="empty_add_photos">Add photos</string>
+    <string name="empty_add_media">Add media</string>
+    <string name="empty_create_note">Create note</string>
+    <string name="empty_create_memo">Create memo</string>
+    <string name="search">Search</string>
+    <string name="search_no_match">Nothing matches.</string>
+    <string name="search_no_match_line">Searches look at names, folders and tags.</string>
+    <string name="folder_empty">Nothing in this folder.</string>
+    <string name="folder_empty_line">Import into it, or move items in from anywhere in the vault.</string>
+    <string name="trash_empty">Nothing in the trash.</string>
+    <string name="trash_empty_line">Deleted items wait here for %1$d days, then are destroyed.</string>
+    <string name="section_edited">Edited %1$s</string>
+    <string name="section_added">Added %1$s</string>
+
+    <!-- Viewer — one item, full screen -->
+    <string name="viewer_thumbnail_set">Thumbnail set to %1$s.</string>
+    <string name="viewer_frame_unusable">This frame couldn\'t be used.</string>
+    <string name="viewer_rotate">Rotate</string>
+    <string name="viewer_edit_image">Edit image</string>
+    <string name="viewer_opening">Opening…</string>
+    <string name="viewer_could_not_open">This item could not be opened.</string>
+    <string name="viewer_export_item">Export this item</string>
+    <plurals name="viewer_skip_forward">
+        <item quantity="one">Forward %1$d second</item>
+        <item quantity="other">Forward %1$d seconds</item>
+    </plurals>
+    <plurals name="viewer_skip_back">
+        <item quantity="one">Back %1$d second</item>
+        <item quantity="other">Back %1$d seconds</item>
+    </plurals>
+    <string name="viewer_set_folder_cover">Set as folder cover</string>
+    <string name="viewer_use_frame">Use this frame as the thumbnail</string>
+
+    <!-- Settings rows — a choice revealed in place -->
+    <string name="reveal_choose">Choose a %1$s</string>
+    <string name="reveal_close">Close the %1$s</string>
+    <string name="reveal_shown">%1$s shown</string>
+    <string name="reveal_hidden">%1$s hidden</string>
+    <string name="reveal_speed">speed</string>
+    <string name="reveal_speeds">speeds</string>
+    <string name="reveal_length">length</string>
+    <string name="reveal_lengths">lengths</string>
+    <string name="reveal_way">way</string>
+    <string name="reveal_ways">ways</string>
+    <string name="reveal_quality">quality</string>
+    <string name="reveal_qualities">qualities</string>
+
+    <!-- Slideshow -->
+    <string name="slideshow_speed_quick">Quick</string>
+    <string name="slideshow_speed_usual">The usual pace</string>
+    <string name="slideshow_speed_slow">Time to look at each one</string>
+    <string name="slideshow_end">End slideshow</string>
+    <string name="slideshow_play">Play slideshow</string>
+    <string name="slideshow_pause">Pause slideshow</string>
+    <string name="slideshow_options">Slideshow options</string>
+    <string name="slideshow_options_lead">The slideshow waits while these are open, and carries on when you close them.</string>
+    <string name="slideshow_speed_footnote">How long each photo stays. Videos play to their end.</string>
+    <string name="slideshow_repeat">Repeat</string>
+    <string name="slideshow_repeat_on">On · After the last item, the slideshow starts again from the first.</string>
+    <string name="slideshow_repeat_off">Off · The slideshow ends after the last item.</string>
+    <string name="slideshow_shuffle">Shuffle</string>
+    <string name="slideshow_shuffle_on">On · Every item shows once, in a random order, before any shows again.</string>
+    <string name="slideshow_shuffle_off">Off · Items show in the order of your list.</string>
+
+    <!-- Folders -->
+    <string name="colour_none">No colour</string>
+    <string name="colour_red">Red</string>
+    <string name="colour_amber">Amber</string>
+    <string name="colour_teal">Teal</string>
+    <string name="colour_blue">Blue</string>
+    <string name="colour_pink">Pink</string>
+    <string name="folder_rename">Rename folder</string>
+    <string name="folder_create">Create</string>
+    <string name="folder_move">Move</string>
+    <string name="folder_cover">Cover</string>
+    <string name="folder_delete">Delete folder</string>
+    <string name="folder_delete_named">\"%1$s\" will be removed.</string>
+    <string name="folder_delete_moves_to">Everything in it moves to \"%1$s\". Nothing is deleted and nothing goes to the trash.</string>
+    <string name="folder_delete_moves_home">Everything in it moves to the home screen. Nothing is deleted and nothing goes to the trash.</string>
+    <string name="folder_cover_recent">Use the most recent item</string>
+    <string name="folder_cover_empty">Nothing in this folder to show yet.</string>
+    <string name="folder_cover_current">Current cover</string>
+    <string name="picker_move_folder">Move \"%1$s\"</string>
+    <plurals name="picker_move_items">
+        <item quantity="one">Move %1$d item</item>
+        <item quantity="other">Move %1$d items</item>
+    </plurals>
+    <string name="picker_folder_lead">Everything inside the folder moves with it.</string>
+    <string name="picker_items_lead">An item is in one folder at most, so moving replaces whatever folder it is in.</string>
+    <string name="picker_mixed_kinds">Media, files, notes and memos each have their own folders. To move into a folder, select items of one kind.</string>
+    <string name="picker_home">Home screen</string>
+    <string name="picker_up">Up</string>
+    <string name="picker_where_now">where it is now</string>
+    <string name="picker_move_here">Move here</string>
+    <string name="picker_move_into">Move into \"%1$s\"</string>
+    <string name="picker_move_home">Move to the home screen</string>
+    <string name="colour_yellow">Yellow</string>
+    <string name="colour_white">White</string>
+    <string name="colour_black">Black</string>
+
+    <!-- Rename, delete and destroy -->
+    <string name="rename_item">Rename item</string>
+    <string name="rename_lead">This is the name the item exports under. The ending is kept as it is — it is what decides how the item opens and where it exports to.</string>
+    <string name="rename_refused">A name needs at least one character, cannot be only dots, cannot contain a slash, and is at most %1$d characters including the ending.</string>
+    <string name="delete_one_forever">Delete %1$s forever?</string>
+    <plurals name="delete_many_forever">
+        <item quantity="one">Delete %1$d item forever?</item>
+        <item quantity="other">Delete %1$d items forever?</item>
+    </plurals>
+    <string name="delete_one">Delete %1$s?</string>
+    <plurals name="delete_many">
+        <item quantity="one">Delete %1$d item?</item>
+        <item quantity="other">Delete %1$d items?</item>
+    </plurals>
+    <string name="delete_body_one_forever">The copy in this vault is destroyed. It cannot be recovered.</string>
+    <string name="delete_body_many_forever">The copies in this vault are destroyed. They cannot be recovered.</string>
+    <string name="delete_body_trash">Moved to Trash. Deleted permanently after %1$d days.</string>
+    <string name="delete_forever">Delete forever</string>
+    <string name="keep">Keep</string>
+    <string name="destroy_title">Destroy “%1$s”?</string>
+    <string name="destroy_body">Everything in this vault goes — every photo, video, note and folder. It does not go to the trash and it cannot be recovered.</string>
+    <string name="destroy_others_safe">Your other vaults are not affected.</string>
+    <string name="destroy_backup_file">Its backup file is deleted too — otherwise your recovery kit would still open a full copy of this vault. Copies your provider keeps in its own trash or version history are beyond this app\'s reach.</string>
+    <string name="destroy_backup_folder">Its backup folder is emptied too — otherwise your recovery kit would still open a full copy of this vault. Copies your provider keeps in its own trash or version history are beyond this app\'s reach.</string>
+    <string name="destroy_give_back">Give my files back, then destroy</string>
+    <string name="destroy_everything">Destroy everything in it</string>
+    <string name="destroy_keep">Keep vault</string>
+    <string name="destroy_gate_own">This can\'t be undone. First, enter the passphrase that opens %1$s — its own, not your vault list\'s.</string>
+    <string name="destroy_gate_list">This can\'t be undone. First, enter your vault list\'s passphrase.</string>
+    <string name="destroy_gate_lost">Lost this passphrase? This vault\'s own 24 words bring it back. On the vault list, open the menu and choose “Recover a vault with its kit”, then destroy it from there.</string>
+    <string name="destroy_continue">Continue</string>
+    <string name="destroy_checking">Checking…</string>
+    <string name="destroy_return_then">When every file is out and checked, %1$s is destroyed.</string>
+
+    <!-- Destination settings — Media, Notes and Memos -->
+    <string name="skip_short">A short step</string>
+    <string name="skip_usual">The usual step</string>
+    <string name="skip_longer">A longer step</string>
+    <string name="skip_scene">Past a scene</string>
+    <string name="orientation_auto">Auto</string>
+    <string name="orientation_auto_detail">Videos turn with your phone</string>
+    <string name="orientation_landscape">Landscape</string>
+    <string name="orientation_landscape_detail">Videos open sideways, whichever way you hold your phone</string>
+    <string name="speed_0_5">0.5×</string>
+    <string name="speed_0_5_detail">Half speed</string>
+    <string name="speed_0_75">0.75×</string>
+    <string name="speed_0_75_detail">A little slower</string>
+    <string name="speed_normal">Normal</string>
+    <string name="speed_normal_detail">As it was recorded</string>
+    <string name="speed_1_25">1.25×</string>
+    <string name="speed_1_25_detail">A little faster</string>
+    <string name="speed_1_5">1.5×</string>
+    <string name="speed_1_5_detail">Half again as fast</string>
+    <string name="speed_2">2×</string>
+    <string name="speed_2_detail">Double speed</string>
+    <string name="quality_standard">Standard</string>
+    <string name="quality_standard_detail">64 kbps · about 0.5 MB a minute</string>
+    <string name="quality_high">High</string>
+    <string name="quality_high_detail">128 kbps · about 1 MB a minute</string>
+    <string name="quality_highest">Highest</string>
+    <string name="quality_highest_detail">256 kbps · about 2 MB a minute</string>
+    <string name="media_settings_intro">How photos and videos look and play when you open them.</string>
+    <string name="media_settings_viewing">While viewing</string>
+    <string name="media_keep_on">Keep screen on while viewing</string>
+    <string name="media_keep_on_on">On · The screen stays on while a photo or video is open, and the vault stays open with it.</string>
+    <string name="media_keep_on_off">Off · The screen turns off on your phone\'s usual timer, and the vault locks with it.</string>
+    <string name="media_brightness">Full brightness while viewing</string>
+    <string name="media_brightness_on">On · Photos and videos open at full brightness. Your brightness comes back when you close them.</string>
+    <string name="media_brightness_off">Off · Photos and videos open at your phone\'s brightness.</string>
+    <string name="media_stretch">Stretch low-resolution photos</string>
+    <string name="media_stretch_on">On · A photo smaller than the screen is enlarged to fill it.</string>
+    <string name="media_stretch_off">Off · A photo smaller than the screen is shown at its own size.</string>
+    <string name="media_quality">Highest display quality</string>
+    <string name="media_quality_on">On · Photos open at full resolution, for detail when you zoom. Uses more memory and battery.</string>
+    <string name="media_quality_off">Off · Photos open at the screen\'s resolution. Zooming in shows less detail.</string>
+    <string name="playback_speed">Playback speed</string>
+    <string name="media_speed_footnote">The pitch stays the same.</string>
+    <string name="media_resume">Resume videos</string>
+    <string name="media_resume_on">On · A video starts where you last stopped it.</string>
+    <string name="media_resume_off">Off · Videos start from the beginning, and where you stop is not kept.</string>
+    <string name="media_repeat">Repeat video</string>
+    <string name="media_repeat_on">On · A video plays again from the start when it ends.</string>
+    <string name="media_repeat_off">Off · A video stops at its end.</string>
+    <string name="media_skip">Double-tap to skip</string>
+    <string name="media_skip_footnote">Double-tap the right side of a video to go forward, the left side to go back.</string>
+    <string name="media_orientation">Video orientation</string>
+    <string name="notes_settings_intro">These apply to every note, in every vault.</string>
+    <string name="notes_checklists">Checklists</string>
+    <string name="notes_move_checked">Move checked items to the bottom</string>
+    <string name="notes_move_checked_on">On · Ticking an item moves it below the unticked ones in its list. Unticking moves it back up.</string>
+    <string name="notes_move_checked_off">Off · Ticked items stay where they are.</string>
+    <string name="notes_keyboard">Keyboard</string>
+    <string name="notes_incognito">Incognito keyboard</string>
+    <string name="notes_incognito_on">On · Your keyboard is asked not to learn words from your notes. Most keyboards do as asked; some may not.</string>
+    <string name="notes_incognito_off">Off · Your keyboard may learn words from your notes and suggest them in other apps.</string>
+    <string name="memos_settings_intro">How memos are recorded, and how they play when you open them.</string>
+    <string name="memos_quality">Recording quality</string>
+    <string name="memos_quality_footnote">A memo keeps the quality it started with. A change applies from the next one.</string>
+    <string name="memos_stereo">Stereo recording</string>
+    <string name="memos_stereo_on">On · Memos are recorded in two channels, at about twice the size. A phone that cannot records in mono.</string>
+    <string name="memos_stereo_off">Off · Memos are recorded in one channel.</string>
+    <string name="memos_bluetooth">Use Bluetooth microphone</string>
+    <string name="memos_bluetooth_on">On · A connected Bluetooth headset records the memo, at call quality and in mono — quality and stereo do not apply to it. With none connected, your phone\'s microphone does.</string>
+    <string name="memos_bluetooth_off">Off · Your phone\'s microphone records memos. A Bluetooth headset records at call quality and in mono, without quality or stereo.</string>
+    <string name="memos_playback">Playback</string>
+    <string name="memos_speed_footnote">The pitch stays the same. Videos follow Media\'s speed, not this one.</string>
+    <string name="memos_skip_silence">Skip silence</string>
+    <string name="memos_skip_silence_on">On · Silent stretches are skipped while a memo plays.</string>
+    <string name="memos_skip_silence_off">Off · Memos play through their silences.</string>
+
+    <!-- Notes -->
+    <string name="note_title">Title</string>
+    <string name="note_body">Note</string>
+    <string name="note_edit">Edit note</string>
+    <string name="note_placeholder">Start writing</string>
+    <string name="note_too_long">This note is %1$d bytes and the limit is %2$d. The limit is in bytes rather than characters, so accented letters, emoji and non-Latin scripts each count for more than one.</string>
+    <string name="note_pin">Pin</string>
+    <string name="note_unpin">Unpin</string>
+    <string name="note_delete">Delete note</string>
+    <string name="format_checklist">Checklist</string>
+    <string name="format_bullet">Bulleted list</string>
+    <string name="format_numbered">Numbered list</string>
+    <string name="format_heading">Heading</string>
+    <string name="format_bold">Bold</string>
+    <string name="format_italic">Italic</string>
+    <string name="format_strike">Strikethrough</string>
+    <string name="note_completed">Completed: %1$s</string>
+    <string name="note_attached_image">Attached image</string>
+    <string name="note_attachment_missing">This attachment is no longer in the vault.</string>
+    <string name="note_attachment_missing_label">Missing attachment %1$s</string>
+
+    <!-- Image editor -->
+    <!-- Aspect ratios: the numbers are the same in every language; write them the way the language writes a ratio. -->
+    <string name="aspect_free">Free</string>
+    <string name="aspect_1_1">1:1</string>
+    <string name="aspect_4_3">4:3</string>
+    <string name="aspect_3_2">3:2</string>
+    <string name="aspect_16_9">16:9</string>
+    <string name="filter_original">Original</string>
+    <string name="filter_mono">Mono</string>
+    <string name="filter_warm">Warm</string>
+    <string name="filter_cool">Cool</string>
+    <string name="filter_fade">Fade</string>
+    <string name="filter_punch">Punch</string>
+    <string name="width_fine">Fine</string>
+    <string name="width_medium">Medium</string>
+    <string name="width_bold">Bold</string>
+    <string name="editor_save_note">Saving adds a new item and keeps the original.</string>
+    <string name="editor_saving">Saving…</string>
+    <string name="editor_save_copy">Save a copy</string>
+    <string name="editor_discard_title">Discard these edits?</string>
+    <string name="editor_discard_body">The picture goes back to how it was. Nothing else changes.</string>
+    <string name="editor_discard">Discard</string>
+    <string name="editor_keep_editing">Keep editing</string>
+    <string name="editor_discard_edits">Discard edits</string>
+    <string name="editor_title">Edit</string>
+    <string name="tool_crop">Crop</string>
+    <string name="tool_straighten">Straighten</string>
+    <string name="tool_filters">Filters</string>
+    <string name="tool_light">Light</string>
+    <string name="tool_markup">Markup</string>
+    <string name="editor_crop_hint">Drag the corners, or the frame itself.</string>
+    <string name="editor_rotate_left">Rotate left</string>
+    <string name="editor_rotate_right">Rotate right</string>
+    <string name="editor_flip_horizontal">Flip horizontally</string>
+    <string name="editor_flip_vertical">Flip vertically</string>
+    <string name="editor_straighten_value">Straighten \u0020· \u0020%1$s°</string>
+    <string name="editor_strength">Strength</string>
+    <string name="editor_brightness">Brightness</string>
+    <string name="editor_contrast">Contrast</string>
+    <string name="editor_saturation">Saturation</string>
+    <string name="editor_warmth">Warmth</string>
+    <string name="editor_erase_hint">Touch a stroke to remove it.</string>
+    <string name="editor_draw_hint">Drag on the picture to draw.</string>
+    <string name="editor_eraser">Eraser</string>
+    <string name="editor_reset">Reset</string>
+
+    <!-- Voice memo -->
+    <string name="memo_recorded">Recorded</string>
+    <string name="memo_permission_body">Recording needs the microphone. Nothing recorded here leaves the device — it is written straight into the vault, and this permission is only for that. It does not turn on the microphone for anything else.</string>
+    <string name="memo_speak">Speak, and it goes straight into this vault</string>
+    <string name="memo_trial">Saving a memo starts your 30-day trial. The clock starts at the first thing that lands in a vault, and this would be it.</string>
+    <string name="memo_allow_microphone">Allow the microphone</string>
+    <string name="memo_save">Save to vault</string>
+    <string name="memo_position">Position in this recording</string>
+    <string name="memo_minutes_seconds">%1$s %2$s</string>
+    <string name="memo_recording_length">Recording, %1$s</string>
+    <string name="memo_recorded_length">Recorded, %1$s</string>
+    <string name="memo_nothing_yet">Nothing recorded yet</string>
+    <string name="memo_discard_title">Discard this recording?</string>
+    <string name="memo_discard_body">The recording has not been saved, and leaving loses it. Nothing already in the vault is affected.</string>
+    <string name="memo_keep_recording">Keep recording</string>
+    <string name="memo_already_running">A recording is already running.</string>
+    <string name="memo_could_not_record">The vault could not take a recording just now.</string>
+    <string name="memo_mic_failed">The microphone could not start.</string>
+
+    <!-- Camera -->
+    <string name="camera_recording_failed">The vault could not take a recording.</string>
+    <string name="camera_permission_body">The camera needs permission before it can take anything. Nothing captured here goes to the gallery — it is written straight into the vault, and this permission is only for that.</string>
+    <string name="camera_allow">Allow the camera</string>
+    <string name="camera_close">Close the camera</string>
+    <string name="camera_switch_back">Switch to the back camera</string>
+    <string name="camera_switch_front">Switch to the front camera</string>
+    <string name="camera_take_photo">Take photo</string>
+    <string name="camera_open_receipt">Open it in the vault</string>
+    <string name="camera_saving">Saving the capture to the vault</string>
+    <string name="camera_receipt">Last capture, saved to the vault</string>
+    <string name="camera_none">There is no camera on this device.</string>
+    <string name="camera_no_sizes">This camera reports no usable sizes.</string>
+    <string name="camera_no_still">This camera offers no still size.</string>
+    <string name="camera_taken">The camera was taken by something else.</string>
+    <string name="camera_not_opened">The camera could not be opened.</string>
+    <string name="camera_photo_failed">The photo could not be taken.</string>
+    <string name="camera_recording_refused">This device would not start a recording.</string>
+    <string name="camera_preview_failed">The camera would not start a preview.</string>
+
+    <!-- Backup and restore -->
+    <string name="backup_turn_on">Turn on backup</string>
+    <string name="backup_choose_where">Choose where to back up</string>
+    <string name="backup_now">Back up now</string>
+    <string name="backup_backed_up_to">Backed up to</string>
+    <string name="backup_how_it_works">How backup works</string>
+    <string name="backup_stop">Stop backing up</string>
+    <string name="backup_caption_off">Encrypted on this phone before it\'s copied.</string>
+    <string name="backup_caption_file">Copies the whole vault a few minutes after you make changes, and when you lock this vault.</string>
+    <string name="backup_caption_folder">Copies after every change, and when you lock this vault.</string>
+    <string name="backup_last_copied">Last copied %1$s · %2$s</string>
+    <string name="backup_is_off">Backup is off</string>
+    <string name="backup_only_here">This vault is only on this phone · %1$s</string>
+    <string name="backup_checking">Checking the folder…</string>
+    <string name="backup_up_to_date">Up to date</string>
+    <plurals name="backup_changes_to_copy">
+        <item quantity="one">%1$d change to copy</item>
+        <item quantity="other">%1$d changes to copy</item>
+    </plurals>
+    <string name="backup_copying">Copying…</string>
+    <string name="backup_progress">%1$s of %2$s</string>
+    <plurals name="backup_files_failed">
+        <item quantity="one">%1$d file didn\'t copy</item>
+        <item quantity="other">%1$d files didn\'t copy</item>
+    </plurals>
+    <string name="backup_partial_line">They\'ll be tried again next time.</string>
+    <string name="backup_unreachable_file">Can\'t reach the backup file</string>
+    <string name="backup_unreachable_folder">Can\'t reach the folder</string>
+    <string name="backup_unreachable_line">It may have been deleted, or the app that holds it signed out.</string>
+    <string name="backup_no_space">Not enough space</string>
+    <string name="backup_no_space_line">%1$s more free space is needed to hand the backup over.</string>
+    <string name="backup_just_now">just now</string>
+    <string name="backup_before_title">Before you turn on backup</string>
+    <string name="backup_before_words">Restoring needs your 24 words</string>
+    <string name="backup_before_words_body">Your passphrase can\'t open a backup. If this phone and the words are both lost, nobody can open it — you included.</string>
+    <string name="backup_before_provider">The provider sees the backup\'s size and when it changed</string>
+    <string name="backup_before_provider_body">Never a name, a date, an album or what\'s inside a file.</string>
+    <string name="backup_before_one_vault">This backup is for this vault only</string>
+    <string name="backup_before_one_vault_body">Each vault needs a backup of its own.</string>
+    <string name="backup_back_up_to">Back up to</string>
+    <string name="backup_no_destinations">No cloud app or SD card on this phone. Install your cloud provider\'s app, sign in, and come back here.</string>
+    <string name="backup_dest_cloud">One backup file, updated after changes</string>
+    <string name="backup_dest_volume">A folder, updated after every change</string>
+    <string name="backup_how_copied">What\'s copied</string>
+    <string name="backup_how_copied_body">This vault\'s files, encrypted on this phone, and the encrypted list of vaults your recovery kit opens. Your passphrase and the file it unlocks stay on this phone.</string>
+    <string name="backup_how_when">When it copies</string>
+    <string name="backup_how_when_body">After every change, with nothing to press. An SD card folder is updated within seconds and copies only what changed. A cloud app\'s backup file holds the whole vault, so it is rewritten a few minutes after you stop making changes, or at once when you lock. A vault you never open is never copied.</string>
+    <string name="backup_how_restoring">Restoring</string>
+    <string name="backup_how_restoring_body">A backup is restored with your 24 words, not your passphrase. If this phone and those words are both lost, the backup can\'t be read by anyone, including you.</string>
+    <string name="backup_how_provider">What the provider can see</string>
+    <string name="backup_how_provider_body">A cloud app sees one file: its size and when it changed. What\'s inside is sealed, so it can\'t count or measure your files. An SD card folder shows how many files there are, each one\'s size rounded up to a fixed step, and when each changed — items over 16 MB show as a group, and the pattern could identify them as this app\'s backup. Neither sees a name, a date, an album, or anything inside a file.</string>
+    <string name="backup_how_per_vault">One backup per vault</string>
+    <string name="backup_how_per_vault_body">Each vault needs its own backup. Every backup also holds the same encrypted list of vaults, so someone who can see two of them can tell they belong together.</string>
+    <string name="backup_how_destinations">Cloud apps and SD cards</string>
+    <string name="backup_how_destinations_body">A cloud app gets one file holding the whole vault, sealed so the provider sees only its size and when it changed. It is rewritten in full each time. An SD card gets a folder that copies only what changed. This phone\'s own storage is not offered — a copy there is lost with the phone.</string>
+    <string name="backup_how_deleting">Deleting and stopping</string>
+    <string name="backup_how_deleting_body">Deleting here removes it from the backup on the next copy. Copies your provider keeps in its trash or version history are beyond this app\'s reach — including an earlier backup file, if a copy was interrupted. Stopping backup leaves the backup where it is.</string>
+    <string name="backup_stop_title">Stop backing up this vault?</string>
+    <string name="backup_stop_body">The backup already made stays where it is. Delete it through your provider if you want it gone.</string>
+    <string name="backup_keep">Keep backing up</string>
+    <string name="backup_on_sd_card">Backup is on an SD card</string>
+    <string name="restore_into_list">Choose the backup of a vault on this list — the file in your cloud app, or the folder on your SD card. It comes back onto this list.</string>
+    <string name="restore_lead">Choose the backup file you saved to your cloud app, or the folder on your SD card. You\'ll need the 24 words from your recovery kit — your passphrase can\'t open a backup.</string>
+    <string name="restore_choose_file">Choose the backup file</string>
+    <string name="restore_copying">Copying files… %1$d of %2$d</string>
+    <string name="import_title">Import a vault</string>
+    <string name="import_lead">Bring back a vault from a .vault file, or from a backup saved to your cloud app or an SD card.</string>
+    <string name="import_choose_file">Choose a file</string>
+    <string name="import_vault_file">.vault file</string>
+    <string name="import_list_full">This list is full. Remove a vault from it to make room, then import again.</string>
+    <string name="import_failed">That didn\'t open. Either the passphrase is wrong, or this isn\'t a .vault file this app can read.</string>
+    <string name="import_passphrase_label">Passphrase for this file</string>
+    <string name="import_importing">Importing</string>
+    <string name="import_action">Import vault</string>
+    <string name="import_backup_here">This is a backup of a vault on this list.</string>
+    <string name="import_restore_vault">Restore vault</string>
+    <string name="import_other_list">This backup is from another vault list. Type the 24 words from that list\'s recovery kit.</string>
+    <string name="import_own_list">It comes back as its own vault list, separate from this one, opened with its own passphrase. Its 24 words don\'t change.</string>
+    <string name="import_no_room">There\'s no room for another vault list on this phone.</string>
+    <string name="import_restore_list">Restore vault list</string>
+    <string name="import_copying">Copying files…</string>
+    <string name="import_vault_restored">Vault restored</string>
+    <string name="import_list_restored">Vault list restored</string>
+    <string name="import_vault_restored_body">It\'s back on its vault list. Open that list with its passphrase to see it.</string>
+    <string name="import_list_restored_body">Lock the app and enter its passphrase to open it.</string>
+
+    <!-- Sizes and units -->
+    <string name="size_bytes">%1$d B</string>
+    <string name="size_kb">%1$s kB</string>
+    <string name="size_mb">%1$s MB</string>
+    <string name="size_gb">%1$s GB</string>
+    <string name="size_tb">%1$s TB</string>
+    <string name="size_pb">%1$s PB</string>
+
+    <!-- Unvault and the encrypted archive -->
+    <plurals name="unvault_items">
+        <item quantity="one">Unvault %1$d item</item>
+        <item quantity="other">Unvault %1$d items</item>
+    </plurals>
+    <plurals name="unvault_selected_body">
+        <item quantity="one">The %1$d item you selected is decrypted, written out, checked, and then removed from the vault. Everything you did not select stays where it is.</item>
+        <item quantity="other">The %1$d items you selected are decrypted, written out, checked, and then removed from the vault. Everything you did not select stays where it is.</item>
+    </plurals>
+    <plurals name="unvault_all_body">
+        <item quantity="one">Every one of the %1$d item in this vault is decrypted, written out, checked, and then removed from the vault. When it finishes the vault is empty and your files are ordinary files again.</item>
+        <item quantity="other">Every one of the %1$d items in this vault is decrypted, written out, checked, and then removed from the vault. When it finishes the vault is empty and your files are ordinary files again.</item>
+    </plurals>
+    <string name="unvault_checked">Each file is read back and compared before its encrypted copy is deleted. Anything that does not match is left in the vault and listed in the manifest.</string>
+    <string name="unvault_where">Where</string>
+    <string name="unvault_gallery">Photos and Videos</string>
+    <string name="unvault_folder_chosen">Chosen folder</string>
+    <string name="unvault_choose_folder">Choose a folder</string>
+    <string name="unvault_remove_details">Remove photo details</string>
+    <string name="unvault_details_kept">Exported photos keep everything they carry, including their location.</string>
+    <string name="unvault_passphrase_needed">Enter your passphrase to continue. Biometric unlock will not do this.</string>
+    <string name="unvault_passphrase_needed_own">Enter this vault\'s own passphrase to continue. Your vault list\'s passphrase and biometric unlock will not do this.</string>
+    <string name="unvault_wrong_passphrase">That did not open this vault.</string>
+    <string name="unvault_progress">%1$d of %2$d out</string>
+    <string name="unvault_progress_left">%1$d of %2$d out, %3$d left in the vault</string>
+    <string name="unvault_busy">Unvaulting</string>
+    <string name="archive_title">Moving to a new device?</string>
+    <string name="archive_body">Save one encrypted .vault file you can open on the new phone. Choose a passphrase for the file itself — it is not the one that opens your vaults, and you will need it on the other device. It does not empty this vault, and Items in the Trash are not included.</string>
+    <string name="archive_passphrase_label">Passphrase for the file</string>
+    <string name="archive_save">Save encrypted archive</string>
+
+    <!-- Sharing -->
+    <string name="lifespan_day">24 hours</string>
+    <string name="lifespan_week">7 days</string>
+    <string name="lifespan_month">30 days</string>
+    <string name="share_trial_ended">Your trial has ended</string>
+    <string name="share_trial_ended_body">Sending a share needs the one-time purchase. Opening shares sent to you, and opening, viewing and exporting your own things, stay free.</string>
+    <string name="share_lead_contact">This makes one encrypted file that only %1$s\'s phone can open. There is no code to pass on.</string>
+    <string name="share_lead_code">This makes one encrypted file and a four-word code. Whoever you send it to needs this app and the code to open it.</string>
+    <string name="share_who">Who can open this</string>
+    <string name="share_contact_detail">Opens on %1$s\'s phone, no code</string>
+    <string name="share_anyone">Anyone with the code</string>
+    <string name="share_anyone_detail">Less secure. Anyone with the file and the words can open it.</string>
+    <string name="share_how_long">How long it opens for</string>
+    <string name="share_no_limit">No limit</string>
+    <string name="share_no_limit_detail">Opens whenever they like</string>
+    <string name="share_open_once">Open once</string>
+    <string name="share_open_once_detail">Opens once, then never again</string>
+    <string name="share_expires">Expires</string>
+    <string name="share_expires_detail">Opens until %1$s</string>
+    <string name="share_limits_contact">These limits are kept by the app on %1$s\'s phone, and no other phone can open the file. Once you send the file you cannot take it back.</string>
+    <string name="share_limits_code">These limits are kept by the app on the phone that opens it. Once you send the file you cannot take it back.</string>
+    <string name="share_photo_carries">What the photo carries</string>
+    <string name="share_remove_details">Remove the details</string>
+    <string name="share_as_is">Send it as it is</string>
+    <string name="share_as_is_detail">Location, date and camera info go too</string>
+    <string name="share_sealing">Sealing</string>
+    <string name="share_try_again">Try again</string>
+    <string name="share_create">Create share</string>
+    <string name="share_less_secure">Less secure than sending to a contact</string>
+    <string name="share_risk_any_phone">Anyone who has the file and the four words can open it, on any phone.</string>
+    <string name="share_risk_once">“Open once” means once per phone. Passed on, it opens again.</string>
+    <string name="share_risk_same_chat">Words sent in the same chat as the file give away both.</string>
+    <string name="share_risk_guessing">Anyone who keeps a copy of the file can keep guessing the words, with no limit.</string>
+    <string name="share_pair_first">To share with one person only, pair with them first.</string>
+    <string name="share_pair">Pair with someone</string>
+    <string name="share_code_title">The code</string>
+    <string name="share_code_label">Share code: %1$s</string>
+    <string name="share_code_separately">Send the code a different way than the file.</string>
+    <string name="share_code_both">Anyone who has both can open it. A code typed into the same chat as the file gives up both at once.</string>
+    <string name="share_code_once">This code is shown once and is not saved. Copy it now.</string>
+    <string name="share_send_file">Send file…</string>
+    <string name="share_copy_code">Copy code</string>
+    <string name="share_sealed_to">Sealed to %1$s</string>
+    <string name="share_sealed_body">Only %1$s can open this. The file is sealed to their phone — no code to send.</string>
+    <string name="share_save_device">Save to device</string>
+    <string name="share_saved">Saved. Attach it from Files in the app you send with.</string>
+    <string name="share_save_failed">The file couldn\'t be saved. Try again, or send it instead.</string>
+    <string name="share_save_hint">Or save it and attach it from Files. The app you send with then can\'t tell which app made it.</string>
+    <string name="share_refused_trash">Items in the trash cannot be shared.</string>
+    <string name="share_refused_no_length">This video\'s length can\'t be read, so it can\'t be shared.</string>
+    <string name="share_refused_too_long">Videos longer than %1$d seconds can\'t be shared.</string>
+
+    <!-- Opening a share -->
+    <string name="share_open_title">Open a share</string>
+    <string name="share_open_reading">Reading the file</string>
+    <string name="share_open_enter_code">If this was sent with a code, enter it.</string>
+    <string name="share_open_code_hint">The sender will have given you four words a different way than the file.</string>
+    <string name="share_open_failed">This share could not be opened.</string>
+    <string name="share_open_check">Check the four words, and that this is the file you were sent.</string>
+    <string name="share_open_action">Open share</string>
+    <string name="share_open_no_contacts">This phone can\'t read its contacts, so a share sealed to it can\'t be opened here.</string>
+    <string name="share_open_contacts">Open Contacts</string>
+    <string name="share_open_view">View</string>
+    <string name="share_open_keep">Keep in this vault</string>
+    <string name="share_open_keep_needs_purchase">Keeping shares needs the one-time purchase. When you leave, nothing is saved.</string>
+    <string name="share_open_leave">If you leave without keeping it, nothing is saved.</string>
+    <string name="share_open_cannot_keep">This share can\'t be kept. When you leave, nothing is saved.</string>
+    <string name="share_open_sealed_here">This share was sealed to this phone. No code is needed to open it.</string>
+    <string name="share_open_open">Open</string>
+    <string name="share_open_newer">This share was made by a newer version of the app. Update this app to open it.</string>
+    <string name="share_open_already_opened">This share was set to open once, and it has been opened.</string>
+    <string name="share_open_expired">This share expired on %1$s.</string>
+    <string name="share_open_code_correct">The code was correct. This limit is kept by the app on this phone, and the sender cannot lift it.</string>
+    <string name="share_open_limit_once">The sender set this to open once. This limit is kept by the app on this phone.</string>
+    <string name="share_open_limit_expiry">The sender set this to stop opening on %1$s. This limit is kept by the app on this phone.</string>
+
+    <!-- Contacts and pairing -->
+    <string name="contacts_waiting">Waiting</string>
+    <string name="contacts_invite_sent">Invite sent — waiting for their reply</string>
+    <string name="contacts_reply_sent">Reply sent — waiting for their confirmation</string>
+    <string name="contacts_confirmation_ready">Confirmation ready to send</string>
+    <string name="contacts_add">Add a contact</string>
+    <string name="contacts_together">Together</string>
+    <string name="contacts_together_detail">Scan each other\'s codes. The strongest way to pair.</string>
+    <string name="contacts_not_together">Not together</string>
+    <string name="contacts_not_together_detail">Send them an invite file and four words.</string>
+    <string name="contacts_have_invite">I have an invite</string>
+    <string name="contacts_have_invite_detail">Open the file they sent and type their four words.</string>
+    <string name="contacts_empty">No contacts yet. Pair with someone — together, or by sending them an invite — then you can send them a file without a code.</string>
+    <string name="contacts_remove_named">Remove %1$s</string>
+    <string name="contacts_unreadable">This phone cannot read its contacts.</string>
+    <string name="contacts_unreadable_body">The contact list is locked to a key held by this device, and that key is gone — which is what a restore onto a different phone leaves behind. The list itself is untouched; nothing here can open it.\n\nStarting again gives this phone a new pairing code. Anyone you paired with will need to scan it again.</string>
+    <string name="contacts_new_identity">Start a new identity</string>
+    <string name="contacts_new_identity_title">Start a new identity?</string>
+    <string name="contacts_new_identity_body">The unreadable contact list is deleted and this phone gets a new pairing code. Everyone you paired with will need to scan it again.</string>
+    <string name="contacts_start_again">Start again</string>
+    <string name="contacts_remove_title">Remove %1$s?</string>
+    <string name="contacts_remove_body">Anything you have already sent stays sent. You can pair with them again.</string>
+    <string name="pairing_title">Pair a contact</string>
+    <string name="pairing_saved">Saved %1$s. Now let them scan your code.</string>
+    <string name="pairing_show">Show this to the other phone, then scan theirs. You each need to scan the other\'s code.</string>
+    <string name="pairing_in_person">Scanning in person is the strongest way to pair. Nothing about it leaves this phone until you send someone a file.</string>
+    <string name="pairing_scan">Scan their code</string>
+    <string name="pairing_your_code">Your pairing code</string>
+    <string name="pairing_camera_permission">The camera needs permission before it can read a code. Nothing it sees is recorded — the frames are decoded and dropped, and this permission is only for that.</string>
+    <string name="pairing_point">Point this at the other phone\'s code.</string>
+    <string name="pairing_camera_looking">Camera, looking for a pairing code</string>
+    <string name="pairing_who">Who is this? The name is yours alone — it is stored on this phone and never sent anywhere.</string>
+    <string name="pairing_save">Save contact</string>
+    <string name="remote_invite_title">Invite someone</string>
+    <string name="remote_answer_title">Answer an invite</string>
+    <string name="remote_important">Important</string>
+    <string name="remote_name_too_long">That name is too long. Try a shorter one.</string>
+    <string name="remote_name_yours">The name is yours alone and stays on this phone.</string>
+    <string name="remote_who_inviting">Who are you inviting?</string>
+    <string name="remote_make_invite">Make invite</string>
+    <string name="remote_invite_ready">Invite ready</string>
+    <string name="remote_invite_send">Send %1$s the invite file. Then give them these four words a different way — say them on a call or in person.</string>
+    <string name="remote_your_words">Your four words: %1$s</string>
+    <string name="remote_invite_strict">Whoever has the file and these words can become this contact. Give the words only to %1$s, never in the same chat as the file.</string>
+    <string name="remote_open_reply">Open %1$s\'s reply</string>
+    <string name="remote_send_invite_again">Send invite file again</string>
+    <string name="remote_waiting_reply_today">Waiting for %1$s\'s reply. This invite ends at %2$s.</string>
+    <string name="remote_waiting_reply_tomorrow">Waiting for %1$s\'s reply. This invite ends tomorrow at %2$s.</string>
+    <string name="remote_send_invite">Send invite file</string>
+    <string name="remote_cancel_invite">Cancel invite</string>
+    <string name="remote_now_contact">%1$s is now a contact.</string>
+    <string name="remote_send_confirmation_body">Send them this confirmation file so they can add you too.</string>
+    <string name="remote_send_confirmation_again">Send confirmation file again</string>
+    <string name="remote_send_confirmation">Send confirmation file</string>
+    <string name="remote_open_invite">Open the invite file</string>
+    <string name="remote_who_sent">Who sent it?</string>
+    <string name="remote_their_words">Their four words</string>
+    <string name="remote_know_sender">Only continue if you know who sent this. Whoever made the invite becomes a contact.</string>
+    <string name="remote_make_reply">Make reply</string>
+    <string name="remote_send_reply_title">Send your reply</string>
+    <string name="remote_send_reply_body">Send %1$s this reply file.</string>
+    <string name="remote_open_confirmation">Open %1$s\'s confirmation</string>
+    <string name="remote_send_reply_again">Send reply file again</string>
+    <string name="remote_waiting_confirmation_today">Waiting for %1$s\'s confirmation. This ends at %2$s.</string>
+    <string name="remote_waiting_confirmation_tomorrow">Waiting for %1$s\'s confirmation. This ends tomorrow at %2$s.</string>
+    <string name="remote_send_reply">Send reply file</string>
+    <string name="remote_ended">This invite has ended</string>
+    <string name="remote_ended_reply">That reply didn\'t match, so this invite has ended. Check the four words were typed exactly and that you both have the latest version of the app.</string>
+    <string name="remote_ended_this">This has ended</string>
+    <string name="remote_ended_confirmation">That confirmation didn\'t match, so this has ended. Ask %1$s to make a new invite, and check the four words with them.</string>
+    <string name="remote_ended_expired">This invite has ended. Invites last 24 hours.</string>
+    <string name="remote_ended_already">This invite has already ended.</string>
+    <string name="remote_own_invite">This is your own invite</string>
+    <string name="remote_own_invite_body">That\'s this phone\'s own invite.</string>
+    <string name="remote_unreadable_body">The contact list is locked to a key this device no longer has. Contacts says what you can do about it.</string>
+    <string name="remote_new_invite">Make a new invite</string>
+
+    <!-- Removing the originals from the gallery -->
+    <string name="originals_title">Remove the originals from your gallery?</string>
+    <string name="originals_removed">The originals were removed from your gallery.</string>
+    <plurals name="originals_photos">
+        <item quantity="one">%1$d photo</item>
+        <item quantity="other">%1$d photos</item>
+    </plurals>
+    <plurals name="originals_videos">
+        <item quantity="one">%1$d video</item>
+        <item quantity="other">%1$d videos</item>
+    </plurals>
+    <plurals name="originals_in_vault">
+        <item quantity="one">%1$s is now in this vault. Android will ask you to confirm.</item>
+        <item quantity="other">%1$s are now in this vault. Android will ask you to confirm.</item>
+    </plurals>
+    <plurals name="originals_stay">
+        <item quantity="one">%1$d other can\'t be removed from here and will stay in your gallery.</item>
+        <item quantity="other">%1$d others can\'t be removed from here and will stay in your gallery.</item>
+    </plurals>
+
+    <!-- Lock screen warnings -->
+    <string name="warning_rooted">This device appears to be rooted. Another app with root can read this vault\'s memory while it is open.</string>
+    <string name="warning_debuggable">This is a debuggable build. Its memory can be read over USB while the vault is open.</string>
+    <string name="warning_debugger">A debugger is attached to this app right now.</string>
+    <plurals name="warning_accessibility">
+        <item quantity="one">%1$d accessibility service is running. Such a service can read what is on screen, including anything you open here.</item>
+        <item quantity="other">%1$d accessibility services are running. Such a service can read what is on screen, including anything you open here.</item>
+    </plurals>
+
+    <!-- Covers — the calculator, the music player and the voice recorder -->
+    <string name="calc_divide_by_zero">Can\'t divide by zero</string>
+    <string name="calc_undefined">Undefined</string>
+    <string name="calc_infinity">Infinity</string>
+    <string name="calc_invalid_format">Invalid format</string>
+    <string name="pattern_draw">Draw your pattern</string>
+    <string name="pattern_wrong">Wrong pattern</string>
+    <string name="music_unknown_track">Unknown track</string>
+    <string name="music_unknown_artist">Unknown artist</string>
+    <string name="music_unknown_album">Unknown album</string>
+    <string name="music_tracks">Tracks</string>
+    <string name="music_albums">Albums</string>
+    <string name="music_artists">Artists</string>
+    <string name="music_shuffle_all">Shuffle all</string>
+    <plurals name="music_track_count">
+        <item quantity="one">%1$d track</item>
+        <item quantity="other">%1$d tracks</item>
+    </plurals>
+    <string name="music_close_player">Close player</string>
+    <string name="music_nothing_playing">Nothing playing</string>
+    <string name="music_shuffle_on">Shuffle on</string>
+    <string name="music_shuffle_off">Shuffle off</string>
+    <string name="music_previous">Previous</string>
+    <string name="music_next">Next</string>
+    <string name="music_repeat_one">Repeat one</string>
+    <string name="music_repeat_all">Repeat all</string>
+    <string name="music_repeat_off">Repeat off</string>
+    <string name="music_tap_to_open">Tap to open the player</string>
+    <string name="music_loading">Loading library…</string>
+    <string name="music_none">No music on this device</string>
+    <string name="music_none_line">Songs you add will appear here.</string>
+    <string name="music_access_off">Music access is off</string>
+    <string name="music_access_off_line">Turn on Music and audio in Settings to play what\'s on this device.</string>
+    <string name="recorder_default_title">Recording %1$s</string>
+    <plurals name="recorder_count">
+        <item quantity="one">%1$d recording · %2$s</item>
+        <item quantity="other">%1$d recordings · %2$s</item>
+    </plurals>
+    <string name="recorder_search">Search recordings</string>
+    <string name="recorder_hide_controls">Hide controls</string>
+    <string name="recorder_show_controls">Show controls</string>
+    <string name="recorder_paused">Paused</string>
+    <string name="recorder_resume">Resume</string>
+    <string name="recorder_delete_title">Delete “%1$s”?</string>
+    <string name="recorder_delete_body">This recording will be removed from this device.</string>
+    <string name="recorder_none">No recordings yet</string>
+    <string name="recorder_mic_off">Microphone access is off</string>
+    <string name="recorder_none_line">Press record to make one.</string>
+    <string name="recorder_mic_off_line">Turn on Microphone in Settings to record.</string>
+    <string name="recorder_no_match">No recordings match “%1$s”</string>
+    <string name="recorder_paused_length">Paused, %1$s</string>
+
+    <!-- The unlock digest — what happened since the last unlock -->
+    <string name="digest_altered">This event log was altered at entry %1$d.</string>
+    <string name="digest_not_opened_since">Not opened since %1$s.</string>
+    <plurals name="digest_recoveries">
+        <item quantity="one">%1$d recovery kit was used to open this vault.</item>
+        <item quantity="other">%1$d recovery kits were used to open this vault.</item>
+    </plurals>
+    <plurals name="digest_failed">
+        <item quantity="one">%1$d unlock attempt failed.</item>
+        <item quantity="other">%1$d unlock attempts failed.</item>
+    </plurals>
+    <plurals name="digest_imported">
+        <item quantity="one">%1$d item imported.</item>
+        <item quantity="other">%1$d items imported.</item>
+    </plurals>
+    <plurals name="digest_deleted">
+        <item quantity="one">%1$d source file deleted.</item>
+        <item quantity="other">%1$d source files deleted.</item>
+    </plurals>
+    <string name="digest_biometric">Biometric unlock was invalidated by an enrolment change.</string>
+    <string name="digest_dev_options">Developer options or USB debugging were enabled on this device.</string>
+    <string name="digest_root">This device\'s root status changed.</string>
+    <string name="digest_data_cleared">This app\'s data appears to have been cleared.</string>
+    <string name="digest_new_device">This vault is running on a different device than it was set up on.</string>
+    <string name="digest_clock">This device\'s clock moved backwards.</string>
+    <string name="vault_passphrase_heading">Passphrase</string>
+    <string name="vault_passphrase_state_list">Opens with your vault list\'s passphrase.</string>
+    <string name="vault_passphrase_state_own">Opens only with its own passphrase.</string>
+    <string name="vault_passphrase_add">Add a passphrase</string>
+    <string name="vault_passphrase_add_supporting">Only that passphrase will open it</string>
+    <string name="vault_passphrase_change">Change passphrase</string>
+    <string name="vault_passphrase_remove">Remove passphrase</string>
+    <string name="vault_passphrase_remove_supporting">Your vault list\'s passphrase will open it</string>
+    <string name="vault_passphrase_added">Passphrase added.</string>
+    <string name="vault_passphrase_changed">Passphrase changed.</string>
+    <string name="vault_passphrase_removed">Passphrase removed.</string>
+    <string name="vault_passphrase_add_lead">Once it\'s added, only this passphrase opens %1$s. Your vault list\'s passphrase won\'t, and neither will the list\'s recovery kit — so %1$s gets a recovery kit of its own.</string>
+    <string name="vault_passphrase_list_label">Vault list passphrase</string>
+    <string name="vault_passphrase_list_supporting">The one that opens this app\'s list of vaults.</string>
+    <string name="vault_passphrase_list_empty">Enter the passphrase that opens your vault list.</string>
+    <string name="vault_passphrase_new_again">New passphrase again</string>
+    <string name="vault_passphrase_backups_heading">Earlier backups</string>
+    <string name="vault_passphrase_add_backups">A backup saved before now still opens %1$s with your vault list\'s passphrase.</string>
+    <string name="vault_passphrase_add_button">Add passphrase</string>
+    <string name="vault_passphrase_adding">Adding…</string>
+    <string name="vault_passphrase_change_lead">The recovery kit for %1$s stays the same, and its 24 words still open it. Your vault list\'s passphrase still won\'t.</string>
+    <string name="vault_passphrase_current_label">Current passphrase</string>
+    <string name="vault_passphrase_current_empty">Enter this vault\'s current passphrase.</string>
+    <string name="vault_passphrase_change_backups">A backup saved before now opens %1$s with the old passphrase.</string>
+    <string name="vault_passphrase_changing">Changing…</string>
+    <string name="vault_passphrase_remove_opens">Your vault list\'s passphrase opens it</string>
+    <string name="vault_passphrase_remove_opens_body">%1$s will open straight from the list, with no passphrase of its own.</string>
+    <string name="vault_passphrase_remove_kit">Your list\'s recovery kit covers it</string>
+    <string name="vault_passphrase_remove_kit_body">The list\'s 24 words will recover %1$s. Its own 24 words still open it too, and can\'t be cancelled.</string>
+    <string name="vault_passphrase_remove_captures">Its intruder captures move home</string>
+    <string name="vault_passphrase_remove_captures_body">Its timeline joins Intruder capture on the home screen, and its own capture settings are turned off.</string>
+    <string name="vault_passphrase_removing">Removing…</string>
+    <plurals name="kit_remaining_views_fewer">
+        <item quantity="one">After you continue, you can view them %1$d more time from the menu. After that they can\'t be shown again, and the copy you write down will be the only one.</item>
+        <item quantity="other">After you continue, you can view them %1$d more times from the menu. After that they can\'t be shown again, and the copy you write down will be the only one.</item>
+    </plurals>
+    <string name="kit_remaining_views_none">This app has already shown them as many times as it can, so after you continue they can\'t be shown again. The copy you write down will be the only one.</string>
+    <!-- `third-party-notices`. The Open-source licences row and its two screens. -->
+    <string name="licences_title">Open-source licences</string>
+    <plurals name="licences_drawer_line">
+        <item quantity="one">%1$d library and its licence</item>
+        <item quantity="other">%1$d libraries and their licences</item>
+    </plurals>
+    <string name="licences_lead">%1$s is built with these libraries. Each is used under its own licence, shown below.</string>
+    <string name="licences_open_action">open licence</string>
+    <string name="licences_version">Version %1$s</string>
+    <string name="licences_source">Source</string>
+    <string name="licences_licence">Licence</string>
+    <!-- Version, then licence name: two values, no words of its own. -->
+    <string name="licences_row_line" translatable="false">%1$s · %2$s</string>
+</resources>

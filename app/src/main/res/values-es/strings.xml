@@ -1,0 +1,1819 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      The app's text — `app-languages`. Every string a person reads is here, grouped by the
+      screen it appears on, with a comment heading each group. The eight translations keep
+      this file's key order so a reviewer can read them side by side.
+
+      Left in code on purpose, in every language (`app-languages` D4):
+      - Log lines, exception and require() messages: read in logcat and crash reports,
+        never on a screen.
+      - Data written into files and read back by code: the export manifest and its
+        reasons, export stamps and EXIF/XMP fields, file and folder names the app finds
+        again by name (the gallery's "Vault" export folder, a received share's "Shared item" fallback name),
+        container and blob names, preference keys and MIME types.
+      - The recovery and share-code words: the BIP-39 English list in res/raw. A kit
+        written down under one language has to open the vault under another.
+      - The calculator's notation (sin, cos, tan, ln, log, π, e, EXP, AC, DEL, INV,
+        DEG/RAD) and the language names on the Language sheet, which are each language's
+        own name for itself.
+      - The debug-only Crash log screen and its drawer row, which ship in no release build.
+    -->
+
+    <!--
+      The application label: "Kova", the owner's name for the app (2026-10-25). It
+      replaced "Toolbox", an agent-drafted category name nobody chose. It is the same
+      in every locale.
+
+      This is what notifications, Settings > Apps, the app-info page, storage,
+      battery, the permission manager and every runtime permission dialog read. An
+      activity-alias label does not reach it and no runtime API overrides it, so
+      whatever stands here is what a cover identity says about itself the moment any
+      of those surfaces appears. With "Vault" here, granting the recorder its
+      microphone read "Allow Vault to record audio?" over a voice recorder, which is
+      why it must never be "Vault" or any identity's name.
+
+      P2-22 left this as "Vault" on two arguments. The first — that a label other than
+      an alias's imposes a build-time choice on every install including the honest
+      default — is true, and is the price: a user who never wears a cover sees "Vault"
+      on their home screen (the alias label, unchanged) and this word in Settings. The
+      second — that it would desync the label from the name the Play listing is
+      approved under — is simply wrong. The Play Console title is a separate field
+      from android:label; the two differ routinely and nothing couples them.
+    -->
+    <string name="app_name">Kova</string>
+
+    <!--
+      Launcher identity labels — P2-22. These are the words the launcher and recents
+      show, in the device's language (`app-languages` D5); LauncherIdentity names these
+      same resources, and LauncherIdentityScanTest fails the build if the two disagree.
+    -->
+    <string name="identity_vault">Bóveda</string>
+
+    <!--
+      P2-24's cover identities. Ordinary names for ordinary apps: the cover has to be
+      a believable instance of the thing it claims to be, and a clever name is the
+      first thing that makes somebody look twice.
+    -->
+    <string name="identity_calculator">Calculadora</string>
+    <string name="identity_musicplayer">Música</string>
+    <string name="identity_voicerecorder">Grabadora de voz</string>
+
+    <!-- Language — the drawer row and the Language sheet -->
+    <!-- Not a phrase: the tag of the language this file is written in. Each translation
+         names its own (ja, ko, pt-BR, …). System default's line reads it to say which
+         language the device's setting resolves to. -->
+    <string name="language_resource_tag">es</string>
+    <string name="language_german">Alemán</string>
+    <string name="language_english">Inglés</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_french">Francés</string>
+    <string name="language_portuguese_brazil">Portugués (Brasil)</string>
+    <string name="language_japanese">Japonés</string>
+    <string name="language_korean">Coreano</string>
+    <string name="language_chinese_simplified">Chino simplificado</string>
+    <string name="language_chinese_traditional">Chino tradicional</string>
+    <string name="language_title">Idioma</string>
+    <string name="language_system_default">Predeterminado del sistema</string>
+    <string name="language_explainer">Cambia solo el idioma de esta app. El idioma de tu teléfono no cambia.</string>
+    <string name="language_suggested">Sugerencias</string>
+    <string name="language_all">Todos los idiomas</string>
+    <string name="language_system_default_detail">%1$s — según tu teléfono</string>
+    <string name="language_changed">Idioma cambiado a %1$s</string>
+    <string name="drawer_language">Idioma \u0020· \u0020%1$s</string>
+
+    <!-- Messages — unlock, backup, restore and vault lifecycle (MainActivity) -->
+    <string name="backup_incomplete">Este archivo de copia de seguridad está incompleto; puede que sea de una copia que no terminó.</string>
+    <string name="backup_unreadable">No se pudo leer la copia de seguridad. Comprueba que la app que la guarda tenga una sesión iniciada.</string>
+    <string name="backup_other_list">Esta copia de seguridad es de otra lista de bóvedas. Usa “Importar una bóveda desde un archivo” para recuperarla.</string>
+    <string name="bio_invalidated">El desbloqueo biométrico se desactivó porque cambiaron tus datos biométricos. Usa tu frase de contraseña.</string>
+    <string name="bio_after_migration">El desbloqueo biométrico se desactivó tras esta actualización. Vuelve a activarlo en Configuración.</string>
+    <string name="vault_newer_version">Esta bóveda se abrió por última vez con una versión más reciente de la app. Tus archivos están a salvo y no se cambió nada. Actualiza la app para abrirla.</string>
+    <string name="vault_index_relinked">Hubo que volver a vincular el índice de esta bóveda tras un fallo. Se encontró todo y no se perdió nada.</string>
+    <string name="vault_index_unreadable">No se pudo abrir esta bóveda. Su índice falta o está dañado, y al buscar en los archivos de la bóveda no se encontró otro. Tu kit de recuperación puede restaurarla.</string>
+    <string name="capture_not_saved">No se pudo guardar esa captura en la bóveda.</string>
+    <string name="backup_folder_on_phone">Esa carpeta está en este teléfono. Una copia de seguridad aquí se pierde con el teléfono; elige una app en la nube o una tarjeta SD.</string>
+    <string name="restore_device_not_empty">Este dispositivo ya tiene una bóveda. Una copia de seguridad solo se puede restaurar en uno vacío.</string>
+    <string name="restore_open_vaults_first">Abre primero tus bóvedas.</string>
+    <string name="restore_file_not_opened">No se pudo abrir el archivo de copia de seguridad.</string>
+    <string name="restore_file_unreadable">No se pudo leer el archivo de copia de seguridad. Comprueba que la app que lo guarda tenga una sesión iniciada.</string>
+    <string name="restore_no_backup_in_folder">No se encontró ninguna copia de seguridad en esa carpeta.</string>
+    <string name="capture_mode_permission_denied">Ese modo necesita el permiso que acaba de pedir. Está desactivado.</string>
+    <string name="decoy_trial_notice">Crear una bóveda señuelo importa fotos reales, y la prueba de 30 días empieza con lo primero que se agrega a una bóveda. Déjalo para después si prefieres empezarla con tus propias cosas.</string>
+    <string name="vault_list_not_saved">No se pudo guardar.</string>
+    <string name="editor_could_not_open">No se pudo abrir este elemento para editarlo.</string>
+    <string name="folder_name_length">El nombre de una carpeta necesita al menos un carácter y como máximo %1$d.</string>
+    <string name="folder_name_duplicate">Ya hay una carpeta con ese nombre aquí.</string>
+    <string name="folder_cycle">Una carpeta no puede estar dentro de sí misma.</string>
+    <string name="vault_destroy_failed">No se pudo quitar “%1$s”. No se perdió nada de su contenido.</string>
+    <string name="share_create_failed">No se pudo crear el elemento compartido. Puede que no haya suficiente espacio en el dispositivo.</string>
+    <string name="setup_vault_not_created">No se pudo crear la bóveda. Inténtalo de nuevo.</string>
+    <string name="decoy_choose_photos_first">Elige primero las fotos.</string>
+    <string name="decoy_set_passphrase_first">Primero define la frase de contraseña del señuelo.</string>
+    <string name="decoy_passphrase_in_use">Esa frase de contraseña ya abre una bóveda en este dispositivo. Vuelve atrás y elige otra.</string>
+    <string name="decoy_no_room">No hay espacio para otra bóveda en este dispositivo.</string>
+    <string name="decoy_passphrase_needed">Este dispositivo ya tiene un señuelo, y configurar uno ahora podría sobrescribirlo. Vuelve atrás e ingresa también la frase de contraseña del señuelo.</string>
+    <string name="decoy_not_created">No se creó ninguna bóveda.</string>
+    <string name="recovery_words_wrong_backup">Estas palabras no abren esta copia de seguridad.</string>
+    <string name="import_words_wrong_backup">Estas palabras no abren esta copia de seguridad.</string>
+    <string name="recovery_list_not_here">La lista de bóvedas de esta copia de seguridad no está en este teléfono. Desbloquea y elige “Importar una bóveda desde un archivo” en el menú.</string>
+    <string name="this_vault">esta bóveda</string>
+    <string name="that_vault">Esa bóveda</string>
+    <string name="backup_open_vault_first_file">Abre primero la bóveda de la que quieres hacer una copia de seguridad. Una copia guarda una bóveda.</string>
+    <string name="backup_open_vault_first_folder">Abre primero la bóveda de la que quieres hacer una copia de seguridad. Una carpeta guarda una bóveda.</string>
+    <string name="backup_folder_another_vault">Esa carpeta ya guarda otra bóveda de este dispositivo. Cada bóveda necesita su propia carpeta; hacer la copia aquí borraría lo que contiene.</string>
+    <string name="backup_folder_another_install">Esa carpeta ya guarda otra copia de seguridad. Elige una carpeta vacía o una que haya llenado esta bóveda; hacer la copia aquí borraría lo que contiene.</string>
+    <plurals name="vault_destroy_items_left">
+        <item quantity="one">No se pudo exportar %1$d elemento, así que esta bóveda se conservó. Todo lo que sigue en ella está intacto.</item>
+        <item quantity="many">No se pudieron exportar %1$d elementos, así que esta bóveda se conservó. Todo lo que sigue en ella está intacto.</item>
+        <item quantity="other">No se pudieron exportar %1$d elementos, así que esta bóveda se conservó. Todo lo que sigue en ella está intacto.</item>
+    </plurals>
+    <string name="kit_print_job">Kit de recuperación de la bóveda</string>
+    <string name="panic_wrong_passphrase">Esa frase de contraseña no abre esta lista de bóvedas.</string>
+    <string name="panic_wrong_phrase">Esa no es tu frase de pánico.</string>
+    <string name="panic_too_close">Se parece demasiado a tu frase de contraseña; un error de escritura podría activarla. Elige algo diferente.</string>
+    <string name="panic_in_use">Esa frase ya abre una lista de bóvedas. Elige otra.</string>
+    <string name="panic_no_room">No hay espacio para otra frase en este dispositivo.</string>
+    <string name="panic_cleared">Tu frase de pánico anterior ya no funciona aquí, así que está desactivada. Define una nueva.</string>
+    <string name="panic_not_saved">No se guardó. Inténtalo de nuevo.</string>
+    <string name="pairing_not_a_code">Eso no es un código de vinculación.</string>
+    <string name="pairing_newer_app">Este código se creó con una versión más reciente de la app. Actualízala para escanearlo.</string>
+    <string name="pairing_own_code">Ese es el código de este mismo teléfono.</string>
+    <string name="pairing_already_known">Ya tienes este contacto, como %1$s.</string>
+    <string name="remote_not_an_invite">Este no es un archivo de invitación.</string>
+    <string name="remote_wrong_reply">Este archivo no es la respuesta de %1$s a esta invitación.</string>
+    <string name="remote_wrong_confirmation">Este archivo no es la confirmación de %1$s.</string>
+    <string name="memo_notifications_off">Las notificaciones están desactivadas, así que “Detener” no aparecerá en el panel de notificaciones.</string>
+    <string name="memo_too_short">Fue demasiado corto para guardarlo.</string>
+    <string name="vault_list_full">Esta lista está llena. Quita una bóveda para hacer espacio.</string>
+    <string name="vault_not_created">No se pudo crear esa bóveda.</string>
+    <string name="vault_not_opened">No se pudo abrir esa bóveda.</string>
+    <string name="bio_prompt_unlock_title">Desbloquear bóveda</string>
+    <string name="bio_prompt_use_passphrase">Usar frase de contraseña</string>
+    <string name="purchase_unavailable">La compra no está disponible en este dispositivo en este momento (código %1$d). Nada de lo que ya tienes se ve afectado.</string>
+    <plurals name="imports_failed">
+        <item quantity="one">%1$d importación no se completó. No se agregó nada. Inténtalo de nuevo.</item>
+        <item quantity="many">%1$d importaciones no se completaron. No se agregó nada. Inténtalo de nuevo.</item>
+        <item quantity="other">%1$d importaciones no se completaron. No se agregó nada. Inténtalo de nuevo.</item>
+    </plurals>
+
+    <!-- Notifications — the foreground work and the recording -->
+    <string name="notification_working">Procesando</string>
+    <string name="notification_channel_import">Importación</string>
+    <string name="notification_channel_archive">Archivo</string>
+    <string name="notification_channel_export">Exportación</string>
+    <string name="notification_channel_recording">Grabación</string>
+    <string name="notification_recording">Grabando</string>
+    <string name="notification_stop">Detener</string>
+
+    <!-- The printed recovery kit -->
+    <string name="kit_print_heading">Kit de recuperación de la bóveda</string>
+    <string name="kit_print_line_1">Estas 24 palabras abren esta bóveda. Guarda esta página en un lugar seguro.</string>
+    <string name="kit_print_line_2">No se pueden cambiar ni cancelar.</string>
+
+    <!-- Biometric unlock — the screen, the drawer row and the first-run step -->
+    <string name="bio_name">Desbloqueo biométrico</string>
+    <string name="bio_lead">Una forma más rápida de entrar que nunca reemplaza tu frase de contraseña.</string>
+    <string name="bio_row_fingerprint">Desbloqueo con huella digital</string>
+    <string name="bio_row_face">Desbloqueo facial</string>
+    <string name="bio_row_both">Desbloqueo facial y con huella digital</string>
+    <string name="bio_on">Activado</string>
+    <string name="bio_off">Desactivado</string>
+    <string name="bio_line_not_set_up">Aún no está configurado. Presiona para configurarlo en la configuración del dispositivo.</string>
+    <string name="bio_line_not_available_now">No disponible en este momento; el sensor no responde.</string>
+    <string name="bio_line_needs_update">Necesita una actualización de seguridad del fabricante del dispositivo antes de que la bóveda pueda usarlo.</string>
+    <string name="bio_unsupported">No es compatible con este dispositivo.</string>
+    <string name="bio_unsupported_face">No es compatible con este dispositivo. Su desbloqueo facial no es lo bastante seguro para proteger datos encriptados.</string>
+    <string name="bio_unsupported_fingerprint">No es compatible con este dispositivo. Su sensor de huellas digitales no es lo bastante seguro para proteger datos encriptados.</string>
+    <string name="bio_drawer_not_set_up">Sin configurar</string>
+    <string name="bio_drawer_not_available_now">No disponible en este momento</string>
+    <string name="bio_drawer_needs_update">Necesita una actualización de seguridad</string>
+    <string name="bio_drawer_not_supported">No es compatible con este dispositivo</string>
+    <string name="bio_fact_how">Cómo abres la bóveda</string>
+    <string name="bio_fact_how_fingerprint">Cuando la bóveda está bloqueada, Android pide tu huella digital. Toca el sensor y la bóveda se abre.</string>
+    <string name="bio_fact_how_face">Cuando la bóveda está bloqueada, Android pide tu rostro. Mira la pantalla y presiona para confirmar; la bóveda nunca se abre solo con una mirada.</string>
+    <string name="bio_fact_how_both">Cuando la bóveda está bloqueada, Android espera tu rostro y tu huella digital a la vez. Toca el sensor, o mira la pantalla y presiona para confirmar; lo que uses primero abre la bóveda.</string>
+    <string name="bio_fact_how_unnamed">Cuando la bóveda está bloqueada, Android pide la biometría configurada en este dispositivo.</string>
+    <string name="bio_fact_fingerprint_only">Para usar solo tu huella digital</string>
+    <string name="bio_fact_fingerprint_only_body">Android decide qué biometría pueden usar las apps, no esta app. En la configuración del dispositivo, abre Desbloqueo facial y desactiva su uso en apps; así solo tu huella digital abre la bóveda.</string>
+    <string name="bio_fact_turns_off">Se desactiva si cambia tu biometría</string>
+    <string name="bio_fact_turns_off_fingerprint">Agregar o quitar una huella digital en la configuración del dispositivo lo desactiva. Desbloquea con tu frase de contraseña y vuelve a activarlo desde “Desbloqueo biométrico” en el menú.</string>
+    <string name="bio_fact_turns_off_face">Agregar o quitar un rostro en la configuración del dispositivo lo desactiva. Desbloquea con tu frase de contraseña y vuelve a activarlo desde “Desbloqueo biométrico” en el menú.</string>
+    <string name="bio_fact_turns_off_both">Agregar o quitar un rostro o una huella digital en la configuración del dispositivo lo desactiva. Desbloquea con tu frase de contraseña y vuelve a activarlo desde “Desbloqueo biométrico” en el menú.</string>
+    <string name="bio_fact_turns_off_unnamed">Agregar o quitar datos biométricos en la configuración del dispositivo lo desactiva. Desbloquea con tu frase de contraseña y vuelve a activarlo desde “Desbloqueo biométrico” en el menú.</string>
+    <string name="bio_fact_passphrase">Tu frase de contraseña siempre abre la bóveda</string>
+    <string name="bio_fact_passphrase_body">El desbloqueo biométrico es una segunda forma de entrar, nunca un reemplazo. Si olvidas tu frase de contraseña, no te dejará entrar; tu kit de recuperación sí.</string>
+    <string name="bio_button_fallback">Usar biometría</string>
+    <string name="bio_enable_title">Activar el desbloqueo biométrico</string>
+
+    <!-- Calculator cover — how it opens -->
+    <string name="method_sequence">Secuencia de botones</string>
+    <string name="method_sequence_line">Escribe tu secuencia y mantén presionado =.</string>
+    <string name="method_sequence_pattern">Secuencia de botones y luego patrón</string>
+    <string name="method_sequence_pattern_line">Escribe tu secuencia y mantén presionado =; luego dibuja tu patrón sobre los puntos que aparecen.</string>
+    <string name="method_hold_pattern">Mantener presionado y luego patrón</string>
+    <string name="method_hold_pattern_line">Mantén presionado durante 2 segundos un lugar que elijas; luego dibuja tu patrón sobre los puntos que aparecen.</string>
+    <string name="method_choose_lead">Elige cómo abrirás la pantalla de la frase de contraseña desde este ícono. Lo configuras a continuación.</string>
+
+    <!-- Intruder capture — where an attempt failed -->
+    <string name="capture_where_music">Reproductor de música</string>
+    <string name="capture_where_recorder">Grabadora de voz</string>
+    <string name="capture_where_calculator">Calculadora</string>
+    <string name="capture_where_cover">Fachada</string>
+    <string name="capture_where_pattern">%1$s: patrón incorrecto</string>
+    <string name="capture_where_pattern_dots">%1$s: patrón incorrecto sobre los puntos visibles</string>
+    <string name="capture_where_pattern_lockout">%1$s: patrón probado durante el bloqueo</string>
+    <string name="capture_where_pattern_lockout_dots">%1$s: patrón probado durante el bloqueo sobre los puntos visibles</string>
+    <string name="capture_where_wrong_fingerprint">Pantalla de desbloqueo: huella digital incorrecta</string>
+    <string name="capture_where_wrong_face">Pantalla de desbloqueo: rostro incorrecto</string>
+    <string name="capture_where_wrong_both">Pantalla de desbloqueo: rostro o huella digital incorrectos</string>
+    <string name="capture_where_wrong_biometric">Pantalla de desbloqueo: biometría incorrecta</string>
+    <string name="capture_where_wrong_passphrase">Pantalla de desbloqueo: frase de contraseña incorrecta</string>
+    <string name="capture_where_vault_passphrase">Frase de contraseña de la bóveda: frase incorrecta</string>
+
+    <!-- Passphrase strength — the meter under every passphrase field -->
+    <string name="strength_add_another_word">Agrega una o dos palabras más. Las palabras poco comunes son las que más ayudan.</string>
+    <string name="strength_default_suggestions_use_few_words">Usa varias palabras que no tengan relación entre sí.</string>
+    <string name="strength_default_suggestions_no_need_symbols">Aquí no hacen falta símbolos, números ni mayúsculas; lo que cuenta es la longitud.</string>
+    <string name="strength_dictionary_warning_passwords_top10">Es una de las diez contraseñas más usadas.</string>
+    <string name="strength_dictionary_warning_passwords_top100">Es una de las cien contraseñas más usadas.</string>
+    <string name="strength_dictionary_warning_passwords_very_common">Es una contraseña muy común y se adivinaría pronto.</string>
+    <string name="strength_dictionary_warning_passwords_similar">Se parece a una contraseña que ya se usa mucho.</string>
+    <string name="strength_dictionary_warning_english_wikipedia_itself">Una sola palabra es fácil de adivinar.</string>
+    <string name="strength_dictionary_warning_etc_names_themselves">Un nombre solo es fácil de adivinar.</string>
+    <string name="strength_dictionary_warning_etc_names_common">Los nombres comunes son fáciles de adivinar.</string>
+    <string name="strength_dictionary_suggestions_capitalization">Una mayúscula al principio casi no aporta nada. Mejor agrega una palabra.</string>
+    <string name="strength_dictionary_suggestions_all_uppercase">Todo en mayúsculas es casi tan fácil de adivinar como todo en minúsculas.</string>
+    <string name="strength_dictionary_suggestions_reversed">Escribir una palabra al revés no la hace mucho más difícil de adivinar.</string>
+    <string name="strength_dictionary_suggestions_l33t">Cambiar letras por caracteres parecidos, como 4 por a, ya es algo previsto.</string>
+    <string name="strength_spatial_warning_straight_rows_of_keys">Una fila recta de teclas es de lo primero que se prueba.</string>
+    <string name="strength_spatial_warning_short_keyboard_patterns">Los patrones cortos trazados en el teclado son fáciles de adivinar.</string>
+    <string name="strength_spatial_suggestions_use_longer_keyboard_pattern">Usa palabras en lugar de una forma trazada en el teclado.</string>
+    <string name="strength_repeat_warning_like_aaa">Un carácter repetido se adivina tan rápido como un solo carácter.</string>
+    <string name="strength_repeat_warning_like_abcabcabc">Un bloque repetido apenas es más difícil de adivinar que el bloque solo.</string>
+    <string name="strength_repeat_suggestions_avoid_repeated_words">Repetir una palabra o una letra aporta muy poco. Agrega una palabra distinta.</string>
+    <string name="strength_sequence_warning_like_abcor6543">Las secuencias como abc o 6543 se adivinan de inmediato.</string>
+    <string name="strength_sequence_suggestions_avoid_sequences">Evita letras o números seguidos en orden.</string>
+    <string name="strength_regex_warning_recent_years">Los años recientes están entre lo primero que se prueba.</string>
+    <string name="strength_regex_suggestions_avoid_recent_years">No incluyas años, sobre todo los que significan algo para ti.</string>
+    <string name="strength_date_warning_dates">Las fechas son fáciles de adivinar, incluso las que solo tú conoces.</string>
+    <string name="strength_date_suggestions_avoid_dates">No incluyas fechas, sobre todo las que significan algo para ti.</string>
+    <string name="strength_very_weak">Muy débil</string>
+    <string name="strength_weak">Débil</string>
+    <string name="strength_fair">Aceptable</string>
+    <string name="strength_almost">Casi</string>
+    <string name="strength_strong_enough">Suficientemente segura</string>
+    <string name="strength_count">%1$d de %2$d caracteres</string>
+    <string name="passphrase_requirement">Al menos %1$d caracteres. Unas cuantas palabras poco comunes valen más que una palabra complicada.</string>
+    <string name="passphrase_too_weak">Esa frase de contraseña es demasiado fácil de adivinar. Agrega una o dos palabras más.</string>
+
+    <!-- First vault and the lock screen -->
+    <string name="passphrase_label">Frase de contraseña</string>
+    <string name="passphrase_again_label">Vuelve a escribirla</string>
+    <string name="passphrase_mismatch">Las dos entradas no coinciden.</string>
+    <string name="setup_title">Elige una frase de contraseña</string>
+    <string name="setup_lead">No se puede restablecer. A continuación verás un kit de recuperación de 24 palabras, que es la única otra forma de entrar en esta bóveda. Si pierdes ambos, todo lo que contiene desaparece para siempre.</string>
+    <string name="setup_preparing">Preparando el almacenamiento</string>
+    <string name="setup_create">Crear bóveda</string>
+    <string name="setup_restore_backup">Restaurar copia de seguridad</string>
+    <string name="unlock_welcome">Hola de nuevo</string>
+    <string name="unlock_lead">Ingresa tu frase de contraseña para abrir esta bóveda.</string>
+    <string name="unlock_failed">Eso no abrió ninguna bóveda.</string>
+    <string name="unlock_action">Desbloquear</string>
+    <string name="unlock_forgot">¿Olvidaste tu frase de contraseña?</string>
+    <string name="unlock_busy">Desbloqueando</string>
+    <string name="passphrase_hide">Ocultar frase de contraseña</string>
+    <string name="passphrase_show">Mostrar frase de contraseña</string>
+    <string name="passphrase_match">Las dos entradas coinciden</string>
+
+    <!-- Photo details — the sheet, and the export and share lines -->
+    <string name="photo_details_privacy">Privacidad</string>
+    <string name="photo_details_custom">Personalizado</string>
+    <!-- Joining a list: "%1$s" is everything before the last item, already joined with list_separator. -->
+    <string name="list_separator">,\u0020</string>
+    <string name="list_and">%1$s y %2$s</string>
+    <string name="list_or">%1$s o %2$s</string>
+    <string name="exif_noun_location">ubicación</string>
+    <string name="exif_noun_camera">información de la cámara</string>
+    <string name="exif_noun_the_date">fecha</string>
+    <string name="exif_noun_date">fecha</string>
+    <string name="exif_noun_software">historial de edición</string>
+    <string name="exif_export_names_only">De las fotos JPEG exportadas solo se eliminan nombres, descripciones y comentarios. Los demás formatos se guardan sin cambios.</string>
+    <plurals name="exif_export_removed">
+        <item quantity="one">%1$s se elimina de las fotos JPEG exportadas.</item>
+        <item quantity="many">%1$s se eliminan de las fotos JPEG exportadas.</item>
+        <item quantity="other">%1$s se eliminan de las fotos JPEG exportadas.</item>
+    </plurals>
+    <plurals name="exif_export_kept">
+        <item quantity="one">%1$s se conserva.</item>
+        <item quantity="many">%1$s se conservan.</item>
+        <item quantity="other">%1$s se conservan.</item>
+    </plurals>
+    <plurals name="exif_export_kept_sorted">
+        <item quantity="one">%1$s se conserva, así que tu galería las sigue ordenando.</item>
+        <item quantity="many">%1$s se conservan, así que tu galería las sigue ordenando.</item>
+        <item quantity="other">%1$s se conservan, así que tu galería las sigue ordenando.</item>
+    </plurals>
+    <string name="exif_export_summary">%1$s Los demás formatos se guardan sin cambios.</string>
+    <string name="exif_share_names_only">Solo nombres, descripciones y comentarios.</string>
+    <string name="exif_share_removed">Sin %1$s.</string>
+    <string name="exif_share_kept">Conserva %1$s.</string>
+    <string name="photo_details_title">Detalles de la foto</string>
+    <string name="photo_details_lead">Elige qué se elimina de una foto antes de que salga de la bóveda.</string>
+    <string name="photo_details_privacy_row">Privacidad (recomendado)</string>
+    <string name="photo_details_privacy_detail">Elimina ubicación, información de la cámara e historial de edición</string>
+    <string name="photo_details_custom_detail">Elige qué se elimina.</string>
+    <string name="photo_details_remove_heading">Eliminar</string>
+    <string name="photo_details_removed">Se elimina</string>
+    <string name="photo_details_kept">Se conserva</string>
+    <string name="photo_details_import_heading">Al importar</string>
+    <string name="photo_details_import_row">Eliminar de las fotos que importas</string>
+    <string name="photo_details_import_on">Activado · No se puede deshacer una vez que la foto se importa.</string>
+    <string name="photo_details_footer">Solo fotos JPEG; los demás formatos se dejan tal cual. Cada eliminación también quita nombres, descripciones, comentarios, personas etiquetadas y todo lo que la app no reconoce, y conserva lo que la foto necesita para verse bien, incluidos el movimiento y el HDR.</string>
+    <string name="photo_details_location">Ubicación</string>
+    <string name="photo_details_location_covers">Posición GPS, altitud y dirección</string>
+    <string name="photo_details_camera">Información de la cámara</string>
+    <string name="photo_details_camera_covers">Marca, modelo, lente, números de serie y ajustes</string>
+    <string name="photo_details_date">Fecha y hora</string>
+    <string name="photo_details_date_covers">Cuándo se tomó y cuándo se modificó por última vez</string>
+    <string name="photo_details_software">Software e historial de edición</string>
+    <string name="photo_details_software_covers">Las apps que la crearon o editaron</string>
+
+    <!-- Drawer — appearance -->
+    <string name="appearance">Apariencia</string>
+    <string name="appearance_system">Sistema</string>
+    <string name="appearance_light">Claro</string>
+    <string name="appearance_dark">Oscuro</string>
+
+    <!-- Drawer — the vault's rows and the install's -->
+    <string name="drawer_trash">Papelera</string>
+    <string name="drawer_backup">Copia de seguridad</string>
+    <string name="drawer_intruder_capture">Captura de intrusos</string>
+    <string name="drawer_open_share">Abrir un elemento compartido…</string>
+    <string name="drawer_unvault_everything">Sacar todo de la bóveda</string>
+    <string name="drawer_destroy_vault">Destruir bóveda</string>
+    <string name="drawer_purchase">Compra \u0020· \u0020%1$s</string>
+    <string name="drawer_app_identity">Identidad de la app \u0020· \u0020%1$s</string>
+    <string name="drawer_face_down">Bloqueo boca abajo</string>
+    <string name="face_down_no_sensor">Este dispositivo no tiene sensor de movimiento, así que no puede saber cuándo está boca abajo.</string>
+    <string name="face_down_lead">Pon tu teléfono boca abajo para bloquear la bóveda.</string>
+    <string name="face_down_switch">Usar bloqueo boca abajo</string>
+    <string name="face_down_lock_after">Bloquear después de</string>
+    <string name="face_down_immediately">Inmediatamente</string>
+    <string name="face_down_locks_at_once">Se bloquea al instante</string>
+    <string name="face_down_locks_after">Se bloquea después de %1$s</string>
+    <string name="face_down_timeout_line">Tu pantalla se apaga después de %1$s, y eso bloquea la bóveda antes.</string>
+    <plurals name="face_down_seconds">
+        <item quantity="one">%1$d segundo</item>
+        <item quantity="many">%1$d segundos</item>
+        <item quantity="other">%1$d segundos</item>
+    </plurals>
+    <plurals name="face_down_minutes">
+        <item quantity="one">%1$d minuto</item>
+        <item quantity="many">%1$d minutos</item>
+        <item quantity="other">%1$d minutos</item>
+    </plurals>
+    <string name="drawer_decoy">Bóveda señuelo</string>
+    <string name="drawer_decoy_set_up">Configurada; no se puede crear una segunda.</string>
+    <string name="drawer_set_up_decoy">Configurar una bóveda señuelo</string>
+    <string name="drawer_panic">Credencial de pánico</string>
+    <string name="drawer_photo_details">Detalles de la foto \u0020· \u0020%1$s</string>
+    <string name="drawer_contacts">Contactos</string>
+    <string name="drawer_recover_vault">Recuperar una bóveda con su kit</string>
+    <string name="drawer_restore_vault">Restaurar una bóveda desde una copia de seguridad</string>
+    <string name="drawer_import_vault">Importar una bóveda desde un archivo</string>
+    <string name="drawer_capture_waiting">Hay una captura de intruso esperando</string>
+
+    <!-- Purchase — the screen, the drawer row and the trial -->
+    <string name="trial_blocked">Tu prueba terminó. Abrir, ver y exportar todo lo que hay en tus bóvedas sigue sin restricciones; compra la app una vez, en “Compra” del menú, para agregar más.</string>
+    <plurals name="trial_reminder">
+        <item quantity="one">Te queda %1$d día de prueba. Abrir, ver y exportar siguen sin restricciones de todos modos.</item>
+        <item quantity="many">Te quedan %1$d días de prueba. Abrir, ver y exportar siguen sin restricciones de todos modos.</item>
+        <item quantity="other">Te quedan %1$d días de prueba. Abrir, ver y exportar siguen sin restricciones de todos modos.</item>
+    </plurals>
+    <string name="purchase_title">Compra</string>
+    <plurals name="purchase_days_from_first">
+        <item quantity="one">%1$d día, desde lo primero que agregues</item>
+        <item quantity="many">%1$d días, desde lo primero que agregues</item>
+        <item quantity="other">%1$d días, desde lo primero que agregues</item>
+    </plurals>
+    <plurals name="purchase_days_left">
+        <item quantity="one">Queda %1$d día</item>
+        <item quantity="many">Quedan %1$d días</item>
+        <item quantity="other">Quedan %1$d días</item>
+    </plurals>
+    <string name="purchase_owned_body">Agregar a tus bóvedas, crear bóvedas y enviar elementos compartidos no tienen restricciones. La compra pertenece a tu Cuenta de Google y vuelve si reinstalas la app.</string>
+    <string name="purchase_pending_body">Google Play está esperando que se acredite tu pago. Todo se desbloquea cuando ocurra; no necesitas mantener esta pantalla abierta.</string>
+    <string name="purchase_trial_body">Cuando termina la prueba, se detienen agregar a una bóveda, crear bóvedas y enviar elementos compartidos. Abrir, ver y exportar todo lo que ya está en tus bóvedas, y abrir lo que te compartan, nunca se detienen, pagues o no.</string>
+    <string name="purchase_one_payment">Un solo pago. Sin suscripción, nada se renueva.</string>
+    <string name="purchase_buy_for">Comprar por %1$s</string>
+    <string name="purchase_buy">Comprar</string>
+    <string name="purchase_state_owned">Comprada</string>
+    <string name="purchase_state_pending">Pago pendiente</string>
+    <string name="purchase_state_not_started">Prueba sin iniciar</string>
+    <plurals name="purchase_state_trial_left">
+        <item quantity="one">Prueba, queda %1$d día</item>
+        <item quantity="many">Prueba, quedan %1$d días</item>
+        <item quantity="other">Prueba, quedan %1$d días</item>
+    </plurals>
+    <string name="purchase_state_trial">Prueba</string>
+    <string name="purchase_state_ended">Prueba terminada</string>
+
+    <!-- App identity — the screen and the sheet that commits a choice -->
+    <string name="identity_screen_title">Identidad de la app</string>
+    <string name="identity_screen_lead">Elige el nombre y el ícono que esta app muestra en el selector de apps y en las apps recientes. Todos abren esta bóveda, y ninguno la abre sin tu frase de contraseña o una biometría que hayas configurado.</string>
+    <string name="identity_current">Se muestra ahora</string>
+    <string name="identity_opens_vault">Abre la bóveda directamente</string>
+    <string name="identity_opens_calculator">Abre primero una calculadora</string>
+    <string name="identity_opens_calculator_setup">Abre primero una calculadora; hay que configurarla</string>
+    <string name="identity_opens_music">Abre primero un reproductor de música</string>
+    <string name="identity_opens_music_setup">Abre primero un reproductor de música; hay que configurarlo</string>
+    <string name="identity_opens_recorder">Abre primero una grabadora de voz</string>
+    <string name="identity_opens_recorder_setup">Abre primero una grabadora de voz; hay que configurarla</string>
+    <string name="identity_calculator_weak">La más débil de las fachadas: su gesto es una secuencia corta de teclas.</string>
+    <string name="identity_calculator_weak_unset">Solo con una secuencia de botones, es la más débil de las fachadas.</string>
+    <string name="identity_boundary_title">Lo que una identidad no cambia</string>
+    <string name="identity_boundary_body">La Configuración de Android, la página de información de la app y cualquier notificación durante una importación siguen mostrando esta app con su nombre real. Una identidad cambia el selector de apps y las apps recientes, y nada más.</string>
+    <string name="identity_commit_body">Cambiar esto quita cualquier acceso directo fijado y cualquier ubicación de la app en la pantalla principal. Puedes volver a colocarla después.</string>
+    <string name="identity_rationale_music">Un reproductor de música que no puede ver tu música no resulta convincente: se abriría con una biblioteca vacía. Este ícono necesita acceso al audio de este dispositivo.</string>
+    <string name="identity_rationale_recorder">Una grabadora de voz que no puede usar el micrófono no resulta convincente: su botón de grabar no haría nada. Este ícono necesita acceso al micrófono.</string>
+    <string name="identity_blocked_music">Android no volverá a preguntar desde dentro de la app. El acceso al audio se puede cambiar en la página de configuración de esta app, en Permisos.</string>
+    <string name="identity_blocked_recorder">Android no volverá a preguntar desde dentro de la app. El acceso al micrófono se puede cambiar en la página de configuración de esta app, en Permisos.</string>
+    <string name="identity_use_icon">Usar este ícono</string>
+    <string name="identity_set_up">Configurar</string>
+    <string name="identity_ask_again">Volver a preguntar</string>
+    <string name="identity_open_settings">Abrir configuración</string>
+
+    <!-- Shared words -->
+    <string name="state_expanded">Expandido</string>
+    <string name="state_collapsed">Contraído</string>
+    <string name="action_continue">Continuar</string>
+    <string name="action_done">Listo</string>
+    <string name="action_save">Guardar</string>
+    <string name="action_back">Atrás</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_remove">Quitar</string>
+    <string name="action_not_now">Ahora no</string>
+    <string name="menu">Menú</string>
+    <string name="action_saving">Guardando</string>
+    <string name="rename">Cambiar nombre</string>
+    <string name="delete">Borrar</string>
+    <string name="more">Más</string>
+    <string name="pause">Pausar</string>
+    <string name="play">Reproducir</string>
+    <string name="seek">Buscar posición</string>
+    <string name="slideshow">Presentación</string>
+    <string name="speed">Velocidad</string>
+    <plurals name="seconds">
+        <item quantity="one">%1$d segundo</item>
+        <item quantity="many">%1$d segundos</item>
+        <item quantity="other">%1$d segundos</item>
+    </plurals>
+    <string name="undo">Deshacer</string>
+    <string name="redo">Rehacer</string>
+    <string name="export">Exportar</string>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minuto</item>
+        <item quantity="many">%1$d minutos</item>
+        <item quantity="other">%1$d minutos</item>
+    </plurals>
+    <string name="start_recording">Empezar a grabar</string>
+    <string name="stop_recording">Detener grabación</string>
+    <string name="warning">Advertencia</string>
+
+    <!-- Cover setup — recording how a cover opens -->
+    <string name="setup_cover_choose_title">¿Cómo quieres abrirla?</string>
+    <string name="setup_cover_draw_shape">Ahora dibuja tu forma</string>
+    <string name="setup_cover_record">Graba tu gesto</string>
+    <string name="setup_cover_draw_again">Dibújala de nuevo</string>
+    <string name="setup_cover_do_again">Hazlo de nuevo</string>
+    <string name="setup_cover_mismatch_title">Ese fue un gesto distinto</string>
+    <string name="setup_cover_hold_title">Elige dónde mantener presionado</string>
+    <string name="setup_cover_hold_again_title">Mantén presionado de nuevo</string>
+    <string name="setup_cover_hold_mismatch_title">Ese fue un lugar distinto</string>
+    <string name="setup_cover_hold_mismatch">La segunda vez mantuviste presionado otro lugar, así que no se conservó ninguna.</string>
+    <string name="setup_cover_start_over">Empezar de nuevo</string>
+    <string name="setup_cover_done_title">Todo listo</string>
+    <string name="setup_cover_hold_line">Mantén presionado cualquier lugar de la pantalla durante 2 segundos. Ese lugar es el que hace aparecer los puntos; funciona sin importar lo que se muestre ahí.</string>
+    <string name="setup_cover_hold_again_line">Mantén presionado el mismo lugar otra vez.</string>
+    <string name="setup_cover_hold_early_line">Sigue presionando durante 2 segundos.</string>
+    <string name="setup_cover_too_short">Fue demasiado corto. Un gesto necesita al menos %1$s.</string>
+    <string name="setup_cover_so_far">%1$s hasta ahora. Faltan %2$d.</string>
+    <string name="setup_cover_at_cap">%1$s: lo máximo que recuerda. %2$s</string>
+    <string name="setup_cover_enough">%1$s. %2$s</string>
+    <string name="setup_cover_keys_again">Presiona las mismas teclas otra vez. Presiona “AC” para empezar de nuevo.</string>
+    <string name="setup_cover_keys">Presiona las teclas que quieras usar; puede ser una cuenta normal. Cuenta cada tecla, incluida “DEL”. ¿Presionaste una tecla equivocada? Presiona “AC” para empezar de nuevo.</string>
+    <string name="setup_cover_shape_again">Dibuja la misma forma otra vez.</string>
+    <string name="setup_cover_shape_music">Dibuja una forma que una al menos cinco de los nueve puntos, en un orden que vayas a recordar. No se mostrará una vez que se cierre esta pantalla.</string>
+    <string name="setup_cover_shape_recorder">Dibuja una forma que una al menos cinco de los nueve puntos, en un orden que vayas a recordar. No se conserva ninguna grabación que hagas aquí.</string>
+    <string name="setup_cover_finish_keys">Mantén presionado “=” para terminar.</string>
+    <string name="setup_cover_finish_shape">Levanta el dedo para terminar.</string>
+    <plurals name="setup_cover_key_count">
+        <item quantity="one">%1$d tecla</item>
+        <item quantity="many">%1$d teclas</item>
+        <item quantity="other">%1$d teclas</item>
+    </plurals>
+    <plurals name="setup_cover_node_count">
+        <item quantity="one">%1$d punto</item>
+        <item quantity="many">%1$d puntos</item>
+        <item quantity="other">%1$d puntos</item>
+    </plurals>
+    <string name="setup_cover_mismatch_sequence">La segunda secuencia no coincidió con la primera, así que no se conservó ninguna. Empezar de nuevo es la única respuesta segura: conservar la primera dejaría que un segundo intento con suerte eligiera entre dos gestos que recuerdas a medias, y estarías practicando contra un objetivo que no puedes ver.</string>
+    <string name="setup_cover_mismatch_pattern">El segundo patrón no coincidió con el primero, así que no se conservó ninguno. Empezar de nuevo es la única respuesta segura: conservar el primero dejaría que un segundo intento con suerte eligiera entre dos gestos que recuerdas a medias, y estarías practicando contra un objetivo que no puedes ver.</string>
+    <string name="setup_cover_sequence_kept">Tu secuencia se conserva; solo la forma empieza de nuevo.</string>
+    <string name="setup_cover_spot_kept">Tu lugar se conserva; solo la forma empieza de nuevo.</string>
+    <string name="setup_cover_nothing_changed">No cambió nada. Tu selector de apps sigue mostrando el ícono de antes.</string>
+    <string name="setup_cover_done_vault">Este ícono abre la pantalla que pide tu frase de contraseña.</string>
+    <string name="setup_cover_done_route">Para llegar a la pantalla de la frase de contraseña desde este ícono:</string>
+    <string name="setup_cover_done_hidden_dots">Tu forma también funciona sobre los puntos ocultos en cualquier momento.</string>
+    <plurals name="setup_cover_route_keys_shape">
+        <item quantity="one">Presiona %1$s en la calculadora, luego mantén presionado “=” y aparecerán los puntos. Dibuja tu forma sobre ellos: %2$d punto.</item>
+        <item quantity="many">Presiona %1$s en la calculadora, luego mantén presionado “=” y aparecerán los puntos. Dibuja tu forma sobre ellos: %2$d puntos.</item>
+        <item quantity="other">Presiona %1$s en la calculadora, luego mantén presionado “=” y aparecerán los puntos. Dibuja tu forma sobre ellos: %2$d puntos.</item>
+    </plurals>
+    <string name="setup_cover_wrong_key">Si presionas una tecla equivocada, presiona “AC” y empieza de nuevo.</string>
+    <string name="setup_cover_remember">Nadie puede recuperar este gesto por ti y la app no te lo volverá a mostrar; si prefieres no depender de recordarlo, vuelve al ícono propio de la bóveda desde el menú mientras aún puedas.</string>
+    <string name="setup_cover_route_keys">Presiona %1$s en la calculadora y luego mantén presionado “=”. Si presionas una tecla equivocada, presiona “AC” y empieza de nuevo.</string>
+    <plurals name="setup_cover_route_shape">
+        <item quantity="one">Dibuja en la pantalla la forma que elegiste (%1$d punto) y levanta el dedo.</item>
+        <item quantity="many">Dibuja en la pantalla la forma que elegiste (%1$d puntos) y levanta el dedo.</item>
+        <item quantity="other">Dibuja en la pantalla la forma que elegiste (%1$d puntos) y levanta el dedo.</item>
+    </plurals>
+    <plurals name="setup_cover_route_hold">
+        <item quantity="one">Mantén presionado el lugar que elegiste (%1$s) durante 2 segundos y aparecerán los puntos. Dibuja tu forma sobre ellos: %2$d punto.</item>
+        <item quantity="many">Mantén presionado el lugar que elegiste (%1$s) durante 2 segundos y aparecerán los puntos. Dibuja tu forma sobre ellos: %2$d puntos.</item>
+        <item quantity="other">Mantén presionado el lugar que elegiste (%1$s) durante 2 segundos y aparecerán los puntos. Dibuja tu forma sobre ellos: %2$d puntos.</item>
+    </plurals>
+    <string name="hold_place">%1$s, %2$s</string>
+    <string name="hold_row_top">Fila superior</string>
+    <string name="hold_row_second">Segunda fila</string>
+    <string name="hold_row_third">Tercera fila</string>
+    <string name="hold_row_bottom">Fila inferior</string>
+    <string name="hold_column_left">izquierda</string>
+    <string name="hold_column_centre">centro</string>
+    <string name="hold_column_right">derecha</string>
+
+    <!-- Panic credential -->
+    <string name="panic_status_on">La credencial de pánico está activada</string>
+    <string name="panic_status_off">La credencial de pánico está desactivada</string>
+    <string name="panic_fact_survives">Esta lista de bóvedas sobrevive</string>
+    <string name="panic_fact_survives_body">Si la escribes en la pantalla de bloqueo, tu frase de pánico abre esta lista de bóvedas como siempre, y todas las bóvedas que no están en ella dejan de abrirse en este dispositivo, para siempre.</string>
+    <string name="panic_fact_way_in">Destruye la entrada, no los archivos</string>
+    <string name="panic_fact_way_in_body">Las demás bóvedas se quedan en este dispositivo como datos ilegibles. Sus kits de recuperación de 24 palabras todavía las abren.</string>
+    <string name="panic_fact_silent">Nada confirma que funcionó</string>
+    <string name="panic_fact_silent_body">Quien esté mirando ve un desbloqueo normal.</string>
+    <string name="panic_fact_backup">También vacía tu carpeta de copia de seguridad</string>
+    <string name="panic_fact_backup_body">Las copias que tu proveedor en la nube guarda en su propia papelera o historial de versiones están fuera del alcance de esta app.</string>
+    <string name="panic_change">Cambiar frase de pánico</string>
+    <string name="panic_turn_it_off">Desactivarla</string>
+    <string name="panic_turn_off_title">Desactivar frase de pánico</string>
+    <string name="panic_turn_off">Desactivar</string>
+    <string name="panic_set_title">Definir una frase de pánico</string>
+    <string name="panic_your_passphrase">Tu frase de contraseña</string>
+    <string name="panic_passphrase_hint">La que abrió esta lista de bóvedas.</string>
+    <string name="panic_phrase_label">Frase de pánico</string>
+    <string name="panic_turn_on">Activar</string>
+    <string name="panic_forgot_title">Borrar una frase de pánico olvidada</string>
+    <string name="panic_forgot_body">Tu frase de contraseña desactiva la frase de pánico. Después puedes definir una nueva.</string>
+    <string name="panic_clear">Borrar frase de pánico</string>
+    <string name="panic_current_label">Frase de pánico actual</string>
+    <string name="panic_forgot">¿Olvidaste tu frase de pánico?</string>
+    <string name="panic_new_label">Nueva frase de pánico</string>
+    <string name="panic_phrase_requirement">%1$s Que no se parezca a ninguna de tus frases de contraseña; solo se puede comprobar la de esta lista.</string>
+    <string name="panic_label_again">%1$s otra vez</string>
+
+    <!-- Vault names -->
+    <string name="vault_name_label">Nombre</string>
+    <string name="vault_name_empty">Ponle un nombre a la bóveda.</string>
+    <string name="vault_name_too_long">Ese nombre es demasiado largo para esta bóveda.</string>
+
+    <!-- Decoy — building a vault you can hand over -->
+    <string name="decoy_captured_during_setup">capturada mientras se creaba esta bóveda; una foto tomada hoy no encaja en una bóveda que debe parecer de hace meses</string>
+    <string name="decoy_step">Paso %1$d de %2$d</string>
+    <string name="decoy_leave">Salir de la configuración del señuelo</string>
+    <string name="decoy_intro_title">Una bóveda que puedes entregar</string>
+    <string name="decoy_intro_lead">Una bóveda normal con su propia frase de contraseña, con cosas que no te importaría que alguien viera.</string>
+    <string name="decoy_start">Empezar</string>
+    <string name="decoy_fact_used">Tiene que parecer usada</string>
+    <string name="decoy_fact_used_body">Una bóveda vacía no engaña a nadie. Esta recibe las fotos que elijas, y fechas y un historial que parecen meses de uso normal.</string>
+    <string name="decoy_fact_photos">Las fotos son tuyas</string>
+    <string name="decoy_fact_photos_body">Vienen de este dispositivo. La app no incluye ningún contenido, porque el contenido incluido sería idéntico en todos los teléfonos que la tengan. Quien reciba esta bóveda verá estas fotos, así que elige las que estés dispuesto a mostrar.</string>
+    <string name="decoy_fact_own">Tu propia bóveda se queda donde está</string>
+    <string name="decoy_fact_own_body">Esto crea una segunda bóveda junto a ella. Nada de lo que ya está en este dispositivo se mueve, cambia ni se quita, y la bóveda que tienes abierta ahora no puede verse afectada.</string>
+    <string name="decoy_fact_cost">Lo que cuesta</string>
+    <string name="decoy_photos_title">Elige las fotos</string>
+    <string name="decoy_photos_lead">Entre %1$d y %2$d, repartidas en al menos %3$d semanas.</string>
+    <string name="decoy_choose_to_continue">Elige fotos para continuar</string>
+    <string name="decoy_not_plausible">Aún no es un conjunto creíble</string>
+    <string name="decoy_choose_photos">Elegir fotos</string>
+    <string name="decoy_choose_again">Elegir de nuevo</string>
+    <string name="decoy_nothing_chosen">Aún no elegiste nada. El selector muestra tu biblioteca de fotos; la app no la lee y nunca ve lo que no elijas.</string>
+    <plurals name="decoy_summary_in">
+        <item quantity="one">Entrará %1$d.</item>
+        <item quantity="many">Entrarán %1$d.</item>
+        <item quantity="other">Entrarán %1$d.</item>
+    </plurals>
+    <plurals name="decoy_summary_kept">
+        <item quantity="one">%1$d conserva la fecha en que se tomó</item>
+        <item quantity="many">%1$d conservan la fecha en que se tomaron</item>
+        <item quantity="other">%1$d conservan la fecha en que se tomaron</item>
+    </plurals>
+    <plurals name="decoy_summary_assigned">
+        <item quantity="one">%1$d no tiene fecha y recibe una</item>
+        <item quantity="many">%1$d no tienen fecha y reciben una</item>
+        <item quantity="other">%1$d no tienen fecha y reciben una</item>
+    </plurals>
+    <string name="decoy_summary_dates">%1$s.</string>
+    <string name="decoy_summary_dates_assigned">%1$s, %2$s.</string>
+    <plurals name="decoy_summary_declined">
+        <item quantity="one">%1$d quedó fuera: %2$s.</item>
+        <item quantity="many">%1$d quedaron fuera: %2$s.</item>
+        <item quantity="other">%1$d quedaron fuera: %2$s.</item>
+    </plurals>
+    <string name="decoy_summary_truncated">Solo se tomaron las primeras %1$d; más que eso no es un señuelo, es una segunda biblioteca.</string>
+    <string name="decoy_gate_enough">Suficientes elementos: %1$d, y el mínimo es %2$d.</string>
+    <string name="decoy_gate_not_enough">No hay suficientes elementos. Tienes %1$d y el mínimo es %2$d; elige de nuevo y agrega al menos %3$d más.</string>
+    <plurals name="decoy_gate_spread">
+        <item quantity="one">Abarcan %1$d semana, y el mínimo es %2$d.</item>
+        <item quantity="many">Abarcan %1$d semanas, y el mínimo es %2$d.</item>
+        <item quantity="other">Abarcan %1$d semanas, y el mínimo es %2$d.</item>
+    </plurals>
+    <plurals name="decoy_gate_not_spread">
+        <item quantity="one">Abarcan %1$d semana y el mínimo es %2$d. Elige de nuevo y agrega fotos más antiguas, o fotos sin fecha propia; esas reciben una fecha de los meses anteriores.</item>
+        <item quantity="many">Abarcan %1$d semanas y el mínimo es %2$d. Elige de nuevo y agrega fotos más antiguas, o fotos sin fecha propia; esas reciben una fecha de los meses anteriores.</item>
+        <item quantity="other">Abarcan %1$d semanas y el mínimo es %2$d. Elige de nuevo y agrega fotos más antiguas, o fotos sin fecha propia; esas reciben una fecha de los meses anteriores.</item>
+    </plurals>
+    <plurals name="decoy_age_months">
+        <item quantity="one">Esta bóveda parecerá tener hasta %1$d mes.</item>
+        <item quantity="many">Esta bóveda parecerá tener hasta %1$d meses.</item>
+        <item quantity="other">Esta bóveda parecerá tener hasta %1$d meses.</item>
+    </plurals>
+    <plurals name="decoy_age_install">
+        <item quantity="one">Esta app se instaló hace %1$d día, así que esta bóveda no puede parecer más antigua que eso: una lista de archivos muestra la fecha de instalación sin ninguna frase de contraseña. Su historial cubrirá esos días; las fotos se encargan del resto.</item>
+        <item quantity="many">Esta app se instaló hace %1$d días, así que esta bóveda no puede parecer más antigua que eso: una lista de archivos muestra la fecha de instalación sin ninguna frase de contraseña. Su historial cubrirá esos días; las fotos se encargan del resto.</item>
+        <item quantity="other">Esta app se instaló hace %1$d días, así que esta bóveda no puede parecer más antigua que eso: una lista de archivos muestra la fecha de instalación sin ninguna frase de contraseña. Su historial cubrirá esos días; las fotos se encargan del resto.</item>
+    </plurals>
+    <string name="decoy_requirement_met">Requisito cumplido</string>
+    <string name="decoy_requirement_not_met">Requisito no cumplido</string>
+    <string name="decoy_name_title">Ponle nombre y bloquéala</string>
+    <string name="decoy_name_lead">Este nombre es lo primero que verá quien abra esta bóveda, y esta frase de contraseña es la que entregarías.</string>
+    <string name="decoy_name_hint">Elige algo normal: el tipo de nombre que tendría una bóveda de fotos de vacaciones.</string>
+    <string name="decoy_passphrase_label">Frase de contraseña del señuelo</string>
+    <string name="decoy_passphrase_note">Esta frase de contraseña debe ser distinta de la que abre tu propia bóveda. Si la escribes en la pantalla de bloqueo, abre esta bóveda y nada más.</string>
+    <string name="decoy_building">Creando %1$s</string>
+    <string name="decoy_building_body">Preparando el almacenamiento y luego importando las fotos. Tarda un momento y no se debe interrumpir.</string>
+    <string name="decoy_ready_title">Lista para crear</string>
+    <string name="decoy_ready_lead">Aún no se escribió nada. Confirmar tu propia frase de contraseña es lo que lo inicia.</string>
+    <string name="decoy_confirm_passphrase">Confirma tu frase de contraseña</string>
+    <string name="decoy_fact_made">Qué se crea</string>
+    <plurals name="decoy_fact_made_body">
+        <item quantity="one">Una bóveda llamada %1$s, con %2$d de tus fotos, y fechas y un historial de desbloqueos repartidos en los meses anteriores.</item>
+        <item quantity="many">Una bóveda llamada %1$s, con %2$d de tus fotos, y fechas y un historial de desbloqueos repartidos en los meses anteriores.</item>
+        <item quantity="other">Una bóveda llamada %1$s, con %2$d de tus fotos, y fechas y un historial de desbloqueos repartidos en los meses anteriores.</item>
+    </plurals>
+    <string name="decoy_fact_this_vault">Qué le pasa a esta bóveda</string>
+    <string name="decoy_fact_this_vault_body">Nada. Tu propia bóveda queda intacta: esto no puede sobrescribirla, y no se te pide su frase de contraseña para protegerla.</string>
+    <string name="decoy_fact_end_up">Dónde terminas</string>
+    <string name="decoy_fact_end_up_body">El último paso te deja dentro de la nueva bóveda, para que veas lo que encontraría quien escriba su frase de contraseña. Vuelves aquí cuando termines.</string>
+    <string name="decoy_other_vaults">Tengo otras bóvedas en este dispositivo</string>
+    <string name="decoy_other_vaults_hint">Solo si tienes una segunda frase de contraseña que abre algo en la pantalla de bloqueo.</string>
+    <plurals name="decoy_entries_added">
+        <item quantity="one">Se agregó %1$d entrada.</item>
+        <item quantity="many">Se agregaron %1$d entradas.</item>
+        <item quantity="other">Se agregaron %1$d entradas.</item>
+    </plurals>
+    <string name="decoy_handover_title">Esto es lo que verán</string>
+    <string name="decoy_handover_lead">Escribir la frase de contraseña de esta bóveda en la pantalla de bloqueo lleva exactamente aquí y a nada más. Lo estás viendo como lo verían.</string>
+    <string name="decoy_show_words">Mostrar las palabras de recuperación</string>
+    <string name="decoy_fact_no_way_across">No hay forma de pasar a otra desde aquí</string>
+    <string name="decoy_fact_no_way_across_body">Quien tenga esta frase de contraseña llega a esta bóveda y ahí se detiene. No puede ver que la tuya existe, y mucho menos abrirla; ese es el objetivo.</string>
+    <string name="decoy_fact_nothing_names">Aquí no hay nada que mencione la otra</string>
+    <string name="decoy_fact_nothing_names_body">Esta bóveda no sabe que la tuya existe, y nada en esta pantalla tampoco. Para quien la abra, esto es todo el dispositivo.</string>
+    <string name="decoy_fact_inside">Qué hay dentro</string>
+    <plurals name="decoy_fact_inside_body">
+        <item quantity="one">%1$d foto, con la fecha en que se tomó, y un historial de desbloqueos que parece de meses de uso normal.</item>
+        <item quantity="many">%1$d fotos, con las fechas en que se tomaron, y un historial de desbloqueos que parece de meses de uso normal.</item>
+        <item quantity="other">%1$d fotos, con las fechas en que se tomaron, y un historial de desbloqueos que parece de meses de uso normal.</item>
+    </plurals>
+    <string name="decoy_fact_back">Luego vuelves a tu propia bóveda</string>
+    <string name="decoy_fact_back_body">Anotar las palabras de recuperación es lo último que falta. Después, esta bóveda se cierra y la tuya se vuelve a abrir, donde estabas.</string>
+    <string name="decoy_vaults_label">Bóvedas</string>
+    <string name="decoy_confirm_title">Confirma que eres tú</string>
+    <string name="decoy_confirm_body">Ingresa la frase de contraseña de la bóveda que tienes abierta. Esto autoriza crear el señuelo y nada más.</string>
+    <string name="decoy_confirm_wrong">Esa no es la frase de contraseña de la bóveda que tienes abierta.</string>
+    <string name="decoy_checking">Comprobando</string>
+    <string name="decoy_build">Crear el señuelo</string>
+    <string name="decoy_preserve_title">Otras bóvedas en este dispositivo</string>
+    <string name="decoy_preserve_body">Solo para una segunda frase de contraseña que abre algo en la pantalla de bloqueo: un señuelo que ya creaste o una bóveda que restauraste. Las bóvedas de tu propia lista no cuentan y nunca corren riesgo.</string>
+    <string name="decoy_preserve_warning">La app no puede encontrar una bóveda que no puede abrir, así que tampoco puede evitarla. Cualquier bóveda así cuya frase de contraseña no se ingrese aquí podría sobrescribirse con la nueva.</string>
+    <string name="decoy_preserve_label">Frase de contraseña de una bóveda que quieres conservar</string>
+    <string name="decoy_preserve_add">Agregar a la lista</string>
+    <string name="decoy_preserve_empty">No se agregó nada. Dejarlo vacío es lo correcto para la mayoría.</string>
+    <string name="decoy_preserve_entry">Frase de contraseña %1$d</string>
+    <string name="decoy_preserve_remove">Quitar frase de contraseña %1$d</string>
+
+    <!-- Onboarding — the first-run steps -->
+    <string name="onboarding_welcome_title">Fotos que nadie más puede abrir</string>
+    <string name="onboarding_welcome_lead">Todo lo que guardas aquí se encripta en este dispositivo y se queda en él. No hay cuenta, ni servidor, ni forma de que veamos nada; esta app no puede conectarse a internet en absoluto.</string>
+    <string name="onboarding_welcome_steps">La configuración tiene ocho pasos cortos. Ninguno es obligatorio, y puedes cambiar de opinión después en Configuración.</string>
+    <string name="onboarding_get_started">Empezar</string>
+    <string name="onboarding_have_backup">Tengo una copia de seguridad para restaurar</string>
+    <string name="onboarding_passphrase_lead">Es lo único que abre tu bóveda. No se puede restablecer.</string>
+    <string name="onboarding_fact_no_reset">No hay restablecimiento ni cuenta</string>
+    <string name="onboarding_fact_no_reset_body">Nadie puede recuperarla por ti: ni nosotros ni nadie. Ese es el objetivo, y también el riesgo.</string>
+    <string name="onboarding_fact_kit_next">A continuación recibes un kit de recuperación</string>
+    <string name="onboarding_fact_kit_next_body">Veinticuatro palabras que abren esta bóveda si olvidas la frase de contraseña. Es la única otra forma de entrar.</string>
+    <string name="onboarding_kit_title">Anota estas palabras</string>
+    <string name="onboarding_kit_lead">Veinticuatro palabras que abren esta bóveda si alguna vez pierdes la frase de contraseña. Después de esto, puedes verlas 3 veces más desde el menú. Luego desaparecen de esta app para siempre.</string>
+    <string name="onboarding_fact_anyone">Quien tenga estas palabras puede abrir esta bóveda</string>
+    <string name="onboarding_fact_anyone_body">No se pueden cambiar ni cancelar. Guarda el papel donde no buscaría alguien que revise tus cosas.</string>
+    <string name="onboarding_fact_backup_words">Una copia de seguridad se restaura con ellas, no con tu frase de contraseña</string>
+    <string name="onboarding_fact_backup_words_body">Si después guardas una copia en una carpeta en la nube, estas palabras son lo único que puede leerla.</string>
+    <string name="onboarding_kit_type">Escribe “%1$s” para confirmar que las anotaste.</string>
+    <string name="onboarding_capture_title">Mira quién intentó entrar</string>
+    <string name="onboarding_capture_lead">Tras un desbloqueo fallido, el teléfono registra en silencio a quien lo tenga en la mano.</string>
+    <string name="onboarding_fact_failed_unlock">Solo funciona tras un desbloqueo fallido</string>
+    <string name="onboarding_fact_failed_unlock_body">No se registra nada cuando un desbloqueo sale bien, y nada sale de este dispositivo; cada captura se sella para que solo tu frase de contraseña pueda leerla, y te espera en Captura de intrusos.</string>
+    <string name="onboarding_fact_permission">Cada modo pide su propio permiso</string>
+    <string name="onboarding_fact_permission_body">Activa uno y Android pide exactamente lo que ese modo necesita. Si lo rechazas, el modo queda desactivado; nada más cambia.</string>
+    <string name="onboarding_decoy_title">Ten una bóveda que puedas entregar</string>
+    <string name="onboarding_decoy_lead">Una segunda bóveda, con su propia frase de contraseña, con cosas que no te importaría que alguien viera.</string>
+    <string name="onboarding_fact_used_body">Una bóveda vacía no engaña a nadie. Esta recibe las fotos que elijas, con fechas y un historial que parecen meses de uso normal.</string>
+    <string name="onboarding_fact_choose">Tú eliges las fotos</string>
+    <string name="onboarding_fact_choose_body">Vienen de este dispositivo y son tuyas. Quien reciba esta bóveda las verá, así que elige las que estés dispuesto a mostrar.</string>
+    <string name="onboarding_fact_trial">Esto inicia tu prueba de 30 días</string>
+    <string name="onboarding_fact_trial_body">Crear un señuelo importa fotos reales, y la prueba empieza con lo primero que se agrega a una bóveda. Omite este paso si prefieres empezarla con tus propias cosas.</string>
+    <string name="onboarding_backup_title">Guarda una copia en otro lugar</string>
+    <string name="onboarding_backup_lead">Si pierdes o se rompe este teléfono, todo lo que hay en la bóveda se va con él, a menos que exista una copia.</string>
+    <string name="onboarding_panic_title">Una frase de contraseña que cierra las demás</string>
+    <string name="onboarding_panic_lead">Si la escribes en la pantalla de bloqueo, abre una bóveda y cierra para siempre todas las demás de este dispositivo.</string>
+    <string name="onboarding_panic_set_up">Configurar una credencial de pánico</string>
+    <string name="onboarding_fact_ordinary">Parece un desbloqueo normal</string>
+    <string name="onboarding_fact_ordinary_body">La misma pantalla, la misma velocidad, nada que ver. Ese es el objetivo: quien esté mirando no se entera de nada.</string>
+    <string name="onboarding_fact_way_in_body">Las demás bóvedas se quedan en este dispositivo como datos ilegibles, y sus kits de recuperación de 24 palabras todavía las abren. Así es como las recuperas.</string>
+    <string name="onboarding_identity_title">Haz que parezca otra cosa</string>
+    <string name="onboarding_identity_lead">La app puede presentarse como una calculadora, un reproductor de música o una grabadora de voz en tu pantalla principal.</string>
+    <string name="onboarding_finish">Terminar la configuración</string>
+    <string name="onboarding_choose_identity">Elegir una identidad</string>
+    <string name="onboarding_fact_disguise">El disfraz es real y funciona</string>
+    <string name="onboarding_fact_disguise_body">Cambian tanto la entrada del selector de apps como la tarjeta de apps recientes. Vuelves a entrar haciendo, en la propia fachada, un gesto que eliges.</string>
+    <string name="onboarding_fact_hides">Oculta la app, no los archivos</string>
+    <string name="onboarding_fact_hides_body">Quien pueda leer el almacenamiento de este dispositivo, o abra la Configuración de Android, todavía puede saber que la app está aquí. Tu frase de contraseña, o una biometría que hayas configurado, sigue siendo lo único que abre una bóveda.</string>
+    <string name="onboarding_fact_rehearse">Ensayarás el gesto dos veces</string>
+    <string name="onboarding_fact_rehearse_body">Una para grabarlo y otra de memoria. Un activador que no puedes repetir es una bóveda que no puedes abrir.</string>
+
+    <!-- Intruder capture — the modes -->
+    <string name="capture_mode_photo">Foto</string>
+    <string name="capture_mode_audio">Audio</string>
+    <string name="capture_mode_video">Video</string>
+    <string name="capture_mode_photo_line">Una foto de la cámara frontal</string>
+    <string name="capture_mode_audio_line">Un clip corto del micrófono</string>
+    <string name="capture_mode_video_line">Un clip corto con sonido</string>
+    <string name="capture_no_front_camera">Este dispositivo no tiene cámara frontal.</string>
+    <string name="capture_sheet_lead">Se registra tras un desbloqueo fallido.</string>
+    <string name="capture_sheet_photo">Una foto de la cámara frontal.</string>
+    <string name="capture_sheet_audio">Unos segundos del micrófono.</string>
+    <string name="capture_sheet_video">Unos segundos de cámara y sonido.</string>
+    <string name="capture_sheet_no_front">Este dispositivo no tiene cámara frontal, así que la foto y el video no están disponibles.</string>
+    <!-- Intruder capture — the home screen's timeline, its flows and its notices -->
+    <string name="intruder_capture_settings">Ajustes de captura</string>
+    <string name="intruder_today">Hoy</string>
+    <string name="intruder_yesterday">Ayer</string>
+    <string name="intruder_empty_off_title">Nada capturado</string>
+    <string name="intruder_empty_off_body">Activa un modo y el teléfono registrará en silencio a quien no logre desbloquearlo.</string>
+    <string name="intruder_empty_off_action">Elegir qué registrar</string>
+    <string name="intruder_empty_on_title">Aún no hay nada capturado</string>
+    <string name="intruder_empty_on_body">%1$s activado. Aquí aparece una captura después de un desbloqueo fallido.</string>
+    <string name="intruder_empty_on_action">Cambiar qué se registra</string>
+    <string name="intruder_left_moved">Movida a %1$s</string>
+    <string name="intruder_left_exported">Exportada</string>
+    <string name="intruder_left_deleted">Borrada</string>
+    <string name="intruder_row_description">%1$s. %2$s, %3$s.</string>
+    <string name="intruder_row_description_left">%1$s. %2$s, %3$s. %4$s.</string>
+    <string name="intruder_move_to_vault">Mover a una bóveda</string>
+    <string name="intruder_export">Exportar</string>
+    <plurals name="intruder_capture_count">
+        <item quantity="one">%1$d captura</item>
+        <item quantity="many">%1$d capturas</item>
+        <item quantity="other">%1$d capturas</item>
+    </plurals>
+    <string name="intruder_move_failed">No se pudieron mover esas capturas. No se cambió nada.</string>
+    <plurals name="intruder_delete_title">
+        <item quantity="one">¿Borrar %1$d captura para siempre?</item>
+        <item quantity="many">¿Borrar %1$d capturas para siempre?</item>
+        <item quantity="other">¿Borrar %1$d capturas para siempre?</item>
+    </plurals>
+    <plurals name="intruder_delete_body">
+        <item quantity="one">La captura se destruye y no se puede restaurar. Su línea se queda en la cronología.</item>
+        <item quantity="many">Las capturas se destruyen y no se pueden restaurar. Sus líneas se quedan en la cronología.</item>
+        <item quantity="other">Las capturas se destruyen y no se pueden restaurar. Sus líneas se quedan en la cronología.</item>
+    </plurals>
+    <plurals name="intruder_export_title">
+        <item quantity="one">Exportar %1$d captura</item>
+        <item quantity="many">Exportar %1$d capturas</item>
+        <item quantity="other">Exportar %1$d capturas</item>
+    </plurals>
+    <plurals name="intruder_export_body">
+        <item quantity="one">La captura se desencripta, se escribe fuera, se comprueba y luego se quita de Captura de intrusos. Su línea se queda en la cronología.</item>
+        <item quantity="many">Las %1$d capturas se desencriptan, se escriben fuera, se comprueban y luego se quitan de Captura de intrusos. Sus líneas se quedan en la cronología.</item>
+        <item quantity="other">Las %1$d capturas se desencriptan, se escriben fuera, se comprueban y luego se quitan de Captura de intrusos. Sus líneas se quedan en la cronología.</item>
+    </plurals>
+    <string name="intruder_export_checked">Cada archivo se vuelve a leer y se compara antes de borrar su copia encriptada. Lo que no coincide se queda en Captura de intrusos y aparece en el manifiesto.</string>
+    <string name="intruder_export_wrong_passphrase">Esa no es la frase de contraseña que abre esta lista de bóvedas.</string>
+    <string name="intruder_export_progress_left">%1$d de %2$d fuera, %3$d siguen guardadas</string>
+    <string name="intruder_export_busy">Exportando</string>
+    <string name="intruder_blank">Salió en negro</string>
+    <string name="intruder_silent">Salió en silencio</string>
+    <string name="intruder_permission_camera_off">Permiso de cámara desactivado</string>
+    <string name="intruder_permission_camera_on">Permiso de cámara activado de nuevo</string>
+    <string name="intruder_permission_microphone_off">Permiso de micrófono desactivado</string>
+    <string name="intruder_permission_microphone_on">Permiso de micrófono activado de nuevo</string>
+    <string name="intruder_permission_stopped">Detectado a las %1$s · %2$s se detuvo</string>
+    <string name="intruder_permission_resumed">Detectado a las %1$s · %2$s vuelve a grabar</string>
+    <string name="intruder_permission_noticed">Detectado a las %1$s</string>
+    <string name="capture_banner_camera_one">%1$s no está grabando. El permiso de cámara está desactivado.</string>
+    <string name="capture_banner_camera_many">%1$s no están grabando. El permiso de cámara está desactivado.</string>
+    <string name="capture_banner_microphone_one">%1$s no está grabando. El permiso de micrófono está desactivado.</string>
+    <string name="capture_banner_microphone_many">%1$s no están grabando. El permiso de micrófono está desactivado.</string>
+    <string name="capture_turn_back_on">Volver a activar</string>
+    <string name="capture_sheet_no_camera">No graba · permiso de cámara desactivado</string>
+    <string name="capture_sheet_no_microphone">No graba · permiso de micrófono desactivado</string>
+    <string name="capture_auto_reset">Android puede quitar los permisos de esta app si no se usa durante unos meses, y la captura se detendría.</string>
+    <string name="capture_keep_permissions">Conservar permisos</string>
+    <string name="intruder_subtitle_description">Bóveda: %1$s</string>
+
+    <!-- Recovery kit — showing, re-showing and entering the 24 words -->
+    <string name="kit_acknowledgement">Entendido</string>
+    <string name="kit_title_list">Tu kit de recuperación</string>
+    <string name="kit_title_vault">Kit de recuperación de %1$s</string>
+    <string name="kit_title_short">Kit de recuperación</string>
+    <string name="kit_body_list">Estas 24 palabras son la única forma de volver a las bóvedas que abre tu frase de contraseña si la olvidas. Anótalas en orden y guarda el papel en un lugar seguro.\n\nQuien tenga estas palabras puede abrir esas bóvedas, incluidas las que agregues después. Una bóveda a la que le des su propia frase de contraseña no está entre ellas: tiene su propio kit. Estas palabras no se pueden cambiar ni cancelar.</string>
+    <string name="kit_body_list_backup">Si alguna vez haces una copia de seguridad de esta bóveda en una carpeta en la nube, son estas palabras las que la restauran, no tu frase de contraseña. Si pierdes este dispositivo y esta página juntos, nadie podrá abrir la copia, ni siquiera tú.</string>
+    <string name="kit_body_vault">Estas 24 palabras son la única forma de volver a %1$s si olvidas la frase de contraseña que acabas de definir. Anótalas en orden y guarda el papel en un lugar seguro.\n\nLa frase de contraseña que abre tu lista de bóvedas no abrirá esta, y tampoco el kit de recuperación de esa lista. Si pierdes la frase de contraseña y esta página, todo lo que hay en %1$s desaparece para siempre.\n\nQuien tenga estas palabras puede abrir %1$s. No se pueden cambiar ni cancelar.</string>
+    <string name="kit_type_acknowledgement">Escribe “%1$s” para confirmar que las anotaste y que sabes que la frase de contraseña no se puede restablecer.</string>
+    <string name="kit_print">Imprimir</string>
+    <string name="kit_last_view">Última vista: no se puede volver a mostrar.</string>
+    <plurals name="kit_views_left_after">
+        <item quantity="one">Queda %1$d vista después de esta.</item>
+        <item quantity="many">Quedan %1$d vistas después de esta.</item>
+        <item quantity="other">Quedan %1$d vistas después de esta.</item>
+    </plurals>
+    <string name="kit_remaining_views">Después de continuar, puedes verlas 3 veces más desde el menú. Después de la tercera no se pueden volver a mostrar, y la copia que anotes será la única.</string>
+    <string name="drawer_kit">Kit de recuperación \u0020· \u0020%1$s</string>
+    <string name="kit_cannot_show">No se puede volver a mostrar</string>
+    <plurals name="kit_views_left">
+        <item quantity="one">Queda %1$d vista</item>
+        <item quantity="many">Quedan %1$d vistas</item>
+        <item quantity="other">Quedan %1$d vistas</item>
+    </plurals>
+    <string name="kit_exhausted">Tu kit de recuperación ya se mostró todas las veces posibles. Esta app no puede volver a mostrarlo. Guarda la copia que anotaste en un lugar seguro.</string>
+    <string name="kit_enter_list">Ingresa tu frase de contraseña para mostrarlo.</string>
+    <string name="kit_enter_vault">Ingresa la frase de contraseña de %1$s para mostrarlo.</string>
+    <string name="kit_last_time">Esta es la última vez que se puede mostrar tu kit de recuperación. Cuando salgas de la siguiente pantalla no se podrá volver a mostrar, así que asegúrate de anotar las 24 palabras. %1$s</string>
+    <plurals name="kit_views_more">
+        <item quantity="one">Puedes ver tu kit de recuperación %1$d vez más. Verlo ahora usa una y quedan %2$d. %3$s</item>
+        <item quantity="many">Puedes ver tu kit de recuperación %1$d veces más. Verlo ahora usa una y quedan %2$d. %3$s</item>
+        <item quantity="other">Puedes ver tu kit de recuperación %1$d veces más. Verlo ahora usa una y quedan %2$d. %3$s</item>
+    </plurals>
+    <string name="kit_wrong_list">Esa frase de contraseña no abre esta lista.</string>
+    <string name="kit_wrong_vault">Esa frase de contraseña no abre esta bóveda.</string>
+    <string name="kit_passphrase_for">Frase de contraseña de %1$s</string>
+    <string name="kit_open_failed">No se pudo abrir tu kit de recuperación. Inténtalo de nuevo.</string>
+    <string name="kit_show">Mostrar kit de recuperación</string>
+    <string name="kit_words_open_nothing">Esas palabras no abren ninguna bóveda en este dispositivo.</string>
+    <string name="kit_new_passphrase_title">Elige una nueva frase de contraseña</string>
+    <string name="kit_enter_title">Ingresa tu kit</string>
+    <string name="kit_enter_lead">Escribe las 24 palabras de tu kit de recuperación, una en cada casilla.</string>
+    <string name="kit_add_backup_file">Agregar un archivo de copia de seguridad</string>
+    <string name="kit_lost_files">¿También perdiste archivos? Elige la copia de seguridad que guardaste en tu app en la nube o tarjeta SD y también volverán.</string>
+    <string name="kit_sd_backup">Copia de seguridad en tarjeta SD</string>
+    <string name="kit_backup_file">Archivo de copia de seguridad</string>
+    <string name="kit_new_passphrase_restoring">Elige la frase de contraseña que este teléfono usará para abrir tus bóvedas. Tus 24 palabras no cambian. Conserva el papel.</string>
+    <string name="kit_new_passphrase_lead">Tu kit de recuperación es correcto. Elige la frase de contraseña que usarás para abrir tus bóvedas de ahora en adelante; la anterior deja de funcionar. Tus 24 palabras no cambian. Conserva el papel.</string>
+    <string name="kit_passphrase_in_use">Esa frase de contraseña ya abre algo en este teléfono. Elige otra.</string>
+    <string name="kit_new_passphrase_label">Nueva frase de contraseña</string>
+    <string name="kit_mismatch">Las dos entradas no coinciden.</string>
+    <string name="kit_setting_passphrase">Definiendo la frase de contraseña</string>
+    <string name="kit_set_passphrase">Definir frase de contraseña</string>
+    <string name="kit_recover_title">Recuperar una bóveda</string>
+    <string name="kit_recover_lead">Escribe las 24 palabras del kit de recuperación propio de una bóveda, una en cada casilla. Se abre desde esta lista con la frase de contraseña que acabas de usar (si ya está en la lista, deja de pedir la suya propia), así que no volverás a necesitar esas palabras.\n\nEsto no recupera archivos: el almacenamiento de la bóveda ya tiene que estar en este dispositivo.</string>
+    <string name="kit_recover_name">Ponle nombre en esta lista</string>
+    <string name="kit_recover_name_hint">El nombre de una bóveda se guarda en la lista en la que estaba, así que esta necesita un nombre aquí.</string>
+    <string name="kit_recovering">Recuperando</string>
+    <string name="kit_recover_action">Recuperar bóveda</string>
+    <string name="kit_not_a_word">no es una palabra</string>
+    <string name="kit_word">Palabra %1$d</string>
+    <string name="kit_word_wrong">Palabra %1$d, no es una de las 24 palabras</string>
+    <plurals name="kit_words_to_check">
+        <item quantity="one">Falta comprobar %1$d palabra.</item>
+        <item quantity="many">Faltan comprobar %1$d palabras.</item>
+        <item quantity="other">Faltan comprobar %1$d palabras.</item>
+    </plurals>
+    <string name="kit_checksum_failed">Todas son palabras válidas, pero el conjunto no cuadra; probablemente el orden está mal. Compáralas con tu kit en orden.</string>
+
+    <!-- Vault list — the list, a new vault, editing a vault, a vault's own passphrase -->
+    <string name="vault_icon_home">Casa</string>
+    <string name="vault_icon_family">Familia</string>
+    <string name="vault_icon_person">Persona</string>
+    <string name="vault_icon_child">Niño</string>
+    <string name="vault_icon_favourite">Favorito</string>
+    <string name="vault_icon_pets">Mascotas</string>
+    <string name="vault_icon_work">Trabajo</string>
+    <string name="vault_icon_id">Identificación</string>
+    <string name="vault_icon_bank">Banco</string>
+    <string name="vault_icon_savings">Ahorros</string>
+    <string name="vault_icon_receipts">Recibos</string>
+    <string name="vault_icon_documents">Documentos</string>
+    <string name="vault_icon_medical">Salud</string>
+    <string name="vault_icon_school">Escuela</string>
+    <string name="vault_icon_travel">Viajes</string>
+    <string name="vault_icon_car">Auto</string>
+    <string name="vault_icon_camera">Cámara</string>
+    <string name="vault_icon_music">Música</string>
+    <string name="vault_icon_books">Libros</string>
+    <string name="vault_icon_celebration">Celebración</string>
+    <string name="vault_icon_star">Estrella</string>
+    <string name="vault_icon_diamond">Diamante</string>
+    <string name="vault_icon_shopping">Compras</string>
+    <string name="vault_icon_archive">Archivo</string>
+    <string name="vault_list_lock">Bloquear</string>
+    <string name="vault_new">Nueva bóveda</string>
+    <string name="first_vault_name">Mi bóveda</string>
+    <string name="vault_list_lead">Una frase de contraseña abre esta lista y todo lo que contiene.</string>
+    <string name="vault_list_lead_locked">Una frase de contraseña abre esta lista. Las bóvedas marcadas como Bloqueada necesitan la suya.</string>
+    <string name="vault_list_empty">No hay bóvedas en esta lista.</string>
+    <string name="vault_list_empty_body">Todo lo que crees aquí se abre con la frase de contraseña que acabas de usar.</string>
+    <string name="vault_list_create">Crear una bóveda</string>
+    <string name="vault_row_locked">Bloqueada; tiene su propia frase de contraseña</string>
+    <string name="vault_row_list_passphrase">Se abre con la frase de contraseña de esta lista</string>
+    <string name="vault_row_options">Opciones de %1$s</string>
+    <string name="vault_edit">Editar bóveda</string>
+    <string name="vault_flow_name_title">Ponle nombre a tu bóveda</string>
+    <string name="vault_flow_name_lead">Verás este nombre y esta insignia en tu lista de bóvedas.</string>
+    <string name="vault_flow_opens_title">¿Cómo debe abrirse %1$s?</string>
+    <string name="vault_flow_opens_lead">Puedes añadir, cambiar o quitar una frase de contraseña más adelante desde Editar bóveda.</string>
+    <string name="vault_opens_list">Con tu lista de bóvedas</string>
+    <string name="vault_opens_list_detail">Se abre directamente desde la lista, con la frase de contraseña que ya usaste.</string>
+    <string name="vault_opens_own">Con su propia frase de contraseña</string>
+    <string name="vault_opens_own_detail">Solo su propia frase de contraseña la abre. Recibe su propio kit de recuperación y su propia captura de intrusos.</string>
+    <string name="vault_flow_passphrase_title">Elige una frase de contraseña para %1$s</string>
+    <string name="vault_flow_passphrase_lead">Solo esta frase de contraseña abrirá %1$s. La de tu lista de bóvedas no la abrirá, ni tampoco el kit de recuperación de la lista; por eso %1$s recibe su propio kit de recuperación.</string>
+    <string name="vault_flow_capture_title">Mira quién intenta abrir %1$s</string>
+    <string name="vault_flow_capture_lead">Tras una frase de contraseña incorrecta para %1$s, el teléfono graba discretamente a quien lo tenga en la mano.</string>
+    <string name="vault_capture_fact">Solo %1$s puede verlas</string>
+    <string name="vault_capture_fact_body">Cada captura se sella para %1$s y espera dentro de ella, en Captura de intrusos de su menú. Nada en tu lista de bóvedas las muestra.</string>
+    <string name="vault_discard_new_title">¿Descartar esta bóveda?</string>
+    <string name="vault_discard_new_body">Todavía no se ha creado nada.</string>
+    <string name="vault_discard_add_title">¿Descartar esta frase de contraseña?</string>
+    <string name="vault_discard_add_body">%1$s sigue abriéndose con la frase de contraseña de tu lista de bóvedas.</string>
+    <string name="vault_capture_not_enrolled">La captura de intrusos no se activó para %1$s. Actívala desde Captura de intrusos en su menú.</string>
+    <string name="vault_passphrase_label">Frase de contraseña de esta bóveda</string>
+    <string name="vault_creating">Creando…</string>
+    <string name="vault_open_named">Abrir %1$s</string>
+    <string name="vault_has_own_passphrase">Esta bóveda tiene su propia frase de contraseña.</string>
+    <string name="vault_open_wrong">Esa frase de contraseña no abrió %1$s.</string>
+    <string name="vault_opening">Abriendo</string>
+    <string name="vault_open">Abrir bóveda</string>
+    <string name="vault_colour">Color</string>
+    <string name="vault_icon">Ícono</string>
+    <string name="vault_icon_letter">Letra</string>
+    <!-- A sample of a letter, shown on the Letter icon before the vault has a name. -->
+    <!-- The name an imported vault is given on the list. From then on it is the vault's own name. -->
+    <string name="imported_vault">Bóveda importada</string>
+
+    <!-- Vault grid — destinations, filters, sorting and the add line -->
+    <string name="add_photos_or_videos">Agregar fotos o videos</string>
+    <string name="add_files">Agregar archivos</string>
+    <string name="destination_media">Multimedia</string>
+    <string name="destination_files">Archivos</string>
+    <string name="destination_notes">Notas</string>
+    <string name="destination_memos">Notas de voz</string>
+    <string name="added_to">Se agregó a %1$s.</string>
+    <string name="media_filter_all">Todo</string>
+    <string name="media_filter_photos">Fotos</string>
+    <string name="media_filter_videos">Videos</string>
+    <string name="sort_newest">Más recientes primero</string>
+    <string name="sort_oldest">Más antiguos primero</string>
+    <string name="sort_recently_added">Agregados recientemente primero</string>
+    <string name="sort_first_added">Agregados primero</string>
+    <string name="sort_name_az">Nombre A–Z</string>
+    <string name="sort_name_za">Nombre Z–A</string>
+    <string name="sort_last_edited">Última edición</string>
+    <string name="media_filter_show_all">Mostrar todo</string>
+    <string name="media_filter_show_photos">Mostrar fotos</string>
+    <string name="media_filter_show_videos">Mostrar videos</string>
+    <string name="view_as_list">Mostrar como lista</string>
+    <string name="view_as_grid">Mostrar como cuadrícula</string>
+
+    <!-- Vault grid — the bar, selection, the add button and empty states -->
+    <string name="grid_selected">%1$d seleccionados</string>
+    <string name="folder_options">Opciones de la carpeta</string>
+    <plurals name="item_count">
+        <item quantity="one">%1$d elemento</item>
+        <item quantity="many">%1$d elementos</item>
+        <item quantity="other">%1$d elementos</item>
+    </plurals>
+    <string name="sort_current">En uso</string>
+    <string name="sort_alphabetical">Alfabético, no numérico</string>
+    <string name="folder_new">Nueva carpeta</string>
+    <string name="grid_destination_settings">Configuración de %1$s</string>
+    <string name="grid_trash_and_settings">Papelera y configuración</string>
+    <string name="fab_camera">Cámara</string>
+    <string name="fab_voice_memo">Nota de voz</string>
+    <string name="fab_new_note">Nueva nota</string>
+    <string name="fab_actions">Acciones</string>
+    <string name="fab_close_actions">Cerrar acciones</string>
+    <string name="fab_no_camera">No disponible en este dispositivo</string>
+    <string name="select_all">Seleccionar todo</string>
+    <string name="move_to_folder">Mover a carpeta</string>
+    <string name="remove_from_folder">Quitar de la carpeta</string>
+    <string name="share_securely">Compartir de forma segura</string>
+    <string name="unvault_selected">Sacar de la bóveda los seleccionados</string>
+    <string name="delete_selected">Borrar los seleccionados</string>
+    <string name="restore_selected">Restaurar los seleccionados</string>
+    <string name="delete_selected_forever">Borrar para siempre los seleccionados</string>
+    <string name="leave_selection">Salir de la selección</string>
+    <string name="all_vaults">Todas las bóvedas</string>
+    <string name="select">Seleccionar</string>
+    <string name="pinned">Fijadas</string>
+    <string name="kind_video">Video</string>
+    <string name="kind_audio">Audio</string>
+    <string name="kind_file">Archivo</string>
+    <string name="empty_media">Esta bóveda está vacía.</string>
+    <string name="empty_media_line">Las fotos y los videos que agregas se encriptan antes de llegar al almacenamiento.</string>
+    <string name="empty_files">Aún no hay archivos.</string>
+    <string name="empty_files_line">Los documentos y todo lo que esta app no puede abrir se guardan aquí, encriptados.</string>
+    <string name="empty_notes">Aún no hay notas.</string>
+    <string name="empty_notes_line">Las notas que escribes se guardan en esta bóveda y nunca salen de ella.</string>
+    <string name="empty_memos">Aún no hay grabaciones.</string>
+    <string name="empty_memos_line">Las notas de voz que grabas se encriptan mientras se escriben.</string>
+    <string name="empty_add_photos">Agregar fotos</string>
+    <string name="empty_add_media">Agregar contenido multimedia</string>
+    <string name="empty_create_note">Crear nota</string>
+    <string name="empty_create_memo">Crear nota de voz</string>
+    <string name="search">Buscar</string>
+    <string name="search_no_match">No hay coincidencias.</string>
+    <string name="search_no_match_line">La búsqueda revisa nombres, carpetas y etiquetas.</string>
+    <string name="folder_empty">No hay nada en esta carpeta.</string>
+    <string name="folder_empty_line">Importa a ella o mueve elementos desde cualquier lugar de la bóveda.</string>
+    <string name="trash_empty">No hay nada en la papelera.</string>
+    <string name="trash_empty_line">Los elementos borrados esperan aquí %1$d días y luego se destruyen.</string>
+    <string name="section_edited">Editado el %1$s</string>
+    <string name="section_added">Agregado el %1$s</string>
+
+    <!-- Viewer — one item, full screen -->
+    <string name="viewer_thumbnail_set">Miniatura establecida en %1$s.</string>
+    <string name="viewer_frame_unusable">No se pudo usar este fotograma.</string>
+    <string name="viewer_rotate">Girar</string>
+    <string name="viewer_edit_image">Editar imagen</string>
+    <string name="viewer_opening">Abriendo…</string>
+    <string name="viewer_could_not_open">No se pudo abrir este elemento.</string>
+    <string name="viewer_export_item">Exportar este elemento</string>
+    <plurals name="viewer_skip_forward">
+        <item quantity="one">Adelantar %1$d segundo</item>
+        <item quantity="many">Adelantar %1$d segundos</item>
+        <item quantity="other">Adelantar %1$d segundos</item>
+    </plurals>
+    <plurals name="viewer_skip_back">
+        <item quantity="one">Retroceder %1$d segundo</item>
+        <item quantity="many">Retroceder %1$d segundos</item>
+        <item quantity="other">Retroceder %1$d segundos</item>
+    </plurals>
+    <string name="viewer_set_folder_cover">Establecer como portada de la carpeta</string>
+    <string name="viewer_use_frame">Usar este fotograma como miniatura</string>
+
+    <!-- Settings rows — a choice revealed in place -->
+    <string name="reveal_choose">Elegir %1$s</string>
+    <string name="reveal_close">Cerrar %1$s</string>
+    <string name="reveal_shown">%1$s visibles</string>
+    <string name="reveal_hidden">%1$s no visibles</string>
+    <string name="reveal_speed">velocidad</string>
+    <string name="reveal_speeds">velocidades</string>
+    <string name="reveal_length">duración</string>
+    <string name="reveal_lengths">duraciones</string>
+    <string name="reveal_way">modo</string>
+    <string name="reveal_ways">modos</string>
+    <string name="reveal_quality">calidad</string>
+    <string name="reveal_qualities">calidades</string>
+
+    <!-- Slideshow -->
+    <string name="slideshow_speed_quick">Rápida</string>
+    <string name="slideshow_speed_usual">El ritmo de siempre</string>
+    <string name="slideshow_speed_slow">Tiempo para mirar cada una</string>
+    <string name="slideshow_end">Terminar presentación</string>
+    <string name="slideshow_play">Reproducir presentación</string>
+    <string name="slideshow_pause">Pausar presentación</string>
+    <string name="slideshow_options">Opciones de la presentación</string>
+    <string name="slideshow_options_lead">La presentación espera mientras estas opciones están abiertas y continúa cuando las cierras.</string>
+    <string name="slideshow_speed_footnote">Cuánto tiempo se muestra cada foto. Los videos se reproducen hasta el final.</string>
+    <string name="slideshow_repeat">Repetir</string>
+    <string name="slideshow_repeat_on">Activado · Después del último elemento, la presentación vuelve a empezar desde el primero.</string>
+    <string name="slideshow_repeat_off">Desactivado · La presentación termina después del último elemento.</string>
+    <string name="slideshow_shuffle">Orden aleatorio</string>
+    <string name="slideshow_shuffle_on">Activado · Cada elemento se muestra una vez, en orden aleatorio, antes de que alguno se repita.</string>
+    <string name="slideshow_shuffle_off">Desactivado · Los elementos se muestran en el orden de tu lista.</string>
+
+    <!-- Folders -->
+    <string name="colour_none">Sin color</string>
+    <string name="colour_red">Rojo</string>
+    <string name="colour_amber">Ámbar</string>
+    <string name="colour_teal">Verde azulado</string>
+    <string name="colour_blue">Azul</string>
+    <string name="colour_pink">Rosa</string>
+    <string name="folder_rename">Cambiar nombre de la carpeta</string>
+    <string name="folder_create">Crear</string>
+    <string name="folder_move">Mover</string>
+    <string name="folder_cover">Portada</string>
+    <string name="folder_delete">Borrar carpeta</string>
+    <string name="folder_delete_named">Se quitará “%1$s”.</string>
+    <string name="folder_delete_moves_to">Todo lo que contiene se mueve a “%1$s”. No se borra nada y nada va a la papelera.</string>
+    <string name="folder_delete_moves_home">Todo lo que contiene se mueve a la pantalla de inicio. No se borra nada y nada va a la papelera.</string>
+    <string name="folder_cover_recent">Usar el elemento más reciente</string>
+    <string name="folder_cover_empty">Aún no hay nada que mostrar en esta carpeta.</string>
+    <string name="folder_cover_current">Portada actual</string>
+    <string name="picker_move_folder">Mover “%1$s”</string>
+    <plurals name="picker_move_items">
+        <item quantity="one">Mover %1$d elemento</item>
+        <item quantity="many">Mover %1$d elementos</item>
+        <item quantity="other">Mover %1$d elementos</item>
+    </plurals>
+    <string name="picker_folder_lead">Todo lo que hay dentro de la carpeta se mueve con ella.</string>
+    <string name="picker_items_lead">Un elemento está en una carpeta como máximo, así que moverlo reemplaza la carpeta en la que esté.</string>
+    <string name="picker_mixed_kinds">Multimedia, archivos, notas y notas de voz tienen cada uno sus propias carpetas. Para mover a una carpeta, selecciona elementos de un solo tipo.</string>
+    <string name="picker_home">Pantalla de inicio</string>
+    <string name="picker_up">Subir</string>
+    <string name="picker_where_now">dónde está ahora</string>
+    <string name="picker_move_here">Mover aquí</string>
+    <string name="picker_move_into">Mover a “%1$s”</string>
+    <string name="picker_move_home">Mover a la pantalla de inicio</string>
+    <string name="colour_yellow">Amarillo</string>
+    <string name="colour_white">Blanco</string>
+    <string name="colour_black">Negro</string>
+
+    <!-- Rename, delete and destroy -->
+    <string name="rename_item">Cambiar nombre del elemento</string>
+    <string name="rename_lead">Este es el nombre con el que se exporta el elemento. La extensión se mantiene tal cual: es lo que decide cómo se abre el elemento y adónde se exporta.</string>
+    <string name="rename_refused">Un nombre necesita al menos un carácter, no puede tener solo puntos, no puede contener una barra y tiene como máximo %1$d caracteres, incluida la extensión.</string>
+    <string name="delete_one_forever">¿Borrar %1$s para siempre?</string>
+    <plurals name="delete_many_forever">
+        <item quantity="one">¿Borrar %1$d elemento para siempre?</item>
+        <item quantity="many">¿Borrar %1$d elementos para siempre?</item>
+        <item quantity="other">¿Borrar %1$d elementos para siempre?</item>
+    </plurals>
+    <string name="delete_one">¿Borrar %1$s?</string>
+    <plurals name="delete_many">
+        <item quantity="one">¿Borrar %1$d elemento?</item>
+        <item quantity="many">¿Borrar %1$d elementos?</item>
+        <item quantity="other">¿Borrar %1$d elementos?</item>
+    </plurals>
+    <string name="delete_body_one_forever">Se destruye la copia de esta bóveda. No se puede recuperar.</string>
+    <string name="delete_body_many_forever">Se destruyen las copias de esta bóveda. No se pueden recuperar.</string>
+    <string name="delete_body_trash">Se movió a la Papelera. Se borrará definitivamente después de %1$d días.</string>
+    <string name="delete_forever">Borrar para siempre</string>
+    <string name="keep">Conservar</string>
+    <string name="destroy_title">¿Destruir “%1$s”?</string>
+    <string name="destroy_body">Todo lo que hay en esta bóveda desaparece: cada foto, video, nota y carpeta. No va a la papelera y no se puede recuperar.</string>
+    <string name="destroy_others_safe">Tus otras bóvedas no se ven afectadas.</string>
+    <string name="destroy_backup_file">Su archivo de copia de seguridad también se borra; si no, tu kit de recuperación todavía abriría una copia completa de esta bóveda. Las copias que tu proveedor guarda en su propia papelera o historial de versiones están fuera del alcance de esta app.</string>
+    <string name="destroy_backup_folder">Su carpeta de copia de seguridad también se vacía; si no, tu kit de recuperación todavía abriría una copia completa de esta bóveda. Las copias que tu proveedor guarda en su propia papelera o historial de versiones están fuera del alcance de esta app.</string>
+    <string name="destroy_give_back">Devolverme mis archivos y luego destruir</string>
+    <string name="destroy_everything">Destruir todo lo que contiene</string>
+    <string name="destroy_keep">Conservar bóveda</string>
+    <string name="destroy_gate_own">Esto no se puede deshacer. Primero, ingresa la frase de contraseña que abre %1$s: la suya propia, no la de tu lista de bóvedas.</string>
+    <string name="destroy_gate_list">Esto no se puede deshacer. Primero, ingresa la frase de contraseña de tu lista de bóvedas.</string>
+    <string name="destroy_gate_lost">¿Perdiste esta frase de contraseña? Las 24 palabras propias de esta bóveda la recuperan. En la lista de bóvedas, abre el menú, elige «Recuperar una bóveda con su kit» y destrúyela desde ahí.</string>
+    <string name="destroy_continue">Continuar</string>
+    <string name="destroy_checking">Comprobando…</string>
+    <string name="destroy_return_then">Cuando cada archivo haya salido y se haya comprobado, %1$s se destruye.</string>
+
+    <!-- Destination settings — Media, Notes and Memos -->
+    <string name="skip_short">Un salto corto</string>
+    <string name="skip_usual">El salto de siempre</string>
+    <string name="skip_longer">Un salto más largo</string>
+    <string name="skip_scene">Saltar una escena</string>
+    <string name="orientation_auto">Automática</string>
+    <string name="orientation_auto_detail">Los videos giran con tu teléfono</string>
+    <string name="orientation_landscape">Horizontal</string>
+    <string name="orientation_landscape_detail">Los videos se abren en horizontal, sin importar cómo sostengas el teléfono</string>
+    <string name="speed_0_5">0.5×</string>
+    <string name="speed_0_5_detail">La mitad de velocidad</string>
+    <string name="speed_0_75">0.75×</string>
+    <string name="speed_0_75_detail">Un poco más lento</string>
+    <string name="speed_normal">Normal</string>
+    <string name="speed_normal_detail">Como se grabó</string>
+    <string name="speed_1_25">1.25×</string>
+    <string name="speed_1_25_detail">Un poco más rápido</string>
+    <string name="speed_1_5">1.5×</string>
+    <string name="speed_1_5_detail">Una vez y media más rápido</string>
+    <string name="speed_2">2×</string>
+    <string name="speed_2_detail">El doble de velocidad</string>
+    <string name="quality_standard">Estándar</string>
+    <string name="quality_standard_detail">64 kbps · unos 0.5 MB por minuto</string>
+    <string name="quality_high">Alta</string>
+    <string name="quality_high_detail">128 kbps · unos 1 MB por minuto</string>
+    <string name="quality_highest">Máxima</string>
+    <string name="quality_highest_detail">256 kbps · unos 2 MB por minuto</string>
+    <string name="media_settings_intro">Cómo se ven y se reproducen las fotos y los videos cuando los abres.</string>
+    <string name="media_settings_viewing">Al verlos</string>
+    <string name="media_keep_on">Mantener la pantalla encendida al ver contenido</string>
+    <string name="media_keep_on_on">Activado · La pantalla se mantiene encendida mientras hay una foto o un video abierto, y la bóveda sigue abierta con ella.</string>
+    <string name="media_keep_on_off">Desactivado · La pantalla se apaga según el temporizador habitual del teléfono, y la bóveda se bloquea con ella.</string>
+    <string name="media_brightness">Brillo máximo al ver contenido</string>
+    <string name="media_brightness_on">Activado · Las fotos y los videos se abren con el brillo máximo. Tu brillo vuelve cuando los cierras.</string>
+    <string name="media_brightness_off">Desactivado · Las fotos y los videos se abren con el brillo del teléfono.</string>
+    <string name="media_stretch">Ampliar fotos de baja resolución</string>
+    <string name="media_stretch_on">Activado · Una foto más pequeña que la pantalla se amplía para llenarla.</string>
+    <string name="media_stretch_off">Desactivado · Una foto más pequeña que la pantalla se muestra en su tamaño original.</string>
+    <string name="media_quality">Máxima calidad de visualización</string>
+    <string name="media_quality_on">Activado · Las fotos se abren en resolución completa, para ver detalles al hacer zoom. Usa más memoria y batería.</string>
+    <string name="media_quality_off">Desactivado · Las fotos se abren en la resolución de la pantalla. Al hacer zoom se ven menos detalles.</string>
+    <string name="playback_speed">Velocidad de reproducción</string>
+    <string name="media_speed_footnote">El tono no cambia.</string>
+    <string name="media_resume">Reanudar videos</string>
+    <string name="media_resume_on">Activado · Un video empieza donde lo detuviste la última vez.</string>
+    <string name="media_resume_off">Desactivado · Los videos empiezan desde el principio, y no se guarda dónde te detienes.</string>
+    <string name="media_repeat">Repetir video</string>
+    <string name="media_repeat_on">Activado · Un video vuelve a empezar cuando termina.</string>
+    <string name="media_repeat_off">Desactivado · Un video se detiene al final.</string>
+    <string name="media_skip">Presionar dos veces para saltar</string>
+    <string name="media_skip_footnote">Presiona dos veces el lado derecho de un video para adelantar y el izquierdo para retroceder.</string>
+    <string name="media_orientation">Orientación del video</string>
+    <string name="notes_settings_intro">Esto se aplica a todas las notas, en todas las bóvedas.</string>
+    <string name="notes_checklists">Listas de tareas</string>
+    <string name="notes_move_checked">Mover los elementos marcados al final</string>
+    <string name="notes_move_checked_on">Activado · Marcar un elemento lo mueve debajo de los no marcados de su lista. Desmarcarlo lo vuelve a subir.</string>
+    <string name="notes_move_checked_off">Desactivado · Los elementos marcados se quedan donde están.</string>
+    <string name="notes_keyboard">Teclado</string>
+    <string name="notes_incognito">Teclado de incógnito</string>
+    <string name="notes_incognito_on">Activado · Se le pide a tu teclado que no aprenda palabras de tus notas. La mayoría de los teclados obedece; algunos quizá no.</string>
+    <string name="notes_incognito_off">Desactivado · Tu teclado puede aprender palabras de tus notas y sugerirlas en otras apps.</string>
+    <string name="memos_settings_intro">Cómo se graban las notas de voz y cómo se reproducen cuando las abres.</string>
+    <string name="memos_quality">Calidad de grabación</string>
+    <string name="memos_quality_footnote">Una nota de voz conserva la calidad con la que empezó. Un cambio se aplica a partir de la siguiente.</string>
+    <string name="memos_stereo">Grabación estéreo</string>
+    <string name="memos_stereo_on">Activado · Las notas de voz se graban en dos canales, con aproximadamente el doble de tamaño. Un teléfono que no puede graba en mono.</string>
+    <string name="memos_stereo_off">Desactivado · Las notas de voz se graban en un canal.</string>
+    <string name="memos_bluetooth">Usar micrófono Bluetooth</string>
+    <string name="memos_bluetooth_on">Activado · Unos auriculares Bluetooth conectados graban la nota de voz, con calidad de llamada y en mono; la calidad y el estéreo no se aplican. Si no hay ninguno conectado, graba el micrófono del teléfono.</string>
+    <string name="memos_bluetooth_off">Desactivado · El micrófono del teléfono graba las notas de voz. Unos auriculares Bluetooth graban con calidad de llamada y en mono, sin calidad ni estéreo.</string>
+    <string name="memos_playback">Reproducción</string>
+    <string name="memos_speed_footnote">El tono no cambia. Los videos siguen la velocidad de Multimedia, no esta.</string>
+    <string name="memos_skip_silence">Saltar silencios</string>
+    <string name="memos_skip_silence_on">Activado · Los tramos en silencio se saltan mientras se reproduce una nota de voz.</string>
+    <string name="memos_skip_silence_off">Desactivado · Las notas de voz se reproducen con sus silencios.</string>
+
+    <!-- Notes -->
+    <string name="note_title">Título</string>
+    <string name="note_body">Nota</string>
+    <string name="note_edit">Editar nota</string>
+    <string name="note_placeholder">Empieza a escribir</string>
+    <string name="note_too_long">Esta nota ocupa %1$d bytes y el límite es %2$d. El límite se cuenta en bytes, no en caracteres, así que las letras con tilde, los emojis y las escrituras no latinas cuentan cada uno como más de uno.</string>
+    <string name="note_pin">Fijar</string>
+    <string name="note_unpin">Dejar de fijar</string>
+    <string name="note_delete">Borrar nota</string>
+    <string name="format_checklist">Lista de tareas</string>
+    <string name="format_bullet">Lista con viñetas</string>
+    <string name="format_numbered">Lista numerada</string>
+    <string name="format_heading">Encabezado</string>
+    <string name="format_bold">Negrita</string>
+    <string name="format_italic">Cursiva</string>
+    <string name="format_strike">Tachado</string>
+    <string name="note_completed">Completado: %1$s</string>
+    <string name="note_attached_image">Imagen adjunta</string>
+    <string name="note_attachment_missing">Este archivo adjunto ya no está en la bóveda.</string>
+    <string name="note_attachment_missing_label">Falta el archivo adjunto %1$s</string>
+
+    <!-- Image editor -->
+    <!-- Aspect ratios: the numbers are the same in every language; write them the way the language writes a ratio. -->
+    <string name="aspect_free">Libre</string>
+    <string name="aspect_1_1">1:1</string>
+    <string name="aspect_4_3">4:3</string>
+    <string name="aspect_3_2">3:2</string>
+    <string name="aspect_16_9">16:9</string>
+    <string name="filter_original">Original</string>
+    <string name="filter_mono">B/N</string>
+    <string name="filter_warm">Cálido</string>
+    <string name="filter_cool">Frío</string>
+    <string name="filter_fade">Desvaído</string>
+    <string name="filter_punch">Intenso</string>
+    <string name="width_fine">Fino</string>
+    <string name="width_medium">Medio</string>
+    <string name="width_bold">Grueso</string>
+    <string name="editor_save_note">Al guardar se agrega un nuevo elemento y se conserva el original.</string>
+    <string name="editor_saving">Guardando…</string>
+    <string name="editor_save_copy">Guardar una copia</string>
+    <string name="editor_discard_title">¿Descartar estos cambios?</string>
+    <string name="editor_discard_body">La imagen vuelve a como estaba. No cambia nada más.</string>
+    <string name="editor_discard">Descartar</string>
+    <string name="editor_keep_editing">Seguir editando</string>
+    <string name="editor_discard_edits">Descartar cambios</string>
+    <string name="editor_title">Editar</string>
+    <string name="tool_crop">Recortar</string>
+    <string name="tool_straighten">Enderezar</string>
+    <string name="tool_filters">Filtros</string>
+    <string name="tool_light">Luz</string>
+    <string name="tool_markup">Marcas</string>
+    <string name="editor_crop_hint">Arrastra las esquinas o el propio marco.</string>
+    <string name="editor_rotate_left">Girar a la izquierda</string>
+    <string name="editor_rotate_right">Girar a la derecha</string>
+    <string name="editor_flip_horizontal">Voltear horizontalmente</string>
+    <string name="editor_flip_vertical">Voltear verticalmente</string>
+    <string name="editor_straighten_value">Enderezar \u0020· \u0020%1$s°</string>
+    <string name="editor_strength">Intensidad</string>
+    <string name="editor_brightness">Brillo</string>
+    <string name="editor_contrast">Contraste</string>
+    <string name="editor_saturation">Saturación</string>
+    <string name="editor_warmth">Calidez</string>
+    <string name="editor_erase_hint">Toca un trazo para quitarlo.</string>
+    <string name="editor_draw_hint">Arrastra sobre la imagen para dibujar.</string>
+    <string name="editor_eraser">Borrador</string>
+    <string name="editor_reset">Restablecer</string>
+
+    <!-- Voice memo -->
+    <string name="memo_recorded">Grabado</string>
+    <string name="memo_permission_body">Grabar necesita el micrófono. Nada de lo que se graba aquí sale del dispositivo: se escribe directamente en la bóveda, y este permiso es solo para eso. No activa el micrófono para nada más.</string>
+    <string name="memo_speak">Habla, y va directo a esta bóveda</string>
+    <string name="memo_trial">Guardar una nota de voz inicia tu prueba de 30 días. El reloj empieza con lo primero que llega a una bóveda, y esto sería lo primero.</string>
+    <string name="memo_allow_microphone">Permitir el micrófono</string>
+    <string name="memo_save">Guardar en la bóveda</string>
+    <string name="memo_position">Posición en esta grabación</string>
+    <string name="memo_minutes_seconds">%1$s %2$s</string>
+    <string name="memo_recording_length">Grabando, %1$s</string>
+    <string name="memo_recorded_length">Grabado, %1$s</string>
+    <string name="memo_nothing_yet">Aún no se grabó nada</string>
+    <string name="memo_discard_title">¿Descartar esta grabación?</string>
+    <string name="memo_discard_body">La grabación no se guardó, y si sales la pierdes. Nada de lo que ya está en la bóveda se ve afectado.</string>
+    <string name="memo_keep_recording">Seguir grabando</string>
+    <string name="memo_already_running">Ya hay una grabación en curso.</string>
+    <string name="memo_could_not_record">La bóveda no pudo recibir una grabación en este momento.</string>
+    <string name="memo_mic_failed">No se pudo iniciar el micrófono.</string>
+
+    <!-- Camera -->
+    <string name="camera_recording_failed">La bóveda no pudo recibir una grabación.</string>
+    <string name="camera_permission_body">La cámara necesita permiso para poder capturar algo. Nada de lo que se captura aquí va a la galería: se escribe directamente en la bóveda, y este permiso es solo para eso.</string>
+    <string name="camera_allow">Permitir la cámara</string>
+    <string name="camera_close">Cerrar la cámara</string>
+    <string name="camera_switch_back">Cambiar a la cámara trasera</string>
+    <string name="camera_switch_front">Cambiar a la cámara frontal</string>
+    <string name="camera_take_photo">Tomar foto</string>
+    <string name="camera_open_receipt">Abrirla en la bóveda</string>
+    <string name="camera_saving">Guardando la captura en la bóveda</string>
+    <string name="camera_receipt">Última captura, guardada en la bóveda</string>
+    <string name="camera_none">Este dispositivo no tiene cámara.</string>
+    <string name="camera_no_sizes">Esta cámara no informa ningún tamaño utilizable.</string>
+    <string name="camera_no_still">Esta cámara no ofrece ningún tamaño para fotos.</string>
+    <string name="camera_taken">Otra app está usando la cámara.</string>
+    <string name="camera_not_opened">No se pudo abrir la cámara.</string>
+    <string name="camera_photo_failed">No se pudo tomar la foto.</string>
+    <string name="camera_recording_refused">Este dispositivo no quiso iniciar una grabación.</string>
+    <string name="camera_preview_failed">La cámara no quiso iniciar una vista previa.</string>
+
+    <!-- Backup and restore -->
+    <string name="backup_turn_on">Activar la copia de seguridad</string>
+    <string name="backup_choose_where">Elige dónde guardar la copia</string>
+    <string name="backup_now">Hacer copia ahora</string>
+    <string name="backup_backed_up_to">Copia guardada en</string>
+    <string name="backup_how_it_works">Cómo funciona la copia de seguridad</string>
+    <string name="backup_stop">Dejar de hacer copias</string>
+    <string name="backup_caption_off">Se encripta en este teléfono antes de copiarse.</string>
+    <string name="backup_caption_file">Copia toda la bóveda unos minutos después de que hagas cambios y cuando bloqueas esta bóveda.</string>
+    <string name="backup_caption_folder">Copia después de cada cambio y cuando bloqueas esta bóveda.</string>
+    <string name="backup_last_copied">Última copia %1$s · %2$s</string>
+    <string name="backup_is_off">La copia de seguridad está desactivada</string>
+    <string name="backup_only_here">Esta bóveda solo está en este teléfono · %1$s</string>
+    <string name="backup_checking">Revisando la carpeta…</string>
+    <string name="backup_up_to_date">Al día</string>
+    <plurals name="backup_changes_to_copy">
+        <item quantity="one">%1$d cambio por copiar</item>
+        <item quantity="many">%1$d cambios por copiar</item>
+        <item quantity="other">%1$d cambios por copiar</item>
+    </plurals>
+    <string name="backup_copying">Copiando…</string>
+    <string name="backup_progress">%1$s de %2$s</string>
+    <plurals name="backup_files_failed">
+        <item quantity="one">No se copió %1$d archivo</item>
+        <item quantity="many">No se copiaron %1$d archivos</item>
+        <item quantity="other">No se copiaron %1$d archivos</item>
+    </plurals>
+    <string name="backup_partial_line">Se volverá a intentar la próxima vez.</string>
+    <string name="backup_unreachable_file">No se puede acceder al archivo de copia de seguridad</string>
+    <string name="backup_unreachable_folder">No se puede acceder a la carpeta</string>
+    <string name="backup_unreachable_line">Puede que se haya borrado, o que la app que lo guarda haya cerrado sesión.</string>
+    <string name="backup_no_space">No hay suficiente espacio</string>
+    <string name="backup_no_space_line">Se necesitan %1$s más de espacio libre para entregar la copia de seguridad.</string>
+    <string name="backup_just_now">justo ahora</string>
+    <string name="backup_before_title">Antes de activar la copia de seguridad</string>
+    <string name="backup_before_words">Para restaurar se necesitan tus 24 palabras</string>
+    <string name="backup_before_words_body">Tu frase de contraseña no puede abrir una copia de seguridad. Si pierdes este teléfono y las palabras, nadie podrá abrirla, ni siquiera tú.</string>
+    <string name="backup_before_provider">El proveedor ve el tamaño de la copia y cuándo cambió</string>
+    <string name="backup_before_provider_body">Nunca un nombre, una fecha, un álbum ni lo que hay dentro de un archivo.</string>
+    <string name="backup_before_one_vault">Esta copia es solo de esta bóveda</string>
+    <string name="backup_before_one_vault_body">Cada bóveda necesita su propia copia de seguridad.</string>
+    <string name="backup_back_up_to">Guardar copia en</string>
+    <string name="backup_no_destinations">No hay ninguna app en la nube ni tarjeta SD en este teléfono. Instala la app de tu proveedor en la nube, inicia sesión y vuelve aquí.</string>
+    <string name="backup_dest_cloud">Un archivo de copia de seguridad, actualizado tras los cambios</string>
+    <string name="backup_dest_volume">Una carpeta, actualizada tras cada cambio</string>
+    <string name="backup_how_copied">Qué se copia</string>
+    <string name="backup_how_copied_body">Los archivos de esta bóveda, encriptados en este teléfono, y la lista encriptada de bóvedas que abre tu kit de recuperación. Tu frase de contraseña y el archivo que desbloquea se quedan en este teléfono.</string>
+    <string name="backup_how_when">Cuándo copia</string>
+    <string name="backup_how_when_body">Después de cada cambio, sin tener que presionar nada. Una carpeta en tarjeta SD se actualiza en segundos y copia solo lo que cambió. El archivo de copia de una app en la nube contiene toda la bóveda, así que se reescribe unos minutos después de que dejas de hacer cambios, o de inmediato cuando bloqueas. Una bóveda que nunca abres nunca se copia.</string>
+    <string name="backup_how_restoring">Restaurar</string>
+    <string name="backup_how_restoring_body">Una copia de seguridad se restaura con tus 24 palabras, no con tu frase de contraseña. Si pierdes este teléfono y esas palabras, nadie podrá leer la copia, ni siquiera tú.</string>
+    <string name="backup_how_provider">Lo que puede ver el proveedor</string>
+    <string name="backup_how_provider_body">Una app en la nube ve un archivo: su tamaño y cuándo cambió. El contenido está sellado, así que no puede contar ni medir tus archivos. Una carpeta en tarjeta SD muestra cuántos archivos hay, el tamaño de cada uno redondeado hacia arriba a un escalón fijo y cuándo cambió cada uno; los elementos de más de 16 MB aparecen como grupo, y el patrón podría identificarlos como la copia de esta app. Ninguno de los dos ve un nombre, una fecha, un álbum ni nada de lo que hay dentro de un archivo.</string>
+    <string name="backup_how_per_vault">Una copia por bóveda</string>
+    <string name="backup_how_per_vault_body">Cada bóveda necesita su propia copia de seguridad. Cada copia también contiene la misma lista encriptada de bóvedas, así que quien pueda ver dos de ellas puede saber que van juntas.</string>
+    <string name="backup_how_destinations">Apps en la nube y tarjetas SD</string>
+    <string name="backup_how_destinations_body">Una app en la nube recibe un archivo con toda la bóveda, sellado para que el proveedor solo vea su tamaño y cuándo cambió. Se reescribe completo cada vez. Una tarjeta SD recibe una carpeta que copia solo lo que cambió. El almacenamiento propio de este teléfono no se ofrece: una copia ahí se pierde con el teléfono.</string>
+    <string name="backup_how_deleting">Borrar y detener</string>
+    <string name="backup_how_deleting_body">Lo que borras aquí se quita de la copia en la siguiente copia. Las copias que tu proveedor guarda en su papelera o historial de versiones están fuera del alcance de esta app, incluido un archivo de copia anterior si se interrumpió una copia. Dejar de hacer copias deja la copia donde está.</string>
+    <string name="backup_stop_title">¿Dejar de hacer copias de esta bóveda?</string>
+    <string name="backup_stop_body">La copia que ya se hizo se queda donde está. Bórrala desde tu proveedor si quieres que desaparezca.</string>
+    <string name="backup_keep">Seguir haciendo copias</string>
+    <string name="backup_on_sd_card">La copia de seguridad está en una tarjeta SD</string>
+    <string name="restore_into_list">Elige la copia de seguridad de una bóveda de esta lista: el archivo en tu app en la nube o la carpeta en tu tarjeta SD. Volverá a esta lista.</string>
+    <string name="restore_lead">Elige el archivo de copia que guardaste en tu app en la nube o la carpeta en tu tarjeta SD. Necesitarás las 24 palabras de tu kit de recuperación; tu frase de contraseña no puede abrir una copia de seguridad.</string>
+    <string name="restore_choose_file">Elegir el archivo de copia de seguridad</string>
+    <string name="restore_copying">Copiando archivos… %1$d de %2$d</string>
+    <string name="import_title">Importar una bóveda</string>
+    <string name="import_lead">Recupera una bóveda desde un archivo .vault o desde una copia de seguridad guardada en tu app en la nube o en una tarjeta SD.</string>
+    <string name="import_choose_file">Elegir un archivo</string>
+    <string name="import_vault_file">Archivo .vault</string>
+    <string name="import_list_full">Esta lista está llena. Quita una bóveda para hacer espacio y vuelve a importar.</string>
+    <string name="import_failed">No se abrió. O la frase de contraseña es incorrecta, o este no es un archivo .vault que esta app pueda leer.</string>
+    <string name="import_passphrase_label">Frase de contraseña de este archivo</string>
+    <string name="import_importing">Importando</string>
+    <string name="import_action">Importar bóveda</string>
+    <string name="import_backup_here">Esta es una copia de seguridad de una bóveda de esta lista.</string>
+    <string name="import_restore_vault">Restaurar bóveda</string>
+    <string name="import_other_list">Esta copia de seguridad es de otra lista de bóvedas. Escribe las 24 palabras del kit de recuperación de esa lista.</string>
+    <string name="import_own_list">Vuelve como su propia lista de bóvedas, separada de esta, y se abre con su propia frase de contraseña. Sus 24 palabras no cambian.</string>
+    <string name="import_no_room">No hay espacio para otra lista de bóvedas en este teléfono.</string>
+    <string name="import_restore_list">Restaurar lista de bóvedas</string>
+    <string name="import_copying">Copiando archivos…</string>
+    <string name="import_vault_restored">Bóveda restaurada</string>
+    <string name="import_list_restored">Lista de bóvedas restaurada</string>
+    <string name="import_vault_restored_body">Ya está de vuelta en su lista de bóvedas. Abre esa lista con su frase de contraseña para verla.</string>
+    <string name="import_list_restored_body">Bloquea la app e ingresa su frase de contraseña para abrirla.</string>
+
+    <!-- Sizes and units -->
+    <string name="size_bytes">%1$d B</string>
+    <string name="size_kb">%1$s kB</string>
+    <string name="size_mb">%1$s MB</string>
+    <string name="size_gb">%1$s GB</string>
+    <string name="size_tb">%1$s TB</string>
+    <string name="size_pb">%1$s PB</string>
+
+    <!-- Unvault and the encrypted archive -->
+    <plurals name="unvault_items">
+        <item quantity="one">Sacar %1$d elemento de la bóveda</item>
+        <item quantity="many">Sacar %1$d elementos de la bóveda</item>
+        <item quantity="other">Sacar %1$d elementos de la bóveda</item>
+    </plurals>
+    <plurals name="unvault_selected_body">
+        <item quantity="one">El %1$d elemento que seleccionaste se desencripta, se exporta, se verifica y luego se quita de la bóveda. Todo lo que no seleccionaste se queda donde está.</item>
+        <item quantity="many">Los %1$d elementos que seleccionaste se desencriptan, se exportan, se verifican y luego se quitan de la bóveda. Todo lo que no seleccionaste se queda donde está.</item>
+        <item quantity="other">Los %1$d elementos que seleccionaste se desencriptan, se exportan, se verifican y luego se quitan de la bóveda. Todo lo que no seleccionaste se queda donde está.</item>
+    </plurals>
+    <plurals name="unvault_all_body">
+        <item quantity="one">El %1$d elemento de esta bóveda se desencripta, se exporta, se verifica y luego se quita de la bóveda. Cuando termina, la bóveda queda vacía y tus archivos vuelven a ser archivos normales.</item>
+        <item quantity="many">Los %1$d elementos de esta bóveda se desencriptan, se exportan, se verifican y luego se quitan de la bóveda. Cuando termina, la bóveda queda vacía y tus archivos vuelven a ser archivos normales.</item>
+        <item quantity="other">Los %1$d elementos de esta bóveda se desencriptan, se exportan, se verifican y luego se quitan de la bóveda. Cuando termina, la bóveda queda vacía y tus archivos vuelven a ser archivos normales.</item>
+    </plurals>
+    <string name="unvault_checked">Cada archivo se vuelve a leer y se compara antes de borrar su copia encriptada. Lo que no coincide se queda en la bóveda y aparece en el manifiesto.</string>
+    <string name="unvault_where">Dónde</string>
+    <string name="unvault_gallery">Fotos y videos</string>
+    <string name="unvault_folder_chosen">Carpeta elegida</string>
+    <string name="unvault_choose_folder">Elegir una carpeta</string>
+    <string name="unvault_remove_details">Quitar detalles de la foto</string>
+    <string name="unvault_details_kept">Las fotos exportadas conservan todo lo que traen, incluida su ubicación.</string>
+    <string name="unvault_passphrase_needed">Ingresa tu frase de contraseña para continuar. El desbloqueo biométrico no sirve para esto.</string>
+    <string name="unvault_passphrase_needed_own">Ingresa la frase de contraseña propia de esta bóveda para continuar. La de tu lista de bóvedas y el desbloqueo biométrico no sirven para esto.</string>
+    <string name="unvault_wrong_passphrase">Eso no abrió esta bóveda.</string>
+    <string name="unvault_progress">%1$d de %2$d fuera</string>
+    <string name="unvault_progress_left">%1$d de %2$d fuera, %3$d siguen en la bóveda</string>
+    <string name="unvault_busy">Sacando de la bóveda</string>
+    <string name="archive_title">¿Te cambias a un dispositivo nuevo?</string>
+    <string name="archive_body">Guarda un archivo .vault encriptado que puedas abrir en el teléfono nuevo. Elige una frase de contraseña para el propio archivo: no es la que abre tus bóvedas, y la necesitarás en el otro dispositivo. No vacía esta bóveda, y los elementos de la Papelera no se incluyen.</string>
+    <string name="archive_passphrase_label">Frase de contraseña del archivo</string>
+    <string name="archive_save">Guardar archivo encriptado</string>
+
+    <!-- Sharing -->
+    <string name="lifespan_day">24 horas</string>
+    <string name="lifespan_week">7 días</string>
+    <string name="lifespan_month">30 días</string>
+    <string name="share_trial_ended">Tu prueba terminó</string>
+    <string name="share_trial_ended_body">Enviar un elemento compartido requiere la compra única. Abrir lo que te compartan, y abrir, ver y exportar tus propias cosas, sigue siendo gratis.</string>
+    <string name="share_lead_contact">Esto crea un archivo encriptado que solo el teléfono de %1$s puede abrir. No hay código que pasar.</string>
+    <string name="share_lead_code">Esto crea un archivo encriptado y un código de cuatro palabras. Quien lo reciba necesita esta app y el código para abrirlo.</string>
+    <string name="share_who">Quién puede abrirlo</string>
+    <string name="share_contact_detail">Se abre en el teléfono de %1$s, sin código</string>
+    <string name="share_anyone">Cualquiera con el código</string>
+    <string name="share_anyone_detail">Menos seguro. Cualquiera con el archivo y las palabras puede abrirlo.</string>
+    <string name="share_how_long">Durante cuánto tiempo se abre</string>
+    <string name="share_no_limit">Sin límite</string>
+    <string name="share_no_limit_detail">Se abre cuando quiera</string>
+    <string name="share_open_once">Abrir una vez</string>
+    <string name="share_open_once_detail">Se abre una vez y nunca más</string>
+    <string name="share_expires">Vence</string>
+    <string name="share_expires_detail">Se abre hasta el %1$s</string>
+    <string name="share_limits_contact">Estos límites los aplica la app en el teléfono de %1$s, y ningún otro teléfono puede abrir el archivo. Una vez que envías el archivo, no puedes recuperarlo.</string>
+    <string name="share_limits_code">Estos límites los aplica la app en el teléfono que lo abre. Una vez que envías el archivo, no puedes recuperarlo.</string>
+    <string name="share_photo_carries">Lo que lleva la foto</string>
+    <string name="share_remove_details">Quitar los detalles</string>
+    <string name="share_as_is">Enviarla tal cual</string>
+    <string name="share_as_is_detail">También se envían la ubicación, la fecha y la información de la cámara</string>
+    <string name="share_sealing">Sellando</string>
+    <string name="share_try_again">Intentar de nuevo</string>
+    <string name="share_create">Crear elemento compartido</string>
+    <string name="share_less_secure">Menos seguro que enviarlo a un contacto</string>
+    <string name="share_risk_any_phone">Cualquiera que tenga el archivo y las cuatro palabras puede abrirlo, en cualquier teléfono.</string>
+    <string name="share_risk_once">“Abrir una vez” significa una vez por teléfono. Si se reenvía, se vuelve a abrir.</string>
+    <string name="share_risk_same_chat">Enviar las palabras en el mismo chat que el archivo entrega ambas cosas.</string>
+    <string name="share_risk_guessing">Quien guarde una copia del archivo puede seguir intentando adivinar las palabras, sin límite.</string>
+    <string name="share_pair_first">Para compartir solo con una persona, vincúlate primero con ella.</string>
+    <string name="share_pair">Vincularse con alguien</string>
+    <string name="share_code_title">El código</string>
+    <string name="share_code_label">Código para compartir: %1$s</string>
+    <string name="share_code_separately">Envía el código por un medio distinto al del archivo.</string>
+    <string name="share_code_both">Quien tenga ambos puede abrirlo. Un código escrito en el mismo chat que el archivo entrega ambos a la vez.</string>
+    <string name="share_code_once">Este código se muestra una vez y no se guarda. Cópialo ahora.</string>
+    <string name="share_send_file">Enviar archivo…</string>
+    <string name="share_copy_code">Copiar código</string>
+    <string name="share_sealed_to">Sellado para %1$s</string>
+    <string name="share_sealed_body">Solo %1$s puede abrirlo. El archivo está sellado para su teléfono; no hay código que enviar.</string>
+    <string name="share_save_device">Guardar en el dispositivo</string>
+    <string name="share_saved">Guardado. Adjúntalo desde Archivos en la app con la que lo envíes.</string>
+    <string name="share_save_failed">No se pudo guardar el archivo. Inténtalo de nuevo o envíalo directamente.</string>
+    <string name="share_save_hint">O guárdalo y adjúntalo desde Archivos. Así la app con la que lo envíes no puede saber qué app lo creó.</string>
+    <string name="share_refused_trash">Los elementos de la papelera no se pueden compartir.</string>
+    <string name="share_refused_no_length">No se puede leer la duración de este video, así que no se puede compartir.</string>
+    <string name="share_refused_too_long">Los videos de más de %1$d segundos no se pueden compartir.</string>
+
+    <!-- Opening a share -->
+    <string name="share_open_title">Abrir un elemento compartido</string>
+    <string name="share_open_reading">Leyendo el archivo</string>
+    <string name="share_open_enter_code">Si se envió con un código, ingrésalo.</string>
+    <string name="share_open_code_hint">Quien lo envió te habrá dado cuatro palabras por un medio distinto al del archivo.</string>
+    <string name="share_open_failed">No se pudo abrir este elemento compartido.</string>
+    <string name="share_open_check">Revisa las cuatro palabras y que este sea el archivo que te enviaron.</string>
+    <string name="share_open_action">Abrir elemento compartido</string>
+    <string name="share_open_no_contacts">Este teléfono no puede leer sus contactos, así que un elemento compartido sellado para él no se puede abrir aquí.</string>
+    <string name="share_open_contacts">Abrir Contactos</string>
+    <string name="share_open_view">Ver</string>
+    <string name="share_open_keep">Conservar en esta bóveda</string>
+    <string name="share_open_keep_needs_purchase">Conservar elementos compartidos requiere la compra única. Cuando salgas, no se guardará nada.</string>
+    <string name="share_open_leave">Si sales sin conservarlo, no se guarda nada.</string>
+    <string name="share_open_cannot_keep">Este elemento compartido no se puede conservar. Cuando salgas, no se guardará nada.</string>
+    <string name="share_open_sealed_here">Este elemento compartido se selló para este teléfono. No hace falta ningún código para abrirlo.</string>
+    <string name="share_open_open">Abrir</string>
+    <string name="share_open_newer">Este elemento compartido se creó con una versión más reciente de la app. Actualiza esta app para abrirlo.</string>
+    <string name="share_open_already_opened">Este elemento compartido se configuró para abrirse una vez, y ya se abrió.</string>
+    <string name="share_open_expired">Este elemento compartido venció el %1$s.</string>
+    <string name="share_open_code_correct">El código era correcto. Este límite lo aplica la app en este teléfono, y quien lo envió no puede quitarlo.</string>
+    <string name="share_open_limit_once">Quien lo envió lo configuró para abrirse una vez. Este límite lo aplica la app en este teléfono.</string>
+    <string name="share_open_limit_expiry">Quien lo envió lo configuró para dejar de abrirse el %1$s. Este límite lo aplica la app en este teléfono.</string>
+
+    <!-- Contacts and pairing -->
+    <string name="contacts_waiting">En espera</string>
+    <string name="contacts_invite_sent">Invitación enviada; esperando su respuesta</string>
+    <string name="contacts_reply_sent">Respuesta enviada; esperando su confirmación</string>
+    <string name="contacts_confirmation_ready">Confirmación lista para enviar</string>
+    <string name="contacts_add">Agregar un contacto</string>
+    <string name="contacts_together">En persona</string>
+    <string name="contacts_together_detail">Escaneen el código del otro. La forma más segura de vincularse.</string>
+    <string name="contacts_not_together">A distancia</string>
+    <string name="contacts_not_together_detail">Envíale un archivo de invitación y cuatro palabras.</string>
+    <string name="contacts_have_invite">Tengo una invitación</string>
+    <string name="contacts_have_invite_detail">Abre el archivo que te enviaron y escribe sus cuatro palabras.</string>
+    <string name="contacts_empty">Aún no hay contactos. Vincúlate con alguien, en persona o enviándole una invitación, y luego podrás enviarle archivos sin código.</string>
+    <string name="contacts_remove_named">Quitar a %1$s</string>
+    <string name="contacts_unreadable">Este teléfono no puede leer sus contactos.</string>
+    <string name="contacts_unreadable_body">La lista de contactos está bloqueada con una clave que guardaba este dispositivo, y esa clave ya no está; eso es lo que deja una restauración en otro teléfono. La lista en sí está intacta; nada aquí puede abrirla.\n\nEmpezar de nuevo le da a este teléfono un nuevo código de vinculación. Quien se haya vinculado contigo tendrá que volver a escanearlo.</string>
+    <string name="contacts_new_identity">Empezar una nueva identidad</string>
+    <string name="contacts_new_identity_title">¿Empezar una nueva identidad?</string>
+    <string name="contacts_new_identity_body">La lista de contactos ilegible se borra y este teléfono recibe un nuevo código de vinculación. Todos con quienes te vinculaste tendrán que volver a escanearlo.</string>
+    <string name="contacts_start_again">Empezar de nuevo</string>
+    <string name="contacts_remove_title">¿Quitar a %1$s?</string>
+    <string name="contacts_remove_body">Lo que ya enviaste sigue enviado. Puedes volver a vincularte con esa persona.</string>
+    <string name="pairing_title">Vincular un contacto</string>
+    <string name="pairing_saved">Se guardó a %1$s. Ahora deja que escanee tu código.</string>
+    <string name="pairing_show">Muestra esto al otro teléfono y luego escanea el suyo. Cada uno tiene que escanear el código del otro.</string>
+    <string name="pairing_in_person">Escanear en persona es la forma más segura de vincularse. Nada de esto sale de este teléfono hasta que le envías un archivo a alguien.</string>
+    <string name="pairing_scan">Escanear su código</string>
+    <string name="pairing_your_code">Tu código de vinculación</string>
+    <string name="pairing_camera_permission">La cámara necesita permiso para poder leer un código. No se graba nada de lo que ve: los fotogramas se decodifican y se descartan, y este permiso es solo para eso.</string>
+    <string name="pairing_point">Apunta al código del otro teléfono.</string>
+    <string name="pairing_camera_looking">Cámara, buscando un código de vinculación</string>
+    <string name="pairing_who">¿Quién es? El nombre es solo tuyo: se guarda en este teléfono y nunca se envía a ningún lado.</string>
+    <string name="pairing_save">Guardar contacto</string>
+    <string name="remote_invite_title">Invitar a alguien</string>
+    <string name="remote_answer_title">Responder a una invitación</string>
+    <string name="remote_important">Importante</string>
+    <string name="remote_name_too_long">Ese nombre es demasiado largo. Prueba uno más corto.</string>
+    <string name="remote_name_yours">El nombre es solo tuyo y se queda en este teléfono.</string>
+    <string name="remote_who_inviting">¿A quién invitas?</string>
+    <string name="remote_make_invite">Crear invitación</string>
+    <string name="remote_invite_ready">Invitación lista</string>
+    <string name="remote_invite_send">Envíale a %1$s el archivo de invitación. Luego dale estas cuatro palabras por otro medio: díselas en una llamada o en persona.</string>
+    <string name="remote_your_words">Tus cuatro palabras: %1$s</string>
+    <string name="remote_invite_strict">Quien tenga el archivo y estas palabras puede convertirse en este contacto. Dale las palabras solo a %1$s, nunca en el mismo chat que el archivo.</string>
+    <string name="remote_open_reply">Abrir la respuesta de %1$s</string>
+    <string name="remote_send_invite_again">Volver a enviar el archivo de invitación</string>
+    <string name="remote_waiting_reply_today">Esperando la respuesta de %1$s. Esta invitación termina a las %2$s.</string>
+    <string name="remote_waiting_reply_tomorrow">Esperando la respuesta de %1$s. Esta invitación termina mañana a las %2$s.</string>
+    <string name="remote_send_invite">Enviar archivo de invitación</string>
+    <string name="remote_cancel_invite">Cancelar invitación</string>
+    <string name="remote_now_contact">%1$s ahora es un contacto.</string>
+    <string name="remote_send_confirmation_body">Envíale este archivo de confirmación para que también pueda agregarte.</string>
+    <string name="remote_send_confirmation_again">Volver a enviar el archivo de confirmación</string>
+    <string name="remote_send_confirmation">Enviar archivo de confirmación</string>
+    <string name="remote_open_invite">Abrir el archivo de invitación</string>
+    <string name="remote_who_sent">¿Quién lo envió?</string>
+    <string name="remote_their_words">Sus cuatro palabras</string>
+    <string name="remote_know_sender">Continúa solo si sabes quién lo envió. Quien creó la invitación se convierte en contacto.</string>
+    <string name="remote_make_reply">Crear respuesta</string>
+    <string name="remote_send_reply_title">Envía tu respuesta</string>
+    <string name="remote_send_reply_body">Envíale a %1$s este archivo de respuesta.</string>
+    <string name="remote_open_confirmation">Abrir la confirmación de %1$s</string>
+    <string name="remote_send_reply_again">Volver a enviar el archivo de respuesta</string>
+    <string name="remote_waiting_confirmation_today">Esperando la confirmación de %1$s. Esto termina a las %2$s.</string>
+    <string name="remote_waiting_confirmation_tomorrow">Esperando la confirmación de %1$s. Esto termina mañana a las %2$s.</string>
+    <string name="remote_send_reply">Enviar archivo de respuesta</string>
+    <string name="remote_ended">Esta invitación terminó</string>
+    <string name="remote_ended_reply">Esa respuesta no coincidió, así que esta invitación terminó. Comprueben que las cuatro palabras se hayan escrito exactamente y que ambos tengan la versión más reciente de la app.</string>
+    <string name="remote_ended_this">Esto terminó</string>
+    <string name="remote_ended_confirmation">Esa confirmación no coincidió, así que esto terminó. Pídele a %1$s que cree una nueva invitación y revisen juntos las cuatro palabras.</string>
+    <string name="remote_ended_expired">Esta invitación terminó. Las invitaciones duran 24 horas.</string>
+    <string name="remote_ended_already">Esta invitación ya terminó.</string>
+    <string name="remote_own_invite">Esta es tu propia invitación</string>
+    <string name="remote_own_invite_body">Esa es la invitación de este mismo teléfono.</string>
+    <string name="remote_unreadable_body">La lista de contactos está bloqueada con una clave que este dispositivo ya no tiene. En Contactos se explica qué puedes hacer.</string>
+    <string name="remote_new_invite">Crear una nueva invitación</string>
+
+    <!-- Removing the originals from the gallery -->
+    <string name="originals_title">¿Quitar los originales de tu galería?</string>
+    <string name="originals_removed">Se quitaron los originales de tu galería.</string>
+    <plurals name="originals_photos">
+        <item quantity="one">%1$d foto</item>
+        <item quantity="many">%1$d fotos</item>
+        <item quantity="other">%1$d fotos</item>
+    </plurals>
+    <plurals name="originals_videos">
+        <item quantity="one">%1$d video</item>
+        <item quantity="many">%1$d videos</item>
+        <item quantity="other">%1$d videos</item>
+    </plurals>
+    <plurals name="originals_in_vault">
+        <item quantity="one">%1$s ya está en esta bóveda. Android te pedirá que lo confirmes.</item>
+        <item quantity="many">%1$s ya están en esta bóveda. Android te pedirá que lo confirmes.</item>
+        <item quantity="other">%1$s ya están en esta bóveda. Android te pedirá que lo confirmes.</item>
+    </plurals>
+    <plurals name="originals_stay">
+        <item quantity="one">%1$d más no se puede quitar desde aquí y se quedará en tu galería.</item>
+        <item quantity="many">%1$d más no se pueden quitar desde aquí y se quedarán en tu galería.</item>
+        <item quantity="other">%1$d más no se pueden quitar desde aquí y se quedarán en tu galería.</item>
+    </plurals>
+
+    <!-- Lock screen warnings -->
+    <string name="warning_rooted">Parece que este dispositivo tiene acceso root. Otra app con root puede leer la memoria de esta bóveda mientras está abierta.</string>
+    <string name="warning_debuggable">Esta es una compilación depurable. Su memoria se puede leer por USB mientras la bóveda está abierta.</string>
+    <string name="warning_debugger">Hay un depurador conectado a esta app en este momento.</string>
+    <plurals name="warning_accessibility">
+        <item quantity="one">Hay %1$d servicio de accesibilidad en ejecución. Un servicio así puede leer lo que hay en la pantalla, incluido todo lo que abras aquí.</item>
+        <item quantity="many">Hay %1$d servicios de accesibilidad en ejecución. Un servicio así puede leer lo que hay en la pantalla, incluido todo lo que abras aquí.</item>
+        <item quantity="other">Hay %1$d servicios de accesibilidad en ejecución. Un servicio así puede leer lo que hay en la pantalla, incluido todo lo que abras aquí.</item>
+    </plurals>
+
+    <!-- Covers — the calculator, the music player and the voice recorder -->
+    <string name="calc_divide_by_zero">No se puede dividir entre cero</string>
+    <string name="calc_undefined">Indefinido</string>
+    <string name="calc_infinity">Infinito</string>
+    <string name="calc_invalid_format">Formato no válido</string>
+    <string name="pattern_draw">Dibuja tu patrón</string>
+    <string name="pattern_wrong">Patrón incorrecto</string>
+    <string name="music_unknown_track">Pista desconocida</string>
+    <string name="music_unknown_artist">Artista desconocido</string>
+    <string name="music_unknown_album">Álbum desconocido</string>
+    <string name="music_tracks">Pistas</string>
+    <string name="music_albums">Álbumes</string>
+    <string name="music_artists">Artistas</string>
+    <string name="music_shuffle_all">Reproducir todo aleatoriamente</string>
+    <plurals name="music_track_count">
+        <item quantity="one">%1$d pista</item>
+        <item quantity="many">%1$d pistas</item>
+        <item quantity="other">%1$d pistas</item>
+    </plurals>
+    <string name="music_close_player">Cerrar reproductor</string>
+    <string name="music_nothing_playing">No se está reproduciendo nada</string>
+    <string name="music_shuffle_on">Aleatorio activado</string>
+    <string name="music_shuffle_off">Aleatorio desactivado</string>
+    <string name="music_previous">Anterior</string>
+    <string name="music_next">Siguiente</string>
+    <string name="music_repeat_one">Repetir una</string>
+    <string name="music_repeat_all">Repetir todo</string>
+    <string name="music_repeat_off">Repetición desactivada</string>
+    <string name="music_tap_to_open">Presiona para abrir el reproductor</string>
+    <string name="music_loading">Cargando biblioteca…</string>
+    <string name="music_none">No hay música en este dispositivo</string>
+    <string name="music_none_line">Las canciones que agregues aparecerán aquí.</string>
+    <string name="music_access_off">El acceso a la música está desactivado</string>
+    <string name="music_access_off_line">Activa Música y audio en Configuración para reproducir lo que hay en este dispositivo.</string>
+    <string name="recorder_default_title">Grabación %1$s</string>
+    <plurals name="recorder_count">
+        <item quantity="one">%1$d grabación · %2$s</item>
+        <item quantity="many">%1$d grabaciones · %2$s</item>
+        <item quantity="other">%1$d grabaciones · %2$s</item>
+    </plurals>
+    <string name="recorder_search">Buscar grabaciones</string>
+    <string name="recorder_hide_controls">Ocultar controles</string>
+    <string name="recorder_show_controls">Mostrar controles</string>
+    <string name="recorder_paused">En pausa</string>
+    <string name="recorder_resume">Reanudar</string>
+    <string name="recorder_delete_title">¿Borrar “%1$s”?</string>
+    <string name="recorder_delete_body">Esta grabación se quitará de este dispositivo.</string>
+    <string name="recorder_none">Aún no hay grabaciones</string>
+    <string name="recorder_mic_off">El acceso al micrófono está desactivado</string>
+    <string name="recorder_none_line">Presiona grabar para crear una.</string>
+    <string name="recorder_mic_off_line">Activa Micrófono en Configuración para grabar.</string>
+    <string name="recorder_no_match">Ninguna grabación coincide con “%1$s”</string>
+    <string name="recorder_paused_length">En pausa, %1$s</string>
+
+    <!-- The unlock digest — what happened since the last unlock -->
+    <string name="digest_altered">Este registro de eventos se alteró en la entrada %1$d.</string>
+    <string name="digest_not_opened_since">No se abre desde el %1$s.</string>
+    <plurals name="digest_recoveries">
+        <item quantity="one">Se usó %1$d kit de recuperación para abrir esta bóveda.</item>
+        <item quantity="many">Se usaron %1$d kits de recuperación para abrir esta bóveda.</item>
+        <item quantity="other">Se usaron %1$d kits de recuperación para abrir esta bóveda.</item>
+    </plurals>
+    <plurals name="digest_failed">
+        <item quantity="one">Falló %1$d intento de desbloqueo.</item>
+        <item quantity="many">Fallaron %1$d intentos de desbloqueo.</item>
+        <item quantity="other">Fallaron %1$d intentos de desbloqueo.</item>
+    </plurals>
+    <plurals name="digest_imported">
+        <item quantity="one">Se importó %1$d elemento.</item>
+        <item quantity="many">Se importaron %1$d elementos.</item>
+        <item quantity="other">Se importaron %1$d elementos.</item>
+    </plurals>
+    <plurals name="digest_deleted">
+        <item quantity="one">Se borró %1$d archivo de origen.</item>
+        <item quantity="many">Se borraron %1$d archivos de origen.</item>
+        <item quantity="other">Se borraron %1$d archivos de origen.</item>
+    </plurals>
+    <string name="digest_biometric">Un cambio en los datos biométricos registrados invalidó el desbloqueo biométrico.</string>
+    <string name="digest_dev_options">Se activaron las opciones para desarrolladores o la depuración por USB en este dispositivo.</string>
+    <string name="digest_root">Cambió el estado de root de este dispositivo.</string>
+    <string name="digest_data_cleared">Parece que se borraron los datos de esta app.</string>
+    <string name="digest_new_device">Esta bóveda se está ejecutando en un dispositivo distinto de aquel en el que se configuró.</string>
+    <string name="digest_clock">El reloj de este dispositivo retrocedió.</string>
+    <string name="vault_passphrase_heading">Frase de contraseña</string>
+    <string name="vault_passphrase_state_list">Se abre con la frase de contraseña de tu lista de bóvedas.</string>
+    <string name="vault_passphrase_state_own">Solo se abre con su propia frase de contraseña.</string>
+    <string name="vault_passphrase_add">Añadir una frase de contraseña</string>
+    <string name="vault_passphrase_add_supporting">Solo esa frase de contraseña la abrirá</string>
+    <string name="vault_passphrase_change">Cambiar frase de contraseña</string>
+    <string name="vault_passphrase_remove">Quitar frase de contraseña</string>
+    <string name="vault_passphrase_remove_supporting">La frase de contraseña de tu lista de bóvedas la abrirá</string>
+    <string name="vault_passphrase_added">Frase de contraseña añadida.</string>
+    <string name="vault_passphrase_changed">Frase de contraseña cambiada.</string>
+    <string name="vault_passphrase_removed">Frase de contraseña quitada.</string>
+    <string name="vault_passphrase_add_lead">Una vez añadida, solo esta frase de contraseña abre %1$s. La de tu lista de bóvedas no la abrirá, ni tampoco el kit de recuperación de la lista; por eso %1$s recibe su propio kit de recuperación.</string>
+    <string name="vault_passphrase_list_label">Frase de contraseña de la lista de bóvedas</string>
+    <string name="vault_passphrase_list_supporting">La que abre la lista de bóvedas de esta app.</string>
+    <string name="vault_passphrase_list_empty">Escribe la frase de contraseña que abre tu lista de bóvedas.</string>
+    <string name="vault_passphrase_new_again">Repite la nueva frase de contraseña</string>
+    <string name="vault_passphrase_backups_heading">Copias de seguridad anteriores</string>
+    <string name="vault_passphrase_add_backups">Una copia de seguridad guardada antes de ahora sigue abriendo %1$s con la frase de contraseña de tu lista de bóvedas.</string>
+    <string name="vault_passphrase_add_button">Añadir frase de contraseña</string>
+    <string name="vault_passphrase_adding">Añadiendo…</string>
+    <string name="vault_passphrase_change_lead">El kit de recuperación de %1$s no cambia, y sus 24 palabras la siguen abriendo. La frase de contraseña de tu lista de bóvedas sigue sin abrirla.</string>
+    <string name="vault_passphrase_current_label">Frase de contraseña actual</string>
+    <string name="vault_passphrase_current_empty">Escribe la frase de contraseña actual de esta bóveda.</string>
+    <string name="vault_passphrase_change_backups">Una copia de seguridad guardada antes de ahora abre %1$s con la frase de contraseña anterior.</string>
+    <string name="vault_passphrase_changing">Cambiando…</string>
+    <string name="vault_passphrase_remove_opens">La frase de contraseña de tu lista de bóvedas la abre</string>
+    <string name="vault_passphrase_remove_opens_body">%1$s se abrirá directamente desde la lista, sin frase de contraseña propia.</string>
+    <string name="vault_passphrase_remove_kit">El kit de recuperación de tu lista la cubre</string>
+    <string name="vault_passphrase_remove_kit_body">Las 24 palabras de la lista recuperarán %1$s. Sus propias 24 palabras también la siguen abriendo y no se pueden cancelar.</string>
+    <string name="vault_passphrase_remove_captures">Sus capturas de intrusos pasan al inicio</string>
+    <string name="vault_passphrase_remove_captures_body">Su historial se une a Captura de intrusos en la pantalla de inicio, y sus propios ajustes de captura se desactivan.</string>
+    <string name="vault_passphrase_removing">Quitando…</string>
+    <plurals name="kit_remaining_views_fewer">
+        <item quantity="one">Después de continuar, puedes verlas %1$d vez más desde el menú. Después no se pueden volver a mostrar, y la copia que anotes será la única.</item>
+        <item quantity="other">Después de continuar, puedes verlas %1$d veces más desde el menú. Después no se pueden volver a mostrar, y la copia que anotes será la única.</item>
+    </plurals>
+    <string name="kit_remaining_views_none">Esta app ya las ha mostrado todas las veces que puede, así que después de continuar no se pueden volver a mostrar. La copia que anotes será la única.</string>
+    <!-- `third-party-notices`. The Open-source licences row and its two screens. -->
+    <string name="licences_title">Licencias de código abierto</string>
+    <plurals name="licences_drawer_line">
+        <item quantity="one">%1$d biblioteca y su licencia</item>
+        <item quantity="other">%1$d bibliotecas y sus licencias</item>
+    </plurals>
+    <string name="licences_lead">%1$s está hecho con estas bibliotecas. Cada una se usa bajo su propia licencia, que se muestra abajo.</string>
+    <string name="licences_open_action">abrir licencia</string>
+    <string name="licences_version">Versión %1$s</string>
+    <string name="licences_source">Origen</string>
+    <string name="licences_licence">Licencia</string>
+</resources>

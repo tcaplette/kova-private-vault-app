@@ -1,0 +1,1819 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      The app's text — `app-languages`. Every string a person reads is here, grouped by the
+      screen it appears on, with a comment heading each group. The eight translations keep
+      this file's key order so a reviewer can read them side by side.
+
+      Left in code on purpose, in every language (`app-languages` D4):
+      - Log lines, exception and require() messages: read in logcat and crash reports,
+        never on a screen.
+      - Data written into files and read back by code: the export manifest and its
+        reasons, export stamps and EXIF/XMP fields, file and folder names the app finds
+        again by name (the gallery's "Vault" export folder, a received share's "Shared item" fallback name),
+        container and blob names, preference keys and MIME types.
+      - The recovery and share-code words: the BIP-39 English list in res/raw. A kit
+        written down under one language has to open the vault under another.
+      - The calculator's notation (sin, cos, tan, ln, log, π, e, EXP, AC, DEL, INV,
+        DEG/RAD) and the language names on the Language sheet, which are each language's
+        own name for itself.
+      - The debug-only Crash log screen and its drawer row, which ship in no release build.
+    -->
+
+    <!--
+      The application label: "Kova", the owner's name for the app (2026-10-25). It
+      replaced "Toolbox", an agent-drafted category name nobody chose. It is the same
+      in every locale.
+
+      This is what notifications, Settings > Apps, the app-info page, storage,
+      battery, the permission manager and every runtime permission dialog read. An
+      activity-alias label does not reach it and no runtime API overrides it, so
+      whatever stands here is what a cover identity says about itself the moment any
+      of those surfaces appears. With "Vault" here, granting the recorder its
+      microphone read "Allow Vault to record audio?" over a voice recorder, which is
+      why it must never be "Vault" or any identity's name.
+
+      P2-22 left this as "Vault" on two arguments. The first — that a label other than
+      an alias's imposes a build-time choice on every install including the honest
+      default — is true, and is the price: a user who never wears a cover sees "Vault"
+      on their home screen (the alias label, unchanged) and this word in Settings. The
+      second — that it would desync the label from the name the Play listing is
+      approved under — is simply wrong. The Play Console title is a separate field
+      from android:label; the two differ routinely and nothing couples them.
+    -->
+    <string name="app_name">Kova</string>
+
+    <!--
+      Launcher identity labels — P2-22. These are the words the launcher and recents
+      show, in the device's language (`app-languages` D5); LauncherIdentity names these
+      same resources, and LauncherIdentityScanTest fails the build if the two disagree.
+    -->
+    <string name="identity_vault">Cofre</string>
+
+    <!--
+      P2-24's cover identities. Ordinary names for ordinary apps: the cover has to be
+      a believable instance of the thing it claims to be, and a clever name is the
+      first thing that makes somebody look twice.
+    -->
+    <string name="identity_calculator">Calculadora</string>
+    <string name="identity_musicplayer">Música</string>
+    <string name="identity_voicerecorder">Gravador de voz</string>
+
+    <!-- Language — the drawer row and the Language sheet -->
+    <!-- Not a phrase: the tag of the language this file is written in. Each translation
+         names its own (ja, ko, pt-BR, …). System default's line reads it to say which
+         language the device's setting resolves to. -->
+    <string name="language_resource_tag">pt-BR</string>
+    <string name="language_german">Alemão</string>
+    <string name="language_english">Inglês</string>
+    <string name="language_spanish">Espanhol</string>
+    <string name="language_french">Francês</string>
+    <string name="language_portuguese_brazil">Português (Brasil)</string>
+    <string name="language_japanese">Japonês</string>
+    <string name="language_korean">Coreano</string>
+    <string name="language_chinese_simplified">Chinês simplificado</string>
+    <string name="language_chinese_traditional">Chinês tradicional</string>
+    <string name="language_title">Idioma</string>
+    <string name="language_system_default">Padrão do sistema</string>
+    <string name="language_explainer">Muda o idioma só deste app. O idioma do seu celular continua como está.</string>
+    <string name="language_suggested">Sugeridos</string>
+    <string name="language_all">Todos os idiomas</string>
+    <string name="language_system_default_detail">%1$s — segue o celular</string>
+    <string name="language_changed">Idioma alterado para %1$s</string>
+    <string name="drawer_language">Idioma \u0020· \u0020%1$s</string>
+
+    <!-- Messages — unlock, backup, restore and vault lifecycle (MainActivity) -->
+    <string name="backup_incomplete">Este arquivo de backup está incompleto — talvez seja de um backup que não terminou.</string>
+    <string name="backup_unreadable">Não foi possível ler o backup. Verifique se o app onde ele está tem uma conta conectada.</string>
+    <string name="backup_other_list">Este backup é de outra lista de cofres. Use “Importar um cofre de um arquivo” para recuperá-lo.</string>
+    <string name="bio_invalidated">O desbloqueio biométrico foi desativado porque seus dados biométricos mudaram. Use sua frase secreta.</string>
+    <string name="bio_after_migration">O desbloqueio biométrico foi desativado após esta atualização. Ative-o de novo nas Configurações.</string>
+    <string name="vault_newer_version">Este cofre foi aberto pela última vez por uma versão mais nova do app. Seus arquivos estão seguros e nada foi alterado. Atualize o app para abri-lo.</string>
+    <string name="vault_index_relinked">O índice deste cofre precisou ser reconectado após uma falha. Tudo foi encontrado e nada foi perdido.</string>
+    <string name="vault_index_unreadable">Não foi possível abrir este cofre. O índice está ausente ou danificado, e a busca nos arquivos do cofre não encontrou outro. Seu kit de recuperação pode restaurá-lo.</string>
+    <string name="capture_not_saved">Não foi possível salvar essa captura no cofre.</string>
+    <string name="backup_folder_on_phone">Essa pasta está neste celular. Um backup aqui se perde junto com o celular — escolha um app de nuvem ou um cartão SD.</string>
+    <string name="restore_device_not_empty">Este dispositivo já tem um cofre. Um backup só pode ser restaurado em um dispositivo vazio.</string>
+    <string name="restore_open_vaults_first">Abra seus cofres primeiro.</string>
+    <string name="restore_file_not_opened">Não foi possível abrir o arquivo de backup.</string>
+    <string name="restore_file_unreadable">Não foi possível ler o arquivo de backup. Verifique se o app onde ele está tem uma conta conectada.</string>
+    <string name="restore_no_backup_in_folder">Nenhum backup foi encontrado nessa pasta.</string>
+    <string name="capture_mode_permission_denied">Esse modo precisa da permissão que acabou de pedir. Ele está desativado.</string>
+    <string name="decoy_trial_notice">Criar um cofre isca importa fotos reais, e o teste de 30 dias começa com a primeira coisa adicionada a um cofre. Deixe isso para depois se preferir começá-lo com suas próprias coisas.</string>
+    <string name="vault_list_not_saved">Não foi possível salvar.</string>
+    <string name="editor_could_not_open">Não foi possível abrir este item para edição.</string>
+    <string name="folder_name_length">O nome da pasta precisa ter pelo menos um caractere e no máximo %1$d.</string>
+    <string name="folder_name_duplicate">Já existe uma pasta com esse nome aqui.</string>
+    <string name="folder_cycle">Uma pasta não pode ficar dentro dela mesma.</string>
+    <string name="vault_destroy_failed">Não foi possível remover “%1$s”. Nada dentro dele foi perdido.</string>
+    <string name="share_create_failed">Não foi possível criar o compartilhamento. Talvez não haja espaço suficiente no dispositivo.</string>
+    <string name="setup_vault_not_created">Não foi possível criar o cofre. Tente de novo.</string>
+    <string name="decoy_choose_photos_first">Escolha as fotos primeiro.</string>
+    <string name="decoy_set_passphrase_first">Defina primeiro a frase secreta do cofre isca.</string>
+    <string name="decoy_passphrase_in_use">Essa frase secreta já abre um cofre neste dispositivo. Volte e escolha outra.</string>
+    <string name="decoy_no_room">Não há espaço para outro cofre neste dispositivo.</string>
+    <string name="decoy_passphrase_needed">Este dispositivo já tem um cofre isca, e criar um agora pode sobrescrevê-lo. Volte e digite também a frase secreta do cofre isca.</string>
+    <string name="decoy_not_created">Isso não criou um cofre.</string>
+    <string name="recovery_words_wrong_backup">Essas palavras não abrem este backup.</string>
+    <string name="import_words_wrong_backup">Essas palavras não abrem este backup.</string>
+    <string name="recovery_list_not_here">A lista de cofres deste backup não está neste celular. Desbloqueie e escolha “Importar um cofre de um arquivo” no menu.</string>
+    <string name="this_vault">este cofre</string>
+    <string name="that_vault">Esse cofre</string>
+    <string name="backup_open_vault_first_file">Abra primeiro o cofre de que você quer fazer backup. Um backup guarda um cofre.</string>
+    <string name="backup_open_vault_first_folder">Abra primeiro o cofre de que você quer fazer backup. Uma pasta guarda um cofre.</string>
+    <string name="backup_folder_another_vault">Essa pasta já guarda outro cofre deste dispositivo. Cada cofre precisa da própria pasta — fazer backup aqui apagaria o que está nela.</string>
+    <string name="backup_folder_another_install">Essa pasta já guarda outro backup. Escolha uma pasta vazia ou uma que este cofre preencheu — fazer backup aqui apagaria o que está nela.</string>
+    <plurals name="vault_destroy_items_left">
+        <item quantity="one">%1$d item não pôde ser exportado, então este cofre foi mantido. Tudo o que ainda está nele continua intacto.</item>
+        <item quantity="many">%1$d itens não puderam ser exportados, então este cofre foi mantido. Tudo o que ainda está nele continua intacto.</item>
+        <item quantity="other">%1$d itens não puderam ser exportados, então este cofre foi mantido. Tudo o que ainda está nele continua intacto.</item>
+    </plurals>
+    <string name="kit_print_job">Kit de recuperação do cofre</string>
+    <string name="panic_wrong_passphrase">Essa frase secreta não abre esta lista de cofres.</string>
+    <string name="panic_wrong_phrase">Essa não é sua frase de pânico.</string>
+    <string name="panic_too_close">Parecida demais com sua frase secreta — um erro de digitação poderia acioná-la. Escolha algo diferente.</string>
+    <string name="panic_in_use">Essa frase já abre uma lista de cofres. Escolha outra.</string>
+    <string name="panic_no_room">Não há espaço para outra frase neste dispositivo.</string>
+    <string name="panic_cleared">Sua frase de pânico antiga não funciona mais aqui, então ela está desativada. Defina uma nova.</string>
+    <string name="panic_not_saved">Não foi salvo. Tente de novo.</string>
+    <string name="pairing_not_a_code">Isso não é um código de pareamento.</string>
+    <string name="pairing_newer_app">Este código foi criado por uma versão mais nova do app. Atualize para lê-lo.</string>
+    <string name="pairing_own_code">Esse é o código deste próprio celular.</string>
+    <string name="pairing_already_known">Você já tem este contato, como %1$s.</string>
+    <string name="remote_not_an_invite">Este não é um arquivo de convite.</string>
+    <string name="remote_wrong_reply">Este arquivo não é a resposta de %1$s a este convite.</string>
+    <string name="remote_wrong_confirmation">Este arquivo não é a confirmação de %1$s.</string>
+    <string name="memo_notifications_off">As notificações estão desativadas, então “Parar” não vai aparecer na aba de notificações.</string>
+    <string name="memo_too_short">Foi curto demais para guardar.</string>
+    <string name="vault_list_full">Esta lista está cheia. Remova um cofre para liberar espaço.</string>
+    <string name="vault_not_created">Não foi possível criar esse cofre.</string>
+    <string name="vault_not_opened">Não foi possível abrir esse cofre.</string>
+    <string name="bio_prompt_unlock_title">Desbloquear cofre</string>
+    <string name="bio_prompt_use_passphrase">Usar frase secreta</string>
+    <string name="purchase_unavailable">A compra não está disponível neste dispositivo agora (código %1$d). Nada do que você já tem é afetado.</string>
+    <plurals name="imports_failed">
+        <item quantity="one">%1$d importação não foi concluída. Nada foi adicionado. Tente de novo.</item>
+        <item quantity="many">%1$d importações não foram concluídas. Nada foi adicionado. Tente de novo.</item>
+        <item quantity="other">%1$d importações não foram concluídas. Nada foi adicionado. Tente de novo.</item>
+    </plurals>
+
+    <!-- Notifications — the foreground work and the recording -->
+    <string name="notification_working">Processando</string>
+    <string name="notification_channel_import">Importação</string>
+    <string name="notification_channel_archive">Arquivo</string>
+    <string name="notification_channel_export">Exportação</string>
+    <string name="notification_channel_recording">Gravação</string>
+    <string name="notification_recording">Gravando</string>
+    <string name="notification_stop">Parar</string>
+
+    <!-- The printed recovery kit -->
+    <string name="kit_print_heading">Kit de recuperação do cofre</string>
+    <string name="kit_print_line_1">Estas 24 palavras abrem este cofre. Guarde esta página em segurança.</string>
+    <string name="kit_print_line_2">Elas não podem ser alteradas nem canceladas.</string>
+
+    <!-- Biometric unlock — the screen, the drawer row and the first-run step -->
+    <string name="bio_name">Desbloqueio biométrico</string>
+    <string name="bio_lead">Um jeito mais rápido de entrar que nunca substitui sua frase secreta.</string>
+    <string name="bio_row_fingerprint">Desbloqueio por impressão digital</string>
+    <string name="bio_row_face">Desbloqueio facial</string>
+    <string name="bio_row_both">Desbloqueio facial e por impressão digital</string>
+    <string name="bio_on">Ativado</string>
+    <string name="bio_off">Desativado</string>
+    <string name="bio_line_not_set_up">Ainda não configurado. Toque para configurar nas configurações do dispositivo.</string>
+    <string name="bio_line_not_available_now">Indisponível no momento — o sensor não está respondendo.</string>
+    <string name="bio_line_needs_update">Precisa de uma atualização de segurança do fabricante do dispositivo antes que o cofre possa usá-lo.</string>
+    <string name="bio_unsupported">Não compatível com este dispositivo.</string>
+    <string name="bio_unsupported_face">Não compatível com este dispositivo. O desbloqueio facial dele não é seguro o bastante para proteger dados criptografados.</string>
+    <string name="bio_unsupported_fingerprint">Não compatível com este dispositivo. O sensor de impressão digital dele não é seguro o bastante para proteger dados criptografados.</string>
+    <string name="bio_drawer_not_set_up">Não configurado</string>
+    <string name="bio_drawer_not_available_now">Indisponível no momento</string>
+    <string name="bio_drawer_needs_update">Precisa de atualização de segurança</string>
+    <string name="bio_drawer_not_supported">Não compatível com este dispositivo</string>
+    <string name="bio_fact_how">Como você abre o cofre</string>
+    <string name="bio_fact_how_fingerprint">Quando o cofre está bloqueado, o Android pede sua impressão digital. Toque no sensor e o cofre abre.</string>
+    <string name="bio_fact_how_face">Quando o cofre está bloqueado, o Android pede seu rosto. Olhe para a tela e toque para confirmar — o cofre nunca abre só com um olhar.</string>
+    <string name="bio_fact_how_both">Quando o cofre está bloqueado, o Android espera seu rosto e sua impressão digital ao mesmo tempo. Toque no sensor ou olhe para a tela e toque para confirmar — o que você usar primeiro abre o cofre.</string>
+    <string name="bio_fact_how_unnamed">Quando o cofre está bloqueado, o Android pede a biometria configurada neste dispositivo.</string>
+    <string name="bio_fact_fingerprint_only">Para usar só a impressão digital</string>
+    <string name="bio_fact_fingerprint_only_body">Quem decide quais biometrias os apps podem usar é o Android, não este app. Nas configurações do dispositivo, abra o Desbloqueio facial e desative o uso em apps — assim só sua impressão digital abre o cofre.</string>
+    <string name="bio_fact_turns_off">Ele é desativado se sua biometria mudar</string>
+    <string name="bio_fact_turns_off_fingerprint">Adicionar ou remover uma impressão digital nas configurações do dispositivo desativa este recurso. Desbloqueie com sua frase secreta e ative-o de novo em “Desbloqueio biométrico” no menu.</string>
+    <string name="bio_fact_turns_off_face">Adicionar ou remover um rosto nas configurações do dispositivo desativa este recurso. Desbloqueie com sua frase secreta e ative-o de novo em “Desbloqueio biométrico” no menu.</string>
+    <string name="bio_fact_turns_off_both">Adicionar ou remover um rosto ou uma impressão digital nas configurações do dispositivo desativa este recurso. Desbloqueie com sua frase secreta e ative-o de novo em “Desbloqueio biométrico” no menu.</string>
+    <string name="bio_fact_turns_off_unnamed">Adicionar ou remover uma biometria nas configurações do dispositivo desativa este recurso. Desbloqueie com sua frase secreta e ative-o de novo em “Desbloqueio biométrico” no menu.</string>
+    <string name="bio_fact_passphrase">Sua frase secreta sempre abre o cofre</string>
+    <string name="bio_fact_passphrase_body">O desbloqueio biométrico é uma segunda forma de entrar, nunca um substituto. Se você esquecer sua frase secreta, ele não vai deixar você entrar — seu kit de recuperação vai.</string>
+    <string name="bio_button_fallback">Usar biometria</string>
+    <string name="bio_enable_title">Ativar o desbloqueio biométrico</string>
+
+    <!-- Calculator cover — how it opens -->
+    <string name="method_sequence">Sequência de botões</string>
+    <string name="method_sequence_line">Digite sua sequência e mantenha = pressionado.</string>
+    <string name="method_sequence_pattern">Sequência de botões e depois padrão</string>
+    <string name="method_sequence_pattern_line">Digite sua sequência e mantenha = pressionado; depois desenhe seu padrão nos pontos que aparecerem.</string>
+    <string name="method_hold_pattern">Toque longo e depois padrão</string>
+    <string name="method_hold_pattern_line">Mantenha pressionado por 2 segundos um ponto que você escolher; depois desenhe seu padrão nos pontos que aparecerem.</string>
+    <string name="method_choose_lead">Escolha como você vai abrir a tela da frase secreta a partir deste ícone. A configuração vem a seguir.</string>
+
+    <!-- Intruder capture — where an attempt failed -->
+    <string name="capture_where_music">Player de música</string>
+    <string name="capture_where_recorder">Gravador de voz</string>
+    <string name="capture_where_calculator">Calculadora</string>
+    <string name="capture_where_cover">Disfarce</string>
+    <string name="capture_where_pattern">%1$s: padrão incorreto</string>
+    <string name="capture_where_pattern_dots">%1$s: padrão incorreto nos pontos exibidos</string>
+    <string name="capture_where_pattern_lockout">%1$s: padrão tentado durante o bloqueio</string>
+    <string name="capture_where_pattern_lockout_dots">%1$s: padrão tentado durante o bloqueio nos pontos exibidos</string>
+    <string name="capture_where_wrong_fingerprint">Tela de desbloqueio: impressão digital incorreta</string>
+    <string name="capture_where_wrong_face">Tela de desbloqueio: rosto incorreto</string>
+    <string name="capture_where_wrong_both">Tela de desbloqueio: rosto ou impressão digital incorretos</string>
+    <string name="capture_where_wrong_biometric">Tela de desbloqueio: biometria incorreta</string>
+    <string name="capture_where_wrong_passphrase">Tela de desbloqueio: frase secreta incorreta</string>
+    <string name="capture_where_vault_passphrase">Frase secreta do cofre: frase incorreta</string>
+
+    <!-- Passphrase strength — the meter under every passphrase field -->
+    <string name="strength_add_another_word">Adicione mais uma ou duas palavras. Palavras incomuns ajudam mais.</string>
+    <string name="strength_default_suggestions_use_few_words">Use várias palavras que não têm nada a ver umas com as outras.</string>
+    <string name="strength_default_suggestions_no_need_symbols">Símbolos, números e maiúsculas não são necessários aqui — o que conta é o tamanho.</string>
+    <string name="strength_dictionary_warning_passwords_top10">Esta é uma das dez senhas mais usadas.</string>
+    <string name="strength_dictionary_warning_passwords_top100">Esta é uma das cem senhas mais usadas.</string>
+    <string name="strength_dictionary_warning_passwords_very_common">Esta é uma senha muito comum e seria adivinhada logo.</string>
+    <string name="strength_dictionary_warning_passwords_similar">Isto é parecido com uma senha que já é muito usada.</string>
+    <string name="strength_dictionary_warning_english_wikipedia_itself">Uma única palavra sozinha é fácil de adivinhar.</string>
+    <string name="strength_dictionary_warning_etc_names_themselves">Um nome sozinho é fácil de adivinhar.</string>
+    <string name="strength_dictionary_warning_etc_names_common">Nomes comuns são fáceis de adivinhar.</string>
+    <string name="strength_dictionary_suggestions_capitalization">Maiúscula no início quase não ajuda. Adicione uma palavra.</string>
+    <string name="strength_dictionary_suggestions_all_uppercase">Tudo em maiúsculas é quase tão fácil de adivinhar quanto tudo em minúsculas.</string>
+    <string name="strength_dictionary_suggestions_reversed">Escrever uma palavra ao contrário não a torna muito mais difícil de adivinhar.</string>
+    <string name="strength_dictionary_suggestions_l33t">Trocar letras por símbolos parecidos, como 4 no lugar de a, já é esperado.</string>
+    <string name="strength_spatial_warning_straight_rows_of_keys">Uma fileira reta de teclas é uma das primeiras coisas testadas.</string>
+    <string name="strength_spatial_warning_short_keyboard_patterns">Padrões curtos traçados no teclado são fáceis de adivinhar.</string>
+    <string name="strength_spatial_suggestions_use_longer_keyboard_pattern">Use palavras em vez de uma forma traçada no teclado.</string>
+    <string name="strength_repeat_warning_like_aaa">Um caractere repetido é adivinhado tão rápido quanto um único caractere.</string>
+    <string name="strength_repeat_warning_like_abcabcabc">Um bloco repetido é só um pouco mais difícil de adivinhar que o bloco sozinho.</string>
+    <string name="strength_repeat_suggestions_avoid_repeated_words">Repetir uma palavra ou letra acrescenta muito pouco. Adicione uma palavra diferente.</string>
+    <string name="strength_sequence_warning_like_abcor6543">Sequências como abc ou 6543 são adivinhadas na hora.</string>
+    <string name="strength_sequence_suggestions_avoid_sequences">Evite letras ou números em sequência.</string>
+    <string name="strength_regex_warning_recent_years">Anos recentes estão entre as primeiras coisas testadas.</string>
+    <string name="strength_regex_suggestions_avoid_recent_years">Deixe os anos de fora, principalmente os que têm significado para você.</string>
+    <string name="strength_date_warning_dates">Datas são fáceis de adivinhar, mesmo as que só você conhece.</string>
+    <string name="strength_date_suggestions_avoid_dates">Deixe as datas de fora, principalmente as que têm significado para você.</string>
+    <string name="strength_very_weak">Muito fraca</string>
+    <string name="strength_weak">Fraca</string>
+    <string name="strength_fair">Razoável</string>
+    <string name="strength_almost">Quase lá</string>
+    <string name="strength_strong_enough">Forte o bastante</string>
+    <string name="strength_count">%1$d de %2$d caracteres</string>
+    <string name="passphrase_requirement">Pelo menos %1$d caracteres. Algumas palavras incomuns valem mais que uma palavra complicada.</string>
+    <string name="passphrase_too_weak">Essa frase secreta é fácil demais de adivinhar. Adicione mais uma ou duas palavras.</string>
+
+    <!-- First vault and the lock screen -->
+    <string name="passphrase_label">Frase secreta</string>
+    <string name="passphrase_again_label">Digite de novo</string>
+    <string name="passphrase_mismatch">As duas entradas não coincidem.</string>
+    <string name="setup_title">Escolha uma frase secreta</string>
+    <string name="setup_lead">Ela não pode ser redefinida. Em seguida, você verá um kit de recuperação de 24 palavras, que é a única outra forma de entrar neste cofre. Perca os dois e tudo o que há nele some para sempre.</string>
+    <string name="setup_preparing">Preparando o armazenamento</string>
+    <string name="setup_create">Criar cofre</string>
+    <string name="setup_restore_backup">Restaurar backup</string>
+    <string name="unlock_welcome">Que bom ver você de novo</string>
+    <string name="unlock_lead">Digite sua frase secreta para abrir este cofre.</string>
+    <string name="unlock_failed">Isso não abriu um cofre.</string>
+    <string name="unlock_action">Desbloquear</string>
+    <string name="unlock_forgot">Esqueceu a frase secreta?</string>
+    <string name="unlock_busy">Desbloqueando</string>
+    <string name="passphrase_hide">Ocultar frase secreta</string>
+    <string name="passphrase_show">Mostrar frase secreta</string>
+    <string name="passphrase_match">As duas entradas coincidem</string>
+
+    <!-- Photo details — the sheet, and the export and share lines -->
+    <string name="photo_details_privacy">Privacidade</string>
+    <string name="photo_details_custom">Personalizado</string>
+    <!-- Joining a list: "%1$s" is everything before the last item, already joined with list_separator. -->
+    <string name="list_separator">,\u0020</string>
+    <string name="list_and">%1$s e %2$s</string>
+    <string name="list_or">%1$s ou %2$s</string>
+    <string name="exif_noun_location">localização</string>
+    <string name="exif_noun_camera">informação da câmera</string>
+    <string name="exif_noun_the_date">data</string>
+    <string name="exif_noun_date">data</string>
+    <string name="exif_noun_software">histórico de edição</string>
+    <string name="exif_export_names_only">Só nomes, legendas e comentários são removidos das fotos JPEG exportadas. Outros formatos são gravados sem alterações.</string>
+    <plurals name="exif_export_removed">
+        <item quantity="one">%1$s sai das fotos JPEG exportadas.</item>
+        <item quantity="many">%1$s saem das fotos JPEG exportadas.</item>
+        <item quantity="other">%1$s saem das fotos JPEG exportadas.</item>
+    </plurals>
+    <plurals name="exif_export_kept">
+        <item quantity="one">%1$s fica.</item>
+        <item quantity="many">%1$s ficam.</item>
+        <item quantity="other">%1$s ficam.</item>
+    </plurals>
+    <plurals name="exif_export_kept_sorted">
+        <item quantity="one">%1$s fica, então sua galeria continua ordenando as fotos.</item>
+        <item quantity="many">%1$s ficam, então sua galeria continua ordenando as fotos.</item>
+        <item quantity="other">%1$s ficam, então sua galeria continua ordenando as fotos.</item>
+    </plurals>
+    <string name="exif_export_summary">%1$s Outros formatos são gravados sem alterações.</string>
+    <string name="exif_share_names_only">Só nomes, legendas e comentários.</string>
+    <string name="exif_share_removed">Sem %1$s.</string>
+    <string name="exif_share_kept">Mantém %1$s.</string>
+    <string name="photo_details_title">Detalhes da foto</string>
+    <string name="photo_details_lead">Escolha o que é removido de uma foto antes de ela sair do cofre.</string>
+    <string name="photo_details_privacy_row">Privacidade (recomendado)</string>
+    <string name="photo_details_privacy_detail">Remove localização, informações da câmera e histórico de edição</string>
+    <string name="photo_details_custom_detail">Escolha o que é removido.</string>
+    <string name="photo_details_remove_heading">Remover</string>
+    <string name="photo_details_removed">Removido</string>
+    <string name="photo_details_kept">Mantido</string>
+    <string name="photo_details_import_heading">Ao importar</string>
+    <string name="photo_details_import_row">Remover das fotos que você importa</string>
+    <string name="photo_details_import_on">Ativado · Não pode ser desfeito depois que a foto é importada.</string>
+    <string name="photo_details_footer">Só fotos JPEG — outros formatos ficam exatamente como estão. Toda remoção também tira nomes, legendas, comentários, pessoas marcadas e tudo o que o app não reconhece, e mantém o que a foto precisa para aparecer corretamente, incluindo movimento e HDR.</string>
+    <string name="photo_details_location">Localização</string>
+    <string name="photo_details_location_covers">Posição GPS, altitude e direção</string>
+    <string name="photo_details_camera">Informações da câmera</string>
+    <string name="photo_details_camera_covers">Marca, modelo, lente, números de série e configurações</string>
+    <string name="photo_details_date">Data e hora</string>
+    <string name="photo_details_date_covers">Quando foi tirada e alterada pela última vez</string>
+    <string name="photo_details_software">Software e histórico de edição</string>
+    <string name="photo_details_software_covers">Os apps que a criaram ou editaram</string>
+
+    <!-- Drawer — appearance -->
+    <string name="appearance">Aparência</string>
+    <string name="appearance_system">Sistema</string>
+    <string name="appearance_light">Clara</string>
+    <string name="appearance_dark">Escura</string>
+
+    <!-- Drawer — the vault's rows and the install's -->
+    <string name="drawer_trash">Lixeira</string>
+    <string name="drawer_backup">Backup</string>
+    <string name="drawer_intruder_capture">Captura de intrusos</string>
+    <string name="drawer_open_share">Abrir um compartilhamento…</string>
+    <string name="drawer_unvault_everything">Tirar tudo do cofre</string>
+    <string name="drawer_destroy_vault">Destruir cofre</string>
+    <string name="drawer_purchase">Compra \u0020· \u0020%1$s</string>
+    <string name="drawer_app_identity">Identidade do app \u0020· \u0020%1$s</string>
+    <string name="drawer_face_down">Bloquear com a tela para baixo</string>
+    <string name="face_down_no_sensor">Este dispositivo não tem sensor de movimento, então não consegue saber quando está com a tela para baixo.</string>
+    <string name="face_down_lead">Vire o celular com a tela para baixo e apoie-o para bloquear o cofre.</string>
+    <string name="face_down_switch">Usar bloqueio com a tela para baixo</string>
+    <string name="face_down_lock_after">Bloquear depois de</string>
+    <string name="face_down_immediately">Imediatamente</string>
+    <string name="face_down_locks_at_once">Bloqueia na hora</string>
+    <string name="face_down_locks_after">Bloqueia depois de %1$s</string>
+    <string name="face_down_timeout_line">Sua tela desliga depois de %1$s, e isso bloqueia o cofre antes.</string>
+    <plurals name="face_down_seconds">
+        <item quantity="one">%1$d segundo</item>
+        <item quantity="many">%1$d segundos</item>
+        <item quantity="other">%1$d segundos</item>
+    </plurals>
+    <plurals name="face_down_minutes">
+        <item quantity="one">%1$d minuto</item>
+        <item quantity="many">%1$d minutos</item>
+        <item quantity="other">%1$d minutos</item>
+    </plurals>
+    <string name="drawer_decoy">Cofre isca</string>
+    <string name="drawer_decoy_set_up">Configurado — não dá para criar um segundo.</string>
+    <string name="drawer_set_up_decoy">Configurar um cofre isca</string>
+    <string name="drawer_panic">Credencial de pânico</string>
+    <string name="drawer_photo_details">Detalhes da foto \u0020· \u0020%1$s</string>
+    <string name="drawer_contacts">Contatos</string>
+    <string name="drawer_recover_vault">Recuperar um cofre com o kit dele</string>
+    <string name="drawer_restore_vault">Restaurar um cofre de um backup</string>
+    <string name="drawer_import_vault">Importar um cofre de um arquivo</string>
+    <string name="drawer_capture_waiting">Há uma captura de intruso esperando</string>
+
+    <!-- Purchase — the screen, the drawer row and the trial -->
+    <string name="trial_blocked">Seu teste terminou. Abrir, ver e exportar tudo o que está nos seus cofres continua sem restrições — compre o app uma vez, em “Compra” no menu, para adicionar mais.</string>
+    <plurals name="trial_reminder">
+        <item quantity="one">Falta %1$d dia no seu teste. Abrir, ver e exportar continuam sem restrições de qualquer forma.</item>
+        <item quantity="many">Faltam %1$d dias no seu teste. Abrir, ver e exportar continuam sem restrições de qualquer forma.</item>
+        <item quantity="other">Faltam %1$d dias no seu teste. Abrir, ver e exportar continuam sem restrições de qualquer forma.</item>
+    </plurals>
+    <string name="purchase_title">Compra</string>
+    <plurals name="purchase_days_from_first">
+        <item quantity="one">%1$d dia, a partir da primeira coisa que você adicionar</item>
+        <item quantity="many">%1$d dias, a partir da primeira coisa que você adicionar</item>
+        <item quantity="other">%1$d dias, a partir da primeira coisa que você adicionar</item>
+    </plurals>
+    <plurals name="purchase_days_left">
+        <item quantity="one">Falta %1$d dia</item>
+        <item quantity="many">Faltam %1$d dias</item>
+        <item quantity="other">Faltam %1$d dias</item>
+    </plurals>
+    <string name="purchase_owned_body">Adicionar aos seus cofres, criar cofres e enviar compartilhamentos não têm restrições. A compra pertence à sua Conta do Google e volta se você reinstalar.</string>
+    <string name="purchase_pending_body">O Google Play está esperando a confirmação do seu pagamento. Tudo é liberado quando ela chegar — você não precisa manter esta tela aberta.</string>
+    <string name="purchase_trial_body">Quando o teste termina, adicionar a um cofre, criar cofres e enviar compartilhamentos param. Abrir, ver e exportar tudo o que já está nos seus cofres — e abrir compartilhamentos enviados a você — nunca param, com ou sem pagamento.</string>
+    <string name="purchase_one_payment">Um único pagamento. Sem assinatura, nada é renovado.</string>
+    <string name="purchase_buy_for">Comprar por %1$s</string>
+    <string name="purchase_buy">Comprar</string>
+    <string name="purchase_state_owned">Comprado</string>
+    <string name="purchase_state_pending">Pagamento pendente</string>
+    <string name="purchase_state_not_started">Teste não iniciado</string>
+    <plurals name="purchase_state_trial_left">
+        <item quantity="one">Teste, falta %1$d dia</item>
+        <item quantity="many">Teste, faltam %1$d dias</item>
+        <item quantity="other">Teste, faltam %1$d dias</item>
+    </plurals>
+    <string name="purchase_state_trial">Teste</string>
+    <string name="purchase_state_ended">Teste encerrado</string>
+
+    <!-- App identity — the screen and the sheet that commits a choice -->
+    <string name="identity_screen_title">Identidade do app</string>
+    <string name="identity_screen_lead">Escolha o nome e o ícone que este app mostra na tela inicial e nos apps recentes. Todos eles abrem este cofre, e nenhum o abre sem sua frase secreta ou uma biometria que você configurou.</string>
+    <string name="identity_current">Mostrado agora</string>
+    <string name="identity_opens_vault">Abre o cofre diretamente</string>
+    <string name="identity_opens_calculator">Abre uma calculadora primeiro</string>
+    <string name="identity_opens_calculator_setup">Abre uma calculadora primeiro — precisa ser configurado</string>
+    <string name="identity_opens_music">Abre um player de música primeiro</string>
+    <string name="identity_opens_music_setup">Abre um player de música primeiro — precisa ser configurado</string>
+    <string name="identity_opens_recorder">Abre um gravador de voz primeiro</string>
+    <string name="identity_opens_recorder_setup">Abre um gravador de voz primeiro — precisa ser configurado</string>
+    <string name="identity_calculator_weak">O mais fraco dos disfarces — o gesto dele é uma sequência curta de teclas.</string>
+    <string name="identity_calculator_weak_unset">Só com uma sequência de botões, ele é o mais fraco dos disfarces.</string>
+    <string name="identity_boundary_title">O que uma identidade não muda</string>
+    <string name="identity_boundary_body">As Configurações do próprio Android, a página de informações do app e qualquer notificação durante uma importação continuam mostrando este app com o nome real. Uma identidade muda a tela inicial e os apps recentes, e nada mais.</string>
+    <string name="identity_commit_body">Mudar isso remove qualquer atalho fixado e qualquer posição do app na tela inicial. Você pode colocá-lo de novo depois.</string>
+    <string name="identity_rationale_music">Um player de música que não vê suas músicas não convence — ele abriria uma biblioteca vazia. Este ícone precisa de acesso ao áudio deste dispositivo.</string>
+    <string name="identity_rationale_recorder">Um gravador de voz que não pode usar o microfone não convence — o botão de gravar não faria nada. Este ícone precisa de acesso ao microfone.</string>
+    <string name="identity_blocked_music">O Android não vai perguntar de novo dentro do app. O acesso ao áudio pode ser alterado na página de configurações deste app, em Permissões.</string>
+    <string name="identity_blocked_recorder">O Android não vai perguntar de novo dentro do app. O acesso ao microfone pode ser alterado na página de configurações deste app, em Permissões.</string>
+    <string name="identity_use_icon">Usar este ícone</string>
+    <string name="identity_set_up">Configurar</string>
+    <string name="identity_ask_again">Perguntar de novo</string>
+    <string name="identity_open_settings">Abrir configurações</string>
+
+    <!-- Shared words -->
+    <string name="state_expanded">Expandido</string>
+    <string name="state_collapsed">Recolhido</string>
+    <string name="action_continue">Continuar</string>
+    <string name="action_done">Concluído</string>
+    <string name="action_save">Salvar</string>
+    <string name="action_back">Voltar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_remove">Remover</string>
+    <string name="action_not_now">Agora não</string>
+    <string name="menu">Menu</string>
+    <string name="action_saving">Salvando</string>
+    <string name="rename">Renomear</string>
+    <string name="delete">Excluir</string>
+    <string name="more">Mais</string>
+    <string name="pause">Pausar</string>
+    <string name="play">Reproduzir</string>
+    <string name="seek">Buscar posição</string>
+    <string name="slideshow">Apresentação de slides</string>
+    <string name="speed">Velocidade</string>
+    <plurals name="seconds">
+        <item quantity="one">%1$d segundo</item>
+        <item quantity="many">%1$d segundos</item>
+        <item quantity="other">%1$d segundos</item>
+    </plurals>
+    <string name="undo">Desfazer</string>
+    <string name="redo">Refazer</string>
+    <string name="export">Exportar</string>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minuto</item>
+        <item quantity="many">%1$d minutos</item>
+        <item quantity="other">%1$d minutos</item>
+    </plurals>
+    <string name="start_recording">Começar a gravar</string>
+    <string name="stop_recording">Parar de gravar</string>
+    <string name="warning">Aviso</string>
+
+    <!-- Cover setup — recording how a cover opens -->
+    <string name="setup_cover_choose_title">Como você quer abri-lo?</string>
+    <string name="setup_cover_draw_shape">Agora desenhe sua forma</string>
+    <string name="setup_cover_record">Grave seu gesto</string>
+    <string name="setup_cover_draw_again">Desenhe de novo</string>
+    <string name="setup_cover_do_again">Faça de novo</string>
+    <string name="setup_cover_mismatch_title">Esse foi um gesto diferente</string>
+    <string name="setup_cover_hold_title">Escolha onde manter pressionado</string>
+    <string name="setup_cover_hold_again_title">Mantenha pressionado de novo</string>
+    <string name="setup_cover_hold_mismatch_title">Esse foi um ponto diferente</string>
+    <string name="setup_cover_hold_mismatch">O segundo toque longo foi em um ponto diferente, então nenhum dos dois foi mantido.</string>
+    <string name="setup_cover_start_over">Começar de novo</string>
+    <string name="setup_cover_done_title">Tudo pronto</string>
+    <string name="setup_cover_hold_line">Mantenha pressionado qualquer ponto da tela por 2 segundos. É esse ponto que faz os pontos aparecerem — funciona seja lá o que estiver sendo exibido ali.</string>
+    <string name="setup_cover_hold_again_line">Mantenha pressionado o mesmo ponto de novo.</string>
+    <string name="setup_cover_hold_early_line">Continue pressionando por 2 segundos.</string>
+    <string name="setup_cover_too_short">Foi curto demais. Um gesto precisa de pelo menos %1$s.</string>
+    <string name="setup_cover_so_far">%1$s até agora. Faltam %2$d.</string>
+    <string name="setup_cover_at_cap">%1$s — o máximo que ele lembra. %2$s</string>
+    <string name="setup_cover_enough">%1$s. %2$s</string>
+    <string name="setup_cover_keys_again">Pressione as mesmas teclas de novo. Pressione “AC” para recomeçar.</string>
+    <string name="setup_cover_keys">Pressione as teclas que você quer usar — pode ser uma conta comum. Toda tecla conta, inclusive “DEL”. Apertou a tecla errada? Pressione “AC” para recomeçar.</string>
+    <string name="setup_cover_shape_again">Desenhe a mesma forma de novo.</string>
+    <string name="setup_cover_shape_music">Desenhe uma forma ligando pelo menos cinco dos nove pontos, em uma ordem de que você vai se lembrar. Ela não será mostrada depois que esta tela fechar.</string>
+    <string name="setup_cover_shape_recorder">Desenhe uma forma ligando pelo menos cinco dos nove pontos, em uma ordem de que você vai se lembrar. Nenhuma gravação feita aqui é guardada.</string>
+    <string name="setup_cover_finish_keys">Mantenha “=” pressionado para terminar.</string>
+    <string name="setup_cover_finish_shape">Tire o dedo da tela para terminar.</string>
+    <plurals name="setup_cover_key_count">
+        <item quantity="one">%1$d tecla</item>
+        <item quantity="many">%1$d teclas</item>
+        <item quantity="other">%1$d teclas</item>
+    </plurals>
+    <plurals name="setup_cover_node_count">
+        <item quantity="one">%1$d ponto</item>
+        <item quantity="many">%1$d pontos</item>
+        <item quantity="other">%1$d pontos</item>
+    </plurals>
+    <string name="setup_cover_mismatch_sequence">A segunda sequência não coincidiu com a primeira, então nenhuma das duas foi mantida. Começar de novo é a única resposta segura: manter a primeira deixaria uma segunda tentativa de sorte escolher entre dois gestos de que você só se lembra pela metade, e você ficaria treinando contra um alvo que não consegue ver.</string>
+    <string name="setup_cover_mismatch_pattern">O segundo padrão não coincidiu com o primeiro, então nenhum dos dois foi mantido. Começar de novo é a única resposta segura: manter o primeiro deixaria uma segunda tentativa de sorte escolher entre dois gestos de que você só se lembra pela metade, e você ficaria treinando contra um alvo que não consegue ver.</string>
+    <string name="setup_cover_sequence_kept">Sua sequência foi mantida — só a forma recomeça.</string>
+    <string name="setup_cover_spot_kept">Seu ponto foi mantido — só a forma recomeça.</string>
+    <string name="setup_cover_nothing_changed">Nada mudou. Sua tela inicial ainda mostra o ícone de antes.</string>
+    <string name="setup_cover_done_vault">Este ícone abre a tela que pede sua frase secreta.</string>
+    <string name="setup_cover_done_route">Para chegar à tela da frase secreta a partir deste ícone:</string>
+    <string name="setup_cover_done_hidden_dots">Sua forma também funciona nos pontos ocultos a qualquer momento.</string>
+    <plurals name="setup_cover_route_keys_shape">
+        <item quantity="one">Pressione %1$s na calculadora, depois mantenha “=” pressionado e os pontos aparecem. Desenhe sua forma neles: %2$d ponto.</item>
+        <item quantity="many">Pressione %1$s na calculadora, depois mantenha “=” pressionado e os pontos aparecem. Desenhe sua forma neles: %2$d pontos.</item>
+        <item quantity="other">Pressione %1$s na calculadora, depois mantenha “=” pressionado e os pontos aparecem. Desenhe sua forma neles: %2$d pontos.</item>
+    </plurals>
+    <string name="setup_cover_wrong_key">Se apertar uma tecla errada, pressione “AC” e comece de novo.</string>
+    <string name="setup_cover_remember">Ninguém pode recuperar esse gesto para você, e o app não vai mostrá-lo de novo — se preferir não depender da memória, volte ao ícone do próprio cofre pelo menu enquanto ainda pode.</string>
+    <string name="setup_cover_route_keys">Pressione %1$s na calculadora e mantenha “=” pressionado. Se apertar uma tecla errada, pressione “AC” e comece de novo.</string>
+    <plurals name="setup_cover_route_shape">
+        <item quantity="one">Desenhe na tela a forma que você escolheu — %1$d ponto — e tire o dedo.</item>
+        <item quantity="many">Desenhe na tela a forma que você escolheu — %1$d pontos — e tire o dedo.</item>
+        <item quantity="other">Desenhe na tela a forma que você escolheu — %1$d pontos — e tire o dedo.</item>
+    </plurals>
+    <plurals name="setup_cover_route_hold">
+        <item quantity="one">Mantenha pressionado o ponto que você escolheu — %1$s — por 2 segundos e os pontos aparecem. Desenhe sua forma neles: %2$d ponto.</item>
+        <item quantity="many">Mantenha pressionado o ponto que você escolheu — %1$s — por 2 segundos e os pontos aparecem. Desenhe sua forma neles: %2$d pontos.</item>
+        <item quantity="other">Mantenha pressionado o ponto que você escolheu — %1$s — por 2 segundos e os pontos aparecem. Desenhe sua forma neles: %2$d pontos.</item>
+    </plurals>
+    <string name="hold_place">%1$s, %2$s</string>
+    <string name="hold_row_top">Linha de cima</string>
+    <string name="hold_row_second">Segunda linha</string>
+    <string name="hold_row_third">Terceira linha</string>
+    <string name="hold_row_bottom">Linha de baixo</string>
+    <string name="hold_column_left">esquerda</string>
+    <string name="hold_column_centre">centro</string>
+    <string name="hold_column_right">direita</string>
+
+    <!-- Panic credential -->
+    <string name="panic_status_on">A credencial de pânico está ativada</string>
+    <string name="panic_status_off">A credencial de pânico está desativada</string>
+    <string name="panic_fact_survives">Esta lista de cofres continua</string>
+    <string name="panic_fact_survives_body">Digitada na tela de bloqueio, sua frase de pânico abre esta lista de cofres normalmente, e todo cofre que não está nela deixa de abrir neste dispositivo, para sempre.</string>
+    <string name="panic_fact_way_in">Ela destrói a entrada, não os arquivos</string>
+    <string name="panic_fact_way_in_body">Os outros cofres ficam neste dispositivo como dados ilegíveis. Os kits de recuperação de 24 palavras deles ainda os abrem.</string>
+    <string name="panic_fact_silent">Nada confirma que funcionou</string>
+    <string name="panic_fact_silent_body">Quem estiver olhando vê um desbloqueio comum.</string>
+    <string name="panic_fact_backup">Ela também esvazia sua pasta de backup</string>
+    <string name="panic_fact_backup_body">Cópias que seu provedor de nuvem guarda na lixeira ou no histórico de versões dele estão fora do alcance deste app.</string>
+    <string name="panic_change">Mudar frase de pânico</string>
+    <string name="panic_turn_it_off">Desativar</string>
+    <string name="panic_turn_off_title">Desativar frase de pânico</string>
+    <string name="panic_turn_off">Desativar</string>
+    <string name="panic_set_title">Definir uma frase de pânico</string>
+    <string name="panic_your_passphrase">Sua frase secreta</string>
+    <string name="panic_passphrase_hint">A que abriu esta lista de cofres.</string>
+    <string name="panic_phrase_label">Frase de pânico</string>
+    <string name="panic_turn_on">Ativar</string>
+    <string name="panic_forgot_title">Apagar uma frase de pânico esquecida</string>
+    <string name="panic_forgot_body">Sua frase secreta desativa a frase de pânico. Você pode definir uma nova depois.</string>
+    <string name="panic_clear">Apagar frase de pânico</string>
+    <string name="panic_current_label">Frase de pânico atual</string>
+    <string name="panic_forgot">Esqueceu sua frase de pânico?</string>
+    <string name="panic_new_label">Nova frase de pânico</string>
+    <string name="panic_phrase_requirement">%1$s Nada parecido com nenhuma das suas frases secretas — só a frase secreta desta lista pode ser verificada.</string>
+    <string name="panic_label_again">%1$s de novo</string>
+
+    <!-- Vault names -->
+    <string name="vault_name_label">Nome</string>
+    <string name="vault_name_empty">Dê um nome ao cofre.</string>
+    <string name="vault_name_too_long">Esse nome é longo demais para este cofre.</string>
+
+    <!-- Decoy — building a vault you can hand over -->
+    <string name="decoy_captured_during_setup">capturada enquanto este cofre era criado — uma foto tirada hoje não combina com um cofre que deve parecer ter meses</string>
+    <string name="decoy_step">Etapa %1$d de %2$d</string>
+    <string name="decoy_leave">Sair da configuração do cofre isca</string>
+    <string name="decoy_intro_title">Um cofre que você pode entregar</string>
+    <string name="decoy_intro_lead">Um cofre comum com a própria frase secreta, guardando coisas que você não se importaria que alguém visse.</string>
+    <string name="decoy_start">Começar</string>
+    <string name="decoy_fact_used">Ele precisa parecer usado</string>
+    <string name="decoy_fact_used_body">Um cofre vazio não engana ninguém. Este recebe fotos que você escolhe, e datas e um histórico que parecem meses de uso comum.</string>
+    <string name="decoy_fact_photos">As fotos são suas</string>
+    <string name="decoy_fact_photos_body">Elas vêm deste dispositivo. Nada vem com o app, porque um conteúdo incluído seria idêntico em todo celular que o tivesse. Quem receber este cofre verá essas fotos, então escolha as que você aceita mostrar.</string>
+    <string name="decoy_fact_own">Seu próprio cofre fica onde está</string>
+    <string name="decoy_fact_own_body">Isso cria um segundo cofre ao lado dele. Nada que já está neste dispositivo é movido, alterado ou removido, e o cofre que você tem aberto agora não pode ser afetado.</string>
+    <string name="decoy_fact_cost">O que isso custa</string>
+    <string name="decoy_photos_title">Escolha as fotos</string>
+    <string name="decoy_photos_lead">Entre %1$d e %2$d delas, espalhadas por pelo menos %3$d semanas.</string>
+    <string name="decoy_choose_to_continue">Escolha fotos para continuar</string>
+    <string name="decoy_not_plausible">Ainda não é um conjunto convincente</string>
+    <string name="decoy_choose_photos">Escolher fotos</string>
+    <string name="decoy_choose_again">Escolher de novo</string>
+    <string name="decoy_nothing_chosen">Nada escolhido ainda. O seletor mostra sua biblioteca de fotos; o app não a lê e nunca vê o que você não escolher.</string>
+    <plurals name="decoy_summary_in">
+        <item quantity="one">%1$d vai entrar.</item>
+        <item quantity="many">%1$d vão entrar.</item>
+        <item quantity="other">%1$d vão entrar.</item>
+    </plurals>
+    <plurals name="decoy_summary_kept">
+        <item quantity="one">%1$d mantém a data em que foi tirada</item>
+        <item quantity="many">%1$d mantêm a data em que foram tiradas</item>
+        <item quantity="other">%1$d mantêm a data em que foram tiradas</item>
+    </plurals>
+    <plurals name="decoy_summary_assigned">
+        <item quantity="one">%1$d não tem data e recebe uma</item>
+        <item quantity="many">%1$d não têm data e recebem uma</item>
+        <item quantity="other">%1$d não têm data e recebem uma</item>
+    </plurals>
+    <string name="decoy_summary_dates">%1$s.</string>
+    <string name="decoy_summary_dates_assigned">%1$s, %2$s.</string>
+    <plurals name="decoy_summary_declined">
+        <item quantity="one">%1$d ficou de fora: %2$s.</item>
+        <item quantity="many">%1$d ficaram de fora: %2$s.</item>
+        <item quantity="other">%1$d ficaram de fora: %2$s.</item>
+    </plurals>
+    <string name="decoy_summary_truncated">Só as primeiras %1$d foram usadas — mais que isso não é uma isca, é uma segunda biblioteca.</string>
+    <string name="decoy_gate_enough">Itens suficientes: %1$d, e o mínimo é %2$d.</string>
+    <string name="decoy_gate_not_enough">Itens insuficientes. Você tem %1$d e o mínimo é %2$d — escolha de novo e adicione pelo menos mais %3$d.</string>
+    <plurals name="decoy_gate_spread">
+        <item quantity="one">Elas cobrem %1$d semana, e o mínimo é %2$d.</item>
+        <item quantity="many">Elas cobrem %1$d semanas, e o mínimo é %2$d.</item>
+        <item quantity="other">Elas cobrem %1$d semanas, e o mínimo é %2$d.</item>
+    </plurals>
+    <plurals name="decoy_gate_not_spread">
+        <item quantity="one">Elas cobrem %1$d semana e o mínimo é %2$d. Escolha de novo e adicione fotos mais antigas, ou fotos sem data própria — essas recebem uma data dos meses anteriores.</item>
+        <item quantity="many">Elas cobrem %1$d semanas e o mínimo é %2$d. Escolha de novo e adicione fotos mais antigas, ou fotos sem data própria — essas recebem uma data dos meses anteriores.</item>
+        <item quantity="other">Elas cobrem %1$d semanas e o mínimo é %2$d. Escolha de novo e adicione fotos mais antigas, ou fotos sem data própria — essas recebem uma data dos meses anteriores.</item>
+    </plurals>
+    <plurals name="decoy_age_months">
+        <item quantity="one">Este cofre vai parecer ter até %1$d mês.</item>
+        <item quantity="many">Este cofre vai parecer ter até %1$d meses.</item>
+        <item quantity="other">Este cofre vai parecer ter até %1$d meses.</item>
+    </plurals>
+    <plurals name="decoy_age_install">
+        <item quantity="one">Este app foi instalado há %1$d dia, então este cofre não pode parecer mais antigo que isso — uma listagem de arquivos mostra a data de instalação sem nenhuma frase secreta. O histórico dele vai cobrir esses dias; as fotos cuidam do resto.</item>
+        <item quantity="many">Este app foi instalado há %1$d dias, então este cofre não pode parecer mais antigo que isso — uma listagem de arquivos mostra a data de instalação sem nenhuma frase secreta. O histórico dele vai cobrir esses dias; as fotos cuidam do resto.</item>
+        <item quantity="other">Este app foi instalado há %1$d dias, então este cofre não pode parecer mais antigo que isso — uma listagem de arquivos mostra a data de instalação sem nenhuma frase secreta. O histórico dele vai cobrir esses dias; as fotos cuidam do resto.</item>
+    </plurals>
+    <string name="decoy_requirement_met">Requisito atendido</string>
+    <string name="decoy_requirement_not_met">Requisito não atendido</string>
+    <string name="decoy_name_title">Dê um nome e bloqueie</string>
+    <string name="decoy_name_lead">Este nome é a primeira coisa que alguém vai ver ao abrir este cofre, e esta frase secreta é a que você entregaria.</string>
+    <string name="decoy_name_hint">Escolha algo comum — o tipo de nome que um cofre de fotos de férias teria.</string>
+    <string name="decoy_passphrase_label">Frase secreta do cofre isca</string>
+    <string name="decoy_passphrase_note">Esta frase secreta precisa ser diferente da que abre seu próprio cofre. Digitá-la na tela de bloqueio abre este cofre e nada mais.</string>
+    <string name="decoy_building">Criando %1$s</string>
+    <string name="decoy_building_body">Preparando o armazenamento e depois importando as fotos. Isso leva um momento e não pode ser interrompido.</string>
+    <string name="decoy_ready_title">Pronto para criar</string>
+    <string name="decoy_ready_lead">Nada foi gravado ainda. É a confirmação da sua própria frase secreta que dá início.</string>
+    <string name="decoy_confirm_passphrase">Confirme sua frase secreta</string>
+    <string name="decoy_fact_made">O que é criado</string>
+    <plurals name="decoy_fact_made_body">
+        <item quantity="one">Um cofre chamado %1$s, com %2$d das suas fotos, e datas e um histórico de desbloqueios espalhados pelos meses anteriores.</item>
+        <item quantity="many">Um cofre chamado %1$s, com %2$d das suas fotos, e datas e um histórico de desbloqueios espalhados pelos meses anteriores.</item>
+        <item quantity="other">Um cofre chamado %1$s, com %2$d das suas fotos, e datas e um histórico de desbloqueios espalhados pelos meses anteriores.</item>
+    </plurals>
+    <string name="decoy_fact_this_vault">O que acontece com este cofre</string>
+    <string name="decoy_fact_this_vault_body">Nada. Seu próprio cofre fica intocado — ele não pode ser sobrescrito por isso, e a frase secreta dele não está sendo pedida para protegê-lo.</string>
+    <string name="decoy_fact_end_up">Onde você vai parar</string>
+    <string name="decoy_fact_end_up_body">A última etapa deixa você dentro do novo cofre, para ver o que alguém que digitar a frase secreta dele encontraria. Você volta para cá quando terminar.</string>
+    <string name="decoy_other_vaults">Tenho outros cofres neste dispositivo</string>
+    <string name="decoy_other_vaults_hint">Só se você tiver uma segunda frase secreta que abre algo na tela de bloqueio.</string>
+    <plurals name="decoy_entries_added">
+        <item quantity="one">%1$d registro adicionado.</item>
+        <item quantity="many">%1$d registros adicionados.</item>
+        <item quantity="other">%1$d registros adicionados.</item>
+    </plurals>
+    <string name="decoy_handover_title">É isto que a pessoa vai ver</string>
+    <string name="decoy_handover_lead">Digitar a frase secreta deste cofre na tela de bloqueio leva exatamente a isto e a nada mais. Você está vendo do jeito que a pessoa veria.</string>
+    <string name="decoy_show_words">Mostrar as palavras de recuperação</string>
+    <string name="decoy_fact_no_way_across">Não há como passar daqui para outro lugar</string>
+    <string name="decoy_fact_no_way_across_body">Quem tem esta frase secreta chega a este cofre e para aí. A pessoa não consegue ver que o seu existe, muito menos abri-lo — esse é o objetivo.</string>
+    <string name="decoy_fact_nothing_names">Não há nada aqui que mencione o outro</string>
+    <string name="decoy_fact_nothing_names_body">Este cofre não sabe que o seu existe, e nada nesta tela sabe. Para quem o abre, este é o dispositivo inteiro.</string>
+    <string name="decoy_fact_inside">O que há dentro dele</string>
+    <plurals name="decoy_fact_inside_body">
+        <item quantity="one">%1$d foto, com a data em que foi tirada, e um histórico de desbloqueios que parece meses de uso comum.</item>
+        <item quantity="many">%1$d fotos, com as datas em que foram tiradas, e um histórico de desbloqueios que parece meses de uso comum.</item>
+        <item quantity="other">%1$d fotos, com as datas em que foram tiradas, e um histórico de desbloqueios que parece meses de uso comum.</item>
+    </plurals>
+    <string name="decoy_fact_back">Depois você volta para o seu próprio cofre</string>
+    <string name="decoy_fact_back_body">Anotar as palavras de recuperação é a última coisa que falta. Depois disso, este cofre fecha e o seu abre de novo, onde você estava.</string>
+    <string name="decoy_vaults_label">Cofres</string>
+    <string name="decoy_confirm_title">Confirme que é você</string>
+    <string name="decoy_confirm_body">Digite a frase secreta do cofre que você tem aberto. Isso autoriza a criação do cofre isca e nada mais.</string>
+    <string name="decoy_confirm_wrong">Essa não é a frase secreta do cofre que você tem aberto.</string>
+    <string name="decoy_checking">Verificando</string>
+    <string name="decoy_build">Criar o cofre isca</string>
+    <string name="decoy_preserve_title">Outros cofres neste dispositivo</string>
+    <string name="decoy_preserve_body">Só para uma segunda frase secreta que abre algo na tela de bloqueio — um cofre isca que você já criou ou um cofre que você restaurou. Os cofres da sua própria lista não contam e nunca correm risco.</string>
+    <string name="decoy_preserve_warning">O app não consegue encontrar um cofre que não consegue abrir, então também não consegue evitá-lo. Qualquer cofre assim cuja frase secreta não for digitada aqui pode ser sobrescrito pelo novo.</string>
+    <string name="decoy_preserve_label">Frase secreta de um cofre a manter</string>
+    <string name="decoy_preserve_add">Adicionar à lista</string>
+    <string name="decoy_preserve_empty">Nada adicionado. Deixar vazio é o certo para a maioria das pessoas.</string>
+    <string name="decoy_preserve_entry">Frase secreta %1$d</string>
+    <string name="decoy_preserve_remove">Remover frase secreta %1$d</string>
+
+    <!-- Onboarding — the first-run steps -->
+    <string name="onboarding_welcome_title">Fotos que ninguém mais consegue abrir</string>
+    <string name="onboarding_welcome_lead">Tudo o que você coloca aqui é criptografado neste dispositivo e fica nele. Não há conta, nem servidor, nem como vermos nada disso — este app não consegue acessar a internet de forma alguma.</string>
+    <string name="onboarding_welcome_steps">A configuração tem oito etapas curtas. Nenhuma é obrigatória, e você pode mudar de ideia depois nas Configurações.</string>
+    <string name="onboarding_get_started">Começar</string>
+    <string name="onboarding_have_backup">Tenho um backup para restaurar</string>
+    <string name="onboarding_passphrase_lead">Esta é a única coisa que abre seu cofre. Ela não pode ser redefinida.</string>
+    <string name="onboarding_fact_no_reset">Não há redefinição nem conta</string>
+    <string name="onboarding_fact_no_reset_body">Ninguém pode recuperá-la para você — nem nós, nem ninguém. Esse é o objetivo, e também o risco.</string>
+    <string name="onboarding_fact_kit_next">Em seguida você recebe um kit de recuperação</string>
+    <string name="onboarding_fact_kit_next_body">Vinte e quatro palavras que abrem este cofre se você esquecer a frase secreta. É a única outra forma de entrar.</string>
+    <string name="onboarding_kit_title">Anote estas palavras</string>
+    <string name="onboarding_kit_lead">Vinte e quatro palavras que abrem este cofre se a frase secreta se perder. Depois disso, você pode vê-las mais 3 vezes pelo menu. Então elas somem deste app para sempre.</string>
+    <string name="onboarding_fact_anyone">Quem tiver estas palavras pode abrir este cofre</string>
+    <string name="onboarding_fact_anyone_body">Elas não podem ser alteradas nem canceladas. Guarde o papel em um lugar onde alguém mexendo nas suas coisas não procuraria.</string>
+    <string name="onboarding_fact_backup_words">Um backup é restaurado com elas, não com sua frase secreta</string>
+    <string name="onboarding_fact_backup_words_body">Se depois você guardar uma cópia em uma pasta na nuvem, estas palavras serão a única coisa capaz de lê-la.</string>
+    <string name="onboarding_kit_type">Digite “%1$s” para confirmar que você as anotou.</string>
+    <string name="onboarding_capture_title">Veja quem tentou entrar</string>
+    <string name="onboarding_capture_lead">Depois de um desbloqueio malsucedido, o celular registra discretamente quem está segurando ele.</string>
+    <string name="onboarding_fact_failed_unlock">Só funciona em um desbloqueio malsucedido</string>
+    <string name="onboarding_fact_failed_unlock_body">Nada é gravado quando um desbloqueio dá certo, e nada sai deste dispositivo — cada captura é lacrada para que só a sua frase secreta possa lê-la, e espera por você em Captura de intrusos.</string>
+    <string name="onboarding_fact_permission">Cada modo pede a própria permissão</string>
+    <string name="onboarding_fact_permission_body">Ative um e o Android pede exatamente o que esse modo precisa. Negue e o modo fica desativado; nada mais muda.</string>
+    <string name="onboarding_decoy_title">Tenha um cofre que você pode entregar</string>
+    <string name="onboarding_decoy_lead">Um segundo cofre, com a própria frase secreta, guardando coisas que você não se importaria que alguém visse.</string>
+    <string name="onboarding_fact_used_body">Um cofre vazio não engana ninguém. Este recebe fotos que você escolhe, com datas e um histórico que parecem meses de uso comum.</string>
+    <string name="onboarding_fact_choose">Você escolhe as fotos</string>
+    <string name="onboarding_fact_choose_body">Elas vêm deste dispositivo e são suas. Quem receber este cofre vai vê-las, então escolha as que você aceita mostrar.</string>
+    <string name="onboarding_fact_trial">Isso inicia seu teste de 30 dias</string>
+    <string name="onboarding_fact_trial_body">Criar um cofre isca importa fotos reais, e o teste começa com a primeira coisa adicionada a um cofre. Pule esta etapa se preferir começá-lo com suas próprias coisas.</string>
+    <string name="onboarding_backup_title">Guarde uma cópia em outro lugar</string>
+    <string name="onboarding_backup_lead">Se este celular for perdido ou quebrar, tudo o que está no cofre vai junto — a menos que exista uma cópia.</string>
+    <string name="onboarding_panic_title">Uma frase secreta que fecha as outras</string>
+    <string name="onboarding_panic_lead">Digitada na tela de bloqueio, ela abre um cofre e fecha para sempre todos os outros deste dispositivo.</string>
+    <string name="onboarding_panic_set_up">Configurar uma credencial de pânico</string>
+    <string name="onboarding_fact_ordinary">Parece um desbloqueio comum</string>
+    <string name="onboarding_fact_ordinary_body">Mesma tela, mesma velocidade, nada para ver. Esse é o objetivo — quem estiver olhando não descobre nada.</string>
+    <string name="onboarding_fact_way_in_body">Os outros cofres ficam neste dispositivo como dados ilegíveis, e os kits de recuperação de 24 palavras deles ainda os abrem. É assim que você os recupera.</string>
+    <string name="onboarding_identity_title">Faça parecer outra coisa</string>
+    <string name="onboarding_identity_lead">O app pode se disfarçar de calculadora, player de música ou gravador de voz na sua tela inicial.</string>
+    <string name="onboarding_finish">Concluir configuração</string>
+    <string name="onboarding_choose_identity">Escolher uma identidade</string>
+    <string name="onboarding_fact_disguise">O disfarce é real e funciona</string>
+    <string name="onboarding_fact_disguise_body">O item na tela inicial e o cartão nos apps recentes mudam. Você volta a entrar fazendo, no próprio disfarce, um gesto que você escolhe.</string>
+    <string name="onboarding_fact_hides">Ele esconde o app, não os arquivos</string>
+    <string name="onboarding_fact_hides_body">Quem conseguir ler o armazenamento deste dispositivo, ou abrir as Configurações do próprio Android, ainda consegue saber que o app está aqui. Sua frase secreta — ou uma biometria que você configurou — continua sendo a única coisa que abre um cofre.</string>
+    <string name="onboarding_fact_rehearse">Você vai ensaiar o gesto duas vezes</string>
+    <string name="onboarding_fact_rehearse_body">Uma vez para gravá-lo, outra de memória. Um gatilho que você não consegue repetir é um cofre que você não consegue abrir.</string>
+
+    <!-- Intruder capture — the modes -->
+    <string name="capture_mode_photo">Foto</string>
+    <string name="capture_mode_audio">Áudio</string>
+    <string name="capture_mode_video">Vídeo</string>
+    <string name="capture_mode_photo_line">Uma foto da câmera frontal</string>
+    <string name="capture_mode_audio_line">Um trecho curto do microfone</string>
+    <string name="capture_mode_video_line">Um vídeo curto com som</string>
+    <string name="capture_no_front_camera">Este dispositivo não tem câmera frontal.</string>
+    <string name="capture_sheet_lead">Gravado depois de um desbloqueio malsucedido.</string>
+    <string name="capture_sheet_photo">Uma foto da câmera frontal.</string>
+    <string name="capture_sheet_audio">Alguns segundos do microfone.</string>
+    <string name="capture_sheet_video">Alguns segundos de câmera e som.</string>
+    <string name="capture_sheet_no_front">Este dispositivo não tem câmera frontal, então foto e vídeo não estão disponíveis.</string>
+    <!-- Intruder capture — the home screen's timeline, its flows and its notices -->
+    <string name="intruder_capture_settings">Configurações de captura</string>
+    <string name="intruder_today">Hoje</string>
+    <string name="intruder_yesterday">Ontem</string>
+    <string name="intruder_empty_off_title">Nada capturado</string>
+    <string name="intruder_empty_off_body">Ative um modo e o telefone grava discretamente quem não conseguir desbloqueá-lo.</string>
+    <string name="intruder_empty_off_action">Escolher o que gravar</string>
+    <string name="intruder_empty_on_title">Nada capturado ainda</string>
+    <string name="intruder_empty_on_body">%1$s ativado. Uma captura aparece aqui depois de um desbloqueio malsucedido.</string>
+    <string name="intruder_empty_on_action">Mudar o que é gravado</string>
+    <string name="intruder_left_moved">Movida para %1$s</string>
+    <string name="intruder_left_exported">Exportada</string>
+    <string name="intruder_left_deleted">Excluída</string>
+    <string name="intruder_row_description">%1$s. %2$s, %3$s.</string>
+    <string name="intruder_row_description_left">%1$s. %2$s, %3$s. %4$s.</string>
+    <string name="intruder_move_to_vault">Mover para um cofre</string>
+    <string name="intruder_export">Exportar</string>
+    <plurals name="intruder_capture_count">
+        <item quantity="one">%1$d captura</item>
+        <item quantity="many">%1$d capturas</item>
+        <item quantity="other">%1$d capturas</item>
+    </plurals>
+    <string name="intruder_move_failed">Não foi possível mover essas capturas. Nada foi alterado.</string>
+    <plurals name="intruder_delete_title">
+        <item quantity="one">Excluir %1$d captura para sempre?</item>
+        <item quantity="many">Excluir %1$d capturas para sempre?</item>
+        <item quantity="other">Excluir %1$d capturas para sempre?</item>
+    </plurals>
+    <plurals name="intruder_delete_body">
+        <item quantity="one">A captura é destruída e não pode ser restaurada. A linha dela continua na linha do tempo.</item>
+        <item quantity="many">As capturas são destruídas e não podem ser restauradas. As linhas delas continuam na linha do tempo.</item>
+        <item quantity="other">As capturas são destruídas e não podem ser restauradas. As linhas delas continuam na linha do tempo.</item>
+    </plurals>
+    <plurals name="intruder_export_title">
+        <item quantity="one">Exportar %1$d captura</item>
+        <item quantity="many">Exportar %1$d capturas</item>
+        <item quantity="other">Exportar %1$d capturas</item>
+    </plurals>
+    <plurals name="intruder_export_body">
+        <item quantity="one">A captura é descriptografada, gravada fora, verificada e depois removida de Captura de intrusos. A linha dela continua na linha do tempo.</item>
+        <item quantity="many">As %1$d capturas são descriptografadas, gravadas fora, verificadas e depois removidas de Captura de intrusos. As linhas delas continuam na linha do tempo.</item>
+        <item quantity="other">As %1$d capturas são descriptografadas, gravadas fora, verificadas e depois removidas de Captura de intrusos. As linhas delas continuam na linha do tempo.</item>
+    </plurals>
+    <string name="intruder_export_checked">Cada arquivo é lido de volta e comparado antes que a cópia criptografada seja excluída. Tudo o que não coincidir fica em Captura de intrusos e é listado no manifesto.</string>
+    <string name="intruder_export_wrong_passphrase">Essa não é a frase secreta que abre esta lista de cofres.</string>
+    <string name="intruder_export_progress_left">%1$d de %2$d fora, %3$d ainda guardadas</string>
+    <string name="intruder_export_busy">Exportando</string>
+    <string name="intruder_blank">Saiu preta</string>
+    <string name="intruder_silent">Saiu sem som</string>
+    <string name="intruder_permission_camera_off">Permissão da câmera desativada</string>
+    <string name="intruder_permission_camera_on">Permissão da câmera reativada</string>
+    <string name="intruder_permission_microphone_off">Permissão do microfone desativada</string>
+    <string name="intruder_permission_microphone_on">Permissão do microfone reativada</string>
+    <string name="intruder_permission_stopped">Notado às %1$s · %2$s parou</string>
+    <string name="intruder_permission_resumed">Notado às %1$s · %2$s voltou a gravar</string>
+    <string name="intruder_permission_noticed">Notado às %1$s</string>
+    <string name="capture_banner_camera_one">%1$s não está gravando. A permissão da câmera está desativada.</string>
+    <string name="capture_banner_camera_many">%1$s não estão gravando. A permissão da câmera está desativada.</string>
+    <string name="capture_banner_microphone_one">%1$s não está gravando. A permissão do microfone está desativada.</string>
+    <string name="capture_banner_microphone_many">%1$s não estão gravando. A permissão do microfone está desativada.</string>
+    <string name="capture_turn_back_on">Reativar</string>
+    <string name="capture_sheet_no_camera">Não está gravando · permissão da câmera desativada</string>
+    <string name="capture_sheet_no_microphone">Não está gravando · permissão do microfone desativada</string>
+    <string name="capture_auto_reset">O Android pode remover as permissões deste app se ele ficar sem uso por alguns meses, e a captura pararia.</string>
+    <string name="capture_keep_permissions">Manter permissões</string>
+    <string name="intruder_subtitle_description">Cofre: %1$s</string>
+
+    <!-- Recovery kit — showing, re-showing and entering the 24 words -->
+    <string name="kit_acknowledgement">Entendi</string>
+    <string name="kit_title_list">Seu kit de recuperação</string>
+    <string name="kit_title_vault">Kit de recuperação de %1$s</string>
+    <string name="kit_title_short">Kit de recuperação</string>
+    <string name="kit_body_list">Estas 24 palavras são a única forma de voltar aos cofres que sua frase secreta abre, caso você a esqueça. Anote-as em ordem e guarde o papel em um lugar seguro.\n\nQuem tiver estas palavras pode abrir esses cofres, inclusive os que você adicionar depois. Um cofre com frase secreta própria não está entre eles — ele tem o próprio kit. Estas palavras não podem ser alteradas nem canceladas.</string>
+    <string name="kit_body_list_backup">Se algum dia você fizer backup deste cofre em uma pasta na nuvem, são estas palavras que o restauram — não sua frase secreta. Perca este dispositivo e esta página juntos e ninguém poderá abrir o backup, nem você.</string>
+    <string name="kit_body_vault">Estas 24 palavras são a única forma de voltar a %1$s se você esquecer a frase secreta que acabou de definir. Anote-as em ordem e guarde o papel em um lugar seguro.\n\nA frase secreta que abre sua lista de cofres não vai abrir este, e o kit de recuperação dessa lista também não. Perca a frase secreta e esta página e tudo em %1$s some para sempre.\n\nQuem tiver estas palavras pode abrir %1$s. Elas não podem ser alteradas nem canceladas.</string>
+    <string name="kit_type_acknowledgement">Digite “%1$s” para confirmar que você as anotou e sabe que a frase secreta não pode ser redefinida.</string>
+    <string name="kit_print">Imprimir</string>
+    <string name="kit_last_view">Última visualização — não pode ser mostrado de novo.</string>
+    <plurals name="kit_views_left_after">
+        <item quantity="one">Resta %1$d visualização depois desta.</item>
+        <item quantity="many">Restam %1$d visualizações depois desta.</item>
+        <item quantity="other">Restam %1$d visualizações depois desta.</item>
+    </plurals>
+    <string name="kit_remaining_views">Depois de continuar, você pode vê-las mais 3 vezes pelo menu. Depois da terceira, elas não podem ser mostradas de novo, e a cópia que você anotar será a única.</string>
+    <string name="drawer_kit">Kit de recuperação \u0020· \u0020%1$s</string>
+    <string name="kit_cannot_show">Não pode ser mostrado de novo</string>
+    <plurals name="kit_views_left">
+        <item quantity="one">Resta %1$d visualização</item>
+        <item quantity="many">Restam %1$d visualizações</item>
+        <item quantity="other">Restam %1$d visualizações</item>
+    </plurals>
+    <string name="kit_exhausted">Seu kit de recuperação já foi mostrado o máximo de vezes possível. Este app não pode mostrá-lo de novo. Guarde a cópia que você anotou em um lugar seguro.</string>
+    <string name="kit_enter_list">Digite sua frase secreta para mostrá-lo.</string>
+    <string name="kit_enter_vault">Digite a frase secreta de %1$s para mostrá-lo.</string>
+    <string name="kit_last_time">Esta é a última vez que seu kit de recuperação pode ser mostrado. Depois que você sair da próxima tela, ele não poderá ser mostrado de novo, então confira se as 24 palavras estão anotadas. %1$s</string>
+    <plurals name="kit_views_more">
+        <item quantity="one">Você pode ver seu kit de recuperação mais %1$d vez. Ver agora usa uma, restando %2$d. %3$s</item>
+        <item quantity="many">Você pode ver seu kit de recuperação mais %1$d vezes. Ver agora usa uma, restando %2$d. %3$s</item>
+        <item quantity="other">Você pode ver seu kit de recuperação mais %1$d vezes. Ver agora usa uma, restando %2$d. %3$s</item>
+    </plurals>
+    <string name="kit_wrong_list">Essa frase secreta não abre esta lista.</string>
+    <string name="kit_wrong_vault">Essa frase secreta não abre este cofre.</string>
+    <string name="kit_passphrase_for">Frase secreta de %1$s</string>
+    <string name="kit_open_failed">Não foi possível abrir seu kit de recuperação. Tente de novo.</string>
+    <string name="kit_show">Mostrar kit de recuperação</string>
+    <string name="kit_words_open_nothing">Essas palavras não abrem um cofre neste dispositivo.</string>
+    <string name="kit_new_passphrase_title">Escolha uma nova frase secreta</string>
+    <string name="kit_enter_title">Digite seu kit</string>
+    <string name="kit_enter_lead">Digite as 24 palavras do seu kit de recuperação, uma em cada campo.</string>
+    <string name="kit_add_backup_file">Adicionar um arquivo de backup</string>
+    <string name="kit_lost_files">Perdeu os arquivos também? Escolha o backup que você salvou no app de nuvem ou no cartão SD e eles voltam também.</string>
+    <string name="kit_sd_backup">Backup no cartão SD</string>
+    <string name="kit_backup_file">Arquivo de backup</string>
+    <string name="kit_new_passphrase_restoring">Escolha a frase secreta que este celular vai usar para abrir seus cofres. Suas 24 palavras não mudam. Guarde o papel.</string>
+    <string name="kit_new_passphrase_lead">Seu kit de recuperação foi confirmado. Escolha a frase secreta que você vai usar para abrir seus cofres daqui em diante — a antiga deixa de funcionar. Suas 24 palavras não mudam. Guarde o papel.</string>
+    <string name="kit_passphrase_in_use">Essa frase secreta já abre algo neste celular. Escolha outra.</string>
+    <string name="kit_new_passphrase_label">Nova frase secreta</string>
+    <string name="kit_mismatch">As duas entradas não coincidem.</string>
+    <string name="kit_setting_passphrase">Definindo a frase secreta</string>
+    <string name="kit_set_passphrase">Definir frase secreta</string>
+    <string name="kit_recover_title">Recuperar um cofre</string>
+    <string name="kit_recover_lead">Digite as 24 palavras do kit de recuperação próprio de um cofre, uma em cada campo. Ele abre a partir desta lista com a frase secreta que você acabou de usar — se já estiver na lista, deixa de pedir a frase secreta dele —, então você não vai precisar dessas palavras de novo.\n\nIsso não traz arquivos de volta — o armazenamento do cofre já precisa estar neste dispositivo.</string>
+    <string name="kit_recover_name">Dê um nome a ele nesta lista</string>
+    <string name="kit_recover_name_hint">O nome de um cofre fica na lista em que ele estava, então este precisa de um nome aqui.</string>
+    <string name="kit_recovering">Recuperando</string>
+    <string name="kit_recover_action">Recuperar cofre</string>
+    <string name="kit_not_a_word">não é uma palavra</string>
+    <string name="kit_word">Palavra %1$d</string>
+    <string name="kit_word_wrong">Palavra %1$d, não é uma das 24 palavras</string>
+    <plurals name="kit_words_to_check">
+        <item quantity="one">Falta verificar %1$d palavra.</item>
+        <item quantity="many">Faltam verificar %1$d palavras.</item>
+        <item quantity="other">Faltam verificar %1$d palavras.</item>
+    </plurals>
+    <string name="kit_checksum_failed">Todas são palavras válidas, mas o conjunto não confere — provavelmente a ordem está errada. Compare-as com seu kit, na ordem.</string>
+
+    <!-- Vault list — the list, a new vault, editing a vault, a vault's own passphrase -->
+    <string name="vault_icon_home">Casa</string>
+    <string name="vault_icon_family">Família</string>
+    <string name="vault_icon_person">Pessoa</string>
+    <string name="vault_icon_child">Criança</string>
+    <string name="vault_icon_favourite">Favorito</string>
+    <string name="vault_icon_pets">Pets</string>
+    <string name="vault_icon_work">Trabalho</string>
+    <string name="vault_icon_id">Documento de identidade</string>
+    <string name="vault_icon_bank">Banco</string>
+    <string name="vault_icon_savings">Economias</string>
+    <string name="vault_icon_receipts">Recibos</string>
+    <string name="vault_icon_documents">Documentos</string>
+    <string name="vault_icon_medical">Saúde</string>
+    <string name="vault_icon_school">Escola</string>
+    <string name="vault_icon_travel">Viagem</string>
+    <string name="vault_icon_car">Carro</string>
+    <string name="vault_icon_camera">Câmera</string>
+    <string name="vault_icon_music">Música</string>
+    <string name="vault_icon_books">Livros</string>
+    <string name="vault_icon_celebration">Comemoração</string>
+    <string name="vault_icon_star">Estrela</string>
+    <string name="vault_icon_diamond">Diamante</string>
+    <string name="vault_icon_shopping">Compras</string>
+    <string name="vault_icon_archive">Arquivo</string>
+    <string name="vault_list_lock">Bloquear</string>
+    <string name="vault_new">Novo cofre</string>
+    <string name="first_vault_name">Meu cofre</string>
+    <string name="vault_list_lead">Uma frase secreta abre esta lista e tudo o que está nela.</string>
+    <string name="vault_list_lead_locked">Uma frase secreta abre esta lista. Cofres marcados como Bloqueado precisam da própria.</string>
+    <string name="vault_list_empty">Nenhum cofre nesta lista.</string>
+    <string name="vault_list_empty_body">Tudo o que você criar aqui é aberto pela frase secreta que você acabou de usar.</string>
+    <string name="vault_list_create">Criar um cofre</string>
+    <string name="vault_row_locked">Bloqueado — tem frase secreta própria</string>
+    <string name="vault_row_list_passphrase">Abre com a frase secreta desta lista</string>
+    <string name="vault_row_options">Opções de %1$s</string>
+    <string name="vault_edit">Editar cofre</string>
+    <string name="vault_flow_name_title">Dê um nome ao seu cofre</string>
+    <string name="vault_flow_name_lead">Você verá este nome e este emblema na sua lista de cofres.</string>
+    <string name="vault_flow_opens_title">Como %1$s deve abrir?</string>
+    <string name="vault_flow_opens_lead">Você pode adicionar, alterar ou remover uma frase secreta depois em Editar cofre.</string>
+    <string name="vault_opens_list">Com sua lista de cofres</string>
+    <string name="vault_opens_list_detail">Abre direto da lista, com a frase secreta que você já usou.</string>
+    <string name="vault_opens_own">Com uma frase secreta própria</string>
+    <string name="vault_opens_own_detail">Só a frase secreta dele o abre. Ele recebe um kit de recuperação próprio e uma captura de intrusos própria.</string>
+    <string name="vault_flow_passphrase_title">Escolha uma frase secreta para %1$s</string>
+    <string name="vault_flow_passphrase_lead">Só esta frase secreta vai abrir %1$s. A da sua lista de cofres não vai abrir, e o kit de recuperação da lista também não — por isso %1$s recebe um kit de recuperação próprio.</string>
+    <string name="vault_flow_capture_title">Veja quem tenta abrir %1$s</string>
+    <string name="vault_flow_capture_lead">Depois de uma frase secreta errada para %1$s, o telefone grava discretamente quem estiver com ele.</string>
+    <string name="vault_capture_fact">Só %1$s pode vê-las</string>
+    <string name="vault_capture_fact_body">Cada captura é selada para %1$s e espera dentro dele, em Captura de intrusos no menu dele. Nada na sua lista de cofres as mostra.</string>
+    <string name="vault_discard_new_title">Descartar este cofre?</string>
+    <string name="vault_discard_new_body">Nada foi criado ainda.</string>
+    <string name="vault_discard_add_title">Descartar esta frase secreta?</string>
+    <string name="vault_discard_add_body">%1$s continua abrindo com a frase secreta da sua lista de cofres.</string>
+    <string name="vault_capture_not_enrolled">A captura de intrusos não foi ativada para %1$s. Ative-a em Captura de intrusos no menu dele.</string>
+    <string name="vault_passphrase_label">Frase secreta deste cofre</string>
+    <string name="vault_creating">Criando…</string>
+    <string name="vault_open_named">Abrir %1$s</string>
+    <string name="vault_has_own_passphrase">Este cofre tem frase secreta própria.</string>
+    <string name="vault_open_wrong">Essa frase secreta não abriu %1$s.</string>
+    <string name="vault_opening">Abrindo</string>
+    <string name="vault_open">Abrir cofre</string>
+    <string name="vault_colour">Cor</string>
+    <string name="vault_icon">Ícone</string>
+    <string name="vault_icon_letter">Letra</string>
+    <!-- A sample of a letter, shown on the Letter icon before the vault has a name. -->
+    <!-- The name an imported vault is given on the list. From then on it is the vault's own name. -->
+    <string name="imported_vault">Cofre importado</string>
+
+    <!-- Vault grid — destinations, filters, sorting and the add line -->
+    <string name="add_photos_or_videos">Adicionar fotos ou vídeos</string>
+    <string name="add_files">Adicionar arquivos</string>
+    <string name="destination_media">Mídia</string>
+    <string name="destination_files">Arquivos</string>
+    <string name="destination_notes">Notas</string>
+    <string name="destination_memos">Memos de voz</string>
+    <string name="added_to">Adicionado a %1$s.</string>
+    <string name="media_filter_all">Tudo</string>
+    <string name="media_filter_photos">Fotos</string>
+    <string name="media_filter_videos">Vídeos</string>
+    <string name="sort_newest">Mais recentes primeiro</string>
+    <string name="sort_oldest">Mais antigos primeiro</string>
+    <string name="sort_recently_added">Adicionados recentemente primeiro</string>
+    <string name="sort_first_added">Adicionados primeiro</string>
+    <string name="sort_name_az">Nome A–Z</string>
+    <string name="sort_name_za">Nome Z–A</string>
+    <string name="sort_last_edited">Última edição</string>
+    <string name="media_filter_show_all">Mostrar tudo</string>
+    <string name="media_filter_show_photos">Mostrar fotos</string>
+    <string name="media_filter_show_videos">Mostrar vídeos</string>
+    <string name="view_as_list">Mostrar como lista</string>
+    <string name="view_as_grid">Mostrar como grade</string>
+
+    <!-- Vault grid — the bar, selection, the add button and empty states -->
+    <string name="grid_selected">%1$d selecionado(s)</string>
+    <string name="folder_options">Opções da pasta</string>
+    <plurals name="item_count">
+        <item quantity="one">%1$d item</item>
+        <item quantity="many">%1$d itens</item>
+        <item quantity="other">%1$d itens</item>
+    </plurals>
+    <string name="sort_current">Em uso</string>
+    <string name="sort_alphabetical">Alfabética, não numérica</string>
+    <string name="folder_new">Nova pasta</string>
+    <string name="grid_destination_settings">Configurações de %1$s</string>
+    <string name="grid_trash_and_settings">Lixeira e configurações</string>
+    <string name="fab_camera">Câmera</string>
+    <string name="fab_voice_memo">Memo de voz</string>
+    <string name="fab_new_note">Nova nota</string>
+    <string name="fab_actions">Ações</string>
+    <string name="fab_close_actions">Fechar ações</string>
+    <string name="fab_no_camera">Não disponível neste dispositivo</string>
+    <string name="select_all">Selecionar tudo</string>
+    <string name="move_to_folder">Mover para pasta</string>
+    <string name="remove_from_folder">Remover da pasta</string>
+    <string name="share_securely">Compartilhar com segurança</string>
+    <string name="unvault_selected">Tirar selecionados do cofre</string>
+    <string name="delete_selected">Excluir selecionados</string>
+    <string name="restore_selected">Restaurar selecionados</string>
+    <string name="delete_selected_forever">Excluir selecionados para sempre</string>
+    <string name="leave_selection">Sair da seleção</string>
+    <string name="all_vaults">Todos os cofres</string>
+    <string name="select">Selecionar</string>
+    <string name="pinned">Fixadas</string>
+    <string name="kind_video">Vídeo</string>
+    <string name="kind_audio">Áudio</string>
+    <string name="kind_file">Arquivo</string>
+    <string name="empty_media">Este cofre está vazio.</string>
+    <string name="empty_media_line">Fotos e vídeos que você adiciona são criptografados antes de tocar no armazenamento.</string>
+    <string name="empty_files">Nenhum arquivo ainda.</string>
+    <string name="empty_files_line">Documentos e qualquer outra coisa que este app não consegue abrir ficam aqui, criptografados.</string>
+    <string name="empty_notes">Nenhuma nota ainda.</string>
+    <string name="empty_notes_line">As notas que você escreve ficam guardadas neste cofre e nunca saem dele.</string>
+    <string name="empty_memos">Nenhuma gravação ainda.</string>
+    <string name="empty_memos_line">Os memos de voz que você grava são criptografados enquanto são gravados.</string>
+    <string name="empty_add_photos">Adicionar fotos</string>
+    <string name="empty_add_media">Adicionar mídia</string>
+    <string name="empty_create_note">Criar nota</string>
+    <string name="empty_create_memo">Criar memo</string>
+    <string name="search">Pesquisar</string>
+    <string name="search_no_match">Nada encontrado.</string>
+    <string name="search_no_match_line">A pesquisa procura em nomes, pastas e tags.</string>
+    <string name="folder_empty">Nada nesta pasta.</string>
+    <string name="folder_empty_line">Importe para ela ou mova itens de qualquer lugar do cofre.</string>
+    <string name="trash_empty">Nada na lixeira.</string>
+    <string name="trash_empty_line">Os itens excluídos esperam aqui por %1$d dias e depois são destruídos.</string>
+    <string name="section_edited">Editado em %1$s</string>
+    <string name="section_added">Adicionado em %1$s</string>
+
+    <!-- Viewer — one item, full screen -->
+    <string name="viewer_thumbnail_set">Miniatura definida em %1$s.</string>
+    <string name="viewer_frame_unusable">Não foi possível usar este quadro.</string>
+    <string name="viewer_rotate">Girar</string>
+    <string name="viewer_edit_image">Editar imagem</string>
+    <string name="viewer_opening">Abrindo…</string>
+    <string name="viewer_could_not_open">Não foi possível abrir este item.</string>
+    <string name="viewer_export_item">Exportar este item</string>
+    <plurals name="viewer_skip_forward">
+        <item quantity="one">Avançar %1$d segundo</item>
+        <item quantity="many">Avançar %1$d segundos</item>
+        <item quantity="other">Avançar %1$d segundos</item>
+    </plurals>
+    <plurals name="viewer_skip_back">
+        <item quantity="one">Voltar %1$d segundo</item>
+        <item quantity="many">Voltar %1$d segundos</item>
+        <item quantity="other">Voltar %1$d segundos</item>
+    </plurals>
+    <string name="viewer_set_folder_cover">Definir como capa da pasta</string>
+    <string name="viewer_use_frame">Usar este quadro como miniatura</string>
+
+    <!-- Settings rows — a choice revealed in place -->
+    <string name="reveal_choose">Escolher %1$s</string>
+    <string name="reveal_close">Fechar %1$s</string>
+    <string name="reveal_shown">%1$s visíveis</string>
+    <string name="reveal_hidden">%1$s não visíveis</string>
+    <string name="reveal_speed">velocidade</string>
+    <string name="reveal_speeds">velocidades</string>
+    <string name="reveal_length">duração</string>
+    <string name="reveal_lengths">durações</string>
+    <string name="reveal_way">modo</string>
+    <string name="reveal_ways">modos</string>
+    <string name="reveal_quality">qualidade</string>
+    <string name="reveal_qualities">qualidades</string>
+
+    <!-- Slideshow -->
+    <string name="slideshow_speed_quick">Rápida</string>
+    <string name="slideshow_speed_usual">O ritmo de sempre</string>
+    <string name="slideshow_speed_slow">Tempo para olhar cada uma</string>
+    <string name="slideshow_end">Encerrar apresentação</string>
+    <string name="slideshow_play">Reproduzir apresentação</string>
+    <string name="slideshow_pause">Pausar apresentação</string>
+    <string name="slideshow_options">Opções da apresentação</string>
+    <string name="slideshow_options_lead">A apresentação espera enquanto estas opções estão abertas e continua quando você as fecha.</string>
+    <string name="slideshow_speed_footnote">Quanto tempo cada foto fica na tela. Os vídeos são reproduzidos até o fim.</string>
+    <string name="slideshow_repeat">Repetir</string>
+    <string name="slideshow_repeat_on">Ativado · Depois do último item, a apresentação recomeça do primeiro.</string>
+    <string name="slideshow_repeat_off">Desativado · A apresentação termina depois do último item.</string>
+    <string name="slideshow_shuffle">Ordem aleatória</string>
+    <string name="slideshow_shuffle_on">Ativado · Cada item aparece uma vez, em ordem aleatória, antes de qualquer um aparecer de novo.</string>
+    <string name="slideshow_shuffle_off">Desativado · Os itens aparecem na ordem da sua lista.</string>
+
+    <!-- Folders -->
+    <string name="colour_none">Sem cor</string>
+    <string name="colour_red">Vermelho</string>
+    <string name="colour_amber">Âmbar</string>
+    <string name="colour_teal">Verde-azulado</string>
+    <string name="colour_blue">Azul</string>
+    <string name="colour_pink">Rosa</string>
+    <string name="folder_rename">Renomear pasta</string>
+    <string name="folder_create">Criar</string>
+    <string name="folder_move">Mover</string>
+    <string name="folder_cover">Capa</string>
+    <string name="folder_delete">Excluir pasta</string>
+    <string name="folder_delete_named">“%1$s” será removida.</string>
+    <string name="folder_delete_moves_to">Tudo o que está nela vai para “%1$s”. Nada é excluído e nada vai para a lixeira.</string>
+    <string name="folder_delete_moves_home">Tudo o que está nela vai para a tela inicial. Nada é excluído e nada vai para a lixeira.</string>
+    <string name="folder_cover_recent">Usar o item mais recente</string>
+    <string name="folder_cover_empty">Nada nesta pasta para mostrar ainda.</string>
+    <string name="folder_cover_current">Capa atual</string>
+    <string name="picker_move_folder">Mover “%1$s”</string>
+    <plurals name="picker_move_items">
+        <item quantity="one">Mover %1$d item</item>
+        <item quantity="many">Mover %1$d itens</item>
+        <item quantity="other">Mover %1$d itens</item>
+    </plurals>
+    <string name="picker_folder_lead">Tudo o que está dentro da pasta vai junto.</string>
+    <string name="picker_items_lead">Um item fica em no máximo uma pasta, então mover substitui a pasta em que ele está.</string>
+    <string name="picker_mixed_kinds">Mídia, arquivos, notas e memos de voz têm cada um suas próprias pastas. Para mover para uma pasta, selecione itens de um só tipo.</string>
+    <string name="picker_home">Tela inicial</string>
+    <string name="picker_up">Subir</string>
+    <string name="picker_where_now">onde está agora</string>
+    <string name="picker_move_here">Mover para cá</string>
+    <string name="picker_move_into">Mover para “%1$s”</string>
+    <string name="picker_move_home">Mover para a tela inicial</string>
+    <string name="colour_yellow">Amarelo</string>
+    <string name="colour_white">Branco</string>
+    <string name="colour_black">Preto</string>
+
+    <!-- Rename, delete and destroy -->
+    <string name="rename_item">Renomear item</string>
+    <string name="rename_lead">Este é o nome com que o item é exportado. A extensão continua a mesma — é ela que decide como o item abre e para onde é exportado.</string>
+    <string name="rename_refused">Um nome precisa de pelo menos um caractere, não pode ter só pontos, não pode conter barra e tem no máximo %1$d caracteres, incluindo a extensão.</string>
+    <string name="delete_one_forever">Excluir %1$s para sempre?</string>
+    <plurals name="delete_many_forever">
+        <item quantity="one">Excluir %1$d item para sempre?</item>
+        <item quantity="many">Excluir %1$d itens para sempre?</item>
+        <item quantity="other">Excluir %1$d itens para sempre?</item>
+    </plurals>
+    <string name="delete_one">Excluir %1$s?</string>
+    <plurals name="delete_many">
+        <item quantity="one">Excluir %1$d item?</item>
+        <item quantity="many">Excluir %1$d itens?</item>
+        <item quantity="other">Excluir %1$d itens?</item>
+    </plurals>
+    <string name="delete_body_one_forever">A cópia neste cofre é destruída. Ela não pode ser recuperada.</string>
+    <string name="delete_body_many_forever">As cópias neste cofre são destruídas. Elas não podem ser recuperadas.</string>
+    <string name="delete_body_trash">Movido para a Lixeira. Excluído permanentemente depois de %1$d dias.</string>
+    <string name="delete_forever">Excluir para sempre</string>
+    <string name="keep">Manter</string>
+    <string name="destroy_title">Destruir “%1$s”?</string>
+    <string name="destroy_body">Tudo neste cofre some — cada foto, vídeo, nota e pasta. Nada vai para a lixeira e nada pode ser recuperado.</string>
+    <string name="destroy_others_safe">Seus outros cofres não são afetados.</string>
+    <string name="destroy_backup_file">O arquivo de backup dele também é excluído — caso contrário, seu kit de recuperação ainda abriria uma cópia completa deste cofre. Cópias que seu provedor guarda na lixeira ou no histórico de versões dele estão fora do alcance deste app.</string>
+    <string name="destroy_backup_folder">A pasta de backup dele também é esvaziada — caso contrário, seu kit de recuperação ainda abriria uma cópia completa deste cofre. Cópias que seu provedor guarda na lixeira ou no histórico de versões dele estão fora do alcance deste app.</string>
+    <string name="destroy_give_back">Devolver meus arquivos e depois destruir</string>
+    <string name="destroy_everything">Destruir tudo o que está nele</string>
+    <string name="destroy_keep">Manter cofre</string>
+    <string name="destroy_gate_own">Isto não pode ser desfeito. Primeiro, digite a frase secreta que abre %1$s — a dele, não a da sua lista de cofres.</string>
+    <string name="destroy_gate_list">Isto não pode ser desfeito. Primeiro, digite a frase secreta da sua lista de cofres.</string>
+    <string name="destroy_gate_lost">Perdeu esta frase secreta? As 24 palavras próprias deste cofre o trazem de volta. Na lista de cofres, abra o menu, escolha “Recuperar um cofre com o kit dele” e destrua-o a partir dali.</string>
+    <string name="destroy_continue">Continuar</string>
+    <string name="destroy_checking">Verificando…</string>
+    <string name="destroy_return_then">Quando cada arquivo tiver saído e sido verificado, %1$s será destruído.</string>
+
+    <!-- Destination settings — Media, Notes and Memos -->
+    <string name="skip_short">Um salto curto</string>
+    <string name="skip_usual">O salto de sempre</string>
+    <string name="skip_longer">Um salto mais longo</string>
+    <string name="skip_scene">Pular uma cena</string>
+    <string name="orientation_auto">Automática</string>
+    <string name="orientation_auto_detail">Os vídeos giram junto com o celular</string>
+    <string name="orientation_landscape">Paisagem</string>
+    <string name="orientation_landscape_detail">Os vídeos abrem na horizontal, seja qual for a posição do celular</string>
+    <string name="speed_0_5">0,5×</string>
+    <string name="speed_0_5_detail">Metade da velocidade</string>
+    <string name="speed_0_75">0,75×</string>
+    <string name="speed_0_75_detail">Um pouco mais devagar</string>
+    <string name="speed_normal">Normal</string>
+    <string name="speed_normal_detail">Como foi gravado</string>
+    <string name="speed_1_25">1,25×</string>
+    <string name="speed_1_25_detail">Um pouco mais rápido</string>
+    <string name="speed_1_5">1,5×</string>
+    <string name="speed_1_5_detail">Uma vez e meia mais rápido</string>
+    <string name="speed_2">2×</string>
+    <string name="speed_2_detail">Velocidade dobrada</string>
+    <string name="quality_standard">Padrão</string>
+    <string name="quality_standard_detail">64 kbps · cerca de 0,5 MB por minuto</string>
+    <string name="quality_high">Alta</string>
+    <string name="quality_high_detail">128 kbps · cerca de 1 MB por minuto</string>
+    <string name="quality_highest">Máxima</string>
+    <string name="quality_highest_detail">256 kbps · cerca de 2 MB por minuto</string>
+    <string name="media_settings_intro">Como fotos e vídeos aparecem e são reproduzidos quando você os abre.</string>
+    <string name="media_settings_viewing">Durante a visualização</string>
+    <string name="media_keep_on">Manter a tela ligada durante a visualização</string>
+    <string name="media_keep_on_on">Ativado · A tela fica ligada enquanto uma foto ou um vídeo está aberto, e o cofre continua aberto junto.</string>
+    <string name="media_keep_on_off">Desativado · A tela desliga no tempo normal do celular, e o cofre é bloqueado junto.</string>
+    <string name="media_brightness">Brilho máximo durante a visualização</string>
+    <string name="media_brightness_on">Ativado · Fotos e vídeos abrem com o brilho máximo. Seu brilho volta quando você os fecha.</string>
+    <string name="media_brightness_off">Desativado · Fotos e vídeos abrem com o brilho do celular.</string>
+    <string name="media_stretch">Ampliar fotos de baixa resolução</string>
+    <string name="media_stretch_on">Ativado · Uma foto menor que a tela é ampliada para preenchê-la.</string>
+    <string name="media_stretch_off">Desativado · Uma foto menor que a tela é mostrada no tamanho original.</string>
+    <string name="media_quality">Qualidade de exibição máxima</string>
+    <string name="media_quality_on">Ativado · As fotos abrem na resolução total, para ver detalhes ao aplicar zoom. Usa mais memória e bateria.</string>
+    <string name="media_quality_off">Desativado · As fotos abrem na resolução da tela. O zoom mostra menos detalhes.</string>
+    <string name="playback_speed">Velocidade de reprodução</string>
+    <string name="media_speed_footnote">O tom continua o mesmo.</string>
+    <string name="media_resume">Retomar vídeos</string>
+    <string name="media_resume_on">Ativado · Um vídeo começa de onde você parou da última vez.</string>
+    <string name="media_resume_off">Desativado · Os vídeos começam do início, e o ponto em que você para não é guardado.</string>
+    <string name="media_repeat">Repetir vídeo</string>
+    <string name="media_repeat_on">Ativado · Um vídeo começa de novo quando termina.</string>
+    <string name="media_repeat_off">Desativado · Um vídeo para no final.</string>
+    <string name="media_skip">Tocar duas vezes para pular</string>
+    <string name="media_skip_footnote">Toque duas vezes no lado direito de um vídeo para avançar e no lado esquerdo para voltar.</string>
+    <string name="media_orientation">Orientação do vídeo</string>
+    <string name="notes_settings_intro">Estas configurações valem para todas as notas, em todos os cofres.</string>
+    <string name="notes_checklists">Listas de verificação</string>
+    <string name="notes_move_checked">Mover itens marcados para o final</string>
+    <string name="notes_move_checked_on">Ativado · Marcar um item o move para baixo dos não marcados da lista. Desmarcar o leva de volta para cima.</string>
+    <string name="notes_move_checked_off">Desativado · Os itens marcados ficam onde estão.</string>
+    <string name="notes_keyboard">Teclado</string>
+    <string name="notes_incognito">Teclado anônimo</string>
+    <string name="notes_incognito_on">Ativado · Seu teclado é instruído a não aprender palavras das suas notas. A maioria dos teclados obedece; alguns podem não obedecer.</string>
+    <string name="notes_incognito_off">Desativado · Seu teclado pode aprender palavras das suas notas e sugeri-las em outros apps.</string>
+    <string name="memos_settings_intro">Como os memos são gravados e como são reproduzidos quando você os abre.</string>
+    <string name="memos_quality">Qualidade da gravação</string>
+    <string name="memos_quality_footnote">Um memo mantém a qualidade com que começou. Uma mudança vale a partir do próximo.</string>
+    <string name="memos_stereo">Gravação em estéreo</string>
+    <string name="memos_stereo_on">Ativado · Os memos são gravados em dois canais, com cerca do dobro do tamanho. Um celular que não consegue grava em mono.</string>
+    <string name="memos_stereo_off">Desativado · Os memos são gravados em um canal.</string>
+    <string name="memos_bluetooth">Usar microfone Bluetooth</string>
+    <string name="memos_bluetooth_on">Ativado · Um fone Bluetooth conectado grava o memo, com qualidade de chamada e em mono — qualidade e estéreo não se aplicam a ele. Sem nenhum conectado, o microfone do celular grava.</string>
+    <string name="memos_bluetooth_off">Desativado · O microfone do celular grava os memos. Um fone Bluetooth grava com qualidade de chamada e em mono, sem qualidade nem estéreo.</string>
+    <string name="memos_playback">Reprodução</string>
+    <string name="memos_speed_footnote">O tom continua o mesmo. Os vídeos seguem a velocidade de Mídia, não esta.</string>
+    <string name="memos_skip_silence">Pular silêncios</string>
+    <string name="memos_skip_silence_on">Ativado · Trechos em silêncio são pulados enquanto um memo é reproduzido.</string>
+    <string name="memos_skip_silence_off">Desativado · Os memos são reproduzidos com os silêncios.</string>
+
+    <!-- Notes -->
+    <string name="note_title">Título</string>
+    <string name="note_body">Nota</string>
+    <string name="note_edit">Editar nota</string>
+    <string name="note_placeholder">Comece a escrever</string>
+    <string name="note_too_long">Esta nota tem %1$d bytes e o limite é %2$d. O limite é em bytes, não em caracteres, então letras acentuadas, emojis e alfabetos não latinos contam como mais de um cada.</string>
+    <string name="note_pin">Fixar</string>
+    <string name="note_unpin">Desafixar</string>
+    <string name="note_delete">Excluir nota</string>
+    <string name="format_checklist">Lista de verificação</string>
+    <string name="format_bullet">Lista com marcadores</string>
+    <string name="format_numbered">Lista numerada</string>
+    <string name="format_heading">Título</string>
+    <string name="format_bold">Negrito</string>
+    <string name="format_italic">Itálico</string>
+    <string name="format_strike">Tachado</string>
+    <string name="note_completed">Concluído: %1$s</string>
+    <string name="note_attached_image">Imagem anexada</string>
+    <string name="note_attachment_missing">Este anexo não está mais no cofre.</string>
+    <string name="note_attachment_missing_label">Anexo ausente %1$s</string>
+
+    <!-- Image editor -->
+    <!-- Aspect ratios: the numbers are the same in every language; write them the way the language writes a ratio. -->
+    <string name="aspect_free">Livre</string>
+    <string name="aspect_1_1">1:1</string>
+    <string name="aspect_4_3">4:3</string>
+    <string name="aspect_3_2">3:2</string>
+    <string name="aspect_16_9">16:9</string>
+    <string name="filter_original">Original</string>
+    <string name="filter_mono">P&amp;B</string>
+    <string name="filter_warm">Quente</string>
+    <string name="filter_cool">Frio</string>
+    <string name="filter_fade">Esmaecido</string>
+    <string name="filter_punch">Intenso</string>
+    <string name="width_fine">Fino</string>
+    <string name="width_medium">Médio</string>
+    <string name="width_bold">Grosso</string>
+    <string name="editor_save_note">Salvar adiciona um novo item e mantém o original.</string>
+    <string name="editor_saving">Salvando…</string>
+    <string name="editor_save_copy">Salvar uma cópia</string>
+    <string name="editor_discard_title">Descartar estas edições?</string>
+    <string name="editor_discard_body">A imagem volta a ser como era. Nada mais muda.</string>
+    <string name="editor_discard">Descartar</string>
+    <string name="editor_keep_editing">Continuar editando</string>
+    <string name="editor_discard_edits">Descartar edições</string>
+    <string name="editor_title">Editar</string>
+    <string name="tool_crop">Cortar</string>
+    <string name="tool_straighten">Endireitar</string>
+    <string name="tool_filters">Filtros</string>
+    <string name="tool_light">Luz</string>
+    <string name="tool_markup">Marcação</string>
+    <string name="editor_crop_hint">Arraste os cantos ou a própria moldura.</string>
+    <string name="editor_rotate_left">Girar para a esquerda</string>
+    <string name="editor_rotate_right">Girar para a direita</string>
+    <string name="editor_flip_horizontal">Espelhar na horizontal</string>
+    <string name="editor_flip_vertical">Espelhar na vertical</string>
+    <string name="editor_straighten_value">Endireitar \u0020· \u0020%1$s°</string>
+    <string name="editor_strength">Intensidade</string>
+    <string name="editor_brightness">Brilho</string>
+    <string name="editor_contrast">Contraste</string>
+    <string name="editor_saturation">Saturação</string>
+    <string name="editor_warmth">Temperatura</string>
+    <string name="editor_erase_hint">Toque em um traço para removê-lo.</string>
+    <string name="editor_draw_hint">Arraste sobre a imagem para desenhar.</string>
+    <string name="editor_eraser">Borracha</string>
+    <string name="editor_reset">Redefinir</string>
+
+    <!-- Voice memo -->
+    <string name="memo_recorded">Gravado</string>
+    <string name="memo_permission_body">Gravar precisa do microfone. Nada gravado aqui sai do dispositivo — vai direto para o cofre, e esta permissão serve só para isso. Ela não liga o microfone para mais nada.</string>
+    <string name="memo_speak">Fale, e vai direto para este cofre</string>
+    <string name="memo_trial">Salvar um memo inicia seu teste de 30 dias. A contagem começa com a primeira coisa que entra em um cofre, e seria esta.</string>
+    <string name="memo_allow_microphone">Permitir o microfone</string>
+    <string name="memo_save">Salvar no cofre</string>
+    <string name="memo_position">Posição nesta gravação</string>
+    <string name="memo_minutes_seconds">%1$s %2$s</string>
+    <string name="memo_recording_length">Gravando, %1$s</string>
+    <string name="memo_recorded_length">Gravado, %1$s</string>
+    <string name="memo_nothing_yet">Nada gravado ainda</string>
+    <string name="memo_discard_title">Descartar esta gravação?</string>
+    <string name="memo_discard_body">A gravação não foi salva, e sair faz você perdê-la. Nada do que já está no cofre é afetado.</string>
+    <string name="memo_keep_recording">Continuar gravando</string>
+    <string name="memo_already_running">Já há uma gravação em andamento.</string>
+    <string name="memo_could_not_record">O cofre não conseguiu receber uma gravação agora.</string>
+    <string name="memo_mic_failed">Não foi possível iniciar o microfone.</string>
+
+    <!-- Camera -->
+    <string name="camera_recording_failed">O cofre não conseguiu receber uma gravação.</string>
+    <string name="camera_permission_body">A câmera precisa de permissão para registrar qualquer coisa. Nada capturado aqui vai para a galeria — vai direto para o cofre, e esta permissão serve só para isso.</string>
+    <string name="camera_allow">Permitir a câmera</string>
+    <string name="camera_close">Fechar a câmera</string>
+    <string name="camera_switch_back">Mudar para a câmera traseira</string>
+    <string name="camera_switch_front">Mudar para a câmera frontal</string>
+    <string name="camera_take_photo">Tirar foto</string>
+    <string name="camera_open_receipt">Abrir no cofre</string>
+    <string name="camera_saving">Salvando a captura no cofre</string>
+    <string name="camera_receipt">Última captura, salva no cofre</string>
+    <string name="camera_none">Este dispositivo não tem câmera.</string>
+    <string name="camera_no_sizes">Esta câmera não informa nenhum tamanho utilizável.</string>
+    <string name="camera_no_still">Esta câmera não oferece tamanho para fotos.</string>
+    <string name="camera_taken">A câmera está sendo usada por outro app.</string>
+    <string name="camera_not_opened">Não foi possível abrir a câmera.</string>
+    <string name="camera_photo_failed">Não foi possível tirar a foto.</string>
+    <string name="camera_recording_refused">Este dispositivo não iniciou uma gravação.</string>
+    <string name="camera_preview_failed">A câmera não iniciou uma visualização.</string>
+
+    <!-- Backup and restore -->
+    <string name="backup_turn_on">Ativar backup</string>
+    <string name="backup_choose_where">Escolha onde fazer backup</string>
+    <string name="backup_now">Fazer backup agora</string>
+    <string name="backup_backed_up_to">Backup feito em</string>
+    <string name="backup_how_it_works">Como o backup funciona</string>
+    <string name="backup_stop">Parar de fazer backup</string>
+    <string name="backup_caption_off">Criptografado neste celular antes de ser copiado.</string>
+    <string name="backup_caption_file">Copia o cofre inteiro alguns minutos depois de você fazer mudanças e quando você bloqueia este cofre.</string>
+    <string name="backup_caption_folder">Copia depois de cada mudança e quando você bloqueia este cofre.</string>
+    <string name="backup_last_copied">Última cópia %1$s · %2$s</string>
+    <string name="backup_is_off">O backup está desativado</string>
+    <string name="backup_only_here">Este cofre está só neste celular · %1$s</string>
+    <string name="backup_checking">Verificando a pasta…</string>
+    <string name="backup_up_to_date">Atualizado</string>
+    <plurals name="backup_changes_to_copy">
+        <item quantity="one">%1$d mudança para copiar</item>
+        <item quantity="many">%1$d mudanças para copiar</item>
+        <item quantity="other">%1$d mudanças para copiar</item>
+    </plurals>
+    <string name="backup_copying">Copiando…</string>
+    <string name="backup_progress">%1$s de %2$s</string>
+    <plurals name="backup_files_failed">
+        <item quantity="one">%1$d arquivo não foi copiado</item>
+        <item quantity="many">%1$d arquivos não foram copiados</item>
+        <item quantity="other">%1$d arquivos não foram copiados</item>
+    </plurals>
+    <string name="backup_partial_line">Eles serão tentados de novo na próxima vez.</string>
+    <string name="backup_unreachable_file">Não foi possível acessar o arquivo de backup</string>
+    <string name="backup_unreachable_folder">Não foi possível acessar a pasta</string>
+    <string name="backup_unreachable_line">Ele pode ter sido excluído, ou o app onde ele está saiu da conta.</string>
+    <string name="backup_no_space">Espaço insuficiente</string>
+    <string name="backup_no_space_line">São necessários mais %1$s de espaço livre para entregar o backup.</string>
+    <string name="backup_just_now">agora mesmo</string>
+    <string name="backup_before_title">Antes de ativar o backup</string>
+    <string name="backup_before_words">Para restaurar, você precisa das suas 24 palavras</string>
+    <string name="backup_before_words_body">Sua frase secreta não abre um backup. Se este celular e as palavras se perderem, ninguém consegue abri-lo — nem você.</string>
+    <string name="backup_before_provider">O provedor vê o tamanho do backup e quando ele mudou</string>
+    <string name="backup_before_provider_body">Nunca um nome, uma data, um álbum ou o que há dentro de um arquivo.</string>
+    <string name="backup_before_one_vault">Este backup é só deste cofre</string>
+    <string name="backup_before_one_vault_body">Cada cofre precisa do próprio backup.</string>
+    <string name="backup_back_up_to">Fazer backup em</string>
+    <string name="backup_no_destinations">Não há app de nuvem nem cartão SD neste celular. Instale o app do seu provedor de nuvem, entre na conta e volte aqui.</string>
+    <string name="backup_dest_cloud">Um arquivo de backup, atualizado depois das mudanças</string>
+    <string name="backup_dest_volume">Uma pasta, atualizada a cada mudança</string>
+    <string name="backup_how_copied">O que é copiado</string>
+    <string name="backup_how_copied_body">Os arquivos deste cofre, criptografados neste celular, e a lista criptografada de cofres que seu kit de recuperação abre. Sua frase secreta e o arquivo que ela desbloqueia ficam neste celular.</string>
+    <string name="backup_how_when">Quando copia</string>
+    <string name="backup_how_when_body">Depois de cada mudança, sem precisar apertar nada. Uma pasta no cartão SD é atualizada em segundos e copia só o que mudou. O arquivo de backup de um app de nuvem guarda o cofre inteiro, então é regravado alguns minutos depois que você para de fazer mudanças, ou na hora quando você bloqueia. Um cofre que você nunca abre nunca é copiado.</string>
+    <string name="backup_how_restoring">Restauração</string>
+    <string name="backup_how_restoring_body">Um backup é restaurado com suas 24 palavras, não com sua frase secreta. Se este celular e essas palavras se perderem, ninguém consegue ler o backup, nem você.</string>
+    <string name="backup_how_provider">O que o provedor consegue ver</string>
+    <string name="backup_how_provider_body">Um app de nuvem vê um arquivo: o tamanho dele e quando mudou. O conteúdo está lacrado, então ele não consegue contar nem medir seus arquivos. Uma pasta no cartão SD mostra quantos arquivos existem, o tamanho de cada um arredondado para cima em uma faixa fixa e quando cada um mudou — itens acima de 16 MB aparecem em grupo, e o padrão poderia identificá-los como o backup deste app. Nenhum dos dois vê um nome, uma data, um álbum ou qualquer coisa dentro de um arquivo.</string>
+    <string name="backup_how_per_vault">Um backup por cofre</string>
+    <string name="backup_how_per_vault_body">Cada cofre precisa do próprio backup. Todo backup também guarda a mesma lista criptografada de cofres, então quem conseguir ver dois deles pode saber que pertencem ao mesmo conjunto.</string>
+    <string name="backup_how_destinations">Apps de nuvem e cartões SD</string>
+    <string name="backup_how_destinations_body">Um app de nuvem recebe um arquivo com o cofre inteiro, lacrado para que o provedor veja só o tamanho e quando mudou. Ele é regravado por inteiro a cada vez. Um cartão SD recebe uma pasta que copia só o que mudou. O armazenamento do próprio celular não é oferecido — uma cópia ali se perde junto com o celular.</string>
+    <string name="backup_how_deleting">Excluir e parar</string>
+    <string name="backup_how_deleting_body">Excluir aqui remove do backup na próxima cópia. Cópias que seu provedor guarda na lixeira ou no histórico de versões estão fora do alcance deste app — inclusive um arquivo de backup anterior, se uma cópia for interrompida. Parar o backup deixa o backup onde está.</string>
+    <string name="backup_stop_title">Parar de fazer backup deste cofre?</string>
+    <string name="backup_stop_body">O backup já feito fica onde está. Exclua-o pelo seu provedor se quiser que ele suma.</string>
+    <string name="backup_keep">Continuar fazendo backup</string>
+    <string name="backup_on_sd_card">O backup está em um cartão SD</string>
+    <string name="restore_into_list">Escolha o backup de um cofre desta lista — o arquivo no seu app de nuvem ou a pasta no seu cartão SD. Ele volta para esta lista.</string>
+    <string name="restore_lead">Escolha o arquivo de backup que você salvou no app de nuvem ou a pasta no seu cartão SD. Você vai precisar das 24 palavras do seu kit de recuperação — sua frase secreta não abre um backup.</string>
+    <string name="restore_choose_file">Escolher o arquivo de backup</string>
+    <string name="restore_copying">Copiando arquivos… %1$d de %2$d</string>
+    <string name="import_title">Importar um cofre</string>
+    <string name="import_lead">Traga de volta um cofre de um arquivo .vault ou de um backup salvo no seu app de nuvem ou em um cartão SD.</string>
+    <string name="import_choose_file">Escolher um arquivo</string>
+    <string name="import_vault_file">Arquivo .vault</string>
+    <string name="import_list_full">Esta lista está cheia. Remova um cofre dela para liberar espaço e importe de novo.</string>
+    <string name="import_failed">Isso não abriu. Ou a frase secreta está errada, ou este não é um arquivo .vault que este app consegue ler.</string>
+    <string name="import_passphrase_label">Frase secreta deste arquivo</string>
+    <string name="import_importing">Importando</string>
+    <string name="import_action">Importar cofre</string>
+    <string name="import_backup_here">Este é o backup de um cofre desta lista.</string>
+    <string name="import_restore_vault">Restaurar cofre</string>
+    <string name="import_other_list">Este backup é de outra lista de cofres. Digite as 24 palavras do kit de recuperação dessa lista.</string>
+    <string name="import_own_list">Ele volta como uma lista de cofres própria, separada desta, aberta com a própria frase secreta. As 24 palavras dela não mudam.</string>
+    <string name="import_no_room">Não há espaço para outra lista de cofres neste celular.</string>
+    <string name="import_restore_list">Restaurar lista de cofres</string>
+    <string name="import_copying">Copiando arquivos…</string>
+    <string name="import_vault_restored">Cofre restaurado</string>
+    <string name="import_list_restored">Lista de cofres restaurada</string>
+    <string name="import_vault_restored_body">Ele voltou para a lista de cofres dele. Abra essa lista com a frase secreta dela para vê-lo.</string>
+    <string name="import_list_restored_body">Bloqueie o app e digite a frase secreta dela para abri-la.</string>
+
+    <!-- Sizes and units -->
+    <string name="size_bytes">%1$d B</string>
+    <string name="size_kb">%1$s kB</string>
+    <string name="size_mb">%1$s MB</string>
+    <string name="size_gb">%1$s GB</string>
+    <string name="size_tb">%1$s TB</string>
+    <string name="size_pb">%1$s PB</string>
+
+    <!-- Unvault and the encrypted archive -->
+    <plurals name="unvault_items">
+        <item quantity="one">Tirar %1$d item do cofre</item>
+        <item quantity="many">Tirar %1$d itens do cofre</item>
+        <item quantity="other">Tirar %1$d itens do cofre</item>
+    </plurals>
+    <plurals name="unvault_selected_body">
+        <item quantity="one">O %1$d item que você selecionou é descriptografado, gravado, verificado e depois removido do cofre. Tudo o que você não selecionou fica onde está.</item>
+        <item quantity="many">Os %1$d itens que você selecionou são descriptografados, gravados, verificados e depois removidos do cofre. Tudo o que você não selecionou fica onde está.</item>
+        <item quantity="other">Os %1$d itens que você selecionou são descriptografados, gravados, verificados e depois removidos do cofre. Tudo o que você não selecionou fica onde está.</item>
+    </plurals>
+    <plurals name="unvault_all_body">
+        <item quantity="one">O %1$d item deste cofre é descriptografado, gravado, verificado e depois removido do cofre. Quando terminar, o cofre fica vazio e seus arquivos voltam a ser arquivos comuns.</item>
+        <item quantity="many">Todos os %1$d itens deste cofre são descriptografados, gravados, verificados e depois removidos do cofre. Quando terminar, o cofre fica vazio e seus arquivos voltam a ser arquivos comuns.</item>
+        <item quantity="other">Todos os %1$d itens deste cofre são descriptografados, gravados, verificados e depois removidos do cofre. Quando terminar, o cofre fica vazio e seus arquivos voltam a ser arquivos comuns.</item>
+    </plurals>
+    <string name="unvault_checked">Cada arquivo é lido de volta e comparado antes que a cópia criptografada seja excluída. Tudo o que não coincidir fica no cofre e é listado no manifesto.</string>
+    <string name="unvault_where">Onde</string>
+    <string name="unvault_gallery">Fotos e vídeos</string>
+    <string name="unvault_folder_chosen">Pasta escolhida</string>
+    <string name="unvault_choose_folder">Escolher uma pasta</string>
+    <string name="unvault_remove_details">Remover detalhes da foto</string>
+    <string name="unvault_details_kept">As fotos exportadas mantêm tudo o que carregam, inclusive a localização.</string>
+    <string name="unvault_passphrase_needed">Digite sua frase secreta para continuar. O desbloqueio biométrico não serve para isto.</string>
+    <string name="unvault_passphrase_needed_own">Digite a frase secreta própria deste cofre para continuar. A da sua lista de cofres e o desbloqueio biométrico não servem para isto.</string>
+    <string name="unvault_wrong_passphrase">Isso não abriu este cofre.</string>
+    <string name="unvault_progress">%1$d de %2$d fora</string>
+    <string name="unvault_progress_left">%1$d de %2$d fora, %3$d ainda no cofre</string>
+    <string name="unvault_busy">Tirando do cofre</string>
+    <string name="archive_title">Vai mudar para um novo dispositivo?</string>
+    <string name="archive_body">Salve um arquivo .vault criptografado que você pode abrir no novo celular. Escolha uma frase secreta para o próprio arquivo — não é a que abre seus cofres, e você vai precisar dela no outro dispositivo. Isso não esvazia este cofre, e os itens na Lixeira não são incluídos.</string>
+    <string name="archive_passphrase_label">Frase secreta do arquivo</string>
+    <string name="archive_save">Salvar arquivo criptografado</string>
+
+    <!-- Sharing -->
+    <string name="lifespan_day">24 horas</string>
+    <string name="lifespan_week">7 dias</string>
+    <string name="lifespan_month">30 dias</string>
+    <string name="share_trial_ended">Seu teste terminou</string>
+    <string name="share_trial_ended_body">Enviar um compartilhamento exige a compra única. Abrir compartilhamentos enviados a você e abrir, ver e exportar suas próprias coisas continuam gratuitos.</string>
+    <string name="share_lead_contact">Isso cria um arquivo criptografado que só o celular de %1$s consegue abrir. Não há código para repassar.</string>
+    <string name="share_lead_code">Isso cria um arquivo criptografado e um código de quatro palavras. Quem receber precisa deste app e do código para abrir.</string>
+    <string name="share_who">Quem pode abrir</string>
+    <string name="share_contact_detail">Abre no celular de %1$s, sem código</string>
+    <string name="share_anyone">Qualquer pessoa com o código</string>
+    <string name="share_anyone_detail">Menos seguro. Qualquer pessoa com o arquivo e as palavras pode abrir.</string>
+    <string name="share_how_long">Por quanto tempo abre</string>
+    <string name="share_no_limit">Sem limite</string>
+    <string name="share_no_limit_detail">Abre quando a pessoa quiser</string>
+    <string name="share_open_once">Abrir uma vez</string>
+    <string name="share_open_once_detail">Abre uma vez e nunca mais</string>
+    <string name="share_expires">Expira</string>
+    <string name="share_expires_detail">Abre até %1$s</string>
+    <string name="share_limits_contact">Esses limites são aplicados pelo app no celular de %1$s, e nenhum outro celular consegue abrir o arquivo. Depois de enviar o arquivo, você não pode desfazer o envio.</string>
+    <string name="share_limits_code">Esses limites são aplicados pelo app no celular que abre o arquivo. Depois de enviar o arquivo, você não pode desfazer o envio.</string>
+    <string name="share_photo_carries">O que a foto carrega</string>
+    <string name="share_remove_details">Remover os detalhes</string>
+    <string name="share_as_is">Enviar como está</string>
+    <string name="share_as_is_detail">Localização, data e informações da câmera vão junto</string>
+    <string name="share_sealing">Lacrando</string>
+    <string name="share_try_again">Tentar de novo</string>
+    <string name="share_create">Criar compartilhamento</string>
+    <string name="share_less_secure">Menos seguro que enviar para um contato</string>
+    <string name="share_risk_any_phone">Qualquer pessoa com o arquivo e as quatro palavras pode abri-lo, em qualquer celular.</string>
+    <string name="share_risk_once">“Abrir uma vez” significa uma vez por celular. Se for repassado, abre de novo.</string>
+    <string name="share_risk_same_chat">Palavras enviadas na mesma conversa que o arquivo entregam as duas coisas.</string>
+    <string name="share_risk_guessing">Quem guardar uma cópia do arquivo pode continuar tentando adivinhar as palavras, sem limite.</string>
+    <string name="share_pair_first">Para compartilhar com uma única pessoa, faça o pareamento com ela antes.</string>
+    <string name="share_pair">Parear com alguém</string>
+    <string name="share_code_title">O código</string>
+    <string name="share_code_label">Código de compartilhamento: %1$s</string>
+    <string name="share_code_separately">Envie o código por um meio diferente do arquivo.</string>
+    <string name="share_code_both">Quem tiver os dois pode abrir. Um código digitado na mesma conversa que o arquivo entrega os dois de uma vez.</string>
+    <string name="share_code_once">Este código é mostrado uma vez e não é salvo. Copie-o agora.</string>
+    <string name="share_send_file">Enviar arquivo…</string>
+    <string name="share_copy_code">Copiar código</string>
+    <string name="share_sealed_to">Lacrado para %1$s</string>
+    <string name="share_sealed_body">Só %1$s pode abrir isto. O arquivo está lacrado para o celular dessa pessoa — não há código para enviar.</string>
+    <string name="share_save_device">Salvar no dispositivo</string>
+    <string name="share_saved">Salvo. Anexe-o pelo app Arquivos no app que você usa para enviar.</string>
+    <string name="share_save_failed">Não foi possível salvar o arquivo. Tente de novo ou envie-o diretamente.</string>
+    <string name="share_save_hint">Ou salve e anexe pelo app Arquivos. Assim o app que você usa para enviar não consegue saber qual app o criou.</string>
+    <string name="share_refused_trash">Itens na lixeira não podem ser compartilhados.</string>
+    <string name="share_refused_no_length">Não é possível ler a duração deste vídeo, então ele não pode ser compartilhado.</string>
+    <string name="share_refused_too_long">Vídeos com mais de %1$d segundos não podem ser compartilhados.</string>
+
+    <!-- Opening a share -->
+    <string name="share_open_title">Abrir um compartilhamento</string>
+    <string name="share_open_reading">Lendo o arquivo</string>
+    <string name="share_open_enter_code">Se ele foi enviado com um código, digite-o.</string>
+    <string name="share_open_code_hint">A pessoa que enviou deve ter passado quatro palavras por um meio diferente do arquivo.</string>
+    <string name="share_open_failed">Não foi possível abrir este compartilhamento.</string>
+    <string name="share_open_check">Confira as quatro palavras e se este é o arquivo que enviaram para você.</string>
+    <string name="share_open_action">Abrir compartilhamento</string>
+    <string name="share_open_no_contacts">Este celular não consegue ler os contatos dele, então um compartilhamento lacrado para ele não pode ser aberto aqui.</string>
+    <string name="share_open_contacts">Abrir Contatos</string>
+    <string name="share_open_view">Ver</string>
+    <string name="share_open_keep">Manter neste cofre</string>
+    <string name="share_open_keep_needs_purchase">Manter compartilhamentos exige a compra única. Quando você sair, nada será salvo.</string>
+    <string name="share_open_leave">Se você sair sem mantê-lo, nada será salvo.</string>
+    <string name="share_open_cannot_keep">Este compartilhamento não pode ser mantido. Quando você sair, nada será salvo.</string>
+    <string name="share_open_sealed_here">Este compartilhamento foi lacrado para este celular. Nenhum código é necessário para abri-lo.</string>
+    <string name="share_open_open">Abrir</string>
+    <string name="share_open_newer">Este compartilhamento foi criado por uma versão mais nova do app. Atualize este app para abri-lo.</string>
+    <string name="share_open_already_opened">Este compartilhamento foi configurado para abrir uma vez, e já foi aberto.</string>
+    <string name="share_open_expired">Este compartilhamento expirou em %1$s.</string>
+    <string name="share_open_code_correct">O código estava correto. Este limite é aplicado pelo app neste celular, e quem enviou não pode removê-lo.</string>
+    <string name="share_open_limit_once">Quem enviou configurou isto para abrir uma vez. Este limite é aplicado pelo app neste celular.</string>
+    <string name="share_open_limit_expiry">Quem enviou configurou isto para parar de abrir em %1$s. Este limite é aplicado pelo app neste celular.</string>
+
+    <!-- Contacts and pairing -->
+    <string name="contacts_waiting">Aguardando</string>
+    <string name="contacts_invite_sent">Convite enviado — aguardando a resposta</string>
+    <string name="contacts_reply_sent">Resposta enviada — aguardando a confirmação</string>
+    <string name="contacts_confirmation_ready">Confirmação pronta para enviar</string>
+    <string name="contacts_add">Adicionar um contato</string>
+    <string name="contacts_together">Juntos</string>
+    <string name="contacts_together_detail">Leiam o código um do outro. A forma mais segura de parear.</string>
+    <string name="contacts_not_together">Separados</string>
+    <string name="contacts_not_together_detail">Envie um arquivo de convite e quatro palavras.</string>
+    <string name="contacts_have_invite">Tenho um convite</string>
+    <string name="contacts_have_invite_detail">Abra o arquivo enviado e digite as quatro palavras da outra pessoa.</string>
+    <string name="contacts_empty">Nenhum contato ainda. Faça o pareamento com alguém — juntos ou enviando um convite — e depois você pode enviar arquivos sem código para essa pessoa.</string>
+    <string name="contacts_remove_named">Remover %1$s</string>
+    <string name="contacts_unreadable">Este celular não consegue ler os contatos dele.</string>
+    <string name="contacts_unreadable_body">A lista de contatos está trancada com uma chave guardada por este dispositivo, e essa chave sumiu — é isso que uma restauração em outro celular deixa para trás. A lista em si continua intacta; nada aqui consegue abri-la.\n\nComeçar de novo dá a este celular um novo código de pareamento. Quem já pareou com você vai precisar lê-lo de novo.</string>
+    <string name="contacts_new_identity">Começar uma nova identidade</string>
+    <string name="contacts_new_identity_title">Começar uma nova identidade?</string>
+    <string name="contacts_new_identity_body">A lista de contatos ilegível é excluída e este celular recebe um novo código de pareamento. Todos com quem você pareou vão precisar lê-lo de novo.</string>
+    <string name="contacts_start_again">Começar de novo</string>
+    <string name="contacts_remove_title">Remover %1$s?</string>
+    <string name="contacts_remove_body">O que você já enviou continua enviado. Vocês podem parear de novo.</string>
+    <string name="pairing_title">Parear um contato</string>
+    <string name="pairing_saved">%1$s salvo. Agora deixe a pessoa ler seu código.</string>
+    <string name="pairing_show">Mostre isto ao outro celular e depois leia o código dele. Cada um precisa ler o código do outro.</string>
+    <string name="pairing_in_person">Ler o código pessoalmente é a forma mais segura de parear. Nada disso sai deste celular até você enviar um arquivo para alguém.</string>
+    <string name="pairing_scan">Ler o código da pessoa</string>
+    <string name="pairing_your_code">Seu código de pareamento</string>
+    <string name="pairing_camera_permission">A câmera precisa de permissão para ler um código. Nada do que ela vê é gravado — as imagens são decodificadas e descartadas, e esta permissão serve só para isso.</string>
+    <string name="pairing_point">Aponte para o código do outro celular.</string>
+    <string name="pairing_camera_looking">Câmera, procurando um código de pareamento</string>
+    <string name="pairing_who">Quem é? O nome é só seu — ele fica guardado neste celular e nunca é enviado a lugar nenhum.</string>
+    <string name="pairing_save">Salvar contato</string>
+    <string name="remote_invite_title">Convidar alguém</string>
+    <string name="remote_answer_title">Responder a um convite</string>
+    <string name="remote_important">Importante</string>
+    <string name="remote_name_too_long">Esse nome é longo demais. Tente um mais curto.</string>
+    <string name="remote_name_yours">O nome é só seu e fica neste celular.</string>
+    <string name="remote_who_inviting">Quem você está convidando?</string>
+    <string name="remote_make_invite">Criar convite</string>
+    <string name="remote_invite_ready">Convite pronto</string>
+    <string name="remote_invite_send">Envie o arquivo de convite para %1$s. Depois passe estas quatro palavras por outro meio — diga-as em uma ligação ou pessoalmente.</string>
+    <string name="remote_your_words">Suas quatro palavras: %1$s</string>
+    <string name="remote_invite_strict">Quem tiver o arquivo e estas palavras pode se tornar este contato. Passe as palavras só para %1$s, nunca na mesma conversa que o arquivo.</string>
+    <string name="remote_open_reply">Abrir a resposta de %1$s</string>
+    <string name="remote_send_invite_again">Enviar o arquivo de convite de novo</string>
+    <string name="remote_waiting_reply_today">Aguardando a resposta de %1$s. Este convite termina às %2$s.</string>
+    <string name="remote_waiting_reply_tomorrow">Aguardando a resposta de %1$s. Este convite termina amanhã às %2$s.</string>
+    <string name="remote_send_invite">Enviar arquivo de convite</string>
+    <string name="remote_cancel_invite">Cancelar convite</string>
+    <string name="remote_now_contact">%1$s agora é um contato.</string>
+    <string name="remote_send_confirmation_body">Envie este arquivo de confirmação para que a pessoa também possa adicionar você.</string>
+    <string name="remote_send_confirmation_again">Enviar o arquivo de confirmação de novo</string>
+    <string name="remote_send_confirmation">Enviar arquivo de confirmação</string>
+    <string name="remote_open_invite">Abrir o arquivo de convite</string>
+    <string name="remote_who_sent">Quem enviou?</string>
+    <string name="remote_their_words">As quatro palavras da pessoa</string>
+    <string name="remote_know_sender">Só continue se souber quem enviou isto. Quem criou o convite se torna um contato.</string>
+    <string name="remote_make_reply">Criar resposta</string>
+    <string name="remote_send_reply_title">Envie sua resposta</string>
+    <string name="remote_send_reply_body">Envie este arquivo de resposta para %1$s.</string>
+    <string name="remote_open_confirmation">Abrir a confirmação de %1$s</string>
+    <string name="remote_send_reply_again">Enviar o arquivo de resposta de novo</string>
+    <string name="remote_waiting_confirmation_today">Aguardando a confirmação de %1$s. Isto termina às %2$s.</string>
+    <string name="remote_waiting_confirmation_tomorrow">Aguardando a confirmação de %1$s. Isto termina amanhã às %2$s.</string>
+    <string name="remote_send_reply">Enviar arquivo de resposta</string>
+    <string name="remote_ended">Este convite terminou</string>
+    <string name="remote_ended_reply">Essa resposta não coincidiu, então este convite terminou. Confiram se as quatro palavras foram digitadas exatamente e se os dois têm a versão mais recente do app.</string>
+    <string name="remote_ended_this">Isto terminou</string>
+    <string name="remote_ended_confirmation">Essa confirmação não coincidiu, então isto terminou. Peça a %1$s para criar um novo convite e confiram as quatro palavras juntos.</string>
+    <string name="remote_ended_expired">Este convite terminou. Os convites duram 24 horas.</string>
+    <string name="remote_ended_already">Este convite já terminou.</string>
+    <string name="remote_own_invite">Este é seu próprio convite</string>
+    <string name="remote_own_invite_body">Esse é o convite deste próprio celular.</string>
+    <string name="remote_unreadable_body">A lista de contatos está trancada com uma chave que este dispositivo não tem mais. Contatos explica o que você pode fazer.</string>
+    <string name="remote_new_invite">Criar um novo convite</string>
+
+    <!-- Removing the originals from the gallery -->
+    <string name="originals_title">Remover os originais da sua galeria?</string>
+    <string name="originals_removed">Os originais foram removidos da sua galeria.</string>
+    <plurals name="originals_photos">
+        <item quantity="one">%1$d foto</item>
+        <item quantity="many">%1$d fotos</item>
+        <item quantity="other">%1$d fotos</item>
+    </plurals>
+    <plurals name="originals_videos">
+        <item quantity="one">%1$d vídeo</item>
+        <item quantity="many">%1$d vídeos</item>
+        <item quantity="other">%1$d vídeos</item>
+    </plurals>
+    <plurals name="originals_in_vault">
+        <item quantity="one">%1$s agora está neste cofre. O Android vai pedir sua confirmação.</item>
+        <item quantity="many">%1$s agora estão neste cofre. O Android vai pedir sua confirmação.</item>
+        <item quantity="other">%1$s agora estão neste cofre. O Android vai pedir sua confirmação.</item>
+    </plurals>
+    <plurals name="originals_stay">
+        <item quantity="one">%1$d outro não pode ser removido daqui e vai continuar na sua galeria.</item>
+        <item quantity="many">%1$d outros não podem ser removidos daqui e vão continuar na sua galeria.</item>
+        <item quantity="other">%1$d outros não podem ser removidos daqui e vão continuar na sua galeria.</item>
+    </plurals>
+
+    <!-- Lock screen warnings -->
+    <string name="warning_rooted">Este dispositivo parece ter acesso root. Outro app com root pode ler a memória deste cofre enquanto ele está aberto.</string>
+    <string name="warning_debuggable">Este é um build depurável. A memória dele pode ser lida por USB enquanto o cofre está aberto.</string>
+    <string name="warning_debugger">Um depurador está conectado a este app agora.</string>
+    <plurals name="warning_accessibility">
+        <item quantity="one">%1$d serviço de acessibilidade está em execução. Um serviço assim pode ler o que está na tela, incluindo tudo o que você abre aqui.</item>
+        <item quantity="many">%1$d serviços de acessibilidade estão em execução. Um serviço assim pode ler o que está na tela, incluindo tudo o que você abre aqui.</item>
+        <item quantity="other">%1$d serviços de acessibilidade estão em execução. Um serviço assim pode ler o que está na tela, incluindo tudo o que você abre aqui.</item>
+    </plurals>
+
+    <!-- Covers — the calculator, the music player and the voice recorder -->
+    <string name="calc_divide_by_zero">Não é possível dividir por zero</string>
+    <string name="calc_undefined">Indefinido</string>
+    <string name="calc_infinity">Infinito</string>
+    <string name="calc_invalid_format">Formato inválido</string>
+    <string name="pattern_draw">Desenhe seu padrão</string>
+    <string name="pattern_wrong">Padrão incorreto</string>
+    <string name="music_unknown_track">Faixa desconhecida</string>
+    <string name="music_unknown_artist">Artista desconhecido</string>
+    <string name="music_unknown_album">Álbum desconhecido</string>
+    <string name="music_tracks">Faixas</string>
+    <string name="music_albums">Álbuns</string>
+    <string name="music_artists">Artistas</string>
+    <string name="music_shuffle_all">Ordem aleatória</string>
+    <plurals name="music_track_count">
+        <item quantity="one">%1$d faixa</item>
+        <item quantity="many">%1$d faixas</item>
+        <item quantity="other">%1$d faixas</item>
+    </plurals>
+    <string name="music_close_player">Fechar player</string>
+    <string name="music_nothing_playing">Nada tocando</string>
+    <string name="music_shuffle_on">Ordem aleatória ativada</string>
+    <string name="music_shuffle_off">Ordem aleatória desativada</string>
+    <string name="music_previous">Anterior</string>
+    <string name="music_next">Próxima</string>
+    <string name="music_repeat_one">Repetir uma</string>
+    <string name="music_repeat_all">Repetir todas</string>
+    <string name="music_repeat_off">Não repetir</string>
+    <string name="music_tap_to_open">Toque para abrir o player</string>
+    <string name="music_loading">Carregando biblioteca…</string>
+    <string name="music_none">Nenhuma música neste dispositivo</string>
+    <string name="music_none_line">As músicas que você adicionar vão aparecer aqui.</string>
+    <string name="music_access_off">O acesso às músicas está desativado</string>
+    <string name="music_access_off_line">Ative Música e áudio nas Configurações para tocar o que está neste dispositivo.</string>
+    <string name="recorder_default_title">Gravação %1$s</string>
+    <plurals name="recorder_count">
+        <item quantity="one">%1$d gravação · %2$s</item>
+        <item quantity="many">%1$d gravações · %2$s</item>
+        <item quantity="other">%1$d gravações · %2$s</item>
+    </plurals>
+    <string name="recorder_search">Pesquisar gravações</string>
+    <string name="recorder_hide_controls">Ocultar controles</string>
+    <string name="recorder_show_controls">Mostrar controles</string>
+    <string name="recorder_paused">Pausado</string>
+    <string name="recorder_resume">Retomar</string>
+    <string name="recorder_delete_title">Excluir “%1$s”?</string>
+    <string name="recorder_delete_body">Esta gravação será removida deste dispositivo.</string>
+    <string name="recorder_none">Nenhuma gravação ainda</string>
+    <string name="recorder_mic_off">O acesso ao microfone está desativado</string>
+    <string name="recorder_none_line">Toque em gravar para criar uma.</string>
+    <string name="recorder_mic_off_line">Ative o Microfone nas Configurações para gravar.</string>
+    <string name="recorder_no_match">Nenhuma gravação corresponde a “%1$s”</string>
+    <string name="recorder_paused_length">Pausado, %1$s</string>
+
+    <!-- The unlock digest — what happened since the last unlock -->
+    <string name="digest_altered">Este registro de eventos foi alterado na entrada %1$d.</string>
+    <string name="digest_not_opened_since">Não é aberto desde %1$s.</string>
+    <plurals name="digest_recoveries">
+        <item quantity="one">%1$d kit de recuperação foi usado para abrir este cofre.</item>
+        <item quantity="many">%1$d kits de recuperação foram usados para abrir este cofre.</item>
+        <item quantity="other">%1$d kits de recuperação foram usados para abrir este cofre.</item>
+    </plurals>
+    <plurals name="digest_failed">
+        <item quantity="one">%1$d tentativa de desbloqueio falhou.</item>
+        <item quantity="many">%1$d tentativas de desbloqueio falharam.</item>
+        <item quantity="other">%1$d tentativas de desbloqueio falharam.</item>
+    </plurals>
+    <plurals name="digest_imported">
+        <item quantity="one">%1$d item importado.</item>
+        <item quantity="many">%1$d itens importados.</item>
+        <item quantity="other">%1$d itens importados.</item>
+    </plurals>
+    <plurals name="digest_deleted">
+        <item quantity="one">%1$d arquivo de origem excluído.</item>
+        <item quantity="many">%1$d arquivos de origem excluídos.</item>
+        <item quantity="other">%1$d arquivos de origem excluídos.</item>
+    </plurals>
+    <string name="digest_biometric">O desbloqueio biométrico foi invalidado por uma mudança no cadastro biométrico.</string>
+    <string name="digest_dev_options">As opções do desenvolvedor ou a depuração USB foram ativadas neste dispositivo.</string>
+    <string name="digest_root">O status de root deste dispositivo mudou.</string>
+    <string name="digest_data_cleared">Os dados deste app parecem ter sido apagados.</string>
+    <string name="digest_new_device">Este cofre está sendo executado em um dispositivo diferente daquele em que foi configurado.</string>
+    <string name="digest_clock">O relógio deste dispositivo voltou no tempo.</string>
+    <string name="vault_passphrase_heading">Frase secreta</string>
+    <string name="vault_passphrase_state_list">Abre com a frase secreta da sua lista de cofres.</string>
+    <string name="vault_passphrase_state_own">Abre só com a frase secreta própria.</string>
+    <string name="vault_passphrase_add">Adicionar uma frase secreta</string>
+    <string name="vault_passphrase_add_supporting">Só essa frase secreta vai abri-lo</string>
+    <string name="vault_passphrase_change">Alterar frase secreta</string>
+    <string name="vault_passphrase_remove">Remover frase secreta</string>
+    <string name="vault_passphrase_remove_supporting">A frase secreta da sua lista de cofres vai abri-lo</string>
+    <string name="vault_passphrase_added">Frase secreta adicionada.</string>
+    <string name="vault_passphrase_changed">Frase secreta alterada.</string>
+    <string name="vault_passphrase_removed">Frase secreta removida.</string>
+    <string name="vault_passphrase_add_lead">Depois de adicionada, só esta frase secreta abre %1$s. A da sua lista de cofres não vai abrir, e o kit de recuperação da lista também não — por isso %1$s recebe um kit de recuperação próprio.</string>
+    <string name="vault_passphrase_list_label">Frase secreta da lista de cofres</string>
+    <string name="vault_passphrase_list_supporting">A que abre a lista de cofres deste app.</string>
+    <string name="vault_passphrase_list_empty">Digite a frase secreta que abre sua lista de cofres.</string>
+    <string name="vault_passphrase_new_again">Nova frase secreta de novo</string>
+    <string name="vault_passphrase_backups_heading">Backups anteriores</string>
+    <string name="vault_passphrase_add_backups">Um backup salvo antes de agora continua abrindo %1$s com a frase secreta da sua lista de cofres.</string>
+    <string name="vault_passphrase_add_button">Adicionar frase secreta</string>
+    <string name="vault_passphrase_adding">Adicionando…</string>
+    <string name="vault_passphrase_change_lead">O kit de recuperação de %1$s continua o mesmo, e as 24 palavras dele continuam abrindo o cofre. A frase secreta da sua lista de cofres continua não abrindo.</string>
+    <string name="vault_passphrase_current_label">Frase secreta atual</string>
+    <string name="vault_passphrase_current_empty">Digite a frase secreta atual deste cofre.</string>
+    <string name="vault_passphrase_change_backups">Um backup salvo antes de agora abre %1$s com a frase secreta antiga.</string>
+    <string name="vault_passphrase_changing">Alterando…</string>
+    <string name="vault_passphrase_remove_opens">A frase secreta da sua lista de cofres abre</string>
+    <string name="vault_passphrase_remove_opens_body">%1$s vai abrir direto da lista, sem frase secreta própria.</string>
+    <string name="vault_passphrase_remove_kit">O kit de recuperação da sua lista cobre</string>
+    <string name="vault_passphrase_remove_kit_body">As 24 palavras da lista vão recuperar %1$s. As 24 palavras próprias dele continuam abrindo também, e não podem ser canceladas.</string>
+    <string name="vault_passphrase_remove_captures">As capturas de intrusos vão para o início</string>
+    <string name="vault_passphrase_remove_captures_body">O histórico dele passa para Captura de intrusos na tela inicial, e as configurações de captura próprias são desativadas.</string>
+    <string name="vault_passphrase_removing">Removendo…</string>
+    <plurals name="kit_remaining_views_fewer">
+        <item quantity="one">Depois de continuar, você pode vê-las mais %1$d vez pelo menu. Depois disso, elas não podem ser mostradas de novo, e a cópia que você anotar será a única.</item>
+        <item quantity="other">Depois de continuar, você pode vê-las mais %1$d vezes pelo menu. Depois disso, elas não podem ser mostradas de novo, e a cópia que você anotar será a única.</item>
+    </plurals>
+    <string name="kit_remaining_views_none">Este app já as mostrou todas as vezes que pode, então depois de continuar elas não podem ser mostradas de novo. A cópia que você anotar será a única.</string>
+    <!-- `third-party-notices`. The Open-source licences row and its two screens. -->
+    <string name="licences_title">Licenças de código aberto</string>
+    <plurals name="licences_drawer_line">
+        <item quantity="one">%1$d biblioteca e sua licença</item>
+        <item quantity="other">%1$d bibliotecas e suas licenças</item>
+    </plurals>
+    <string name="licences_lead">O %1$s é feito com estas bibliotecas. Cada uma é usada sob a própria licença, mostrada abaixo.</string>
+    <string name="licences_open_action">abrir licença</string>
+    <string name="licences_version">Versão %1$s</string>
+    <string name="licences_source">Origem</string>
+    <string name="licences_licence">Licença</string>
+</resources>

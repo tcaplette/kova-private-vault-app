@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Material Symbols "draw", outlined — DESIGN.md §9, added by `viewer-chrome-and-editor`.
+  Markup — strokes drawn over the image and flattened into it at save. A pen, because
+  markup is the one editor tool whose result the user draws by hand.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M18.85,10.39l1.06,-1.06c0.78,-0.78 0.78,-2.05 0,-2.83L18.5,5.09c-0.78,-0.78 -2.05,-0.78 -2.83,0l-1.06,1.06 4.24,4.24zM13.19,7.15L3,17.34L3,21h3.66l10.19,-10.19 -3.66,-3.66zM5.83,19L5,18.17 14.02,9.15l0.83,0.83L5.83,19zM19,17.5c0,2.19 -2.54,3.5 -5,3.5 -0.55,0 -1,-0.45 -1,-1s0.45,-1 1,-1c1.54,0 3,-0.73 3,-1.5 0,-0.47 -0.48,-0.87 -1.23,-1.2l1.48,-1.48c1.07,0.63 1.75,1.47 1.75,2.68z" />
+</vector>

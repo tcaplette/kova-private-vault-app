@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The foreground layer of the "recorder" launcher icon, generated from
+     icon/src/voice-recorder.svg (launcher-icon-artwork). Change the SVG, not this file. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:pathData="M50,25 h0 a9,9 0 0,1 9,9 v18 a9,9 0 0,1 -9,9 h0 a9,9 0 0,1 -9,-9 v-18 a9,9 0 0,1 9,-9 Z"
+        android:fillColor="#F8FAFC" />
+    <path
+        android:pathData="M50,27.5 h0 a6.5,6.5 0 0,1 6.5,6.5 v5 a6.5,6.5 0 0,1 -6.5,6.5 h-0 a6.5,6.5 0 0,1 -6.5,-6.5 v-5 a6.5,6.5 0 0,1 6.5,-6.5 Z"
+        android:fillColor="#374151" />
+    <path
+        android:pathData="M46.2,31 h7.6 a0.7,0.7 0 0,1 0.7,0.7 v0 a0.7,0.7 0 0,1 -0.7,0.7 h-7.6 a0.7,0.7 0 0,1 -0.7,-0.7 v-0 a0.7,0.7 0 0,1 0.7,-0.7 Z"
+        android:fillColor="#9CA3AF" />
+    <path
+        android:pathData="M46.2,34.6 h7.6 a0.7,0.7 0 0,1 0.7,0.7 v0 a0.7,0.7 0 0,1 -0.7,0.7 h-7.6 a0.7,0.7 0 0,1 -0.7,-0.7 v-0 a0.7,0.7 0 0,1 0.7,-0.7 Z"
+        android:fillColor="#9CA3AF" />
+    <path
+        android:pathData="M46.2,38.2 h7.6 a0.7,0.7 0 0,1 0.7,0.7 v0 a0.7,0.7 0 0,1 -0.7,0.7 h-7.6 a0.7,0.7 0 0,1 -0.7,-0.7 v-0 a0.7,0.7 0 0,1 0.7,-0.7 Z"
+        android:fillColor="#9CA3AF" />
+    <path
+        android:pathData="M46.2,41.8 h7.6 a0.7,0.7 0 0,1 0.7,0.7 v0 a0.7,0.7 0 0,1 -0.7,0.7 h-7.6 a0.7,0.7 0 0,1 -0.7,-0.7 v-0 a0.7,0.7 0 0,1 0.7,-0.7 Z"
+        android:fillColor="#9CA3AF" />
+    <path
+        android:pathData="M36,45 V48 A14,14 0 0,0 64,48 V45"
+        android:strokeColor="#F8FAFC"
+        android:strokeWidth="3"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M50,62 V74"
+        android:strokeColor="#F8FAFC"
+        android:strokeWidth="3"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M42,76 H58"
+        android:strokeColor="#F8FAFC"
+        android:strokeWidth="3"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M66,33 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0 Z"
+        android:fillColor="#EF4444" />
+</vector>

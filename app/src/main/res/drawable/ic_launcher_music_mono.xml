@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The monochrome layer of the "music" launcher icon, generated from
+     icon/src/music-player.svg (launcher-icon-artwork). Change the SVG, not this file. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:pathData="M28,56 a22,22 0 1,0 44,0 a22,22 0 1,0 -44,0 Z M34,56 a16,16 0 1,0 32,0 a16,16 0 1,0 -32,0 Z M35.5,56 a14.5,14.5 0 1,0 29,0 a14.5,14.5 0 1,0 -29,0 Z M43,56 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0 Z M48.5,56 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0 Z"
+        android:fillColor="#000000"
+        android:fillType="evenOdd" />
+    <path
+        android:pathData="M72,35 L69,57 L63.5,63"
+        android:strokeColor="#000000"
+        android:strokeWidth="2.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M68,35 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0 Z M70.4,35 a1.6,1.6 0 1,0 3.2,0 a1.6,1.6 0 1,0 -3.2,0 Z"
+        android:fillColor="#000000"
+        android:fillType="evenOdd" />
+</vector>

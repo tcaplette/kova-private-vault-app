@@ -1,0 +1,1697 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      The app's text — `app-languages`. Every string a person reads is here, grouped by the
+      screen it appears on, with a comment heading each group. The eight translations keep
+      this file's key order so a reviewer can read them side by side.
+
+      Left in code on purpose, in every language (`app-languages` D4):
+      - Log lines, exception and require() messages: read in logcat and crash reports,
+        never on a screen.
+      - Data written into files and read back by code: the export manifest and its
+        reasons, export stamps and EXIF/XMP fields, file and folder names the app finds
+        again by name (the gallery's "Vault" export folder, a received share's "Shared item" fallback name),
+        container and blob names, preference keys and MIME types.
+      - The recovery and share-code words: the BIP-39 English list in res/raw. A kit
+        written down under one language has to open the vault under another.
+      - The calculator's notation (sin, cos, tan, ln, log, π, e, EXP, AC, DEL, INV,
+        DEG/RAD) and the language names on the Language sheet, which are each language's
+        own name for itself.
+      - The debug-only Crash log screen and its drawer row, which ship in no release build.
+    -->
+
+    <!--
+      The application label: "Kova", the owner's name for the app (2026-10-25). It
+      replaced "Toolbox", an agent-drafted category name nobody chose. It is the same
+      in every locale.
+
+      This is what notifications, Settings > Apps, the app-info page, storage,
+      battery, the permission manager and every runtime permission dialog read. An
+      activity-alias label does not reach it and no runtime API overrides it, so
+      whatever stands here is what a cover identity says about itself the moment any
+      of those surfaces appears. With "Vault" here, granting the recorder its
+      microphone read "Allow Vault to record audio?" over a voice recorder, which is
+      why it must never be "Vault" or any identity's name.
+
+      P2-22 left this as "Vault" on two arguments. The first — that a label other than
+      an alias's imposes a build-time choice on every install including the honest
+      default — is true, and is the price: a user who never wears a cover sees "Vault"
+      on their home screen (the alias label, unchanged) and this word in Settings. The
+      second — that it would desync the label from the name the Play listing is
+      approved under — is simply wrong. The Play Console title is a separate field
+      from android:label; the two differ routinely and nothing couples them.
+    -->
+    <string name="app_name">Kova</string>
+
+    <!--
+      Launcher identity labels — P2-22. These are the words the launcher and recents
+      show, in the device's language (`app-languages` D5); LauncherIdentity names these
+      same resources, and LauncherIdentityScanTest fails the build if the two disagree.
+    -->
+    <string name="identity_vault">보관함</string>
+
+    <!--
+      P2-24's cover identities. Ordinary names for ordinary apps: the cover has to be
+      a believable instance of the thing it claims to be, and a clever name is the
+      first thing that makes somebody look twice.
+    -->
+    <string name="identity_calculator">계산기</string>
+    <string name="identity_musicplayer">음악</string>
+    <string name="identity_voicerecorder">음성 녹음</string>
+
+    <!-- Language — the drawer row and the Language sheet -->
+    <!-- Not a phrase: the tag of the language this file is written in. Each translation
+         names its own (ja, ko, pt-BR, …). System default's line reads it to say which
+         language the device's setting resolves to. -->
+    <string name="language_resource_tag">ko</string>
+    <string name="language_german">독일어</string>
+    <string name="language_english">영어</string>
+    <string name="language_spanish">스페인어</string>
+    <string name="language_french">프랑스어</string>
+    <string name="language_portuguese_brazil">포르투갈어(브라질)</string>
+    <string name="language_japanese">일본어</string>
+    <string name="language_korean">한국어</string>
+    <string name="language_chinese_simplified">중국어(간체)</string>
+    <string name="language_chinese_traditional">중국어(번체)</string>
+    <string name="language_title">언어</string>
+    <string name="language_system_default">시스템 기본값</string>
+    <string name="language_explainer">이 앱의 언어만 바뀝니다. 휴대전화의 언어는 그대로 유지됩니다.</string>
+    <string name="language_suggested">추천</string>
+    <string name="language_all">모든 언어</string>
+    <string name="language_system_default_detail">%1$s — 휴대전화 설정을 따름</string>
+    <string name="language_changed">언어가 %1$s(으)로 변경됨</string>
+    <string name="drawer_language">언어 \u0020· \u0020%1$s</string>
+
+    <!-- Messages — unlock, backup, restore and vault lifecycle (MainActivity) -->
+    <string name="backup_incomplete">이 백업 파일은 불완전합니다. 끝나지 않은 백업에서 만들어졌을 수 있습니다.</string>
+    <string name="backup_unreadable">백업을 읽을 수 없습니다. 백업이 있는 앱에 로그인되어 있는지 확인하세요.</string>
+    <string name="backup_other_list">이 백업은 다른 보관함 목록의 것입니다. \'파일에서 보관함 가져오기\'로 복원하세요.</string>
+    <string name="bio_invalidated">생체 인식 등록 정보가 바뀌어 생체 인식 잠금 해제가 꺼졌습니다. 암호 문구를 사용하세요.</string>
+    <string name="bio_after_migration">이번 업데이트 후 생체 인식 잠금 해제가 꺼졌습니다. 설정에서 다시 켜세요.</string>
+    <string name="vault_newer_version">이 보관함은 더 최신 버전의 앱에서 마지막으로 열렸습니다. 파일은 안전하며 아무것도 변경되지 않았습니다. 열려면 앱을 업데이트하세요.</string>
+    <string name="vault_index_relinked">오류가 발생한 후 이 보관함의 색인을 다시 연결해야 했습니다. 모두 찾았으며 잃어버린 것은 없습니다.</string>
+    <string name="vault_index_unreadable">이 보관함을 열 수 없습니다. 색인이 없거나 손상되었으며, 보관함의 파일을 검색해도 다른 색인을 찾지 못했습니다. 복구 키트로 복원할 수 있습니다.</string>
+    <string name="capture_not_saved">해당 촬영 내용을 보관함에 저장할 수 없습니다.</string>
+    <string name="backup_folder_on_phone">이 폴더는 이 휴대전화에 있습니다. 여기에 백업하면 휴대전화와 함께 사라집니다. 클라우드 앱이나 SD 카드를 선택하세요.</string>
+    <string name="restore_device_not_empty">이 기기에는 이미 보관함이 있습니다. 백업은 빈 기기에만 복원할 수 있습니다.</string>
+    <string name="restore_open_vaults_first">먼저 보관함을 여세요.</string>
+    <string name="restore_file_not_opened">백업 파일을 열 수 없습니다.</string>
+    <string name="restore_file_unreadable">백업 파일을 읽을 수 없습니다. 백업이 있는 앱에 로그인되어 있는지 확인하세요.</string>
+    <string name="restore_no_backup_in_folder">해당 폴더에서 백업을 찾을 수 없습니다.</string>
+    <string name="capture_mode_permission_denied">이 모드에는 방금 요청한 권한이 필요합니다. 꺼져 있습니다.</string>
+    <string name="decoy_trial_notice">위장 보관함을 만들면 실제 사진을 가져오게 되며, 30일 체험 기간은 보관함에 처음 무언가가 추가될 때 시작됩니다. 내 물건으로 체험을 시작하고 싶다면 나중에 하세요.</string>
+    <string name="vault_list_not_saved">저장할 수 없습니다.</string>
+    <string name="editor_could_not_open">이 항목을 편집용으로 열 수 없습니다.</string>
+    <string name="folder_name_length">폴더 이름은 1자 이상 %1$d자 이하여야 합니다.</string>
+    <string name="folder_name_duplicate">여기에 같은 이름의 폴더가 이미 있습니다.</string>
+    <string name="folder_cycle">폴더를 자기 자신 안에 넣을 수 없습니다.</string>
+    <string name="vault_destroy_failed">\'%1$s\'을(를) 삭제할 수 없습니다. 안에 있는 것은 아무것도 잃지 않았습니다.</string>
+    <string name="share_create_failed">공유를 만들 수 없습니다. 기기에 공간이 부족할 수 있습니다.</string>
+    <string name="setup_vault_not_created">보관함을 만들 수 없습니다. 다시 시도하세요.</string>
+    <string name="decoy_choose_photos_first">먼저 사진을 선택하세요.</string>
+    <string name="decoy_set_passphrase_first">먼저 위장 보관함의 암호 문구를 설정하세요.</string>
+    <string name="decoy_passphrase_in_use">그 암호 문구는 이미 이 기기의 보관함을 엽니다. 돌아가서 다른 것을 선택하세요.</string>
+    <string name="decoy_no_room">이 기기에는 보관함을 더 추가할 공간이 없습니다.</string>
+    <string name="decoy_passphrase_needed">이 기기에는 이미 위장 보관함이 있으며, 지금 새로 설정하면 덮어쓸 수 있습니다. 돌아가서 위장 보관함의 암호 문구도 입력하세요.</string>
+    <string name="decoy_not_created">보관함이 만들어지지 않았습니다.</string>
+    <string name="recovery_words_wrong_backup">이 단어로는 이 백업을 열 수 없습니다.</string>
+    <string name="import_words_wrong_backup">이 단어로는 이 백업을 열 수 없습니다.</string>
+    <string name="recovery_list_not_here">이 백업의 보관함 목록이 이 휴대전화에 없습니다. 잠금을 해제한 다음 메뉴에서 \'파일에서 보관함 가져오기\'를 선택하세요.</string>
+    <string name="this_vault">이 보관함</string>
+    <string name="that_vault">해당 보관함</string>
+    <string name="backup_open_vault_first_file">먼저 백업할 보관함을 여세요. 백업 하나에는 보관함 하나가 들어갑니다.</string>
+    <string name="backup_open_vault_first_folder">먼저 백업할 보관함을 여세요. 폴더 하나에는 보관함 하나가 들어갑니다.</string>
+    <string name="backup_folder_another_vault">이 폴더에는 이미 이 기기의 다른 보관함이 들어 있습니다. 보관함마다 전용 폴더가 필요합니다. 여기에 백업하면 안에 있는 것이 삭제됩니다.</string>
+    <string name="backup_folder_another_install">이 폴더에는 이미 다른 백업이 들어 있습니다. 빈 폴더나 이 보관함이 채운 폴더를 선택하세요. 여기에 백업하면 안에 있는 것이 삭제됩니다.</string>
+    <plurals name="vault_destroy_items_left">
+        <item quantity="other">항목 %1$d개를 내보낼 수 없어 이 보관함을 유지했습니다. 안에 남아 있는 것은 모두 그대로입니다.</item>
+    </plurals>
+    <string name="kit_print_job">보관함 복구 키트</string>
+    <string name="panic_wrong_passphrase">그 암호 문구로는 이 보관함 목록을 열 수 없습니다.</string>
+    <string name="panic_wrong_phrase">패닉 문구가 아닙니다.</string>
+    <string name="panic_too_close">암호 문구와 너무 비슷합니다. 오타 하나로 작동할 수 있습니다. 다른 것을 선택하세요.</string>
+    <string name="panic_in_use">그 문구는 이미 보관함 목록을 엽니다. 다른 것을 선택하세요.</string>
+    <string name="panic_no_room">이 기기에는 문구를 더 추가할 공간이 없습니다.</string>
+    <string name="panic_cleared">이전 패닉 문구는 더 이상 여기서 작동하지 않아 꺼졌습니다. 새 문구를 설정하세요.</string>
+    <string name="panic_not_saved">저장되지 않았습니다. 다시 시도하세요.</string>
+    <string name="pairing_not_a_code">페어링 코드가 아닙니다.</string>
+    <string name="pairing_newer_app">이 코드는 더 최신 버전의 앱에서 만들어졌습니다. 스캔하려면 업데이트하세요.</string>
+    <string name="pairing_own_code">이 휴대전화 자신의 코드입니다.</string>
+    <string name="pairing_already_known">이미 이 연락처가 \'%1$s\'(으)로 있습니다.</string>
+    <string name="remote_not_an_invite">초대 파일이 아닙니다.</string>
+    <string name="remote_wrong_reply">이 파일은 이 초대에 대한 %1$s 님의 답장이 아닙니다.</string>
+    <string name="remote_wrong_confirmation">이 파일은 %1$s 님의 확인 파일이 아닙니다.</string>
+    <string name="memo_notifications_off">알림이 꺼져 있어 알림 창에 \'중지\'가 표시되지 않습니다.</string>
+    <string name="memo_too_short">너무 짧아서 저장할 수 없습니다.</string>
+    <string name="vault_list_full">이 목록이 가득 찼습니다. 공간을 만들려면 보관함을 하나 삭제하세요.</string>
+    <string name="vault_not_created">보관함을 만들 수 없습니다.</string>
+    <string name="vault_not_opened">보관함을 열 수 없습니다.</string>
+    <string name="bio_prompt_unlock_title">보관함 잠금 해제</string>
+    <string name="bio_prompt_use_passphrase">암호 문구 사용</string>
+    <string name="purchase_unavailable">지금은 이 기기에서 구매할 수 없습니다(코드 %1$d). 이미 가지고 있는 것에는 영향이 없습니다.</string>
+    <plurals name="imports_failed">
+        <item quantity="other">가져오기 %1$d건이 완료되지 않았습니다. 아무것도 추가되지 않았습니다. 다시 시도하세요.</item>
+    </plurals>
+
+    <!-- Notifications — the foreground work and the recording -->
+    <string name="notification_working">작업 중</string>
+    <string name="notification_channel_import">가져오기</string>
+    <string name="notification_channel_archive">보관 파일</string>
+    <string name="notification_channel_export">내보내기</string>
+    <string name="notification_channel_recording">녹음</string>
+    <string name="notification_recording">녹음 중</string>
+    <string name="notification_stop">중지</string>
+
+    <!-- The printed recovery kit -->
+    <string name="kit_print_heading">보관함 복구 키트</string>
+    <string name="kit_print_line_1">이 24개 단어로 이 보관함을 열 수 있습니다. 이 페이지를 안전하게 보관하세요.</string>
+    <string name="kit_print_line_2">이 단어는 변경하거나 취소할 수 없습니다.</string>
+
+    <!-- Biometric unlock — the screen, the drawer row and the first-run step -->
+    <string name="bio_name">생체 인식 잠금 해제</string>
+    <string name="bio_lead">암호 문구를 대신하지 않는, 더 빠른 여는 방법입니다.</string>
+    <string name="bio_row_fingerprint">지문 잠금 해제</string>
+    <string name="bio_row_face">얼굴 인식 잠금 해제</string>
+    <string name="bio_row_both">얼굴 및 지문 잠금 해제</string>
+    <string name="bio_on">켜짐</string>
+    <string name="bio_off">꺼짐</string>
+    <string name="bio_line_not_set_up">아직 설정되지 않았습니다. 탭하여 기기 설정에서 설정하세요.</string>
+    <string name="bio_line_not_available_now">지금은 사용할 수 없습니다. 센서가 응답하지 않습니다.</string>
+    <string name="bio_line_needs_update">보관함에서 사용하려면 기기 제조업체의 보안 업데이트가 필요합니다.</string>
+    <string name="bio_unsupported">이 기기에서는 지원되지 않습니다.</string>
+    <string name="bio_unsupported_face">이 기기에서는 지원되지 않습니다. 이 기기의 얼굴 인식은 암호화된 데이터를 보호할 만큼 안전하지 않습니다.</string>
+    <string name="bio_unsupported_fingerprint">이 기기에서는 지원되지 않습니다. 이 기기의 지문 센서는 암호화된 데이터를 보호할 만큼 안전하지 않습니다.</string>
+    <string name="bio_drawer_not_set_up">설정 안 됨</string>
+    <string name="bio_drawer_not_available_now">지금은 사용할 수 없음</string>
+    <string name="bio_drawer_needs_update">보안 업데이트 필요</string>
+    <string name="bio_drawer_not_supported">이 기기에서 지원되지 않음</string>
+    <string name="bio_fact_how">보관함을 여는 방법</string>
+    <string name="bio_fact_how_fingerprint">보관함이 잠겨 있으면 Android가 지문을 요청합니다. 센서를 터치하면 보관함이 열립니다.</string>
+    <string name="bio_fact_how_face">보관함이 잠겨 있으면 Android가 얼굴 인식을 요청합니다. 화면을 본 다음 탭하여 확인하세요. 보기만 해서는 보관함이 열리지 않습니다.</string>
+    <string name="bio_fact_how_both">보관함이 잠겨 있으면 Android가 얼굴과 지문을 동시에 기다립니다. 센서를 터치하거나, 화면을 보고 탭하여 확인하세요. 먼저 사용한 쪽으로 보관함이 열립니다.</string>
+    <string name="bio_fact_how_unnamed">보관함이 잠겨 있으면 Android가 이 기기에 설정된 생체 인식을 요청합니다.</string>
+    <string name="bio_fact_fingerprint_only">지문만 사용하려면</string>
+    <string name="bio_fact_fingerprint_only_body">앱이 사용할 수 있는 생체 인식은 이 앱이 아니라 Android가 결정합니다. 기기 설정에서 얼굴 인식 잠금 해제를 열고 앱에서 사용을 끄면, 지문으로만 보관함이 열립니다.</string>
+    <string name="bio_fact_turns_off">생체 인식 정보가 바뀌면 꺼집니다</string>
+    <string name="bio_fact_turns_off_fingerprint">기기 설정에서 지문을 추가하거나 삭제하면 이 기능이 꺼집니다. 암호 문구로 잠금을 해제한 다음 메뉴의 \'생체 인식 잠금 해제\'에서 다시 켜세요.</string>
+    <string name="bio_fact_turns_off_face">기기 설정에서 얼굴을 추가하거나 삭제하면 이 기능이 꺼집니다. 암호 문구로 잠금을 해제한 다음 메뉴의 \'생체 인식 잠금 해제\'에서 다시 켜세요.</string>
+    <string name="bio_fact_turns_off_both">기기 설정에서 얼굴이나 지문을 추가하거나 삭제하면 이 기능이 꺼집니다. 암호 문구로 잠금을 해제한 다음 메뉴의 \'생체 인식 잠금 해제\'에서 다시 켜세요.</string>
+    <string name="bio_fact_turns_off_unnamed">기기 설정에서 생체 인식 정보를 추가하거나 삭제하면 이 기능이 꺼집니다. 암호 문구로 잠금을 해제한 다음 메뉴의 \'생체 인식 잠금 해제\'에서 다시 켜세요.</string>
+    <string name="bio_fact_passphrase">암호 문구로는 언제나 보관함을 열 수 있습니다</string>
+    <string name="bio_fact_passphrase_body">생체 인식 잠금 해제는 두 번째 방법일 뿐, 대체 수단이 아닙니다. 암호 문구를 잊으면 생체 인식으로는 열 수 없습니다. 열 수 있는 것은 복구 키트입니다.</string>
+    <string name="bio_button_fallback">생체 인식 사용</string>
+    <string name="bio_enable_title">생체 인식 잠금 해제 켜기</string>
+
+    <!-- Calculator cover — how it opens -->
+    <string name="method_sequence">버튼 순서</string>
+    <string name="method_sequence_line">순서를 입력한 다음 =를 길게 누르세요.</string>
+    <string name="method_sequence_pattern">버튼 순서 후 패턴</string>
+    <string name="method_sequence_pattern_line">순서를 입력하고 =를 길게 누른 다음, 나타나는 점 위에 패턴을 그리세요.</string>
+    <string name="method_hold_pattern">길게 누른 후 패턴</string>
+    <string name="method_hold_pattern_line">선택한 위치를 2초간 길게 누른 다음, 나타나는 점 위에 패턴을 그리세요.</string>
+    <string name="method_choose_lead">이 아이콘에서 암호 문구 화면을 여는 방법을 선택하세요. 설정은 다음 단계에서 합니다.</string>
+
+    <!-- Intruder capture — where an attempt failed -->
+    <string name="capture_where_music">음악 플레이어</string>
+    <string name="capture_where_recorder">음성 녹음</string>
+    <string name="capture_where_calculator">계산기</string>
+    <string name="capture_where_cover">위장 화면</string>
+    <string name="capture_where_pattern">%1$s: 잘못된 패턴</string>
+    <string name="capture_where_pattern_dots">%1$s: 표시된 점 위의 잘못된 패턴</string>
+    <string name="capture_where_pattern_lockout">%1$s: 잠금 중 시도한 패턴</string>
+    <string name="capture_where_pattern_lockout_dots">%1$s: 잠금 중 표시된 점 위에서 시도한 패턴</string>
+    <string name="capture_where_wrong_fingerprint">잠금 해제 화면: 잘못된 지문</string>
+    <string name="capture_where_wrong_face">잠금 해제 화면: 잘못된 얼굴</string>
+    <string name="capture_where_wrong_both">잠금 해제 화면: 잘못된 얼굴 또는 지문</string>
+    <string name="capture_where_wrong_biometric">잠금 해제 화면: 잘못된 생체 인식</string>
+    <string name="capture_where_wrong_passphrase">잠금 해제 화면: 잘못된 암호 문구</string>
+    <string name="capture_where_vault_passphrase">보관함 암호 문구: 잘못된 암호 문구</string>
+
+    <!-- Passphrase strength — the meter under every passphrase field -->
+    <string name="strength_add_another_word">단어를 한두 개 더 추가하세요. 흔하지 않은 단어일수록 효과가 큽니다.</string>
+    <string name="strength_default_suggestions_use_few_words">서로 관련 없는 단어 여러 개를 사용하세요.</string>
+    <string name="strength_default_suggestions_no_need_symbols">여기서는 기호, 숫자, 대문자가 필요 없습니다. 중요한 것은 길이입니다.</string>
+    <string name="strength_dictionary_warning_passwords_top10">가장 흔히 쓰이는 비밀번호 10개 중 하나입니다.</string>
+    <string name="strength_dictionary_warning_passwords_top100">가장 흔히 쓰이는 비밀번호 100개 중 하나입니다.</string>
+    <string name="strength_dictionary_warning_passwords_very_common">매우 흔한 비밀번호라서 초기에 추측됩니다.</string>
+    <string name="strength_dictionary_warning_passwords_similar">이미 널리 쓰이는 비밀번호와 비슷합니다.</string>
+    <string name="strength_dictionary_warning_english_wikipedia_itself">단어 하나만으로는 쉽게 추측됩니다.</string>
+    <string name="strength_dictionary_warning_etc_names_themselves">이름 하나만으로는 쉽게 추측됩니다.</string>
+    <string name="strength_dictionary_warning_etc_names_common">흔한 이름은 쉽게 추측됩니다.</string>
+    <string name="strength_dictionary_suggestions_capitalization">첫 글자를 대문자로 해도 거의 효과가 없습니다. 대신 단어를 추가하세요.</string>
+    <string name="strength_dictionary_suggestions_all_uppercase">모두 대문자로 써도 모두 소문자로 쓴 것만큼 쉽게 추측됩니다.</string>
+    <string name="strength_dictionary_suggestions_reversed">단어를 거꾸로 써도 추측하기가 그다지 어려워지지 않습니다.</string>
+    <string name="strength_dictionary_suggestions_l33t">a 대신 4를 쓰는 것처럼 비슷한 문자로 바꾸는 것은 이미 예상됩니다.</string>
+    <string name="strength_spatial_warning_straight_rows_of_keys">키를 일렬로 누른 것은 가장 먼저 시도되는 것 중 하나입니다.</string>
+    <string name="strength_spatial_warning_short_keyboard_patterns">키보드에서 따라 그린 짧은 패턴은 쉽게 추측됩니다.</string>
+    <string name="strength_spatial_suggestions_use_longer_keyboard_pattern">키보드에서 따라 그린 모양 대신 단어를 사용하세요.</string>
+    <string name="strength_repeat_warning_like_aaa">같은 문자를 반복하면 문자 하나만큼 빨리 추측됩니다.</string>
+    <string name="strength_repeat_warning_like_abcabcabc">같은 묶음을 반복해도 그 묶음 하나보다 추측하기가 거의 어렵지 않습니다.</string>
+    <string name="strength_repeat_suggestions_avoid_repeated_words">단어나 글자를 반복해도 거의 효과가 없습니다. 다른 단어를 추가하세요.</string>
+    <string name="strength_sequence_warning_like_abcor6543">abc나 6543 같은 연속된 문자는 바로 추측됩니다.</string>
+    <string name="strength_sequence_suggestions_avoid_sequences">순서대로 이어지는 글자나 숫자는 피하세요.</string>
+    <string name="strength_regex_warning_recent_years">최근 연도는 가장 먼저 추측되는 것 중 하나입니다.</string>
+    <string name="strength_regex_suggestions_avoid_recent_years">연도, 특히 나에게 의미 있는 연도는 넣지 마세요.</string>
+    <string name="strength_date_warning_dates">날짜는 나만 아는 날짜라도 쉽게 추측됩니다.</string>
+    <string name="strength_date_suggestions_avoid_dates">날짜, 특히 나에게 의미 있는 날짜는 넣지 마세요.</string>
+    <string name="strength_very_weak">매우 약함</string>
+    <string name="strength_weak">약함</string>
+    <string name="strength_fair">보통</string>
+    <string name="strength_almost">거의 충분함</string>
+    <string name="strength_strong_enough">충분히 강함</string>
+    <string name="strength_count">%1$d/%2$d자</string>
+    <string name="passphrase_requirement">%1$d자 이상. 복잡한 단어 하나보다 흔하지 않은 단어 몇 개가 더 강력합니다.</string>
+    <string name="passphrase_too_weak">그 암호 문구는 너무 쉽게 추측됩니다. 단어를 한두 개 더 추가하세요.</string>
+
+    <!-- First vault and the lock screen -->
+    <string name="passphrase_label">암호 문구</string>
+    <string name="passphrase_again_label">다시 입력</string>
+    <string name="passphrase_mismatch">두 입력이 일치하지 않습니다.</string>
+    <string name="setup_title">암호 문구 정하기</string>
+    <string name="setup_lead">암호 문구는 재설정할 수 없습니다. 다음에 24개 단어로 된 복구 키트가 표시되며, 이것이 이 보관함에 들어가는 유일한 다른 방법입니다. 둘 다 잃어버리면 안에 있는 모든 것이 영원히 사라집니다.</string>
+    <string name="setup_preparing">저장 공간 준비 중</string>
+    <string name="setup_create">보관함 만들기</string>
+    <string name="setup_restore_backup">백업에서 복원</string>
+    <string name="unlock_welcome">다시 오신 것을 환영합니다</string>
+    <string name="unlock_lead">이 보관함을 열려면 암호 문구를 입력하세요.</string>
+    <string name="unlock_failed">보관함이 열리지 않았습니다.</string>
+    <string name="unlock_action">잠금 해제</string>
+    <string name="unlock_forgot">암호 문구를 잊으셨나요?</string>
+    <string name="unlock_busy">잠금 해제 중</string>
+    <string name="passphrase_hide">암호 문구 숨기기</string>
+    <string name="passphrase_show">암호 문구 표시</string>
+    <string name="passphrase_match">두 입력이 일치합니다</string>
+
+    <!-- Photo details — the sheet, and the export and share lines -->
+    <string name="photo_details_privacy">개인정보 보호</string>
+    <string name="photo_details_custom">사용자 지정</string>
+    <!-- Joining a list: "%1$s" is everything before the last item, already joined with list_separator. -->
+    <string name="list_separator">,\u0020</string>
+    <string name="list_and">%1$s 및 %2$s</string>
+    <string name="list_or">%1$s 또는 %2$s</string>
+    <string name="exif_noun_location">위치</string>
+    <string name="exif_noun_camera">카메라 정보</string>
+    <string name="exif_noun_the_date">날짜</string>
+    <string name="exif_noun_date">날짜</string>
+    <string name="exif_noun_software">편집 기록</string>
+    <string name="exif_export_names_only">내보낸 JPEG 사진에서는 이름, 캡션, 댓글만 삭제됩니다. 다른 형식은 그대로 저장됩니다.</string>
+    <plurals name="exif_export_removed">
+        <item quantity="other">내보낸 JPEG 사진에서 %1$s 정보가 삭제됩니다.</item>
+    </plurals>
+    <plurals name="exif_export_kept">
+        <item quantity="other">%1$s 정보는 유지됩니다.</item>
+    </plurals>
+    <plurals name="exif_export_kept_sorted">
+        <item quantity="other">%1$s 정보는 유지되므로 갤러리에서 계속 정렬됩니다.</item>
+    </plurals>
+    <string name="exif_export_summary">%1$s 다른 형식은 그대로 저장됩니다.</string>
+    <string name="exif_share_names_only">이름, 캡션, 댓글만.</string>
+    <string name="exif_share_removed">%1$s 없음.</string>
+    <string name="exif_share_kept">%1$s 유지.</string>
+    <string name="photo_details_title">사진 세부정보</string>
+    <string name="photo_details_lead">사진이 보관함을 떠나기 전에 삭제할 정보를 선택하세요.</string>
+    <string name="photo_details_privacy_row">개인정보 보호(권장)</string>
+    <string name="photo_details_privacy_detail">위치, 카메라 정보, 편집 기록 삭제</string>
+    <string name="photo_details_custom_detail">삭제할 정보를 선택합니다.</string>
+    <string name="photo_details_remove_heading">삭제</string>
+    <string name="photo_details_removed">삭제됨</string>
+    <string name="photo_details_kept">유지됨</string>
+    <string name="photo_details_import_heading">가져올 때</string>
+    <string name="photo_details_import_row">가져오는 사진에서 삭제</string>
+    <string name="photo_details_import_on">켜짐 · 가져온 사진은 되돌릴 수 없습니다.</string>
+    <string name="photo_details_footer">JPEG 사진에만 적용되며 다른 형식은 그대로 둡니다. 어떤 삭제든 이름, 캡션, 댓글, 태그된 사람, 앱이 인식하지 못하는 정보도 함께 삭제하며, 모션과 HDR 등 사진이 제대로 보이는 데 필요한 정보는 유지합니다.</string>
+    <string name="photo_details_location">위치</string>
+    <string name="photo_details_location_covers">GPS 위치, 고도, 방향</string>
+    <string name="photo_details_camera">카메라 정보</string>
+    <string name="photo_details_camera_covers">제조사, 모델, 렌즈, 일련번호, 설정</string>
+    <string name="photo_details_date">날짜 및 시간</string>
+    <string name="photo_details_date_covers">촬영 시각과 마지막 변경 시각</string>
+    <string name="photo_details_software">소프트웨어 및 편집 기록</string>
+    <string name="photo_details_software_covers">만들거나 편집한 앱</string>
+
+    <!-- Drawer — appearance -->
+    <string name="appearance">화면 스타일</string>
+    <string name="appearance_system">시스템</string>
+    <string name="appearance_light">라이트</string>
+    <string name="appearance_dark">다크</string>
+
+    <!-- Drawer — the vault's rows and the install's -->
+    <string name="drawer_trash">휴지통</string>
+    <string name="drawer_backup">백업</string>
+    <string name="drawer_intruder_capture">침입자 촬영</string>
+    <string name="drawer_open_share">공유 열기…</string>
+    <string name="drawer_unvault_everything">모두 보관함에서 꺼내기</string>
+    <string name="drawer_destroy_vault">보관함 파기</string>
+    <string name="drawer_purchase">구매 \u0020· \u0020%1$s</string>
+    <string name="drawer_app_identity">앱 아이덴티티 \u0020· \u0020%1$s</string>
+    <string name="drawer_face_down">뒤집으면 잠금</string>
+    <string name="face_down_no_sensor">이 기기에는 동작 센서가 없어 뒤집혔는지 알 수 없습니다.</string>
+    <string name="face_down_lead">휴대전화를 뒤집어 내려놓으면 보관함이 잠깁니다.</string>
+    <string name="face_down_switch">뒤집으면 잠금 사용</string>
+    <string name="face_down_lock_after">잠금까지 시간</string>
+    <string name="face_down_immediately">즉시</string>
+    <string name="face_down_locks_at_once">즉시 잠김</string>
+    <string name="face_down_locks_after">%1$s 후 잠김</string>
+    <string name="face_down_timeout_line">화면이 %1$s 후에 꺼지며, 그때 보관함이 먼저 잠깁니다.</string>
+    <plurals name="face_down_seconds">
+        <item quantity="other">%1$d초</item>
+    </plurals>
+    <plurals name="face_down_minutes">
+        <item quantity="other">%1$d분</item>
+    </plurals>
+    <string name="drawer_decoy">위장 보관함</string>
+    <string name="drawer_decoy_set_up">설정됨. 두 번째는 만들 수 없습니다.</string>
+    <string name="drawer_set_up_decoy">위장 보관함 설정</string>
+    <string name="drawer_panic">패닉 인증 정보</string>
+    <string name="drawer_photo_details">사진 세부정보 \u0020· \u0020%1$s</string>
+    <string name="drawer_contacts">연락처</string>
+    <string name="drawer_recover_vault">키트로 보관함 복구</string>
+    <string name="drawer_restore_vault">백업에서 보관함 복원</string>
+    <string name="drawer_import_vault">파일에서 보관함 가져오기</string>
+    <string name="drawer_capture_waiting">침입자 촬영 기록이 있습니다</string>
+
+    <!-- Purchase — the screen, the drawer row and the trial -->
+    <string name="trial_blocked">체험 기간이 끝났습니다. 보관함에 있는 모든 것을 열고, 보고, 내보내는 것은 계속 제한 없이 할 수 있습니다. 더 추가하려면 메뉴의 \'구매\'에서 앱을 한 번 구매하세요.</string>
+    <plurals name="trial_reminder">
+        <item quantity="other">체험 기간이 %1$d일 남았습니다. 열기, 보기, 내보내기는 어느 경우에도 제한 없이 할 수 있습니다.</item>
+    </plurals>
+    <string name="purchase_title">구매</string>
+    <plurals name="purchase_days_from_first">
+        <item quantity="other">처음 무언가를 추가한 날부터 %1$d일</item>
+    </plurals>
+    <plurals name="purchase_days_left">
+        <item quantity="other">%1$d일 남음</item>
+    </plurals>
+    <string name="purchase_owned_body">보관함에 추가하기, 보관함 만들기, 공유 보내기를 제한 없이 할 수 있습니다. 구매 내역은 Google 계정에 속하며 다시 설치해도 복원됩니다.</string>
+    <string name="purchase_pending_body">Google Play에서 결제가 처리되기를 기다리고 있습니다. 처리되면 모든 기능이 열립니다. 이 화면을 열어 둘 필요는 없습니다.</string>
+    <string name="purchase_trial_body">체험 기간이 끝나면 보관함에 추가하기, 보관함 만들기, 공유 보내기가 중지됩니다. 보관함에 이미 있는 모든 것을 열고, 보고, 내보내는 것과 나에게 보낸 공유를 여는 것은 구매 여부와 관계없이 중지되지 않습니다.</string>
+    <string name="purchase_one_payment">한 번만 결제합니다. 구독이 아니며 갱신되지 않습니다.</string>
+    <string name="purchase_buy_for">%1$s에 구매</string>
+    <string name="purchase_buy">구매</string>
+    <string name="purchase_state_owned">구매함</string>
+    <string name="purchase_state_pending">결제 대기 중</string>
+    <string name="purchase_state_not_started">체험 시작 전</string>
+    <plurals name="purchase_state_trial_left">
+        <item quantity="other">체험 기간, %1$d일 남음</item>
+    </plurals>
+    <string name="purchase_state_trial">체험 기간</string>
+    <string name="purchase_state_ended">체험 종료</string>
+
+    <!-- App identity — the screen and the sheet that commits a choice -->
+    <string name="identity_screen_title">앱 아이덴티티</string>
+    <string name="identity_screen_lead">이 앱이 런처와 최근 앱에 표시할 이름과 아이콘을 선택하세요. 어느 것을 선택해도 이 보관함이 열리며, 암호 문구나 설정한 생체 인식 없이는 열리지 않습니다.</string>
+    <string name="identity_current">현재 표시 중</string>
+    <string name="identity_opens_vault">보관함을 바로 엽니다</string>
+    <string name="identity_opens_calculator">먼저 계산기를 엽니다</string>
+    <string name="identity_opens_calculator_setup">먼저 계산기를 엽니다 - 설정 필요</string>
+    <string name="identity_opens_music">먼저 음악 플레이어를 엽니다</string>
+    <string name="identity_opens_music_setup">먼저 음악 플레이어를 엽니다 - 설정 필요</string>
+    <string name="identity_opens_recorder">먼저 음성 녹음을 엽니다</string>
+    <string name="identity_opens_recorder_setup">먼저 음성 녹음을 엽니다 - 설정 필요</string>
+    <string name="identity_calculator_weak">위장 중 가장 약합니다. 제스처가 짧은 키 입력 순서이기 때문입니다.</string>
+    <string name="identity_calculator_weak_unset">버튼 순서만 사용하면 위장 중 가장 약합니다.</string>
+    <string name="identity_boundary_title">아이덴티티로 바뀌지 않는 것</string>
+    <string name="identity_boundary_body">Android 설정, 앱 정보 페이지, 가져오기 중의 알림에는 여전히 이 앱의 실제 이름이 표시됩니다. 아이덴티티는 런처와 최근 앱만 바꿉니다.</string>
+    <string name="identity_commit_body">이를 변경하면 고정된 바로가기와 홈 화면에 둔 앱이 모두 삭제됩니다. 나중에 다시 배치할 수 있습니다.</string>
+    <string name="identity_rationale_music">음악을 볼 수 없는 음악 플레이어는 그럴듯하지 않습니다. 빈 라이브러리가 열리게 됩니다. 이 아이콘에는 이 기기의 오디오에 대한 액세스 권한이 필요합니다.</string>
+    <string name="identity_rationale_recorder">마이크를 사용할 수 없는 음성 녹음 앱은 그럴듯하지 않습니다. 녹음 버튼을 눌러도 아무 일도 일어나지 않습니다. 이 아이콘에는 마이크 액세스 권한이 필요합니다.</string>
+    <string name="identity_blocked_music">Android는 앱 안에서 다시 묻지 않습니다. 오디오 액세스 권한은 이 앱의 설정 페이지에 있는 권한 항목에서 변경할 수 있습니다.</string>
+    <string name="identity_blocked_recorder">Android는 앱 안에서 다시 묻지 않습니다. 마이크 액세스 권한은 이 앱의 설정 페이지에 있는 권한 항목에서 변경할 수 있습니다.</string>
+    <string name="identity_use_icon">이 아이콘 사용</string>
+    <string name="identity_set_up">설정</string>
+    <string name="identity_ask_again">다시 요청</string>
+    <string name="identity_open_settings">설정 열기</string>
+
+    <!-- Shared words -->
+    <string name="state_expanded">펼쳐짐</string>
+    <string name="state_collapsed">접힘</string>
+    <string name="action_continue">계속</string>
+    <string name="action_done">완료</string>
+    <string name="action_save">저장</string>
+    <string name="action_back">뒤로</string>
+    <string name="action_cancel">취소</string>
+    <string name="action_remove">삭제</string>
+    <string name="action_not_now">나중에</string>
+    <string name="menu">메뉴</string>
+    <string name="action_saving">저장 중</string>
+    <string name="rename">이름 변경</string>
+    <string name="delete">삭제</string>
+    <string name="more">더보기</string>
+    <string name="pause">일시중지</string>
+    <string name="play">재생</string>
+    <string name="seek">탐색</string>
+    <string name="slideshow">슬라이드쇼</string>
+    <string name="speed">속도</string>
+    <plurals name="seconds">
+        <item quantity="other">%1$d초</item>
+    </plurals>
+    <string name="undo">실행취소</string>
+    <string name="redo">다시 실행</string>
+    <string name="export">내보내기</string>
+    <plurals name="minutes">
+        <item quantity="other">%1$d분</item>
+    </plurals>
+    <string name="start_recording">녹음 시작</string>
+    <string name="stop_recording">녹음 중지</string>
+    <string name="warning">경고</string>
+
+    <!-- Cover setup — recording how a cover opens -->
+    <string name="setup_cover_choose_title">어떻게 여시겠습니까?</string>
+    <string name="setup_cover_draw_shape">이제 모양을 그리세요</string>
+    <string name="setup_cover_record">제스처 기록</string>
+    <string name="setup_cover_draw_again">다시 그리기</string>
+    <string name="setup_cover_do_again">다시 하기</string>
+    <string name="setup_cover_mismatch_title">다른 제스처였습니다</string>
+    <string name="setup_cover_hold_title">길게 누를 위치 선택</string>
+    <string name="setup_cover_hold_again_title">다시 길게 누르기</string>
+    <string name="setup_cover_hold_mismatch_title">다른 위치였습니다</string>
+    <string name="setup_cover_hold_mismatch">두 번째로 길게 누른 위치가 달라서 둘 다 저장되지 않았습니다.</string>
+    <string name="setup_cover_start_over">처음부터 다시</string>
+    <string name="setup_cover_done_title">모두 완료</string>
+    <string name="setup_cover_hold_line">화면의 아무 곳이나 2초간 길게 누르세요. 그 위치를 누르면 점이 나타나며, 그곳에 무엇이 표시되어 있든 작동합니다.</string>
+    <string name="setup_cover_hold_again_line">같은 위치를 다시 길게 누르세요.</string>
+    <string name="setup_cover_hold_early_line">2초 동안 계속 누르세요.</string>
+    <string name="setup_cover_too_short">너무 짧습니다. 제스처는 %1$s 이상이어야 합니다.</string>
+    <string name="setup_cover_so_far">지금까지 %1$s. %2$d개 더 남았습니다.</string>
+    <string name="setup_cover_at_cap">%1$s. 기억할 수 있는 최대치입니다. %2$s</string>
+    <string name="setup_cover_enough">%1$s. %2$s</string>
+    <string name="setup_cover_keys_again">같은 키를 다시 누르세요. 다시 시작하려면 \'AC\'를 누르세요.</string>
+    <string name="setup_cover_keys">사용할 키를 누르세요. 평범한 계산이어도 됩니다. \'DEL\'을 포함해 모든 키가 포함됩니다. 키를 잘못 눌렀다면 \'AC\'를 눌러 다시 시작하세요.</string>
+    <string name="setup_cover_shape_again">같은 모양을 다시 그리세요.</string>
+    <string name="setup_cover_shape_music">9개 점 중 5개 이상을 기억할 수 있는 순서로 연결하여 모양을 그리세요. 이 화면이 닫히면 다시 표시되지 않습니다.</string>
+    <string name="setup_cover_shape_recorder">9개 점 중 5개 이상을 기억할 수 있는 순서로 연결하여 모양을 그리세요. 여기서 녹음한 내용은 저장되지 않습니다.</string>
+    <string name="setup_cover_finish_keys">완료하려면 \'=\'를 길게 누르세요.</string>
+    <string name="setup_cover_finish_shape">완료하려면 손가락을 떼세요.</string>
+    <plurals name="setup_cover_key_count">
+        <item quantity="other">키 %1$d개</item>
+    </plurals>
+    <plurals name="setup_cover_node_count">
+        <item quantity="other">점 %1$d개</item>
+    </plurals>
+    <string name="setup_cover_mismatch_sequence">두 번째 순서가 첫 번째와 일치하지 않아 둘 다 저장되지 않았습니다. 처음부터 다시 하는 것만이 안전한 방법입니다. 첫 번째를 유지하면 우연히 맞은 두 번째 시도가 어렴풋이 기억하는 두 제스처 중 하나를 고르게 되고, 보이지 않는 목표를 향해 연습하게 됩니다.</string>
+    <string name="setup_cover_mismatch_pattern">두 번째 패턴이 첫 번째와 일치하지 않아 둘 다 저장되지 않았습니다. 처음부터 다시 하는 것만이 안전한 방법입니다. 첫 번째를 유지하면 우연히 맞은 두 번째 시도가 어렴풋이 기억하는 두 제스처 중 하나를 고르게 되고, 보이지 않는 목표를 향해 연습하게 됩니다.</string>
+    <string name="setup_cover_sequence_kept">순서는 저장되었습니다. 모양만 다시 그립니다.</string>
+    <string name="setup_cover_spot_kept">위치는 저장되었습니다. 모양만 다시 그립니다.</string>
+    <string name="setup_cover_nothing_changed">아무것도 바뀌지 않았습니다. 런처에는 이전과 같은 아이콘이 표시됩니다.</string>
+    <string name="setup_cover_done_vault">이 아이콘을 누르면 암호 문구를 묻는 화면이 열립니다.</string>
+    <string name="setup_cover_done_route">이 아이콘에서 암호 문구 화면으로 가려면:</string>
+    <string name="setup_cover_done_hidden_dots">그린 모양은 숨겨진 점 위에서도 언제든 작동합니다.</string>
+    <plurals name="setup_cover_route_keys_shape">
+        <item quantity="other">계산기에서 %1$s을(를) 누른 다음 \'=\'를 길게 누르면 점이 나타납니다. 그 위에 모양을 그리세요(점 %2$d개).</item>
+    </plurals>
+    <string name="setup_cover_wrong_key">키를 잘못 눌렀다면 \'AC\'를 누르고 다시 시작하세요.</string>
+    <string name="setup_cover_remember">이 제스처는 아무도 복구해 줄 수 없으며 앱도 다시 보여주지 않습니다. 기억에 의존하고 싶지 않다면, 아직 가능할 때 메뉴에서 보관함 원래 아이콘으로 되돌리세요.</string>
+    <string name="setup_cover_route_keys">계산기에서 %1$s을(를) 누른 다음 \'=\'를 길게 누르세요. 키를 잘못 눌렀다면 \'AC\'를 누르고 다시 시작하세요.</string>
+    <plurals name="setup_cover_route_shape">
+        <item quantity="other">선택한 모양(점 %1$d개)을 화면에 그린 다음 손가락을 떼세요.</item>
+    </plurals>
+    <plurals name="setup_cover_route_hold">
+        <item quantity="other">선택한 위치(%1$s)를 2초간 길게 누르면 점이 나타납니다. 그 위에 모양을 그리세요(점 %2$d개).</item>
+    </plurals>
+    <string name="hold_place">%1$s, %2$s</string>
+    <string name="hold_row_top">맨 위 줄</string>
+    <string name="hold_row_second">두 번째 줄</string>
+    <string name="hold_row_third">세 번째 줄</string>
+    <string name="hold_row_bottom">맨 아래 줄</string>
+    <string name="hold_column_left">왼쪽</string>
+    <string name="hold_column_centre">가운데</string>
+    <string name="hold_column_right">오른쪽</string>
+
+    <!-- Panic credential -->
+    <string name="panic_status_on">패닉 인증 정보가 켜져 있습니다</string>
+    <string name="panic_status_off">패닉 인증 정보가 꺼져 있습니다</string>
+    <string name="panic_fact_survives">이 보관함 목록은 남습니다</string>
+    <string name="panic_fact_survives_body">잠금 화면에서 패닉 문구를 입력하면 이 보관함 목록은 평소처럼 열리고, 목록에 없는 모든 보관함은 이 기기에서 영구적으로 열리지 않게 됩니다.</string>
+    <string name="panic_fact_way_in">파일이 아니라 들어가는 길을 없앱니다</string>
+    <string name="panic_fact_way_in_body">다른 보관함은 읽을 수 없는 데이터로 이 기기에 남습니다. 24개 단어로 된 복구 키트로는 여전히 열 수 있습니다.</string>
+    <string name="panic_fact_silent">작동했다는 표시가 없습니다</string>
+    <string name="panic_fact_silent_body">지켜보는 사람에게는 평범한 잠금 해제로 보입니다.</string>
+    <string name="panic_fact_backup">백업 폴더도 비웁니다</string>
+    <string name="panic_fact_backup_body">클라우드 서비스가 자체 휴지통이나 버전 기록에 보관하는 사본은 이 앱이 손댈 수 없습니다.</string>
+    <string name="panic_change">패닉 문구 변경</string>
+    <string name="panic_turn_it_off">끄기</string>
+    <string name="panic_turn_off_title">패닉 문구 끄기</string>
+    <string name="panic_turn_off">끄기</string>
+    <string name="panic_set_title">패닉 문구 설정</string>
+    <string name="panic_your_passphrase">내 암호 문구</string>
+    <string name="panic_passphrase_hint">이 보관함 목록을 연 암호 문구입니다.</string>
+    <string name="panic_phrase_label">패닉 문구</string>
+    <string name="panic_turn_on">켜기</string>
+    <string name="panic_forgot_title">잊어버린 패닉 문구 지우기</string>
+    <string name="panic_forgot_body">암호 문구를 입력하면 패닉 문구가 꺼집니다. 그 후 새 문구를 설정할 수 있습니다.</string>
+    <string name="panic_clear">패닉 문구 지우기</string>
+    <string name="panic_current_label">현재 패닉 문구</string>
+    <string name="panic_forgot">패닉 문구를 잊으셨나요?</string>
+    <string name="panic_new_label">새 패닉 문구</string>
+    <string name="panic_phrase_requirement">%1$s 어떤 암호 문구와도 비슷하지 않아야 합니다. 확인할 수 있는 것은 이 목록의 암호 문구뿐입니다.</string>
+    <string name="panic_label_again">%1$s 다시 입력</string>
+
+    <!-- Vault names -->
+    <string name="vault_name_label">이름</string>
+    <string name="vault_name_empty">보관함 이름을 입력하세요.</string>
+    <string name="vault_name_too_long">이 보관함에 쓰기에는 이름이 너무 깁니다.</string>
+
+    <!-- Decoy — building a vault you can hand over -->
+    <string name="decoy_captured_during_setup">이 보관함을 만드는 동안 촬영됨. 몇 달 된 것처럼 보여야 하는 보관함에 오늘 찍은 사진은 어울리지 않습니다</string>
+    <string name="decoy_step">%2$d단계 중 %1$d단계</string>
+    <string name="decoy_leave">위장 보관함 설정 나가기</string>
+    <string name="decoy_intro_title">넘겨줄 수 있는 보관함</string>
+    <string name="decoy_intro_lead">자체 암호 문구가 있는 평범한 보관함으로, 다른 사람이 봐도 괜찮은 것을 담아 둡니다.</string>
+    <string name="decoy_start">시작</string>
+    <string name="decoy_fact_used">사용한 것처럼 보여야 합니다</string>
+    <string name="decoy_fact_used_body">빈 보관함으로는 아무도 속일 수 없습니다. 이 보관함에는 선택한 사진과, 몇 달 동안 평범하게 사용한 것처럼 보이는 날짜와 기록이 들어갑니다.</string>
+    <string name="decoy_fact_photos">사진은 내 것입니다</string>
+    <string name="decoy_fact_photos_body">사진은 이 기기에서 가져옵니다. 앱에 포함된 콘텐츠는 없습니다. 포함된 콘텐츠는 앱이 설치된 모든 휴대전화에서 똑같을 것이기 때문입니다. 이 보관함을 넘겨받는 사람은 이 사진을 보게 되므로 보여줘도 괜찮은 사진을 선택하세요.</string>
+    <string name="decoy_fact_own">내 보관함은 그대로 있습니다</string>
+    <string name="decoy_fact_own_body">그 옆에 두 번째 보관함을 만듭니다. 이 기기에 이미 있는 것은 이동, 변경, 삭제되지 않으며, 지금 열려 있는 보관함은 영향을 받지 않습니다.</string>
+    <string name="decoy_fact_cost">필요한 것</string>
+    <string name="decoy_photos_title">사진 선택</string>
+    <string name="decoy_photos_lead">%1$d~%2$d장, 최소 %3$d주에 걸친 사진을 선택하세요.</string>
+    <string name="decoy_choose_to_continue">계속하려면 사진을 선택하세요</string>
+    <string name="decoy_not_plausible">아직 그럴듯한 구성이 아닙니다</string>
+    <string name="decoy_choose_photos">사진 선택</string>
+    <string name="decoy_choose_again">다시 선택</string>
+    <string name="decoy_nothing_chosen">아직 아무것도 선택하지 않았습니다. 선택 화면에는 사진 라이브러리가 표시되지만, 앱은 이를 읽지 않으며 선택하지 않은 것은 보지 않습니다.</string>
+    <plurals name="decoy_summary_in">
+        <item quantity="other">%1$d장이 들어갑니다.</item>
+    </plurals>
+    <plurals name="decoy_summary_kept">
+        <item quantity="other">%1$d장은 촬영 날짜를 유지합니다</item>
+    </plurals>
+    <plurals name="decoy_summary_assigned">
+        <item quantity="other">%1$d장은 날짜가 없어 날짜를 부여받습니다</item>
+    </plurals>
+    <string name="decoy_summary_dates">%1$s.</string>
+    <string name="decoy_summary_dates_assigned">%1$s, %2$s.</string>
+    <plurals name="decoy_summary_declined">
+        <item quantity="other">%1$d장 제외: %2$s.</item>
+    </plurals>
+    <string name="decoy_summary_truncated">처음 %1$d장만 가져왔습니다. 그보다 많으면 위장 보관함이 아니라 두 번째 라이브러리가 됩니다.</string>
+    <string name="decoy_gate_enough">항목 수 충분: %1$d개(최소 %2$d개).</string>
+    <string name="decoy_gate_not_enough">항목이 부족합니다. 현재 %1$d개이며 최소 %2$d개가 필요합니다. 다시 선택하여 %3$d개 이상 추가하세요.</string>
+    <plurals name="decoy_gate_spread">
+        <item quantity="other">기간은 %1$d주입니다(최소 %2$d주).</item>
+    </plurals>
+    <plurals name="decoy_gate_not_spread">
+        <item quantity="other">기간은 %1$d주이며 최소 %2$d주가 필요합니다. 다시 선택하여 더 오래된 사진이나 날짜가 없는 사진을 추가하세요. 날짜가 없는 사진에는 지난 몇 달 중의 날짜가 부여됩니다.</item>
+    </plurals>
+    <plurals name="decoy_age_months">
+        <item quantity="other">이 보관함은 최대 %1$d개월 된 것처럼 보입니다.</item>
+    </plurals>
+    <plurals name="decoy_age_install">
+        <item quantity="other">이 앱은 %1$d일 전에 설치되었으므로 이 보관함이 그보다 오래되었다고 보기 어렵습니다. 파일 목록을 보면 암호 문구 없이도 설치 날짜를 알 수 있습니다. 기록은 그 기간을 채우고, 나머지는 사진이 채웁니다.</item>
+    </plurals>
+    <string name="decoy_requirement_met">요건 충족</string>
+    <string name="decoy_requirement_not_met">요건 미충족</string>
+    <string name="decoy_name_title">이름을 정하고 잠그기</string>
+    <string name="decoy_name_lead">이 이름은 이 보관함을 여는 사람이 가장 먼저 보게 되며, 이 암호 문구가 넘겨줄 암호 문구입니다.</string>
+    <string name="decoy_name_hint">휴가 사진을 담은 보관함에 붙일 만한 평범한 이름을 선택하세요.</string>
+    <string name="decoy_passphrase_label">위장 보관함 암호 문구</string>
+    <string name="decoy_passphrase_note">이 암호 문구는 내 보관함을 여는 암호 문구와 달라야 합니다. 잠금 화면에서 입력하면 이 보관함만 열립니다.</string>
+    <string name="decoy_building">%1$s 만드는 중</string>
+    <string name="decoy_building_body">저장 공간을 준비한 다음 사진을 가져옵니다. 잠시 걸리며 중단하면 안 됩니다.</string>
+    <string name="decoy_ready_title">만들 준비 완료</string>
+    <string name="decoy_ready_lead">아직 아무것도 기록되지 않았습니다. 내 암호 문구를 확인하면 시작됩니다.</string>
+    <string name="decoy_confirm_passphrase">암호 문구 확인</string>
+    <string name="decoy_fact_made">만들어지는 것</string>
+    <plurals name="decoy_fact_made_body">
+        <item quantity="other">%1$s(이)라는 보관함에 내 사진 %2$d장과, 그 이전 몇 달에 걸친 날짜 및 잠금 해제 기록이 들어갑니다.</item>
+    </plurals>
+    <string name="decoy_fact_this_vault">이 보관함은 어떻게 되나요</string>
+    <string name="decoy_fact_this_vault_body">아무 일도 없습니다. 내 보관함은 그대로이며 이 작업으로 덮어써지지 않습니다. 보호를 위해 그 암호 문구를 요청하는 것도 아닙니다.</string>
+    <string name="decoy_fact_end_up">마지막에 도착하는 곳</string>
+    <string name="decoy_fact_end_up_body">마지막 단계에서 새 보관함 안으로 들어가므로, 그 암호 문구를 입력한 사람이 무엇을 보게 될지 확인할 수 있습니다. 다 보면 여기로 돌아옵니다.</string>
+    <string name="decoy_other_vaults">이 기기에 다른 보관함이 있습니다</string>
+    <string name="decoy_other_vaults_hint">잠금 화면에서 무언가를 여는 두 번째 암호 문구가 있는 경우에만 해당합니다.</string>
+    <plurals name="decoy_entries_added">
+        <item quantity="other">항목 %1$d개를 추가했습니다.</item>
+    </plurals>
+    <string name="decoy_handover_title">상대방이 보게 될 화면입니다</string>
+    <string name="decoy_handover_lead">잠금 화면에서 이 보관함의 암호 문구를 입력하면 정확히 여기에만 도달하며 다른 곳은 없습니다. 지금 상대방이 보는 그대로 보고 있습니다.</string>
+    <string name="decoy_show_words">복구 단어 표시</string>
+    <string name="decoy_fact_no_way_across">안에서 다른 곳으로 넘어갈 방법이 없습니다</string>
+    <string name="decoy_fact_no_way_across_body">이 암호 문구를 가진 사람은 이 보관함에 도달하고 거기서 멈춥니다. 내 보관함이 있다는 것조차 알 수 없고, 열 수도 없습니다. 이것이 이 보관함의 목적입니다.</string>
+    <string name="decoy_fact_nothing_names">다른 보관함을 가리키는 것이 여기에 없습니다</string>
+    <string name="decoy_fact_nothing_names_body">이 보관함은 내 보관함의 존재를 모르며, 이 화면의 어떤 것도 마찬가지입니다. 이 보관함을 여는 사람에게는 이것이 기기의 전부입니다.</string>
+    <string name="decoy_fact_inside">안에 들어 있는 것</string>
+    <plurals name="decoy_fact_inside_body">
+        <item quantity="other">사진 %1$d장과 촬영 날짜, 그리고 몇 달 동안 평범하게 사용한 것처럼 보이는 잠금 해제 기록입니다.</item>
+    </plurals>
+    <string name="decoy_fact_back">그런 다음 내 보관함으로 돌아갑니다</string>
+    <string name="decoy_fact_back_body">남은 것은 복구 단어를 적어 두는 것뿐입니다. 그 후 이 보관함이 닫히고 내 보관함이 원래 있던 곳에서 다시 열립니다.</string>
+    <string name="decoy_vaults_label">보관함</string>
+    <string name="decoy_confirm_title">본인 확인</string>
+    <string name="decoy_confirm_body">지금 열려 있는 보관함의 암호 문구를 입력하세요. 이는 위장 보관함 만들기만 승인합니다.</string>
+    <string name="decoy_confirm_wrong">지금 열려 있는 보관함의 암호 문구가 아닙니다.</string>
+    <string name="decoy_checking">확인 중</string>
+    <string name="decoy_build">위장 보관함 만들기</string>
+    <string name="decoy_preserve_title">이 기기의 다른 보관함</string>
+    <string name="decoy_preserve_body">잠금 화면에서 무언가를 여는 두 번째 암호 문구(이미 만든 위장 보관함이나 복원한 보관함)가 있는 경우에만 해당합니다. 내 목록에 있는 보관함은 해당하지 않으며 위험하지 않습니다.</string>
+    <string name="decoy_preserve_warning">앱은 열 수 없는 보관함을 찾을 수 없으므로 피할 수도 없습니다. 여기에 암호 문구를 입력하지 않은 그런 보관함은 새 보관함에 덮어써질 수 있습니다.</string>
+    <string name="decoy_preserve_label">유지할 보관함의 암호 문구</string>
+    <string name="decoy_preserve_add">목록에 추가</string>
+    <string name="decoy_preserve_empty">추가된 항목이 없습니다. 대부분의 사람은 비워 두면 됩니다.</string>
+    <string name="decoy_preserve_entry">암호 문구 %1$d</string>
+    <string name="decoy_preserve_remove">암호 문구 %1$d 삭제</string>
+
+    <!-- Onboarding — the first-run steps -->
+    <string name="onboarding_welcome_title">다른 누구도 열 수 없는 사진</string>
+    <string name="onboarding_welcome_lead">여기에 넣는 모든 것은 이 기기에서 암호화되어 이 기기에 남습니다. 계정도 서버도 없고, 저희가 그것을 볼 방법도 없습니다. 이 앱은 인터넷에 전혀 연결할 수 없습니다.</string>
+    <string name="onboarding_welcome_steps">설정은 짧은 8단계로 이루어집니다. 모두 필수가 아니며 나중에 설정에서 바꿀 수 있습니다.</string>
+    <string name="onboarding_get_started">시작하기</string>
+    <string name="onboarding_have_backup">복원할 백업이 있습니다</string>
+    <string name="onboarding_passphrase_lead">보관함을 열 수 있는 유일한 수단입니다. 재설정할 수 없습니다.</string>
+    <string name="onboarding_fact_no_reset">재설정도 계정도 없습니다</string>
+    <string name="onboarding_fact_no_reset_body">누구도 대신 복구해 줄 수 없습니다. 저희도, 다른 누구도요. 그것이 핵심이자 위험이기도 합니다.</string>
+    <string name="onboarding_fact_kit_next">다음에 복구 키트를 받습니다</string>
+    <string name="onboarding_fact_kit_next_body">암호 문구를 잊었을 때 이 보관함을 여는 24개 단어입니다. 유일한 다른 방법입니다.</string>
+    <string name="onboarding_kit_title">이것을 적어 두세요</string>
+    <string name="onboarding_kit_lead">암호 문구를 잃어버렸을 때 이 보관함을 여는 24개 단어입니다. 이후 메뉴에서 3번 더 볼 수 있으며, 그 후에는 이 앱에서 영원히 사라집니다.</string>
+    <string name="onboarding_fact_anyone">이 단어를 가진 사람은 누구나 이 보관함을 열 수 있습니다</string>
+    <string name="onboarding_fact_anyone_body">변경하거나 취소할 수 없습니다. 내 물건을 뒤지는 사람이 찾아보지 않을 곳에 종이를 보관하세요.</string>
+    <string name="onboarding_fact_backup_words">백업은 암호 문구가 아니라 이 단어로 복원합니다</string>
+    <string name="onboarding_fact_backup_words_body">나중에 클라우드 폴더에 사본을 두면, 그것을 읽을 수 있는 것은 이 단어뿐입니다.</string>
+    <string name="onboarding_kit_type">적어 두었음을 확인하려면 \'%1$s\'를 입력하세요.</string>
+    <string name="onboarding_capture_title">들어오려고 한 사람 확인</string>
+    <string name="onboarding_capture_lead">잠금 해제에 실패하면 휴대전화를 들고 있는 사람을 조용히 기록합니다.</string>
+    <string name="onboarding_fact_failed_unlock">잠금 해제에 실패했을 때만 작동합니다</string>
+    <string name="onboarding_fact_failed_unlock_body">잠금 해제에 성공하면 아무것도 기록되지 않고, 아무것도 이 기기를 떠나지 않습니다. 각 촬영은 내 암호 문구로만 읽을 수 있도록 봉인되어 침입자 촬영에서 기다립니다.</string>
+    <string name="onboarding_fact_permission">모드마다 각자 권한을 요청합니다</string>
+    <string name="onboarding_fact_permission_body">모드를 켜면 Android가 그 모드에 필요한 것만 요청합니다. 거부하면 그 모드는 꺼진 채로 있고, 다른 것은 바뀌지 않습니다.</string>
+    <string name="onboarding_decoy_title">넘겨줄 수 있는 보관함 갖기</string>
+    <string name="onboarding_decoy_lead">자체 암호 문구가 있는 두 번째 보관함으로, 다른 사람이 봐도 괜찮은 것을 담아 둡니다.</string>
+    <string name="onboarding_fact_used_body">빈 보관함으로는 아무도 속일 수 없습니다. 이 보관함에는 선택한 사진과, 몇 달 동안 평범하게 사용한 것처럼 보이는 날짜와 기록이 들어갑니다.</string>
+    <string name="onboarding_fact_choose">사진은 직접 선택합니다</string>
+    <string name="onboarding_fact_choose_body">사진은 이 기기에 있는 내 사진입니다. 이 보관함을 넘겨받는 사람이 보게 되므로 보여줘도 괜찮은 사진을 선택하세요.</string>
+    <string name="onboarding_fact_trial">이것으로 30일 체험 기간이 시작됩니다</string>
+    <string name="onboarding_fact_trial_body">위장 보관함을 만들면 실제 사진을 가져오게 되며, 체험 기간은 보관함에 처음 무언가가 추가될 때 시작됩니다. 내 물건으로 시작하고 싶다면 건너뛰세요.</string>
+    <string name="onboarding_backup_title">다른 곳에 사본 보관하기</string>
+    <string name="onboarding_backup_lead">이 휴대전화를 잃어버리거나 고장 나면, 사본이 없는 한 보관함의 모든 것도 함께 사라집니다.</string>
+    <string name="onboarding_panic_title">다른 보관함을 닫는 암호 문구</string>
+    <string name="onboarding_panic_lead">잠금 화면에서 입력하면 보관함 하나가 열리고, 이 기기의 다른 모든 보관함은 영구적으로 닫힙니다.</string>
+    <string name="onboarding_panic_set_up">패닉 인증 정보 설정</string>
+    <string name="onboarding_fact_ordinary">평범한 잠금 해제처럼 보입니다</string>
+    <string name="onboarding_fact_ordinary_body">같은 화면, 같은 속도, 보이는 것은 없습니다. 그것이 핵심입니다. 지켜보는 사람은 아무것도 알 수 없습니다.</string>
+    <string name="onboarding_fact_way_in_body">다른 보관함은 읽을 수 없는 데이터로 이 기기에 남으며, 24개 단어로 된 복구 키트로 여전히 열 수 있습니다. 그것이 되찾는 방법입니다.</string>
+    <string name="onboarding_identity_title">다른 앱처럼 보이게 하기</string>
+    <string name="onboarding_identity_lead">이 앱은 홈 화면에서 계산기, 음악 플레이어, 음성 녹음 앱으로 위장할 수 있습니다.</string>
+    <string name="onboarding_finish">설정 완료</string>
+    <string name="onboarding_choose_identity">아이덴티티 선택</string>
+    <string name="onboarding_fact_disguise">위장은 실제로 작동합니다</string>
+    <string name="onboarding_fact_disguise_body">런처 항목과 최근 앱 카드가 모두 바뀝니다. 다시 들어가려면 위장 화면에서 직접 고른 제스처를 수행합니다.</string>
+    <string name="onboarding_fact_hides">숨기는 것은 앱이지 파일이 아닙니다</string>
+    <string name="onboarding_fact_hides_body">이 기기의 저장 공간을 읽을 수 있거나 Android 설정을 여는 사람은 이 앱이 있다는 것을 알 수 있습니다. 보관함을 여는 것은 여전히 암호 문구나 설정한 생체 인식뿐입니다.</string>
+    <string name="onboarding_fact_rehearse">제스처를 두 번 연습합니다</string>
+    <string name="onboarding_fact_rehearse_body">한 번은 기록하고, 한 번은 기억으로 합니다. 반복할 수 없는 신호로는 보관함을 열 수 없습니다.</string>
+
+    <!-- Intruder capture — the modes -->
+    <string name="capture_mode_photo">사진</string>
+    <string name="capture_mode_audio">오디오</string>
+    <string name="capture_mode_video">동영상</string>
+    <string name="capture_mode_photo_line">전면 카메라로 정지 사진 한 장</string>
+    <string name="capture_mode_audio_line">마이크로 짧은 클립</string>
+    <string name="capture_mode_video_line">소리가 포함된 짧은 클립</string>
+    <string name="capture_no_front_camera">이 기기에는 전면 카메라가 없습니다.</string>
+    <string name="capture_sheet_lead">잠금 해제에 실패한 후 기록됩니다.</string>
+    <string name="capture_sheet_photo">전면 카메라의 정지 사진.</string>
+    <string name="capture_sheet_audio">마이크로 몇 초.</string>
+    <string name="capture_sheet_video">카메라와 소리로 몇 초.</string>
+    <string name="capture_sheet_no_front">이 기기에는 전면 카메라가 없어 사진과 동영상을 사용할 수 없습니다.</string>
+    <!-- Intruder capture — the home screen's timeline, its flows and its notices -->
+    <string name="intruder_capture_settings">촬영 설정</string>
+    <string name="intruder_today">오늘</string>
+    <string name="intruder_yesterday">어제</string>
+    <string name="intruder_empty_off_title">촬영 없음</string>
+    <string name="intruder_empty_off_body">모드를 켜면 잠금 해제에 실패한 사람을 휴대전화가 조용히 기록합니다.</string>
+    <string name="intruder_empty_off_action">기록할 항목 선택</string>
+    <string name="intruder_empty_on_title">아직 촬영 없음</string>
+    <string name="intruder_empty_on_body">%1$s 켜짐. 잠금 해제에 실패하면 여기에 촬영이 표시됩니다.</string>
+    <string name="intruder_empty_on_action">기록할 항목 변경</string>
+    <string name="intruder_left_moved">%1$s(으)로 이동됨</string>
+    <string name="intruder_left_exported">내보냄</string>
+    <string name="intruder_left_deleted">삭제됨</string>
+    <string name="intruder_row_description">%1$s. %2$s, %3$s.</string>
+    <string name="intruder_row_description_left">%1$s. %2$s, %3$s. %4$s.</string>
+    <string name="intruder_move_to_vault">보관함으로 이동</string>
+    <string name="intruder_export">내보내기</string>
+    <plurals name="intruder_capture_count">
+        <item quantity="other">촬영 %1$d개</item>
+    </plurals>
+    <string name="intruder_move_failed">이 촬영을 이동하지 못했습니다. 아무것도 변경되지 않았습니다.</string>
+    <plurals name="intruder_delete_title">
+        <item quantity="other">촬영 %1$d개를 영구 삭제할까요?</item>
+    </plurals>
+    <plurals name="intruder_delete_body">
+        <item quantity="other">촬영은 파기되며 복원할 수 없습니다. 타임라인의 줄은 남습니다.</item>
+    </plurals>
+    <plurals name="intruder_export_title">
+        <item quantity="other">촬영 %1$d개 내보내기</item>
+    </plurals>
+    <plurals name="intruder_export_body">
+        <item quantity="other">촬영 %1$d개를 복호화해 내보내고 확인한 뒤 침입자 촬영에서 제거합니다. 타임라인의 줄은 남습니다.</item>
+    </plurals>
+    <string name="intruder_export_checked">각 파일을 다시 읽어 비교한 후에 암호화된 사본을 삭제합니다. 일치하지 않는 것은 침입자 촬영에 남고 목록 파일에 기록됩니다.</string>
+    <string name="intruder_export_wrong_passphrase">이 보관함 목록을 여는 암호 문구가 아닙니다.</string>
+    <string name="intruder_export_progress_left">%2$d개 중 %1$d개 꺼냄, %3$d개 남음</string>
+    <string name="intruder_export_busy">내보내는 중</string>
+    <string name="intruder_blank">검게 찍힘</string>
+    <string name="intruder_silent">소리 없음</string>
+    <string name="intruder_permission_camera_off">카메라 권한이 꺼짐</string>
+    <string name="intruder_permission_camera_on">카메라 권한이 다시 켜짐</string>
+    <string name="intruder_permission_microphone_off">마이크 권한이 꺼짐</string>
+    <string name="intruder_permission_microphone_on">마이크 권한이 다시 켜짐</string>
+    <string name="intruder_permission_stopped">%1$s에 감지 · %2$s 중지됨</string>
+    <string name="intruder_permission_resumed">%1$s에 감지 · %2$s 다시 기록 중</string>
+    <string name="intruder_permission_noticed">%1$s에 감지</string>
+    <string name="capture_banner_camera_one">%1$s이(가) 기록되지 않습니다. 카메라 권한이 꺼져 있습니다.</string>
+    <string name="capture_banner_camera_many">%1$s이(가) 기록되지 않습니다. 카메라 권한이 꺼져 있습니다.</string>
+    <string name="capture_banner_microphone_one">%1$s이(가) 기록되지 않습니다. 마이크 권한이 꺼져 있습니다.</string>
+    <string name="capture_banner_microphone_many">%1$s이(가) 기록되지 않습니다. 마이크 권한이 꺼져 있습니다.</string>
+    <string name="capture_turn_back_on">다시 켜기</string>
+    <string name="capture_sheet_no_camera">기록 안 됨 · 카메라 권한 꺼짐</string>
+    <string name="capture_sheet_no_microphone">기록 안 됨 · 마이크 권한 꺼짐</string>
+    <string name="capture_auto_reset">몇 달 동안 이 앱을 사용하지 않으면 Android가 권한을 삭제할 수 있으며, 그러면 촬영이 중지됩니다.</string>
+    <string name="capture_keep_permissions">권한 유지</string>
+    <string name="intruder_subtitle_description">보관함: %1$s</string>
+
+    <!-- Recovery kit — showing, re-showing and entering the 24 words -->
+    <string name="kit_acknowledgement">이해했습니다</string>
+    <string name="kit_title_list">내 복구 키트</string>
+    <string name="kit_title_vault">%1$s 복구 키트</string>
+    <string name="kit_title_short">복구 키트</string>
+    <string name="kit_body_list">암호 문구를 잊은 경우 이 24개 단어가 암호 문구로 여는 보관함에 다시 들어가는 유일한 방법입니다. 순서대로 적어서 안전한 곳에 보관하세요.\n\n이 단어를 가진 사람은 누구나 나중에 추가하는 것을 포함해 그 보관함들을 열 수 있습니다. 자체 암호 문구를 설정한 보관함은 포함되지 않으며, 별도의 키트가 있습니다. 이 단어는 변경하거나 취소할 수 없습니다.</string>
+    <string name="kit_body_list_backup">이 보관함을 클라우드 폴더에 백업한 경우, 복원에 사용하는 것은 암호 문구가 아니라 이 단어입니다. 이 기기와 이 페이지를 함께 잃어버리면 나를 포함해 누구도 백업을 열 수 없습니다.</string>
+    <string name="kit_body_vault">방금 설정한 암호 문구를 잊은 경우 이 24개 단어가 %1$s에 다시 들어가는 유일한 방법입니다. 순서대로 적어서 안전한 곳에 보관하세요.\n\n보관함 목록을 여는 암호 문구로는 이 보관함을 열 수 없으며, 그 목록의 복구 키트로도 열 수 없습니다. 암호 문구와 이 페이지를 모두 잃어버리면 %1$s의 모든 것이 영원히 사라집니다.\n\n이 단어를 가진 사람은 누구나 %1$s을(를) 열 수 있습니다. 변경하거나 취소할 수 없습니다.</string>
+    <string name="kit_type_acknowledgement">적어 두었으며 암호 문구를 재설정할 수 없다는 것을 알고 있음을 확인하려면 \'%1$s\'를 입력하세요.</string>
+    <string name="kit_print">인쇄</string>
+    <string name="kit_last_view">마지막 보기입니다. 다시 표시할 수 없습니다.</string>
+    <plurals name="kit_views_left_after">
+        <item quantity="other">이번 이후 %1$d번 더 볼 수 있습니다.</item>
+    </plurals>
+    <string name="kit_remaining_views">계속하면 이후 메뉴에서 3번 더 볼 수 있습니다. 세 번째 이후에는 다시 표시할 수 없으며, 적어 둔 사본이 유일한 사본이 됩니다.</string>
+    <string name="drawer_kit">복구 키트 \u0020· \u0020%1$s</string>
+    <string name="kit_cannot_show">다시 표시할 수 없음</string>
+    <plurals name="kit_views_left">
+        <item quantity="other">%1$d번 더 볼 수 있음</item>
+    </plurals>
+    <string name="kit_exhausted">복구 키트를 표시할 수 있는 횟수를 모두 사용했습니다. 이 앱에서는 더 이상 표시할 수 없습니다. 적어 둔 사본을 안전한 곳에 보관하세요.</string>
+    <string name="kit_enter_list">표시하려면 암호 문구를 입력하세요.</string>
+    <string name="kit_enter_vault">표시하려면 %1$s의 암호 문구를 입력하세요.</string>
+    <string name="kit_last_time">복구 키트를 표시할 수 있는 마지막 기회입니다. 다음 화면을 떠나면 다시 표시할 수 없으므로 24개 단어를 모두 적었는지 확인하세요. %1$s</string>
+    <plurals name="kit_views_more">
+        <item quantity="other">복구 키트를 %1$d번 더 볼 수 있습니다. 지금 보면 1번을 사용하여 %2$d번이 남습니다. %3$s</item>
+    </plurals>
+    <string name="kit_wrong_list">그 암호 문구로는 이 목록을 열 수 없습니다.</string>
+    <string name="kit_wrong_vault">그 암호 문구로는 이 보관함을 열 수 없습니다.</string>
+    <string name="kit_passphrase_for">%1$s 암호 문구</string>
+    <string name="kit_open_failed">복구 키트를 열 수 없습니다. 다시 시도하세요.</string>
+    <string name="kit_show">복구 키트 표시</string>
+    <string name="kit_words_open_nothing">이 단어로는 이 기기의 보관함이 열리지 않습니다.</string>
+    <string name="kit_new_passphrase_title">새 암호 문구 정하기</string>
+    <string name="kit_enter_title">키트 입력</string>
+    <string name="kit_enter_lead">복구 키트의 24개 단어를 칸마다 하나씩 입력하세요.</string>
+    <string name="kit_add_backup_file">백업 파일 추가</string>
+    <string name="kit_lost_files">파일도 잃어버리셨나요? 클라우드 앱이나 SD 카드에 저장한 백업을 선택하면 파일도 함께 돌아옵니다.</string>
+    <string name="kit_sd_backup">SD 카드 백업</string>
+    <string name="kit_backup_file">백업 파일</string>
+    <string name="kit_new_passphrase_restoring">이 휴대전화에서 보관함을 열 때 사용할 암호 문구를 정하세요. 24개 단어는 바뀌지 않습니다. 종이는 보관해 두세요.</string>
+    <string name="kit_new_passphrase_lead">복구 키트가 확인되었습니다. 앞으로 보관함을 열 때 사용할 암호 문구를 정하세요. 이전 암호 문구는 더 이상 작동하지 않습니다. 24개 단어는 바뀌지 않습니다. 종이는 보관해 두세요.</string>
+    <string name="kit_passphrase_in_use">그 암호 문구는 이미 이 휴대전화에서 무언가를 엽니다. 다른 것을 선택하세요.</string>
+    <string name="kit_new_passphrase_label">새 암호 문구</string>
+    <string name="kit_mismatch">두 입력이 일치하지 않습니다.</string>
+    <string name="kit_setting_passphrase">암호 문구 설정 중</string>
+    <string name="kit_set_passphrase">암호 문구 설정</string>
+    <string name="kit_recover_title">보관함 복구</string>
+    <string name="kit_recover_lead">보관함 자체 복구 키트의 24개 단어를 칸마다 하나씩 입력하세요. 그 보관함은 방금 사용한 암호 문구로 이 목록에서 열리므로(이미 목록에 있다면 자체 암호 문구를 더 이상 묻지 않습니다), 그 단어는 다시 필요하지 않습니다.\n\n이 작업으로 파일이 돌아오지는 않습니다. 보관함의 저장 공간이 이미 이 기기에 있어야 합니다.</string>
+    <string name="kit_recover_name">이 목록에서 사용할 이름</string>
+    <string name="kit_recover_name_hint">보관함 이름은 원래 있던 목록에 저장되므로 여기서 이름이 필요합니다.</string>
+    <string name="kit_recovering">복구 중</string>
+    <string name="kit_recover_action">보관함 복구</string>
+    <string name="kit_not_a_word">단어가 아님</string>
+    <string name="kit_word">단어 %1$d</string>
+    <string name="kit_word_wrong">단어 %1$d, 24개 단어에 포함되지 않음</string>
+    <plurals name="kit_words_to_check">
+        <item quantity="other">확인할 단어가 %1$d개 남았습니다.</item>
+    </plurals>
+    <string name="kit_checksum_failed">모두 올바른 단어이지만 조합이 맞지 않습니다. 순서가 틀렸을 가능성이 높습니다. 키트와 순서대로 대조해 보세요.</string>
+
+    <!-- Vault list — the list, a new vault, editing a vault, a vault's own passphrase -->
+    <string name="vault_icon_home">집</string>
+    <string name="vault_icon_family">가족</string>
+    <string name="vault_icon_person">사람</string>
+    <string name="vault_icon_child">아이</string>
+    <string name="vault_icon_favourite">즐겨찾기</string>
+    <string name="vault_icon_pets">반려동물</string>
+    <string name="vault_icon_work">업무</string>
+    <string name="vault_icon_id">신분증</string>
+    <string name="vault_icon_bank">은행</string>
+    <string name="vault_icon_savings">저축</string>
+    <string name="vault_icon_receipts">영수증</string>
+    <string name="vault_icon_documents">문서</string>
+    <string name="vault_icon_medical">의료</string>
+    <string name="vault_icon_school">학교</string>
+    <string name="vault_icon_travel">여행</string>
+    <string name="vault_icon_car">자동차</string>
+    <string name="vault_icon_camera">카메라</string>
+    <string name="vault_icon_music">음악</string>
+    <string name="vault_icon_books">책</string>
+    <string name="vault_icon_celebration">축하</string>
+    <string name="vault_icon_star">별</string>
+    <string name="vault_icon_diamond">다이아몬드</string>
+    <string name="vault_icon_shopping">쇼핑</string>
+    <string name="vault_icon_archive">보관</string>
+    <string name="vault_list_lock">잠금</string>
+    <string name="vault_new">새 보관함</string>
+    <string name="first_vault_name">내 보관함</string>
+    <string name="vault_list_lead">암호 문구 하나로 이 목록과 그 안의 모든 것이 열립니다.</string>
+    <string name="vault_list_lead_locked">암호 문구 하나로 이 목록이 열립니다. \'잠김\' 표시된 보관함은 자체 암호 문구가 필요합니다.</string>
+    <string name="vault_list_empty">이 목록에 보관함이 없습니다.</string>
+    <string name="vault_list_empty_body">여기서 만드는 모든 것은 방금 사용한 암호 문구로 열립니다.</string>
+    <string name="vault_list_create">보관함 만들기</string>
+    <string name="vault_row_locked">잠김 - 자체 암호 문구 있음</string>
+    <string name="vault_row_list_passphrase">이 목록의 암호 문구로 열림</string>
+    <string name="vault_row_options">%1$s 옵션</string>
+    <string name="vault_edit">보관함 편집</string>
+    <string name="vault_flow_name_title">보관함 이름 정하기</string>
+    <string name="vault_flow_name_lead">이 이름과 배지가 보관함 목록에 표시됩니다.</string>
+    <string name="vault_flow_opens_title">%1$s을(를) 어떻게 열까요?</string>
+    <string name="vault_flow_opens_lead">암호 문구는 나중에 보관함 편집에서 추가, 변경 또는 삭제할 수 있습니다.</string>
+    <string name="vault_opens_list">보관함 목록으로</string>
+    <string name="vault_opens_list_detail">이미 사용한 암호 문구로 목록에서 바로 열립니다.</string>
+    <string name="vault_opens_own">자체 암호 문구로</string>
+    <string name="vault_opens_own_detail">자체 암호 문구로만 열립니다. 전용 복구 키트와 전용 침입자 촬영이 제공됩니다.</string>
+    <string name="vault_flow_passphrase_title">%1$s의 암호 문구 정하기</string>
+    <string name="vault_flow_passphrase_lead">%1$s은(는) 이 암호 문구로만 열립니다. 보관함 목록의 암호 문구나 목록의 복구 키트로는 열리지 않으므로, %1$s 전용 복구 키트가 만들어집니다.</string>
+    <string name="vault_flow_capture_title">%1$s을(를) 열려는 사람 확인</string>
+    <string name="vault_flow_capture_lead">%1$s의 암호 문구가 틀리면 휴대전화를 들고 있는 사람을 조용히 기록합니다.</string>
+    <string name="vault_capture_fact">%1$s에서만 볼 수 있음</string>
+    <string name="vault_capture_fact_body">모든 촬영은 %1$s 전용으로 봉인되어 그 안의 메뉴에 있는 침입자 촬영에서 기다립니다. 보관함 목록에는 아무것도 표시되지 않습니다.</string>
+    <string name="vault_discard_new_title">이 보관함을 삭제할까요?</string>
+    <string name="vault_discard_new_body">아직 아무것도 만들어지지 않았습니다.</string>
+    <string name="vault_discard_add_title">이 암호 문구를 삭제할까요?</string>
+    <string name="vault_discard_add_body">%1$s은(는) 계속 보관함 목록의 암호 문구로 열립니다.</string>
+    <string name="vault_capture_not_enrolled">%1$s의 침입자 촬영이 켜지지 않았습니다. 메뉴의 침입자 촬영에서 켜세요.</string>
+    <string name="vault_passphrase_label">이 보관함의 암호 문구</string>
+    <string name="vault_creating">만드는 중…</string>
+    <string name="vault_open_named">%1$s 열기</string>
+    <string name="vault_has_own_passphrase">이 보관함에는 자체 암호 문구가 있습니다.</string>
+    <string name="vault_open_wrong">그 암호 문구로 %1$s을(를) 열지 못했습니다.</string>
+    <string name="vault_opening">여는 중</string>
+    <string name="vault_open">보관함 열기</string>
+    <string name="vault_colour">색상</string>
+    <string name="vault_icon">아이콘</string>
+    <string name="vault_icon_letter">글자</string>
+    <!-- A sample of a letter, shown on the Letter icon before the vault has a name. -->
+    <!-- The name an imported vault is given on the list. From then on it is the vault's own name. -->
+    <string name="imported_vault">가져온 보관함</string>
+
+    <!-- Vault grid — destinations, filters, sorting and the add line -->
+    <string name="add_photos_or_videos">사진 또는 동영상 추가</string>
+    <string name="add_files">파일 추가</string>
+    <string name="destination_media">미디어</string>
+    <string name="destination_files">파일</string>
+    <string name="destination_notes">노트</string>
+    <string name="destination_memos">음성 메모</string>
+    <string name="added_to">%1$s에 추가했습니다.</string>
+    <string name="media_filter_all">전체</string>
+    <string name="media_filter_photos">사진</string>
+    <string name="media_filter_videos">동영상</string>
+    <string name="sort_newest">최신순</string>
+    <string name="sort_oldest">오래된순</string>
+    <string name="sort_recently_added">최근 추가순</string>
+    <string name="sort_first_added">먼저 추가된 순</string>
+    <string name="sort_name_az">이름 A–Z</string>
+    <string name="sort_name_za">이름 Z–A</string>
+    <string name="sort_last_edited">마지막 수정순</string>
+    <string name="media_filter_show_all">전체 표시</string>
+    <string name="media_filter_show_photos">사진 표시</string>
+    <string name="media_filter_show_videos">동영상 표시</string>
+    <string name="view_as_list">목록으로 보기</string>
+    <string name="view_as_grid">그리드로 보기</string>
+
+    <!-- Vault grid — the bar, selection, the add button and empty states -->
+    <string name="grid_selected">%1$d개 선택됨</string>
+    <string name="folder_options">폴더 옵션</string>
+    <plurals name="item_count">
+        <item quantity="other">항목 %1$d개</item>
+    </plurals>
+    <string name="sort_current">현재 사용 중</string>
+    <string name="sort_alphabetical">숫자 순이 아닌 문자 순</string>
+    <string name="folder_new">새 폴더</string>
+    <string name="grid_destination_settings">%1$s 설정</string>
+    <string name="grid_trash_and_settings">휴지통 및 설정</string>
+    <string name="fab_camera">카메라</string>
+    <string name="fab_voice_memo">음성 메모</string>
+    <string name="fab_new_note">새 노트</string>
+    <string name="fab_actions">작업</string>
+    <string name="fab_close_actions">작업 닫기</string>
+    <string name="fab_no_camera">이 기기에 없음</string>
+    <string name="select_all">모두 선택</string>
+    <string name="move_to_folder">폴더로 이동</string>
+    <string name="remove_from_folder">폴더에서 빼기</string>
+    <string name="share_securely">안전하게 공유</string>
+    <string name="unvault_selected">선택 항목을 보관함에서 꺼내기</string>
+    <string name="delete_selected">선택 항목 삭제</string>
+    <string name="restore_selected">선택 항목 복원</string>
+    <string name="delete_selected_forever">선택 항목 영구 삭제</string>
+    <string name="leave_selection">선택 종료</string>
+    <string name="all_vaults">모든 보관함</string>
+    <string name="select">선택</string>
+    <string name="pinned">고정됨</string>
+    <string name="kind_video">동영상</string>
+    <string name="kind_audio">오디오</string>
+    <string name="kind_file">파일</string>
+    <string name="empty_media">이 보관함은 비어 있습니다.</string>
+    <string name="empty_media_line">추가한 사진과 동영상은 저장 공간에 닿기 전에 암호화됩니다.</string>
+    <string name="empty_files">아직 파일이 없습니다.</string>
+    <string name="empty_files_line">문서와 이 앱이 열 수 없는 기타 항목은 여기에 암호화되어 보관됩니다.</string>
+    <string name="empty_notes">아직 노트가 없습니다.</string>
+    <string name="empty_notes_line">작성한 노트는 이 보관함에 저장되며 밖으로 나가지 않습니다.</string>
+    <string name="empty_memos">아직 녹음이 없습니다.</string>
+    <string name="empty_memos_line">녹음한 음성 메모는 기록되는 동시에 암호화됩니다.</string>
+    <string name="empty_add_photos">사진 추가</string>
+    <string name="empty_add_media">미디어 추가</string>
+    <string name="empty_create_note">노트 만들기</string>
+    <string name="empty_create_memo">음성 메모 만들기</string>
+    <string name="search">검색</string>
+    <string name="search_no_match">일치하는 항목이 없습니다.</string>
+    <string name="search_no_match_line">이름, 폴더, 태그를 검색합니다.</string>
+    <string name="folder_empty">이 폴더에는 아무것도 없습니다.</string>
+    <string name="folder_empty_line">여기로 가져오거나 보관함의 어디서든 항목을 옮겨 오세요.</string>
+    <string name="trash_empty">휴지통이 비어 있습니다.</string>
+    <string name="trash_empty_line">삭제한 항목은 여기서 %1$d일 동안 기다린 후 파기됩니다.</string>
+    <string name="section_edited">%1$s 수정됨</string>
+    <string name="section_added">%1$s 추가됨</string>
+
+    <!-- Viewer — one item, full screen -->
+    <string name="viewer_thumbnail_set">썸네일을 %1$s(으)로 설정했습니다.</string>
+    <string name="viewer_frame_unusable">이 프레임은 사용할 수 없습니다.</string>
+    <string name="viewer_rotate">회전</string>
+    <string name="viewer_edit_image">이미지 편집</string>
+    <string name="viewer_opening">여는 중…</string>
+    <string name="viewer_could_not_open">이 항목을 열 수 없습니다.</string>
+    <string name="viewer_export_item">이 항목 내보내기</string>
+    <plurals name="viewer_skip_forward">
+        <item quantity="other">%1$d초 앞으로</item>
+    </plurals>
+    <plurals name="viewer_skip_back">
+        <item quantity="other">%1$d초 뒤로</item>
+    </plurals>
+    <string name="viewer_set_folder_cover">폴더 커버로 설정</string>
+    <string name="viewer_use_frame">이 프레임을 썸네일로 사용</string>
+
+    <!-- Settings rows — a choice revealed in place -->
+    <string name="reveal_choose">%1$s 선택</string>
+    <string name="reveal_close">%1$s 닫기</string>
+    <string name="reveal_shown">%1$s 표시됨</string>
+    <string name="reveal_hidden">%1$s 숨겨짐</string>
+    <string name="reveal_speed">속도</string>
+    <string name="reveal_speeds">속도</string>
+    <string name="reveal_length">길이</string>
+    <string name="reveal_lengths">길이</string>
+    <string name="reveal_way">방식</string>
+    <string name="reveal_ways">방식</string>
+    <string name="reveal_quality">음질</string>
+    <string name="reveal_qualities">음질</string>
+
+    <!-- Slideshow -->
+    <string name="slideshow_speed_quick">빠르게</string>
+    <string name="slideshow_speed_usual">보통 속도</string>
+    <string name="slideshow_speed_slow">하나씩 천천히</string>
+    <string name="slideshow_end">슬라이드쇼 종료</string>
+    <string name="slideshow_play">슬라이드쇼 재생</string>
+    <string name="slideshow_pause">슬라이드쇼 일시중지</string>
+    <string name="slideshow_options">슬라이드쇼 옵션</string>
+    <string name="slideshow_options_lead">이 옵션이 열려 있는 동안 슬라이드쇼가 기다리며, 닫으면 계속됩니다.</string>
+    <string name="slideshow_speed_footnote">각 사진이 표시되는 시간입니다. 동영상은 끝까지 재생됩니다.</string>
+    <string name="slideshow_repeat">반복</string>
+    <string name="slideshow_repeat_on">켜짐 · 마지막 항목 후 슬라이드쇼가 처음부터 다시 시작됩니다.</string>
+    <string name="slideshow_repeat_off">꺼짐 · 마지막 항목 후 슬라이드쇼가 끝납니다.</string>
+    <string name="slideshow_shuffle">무작위 재생</string>
+    <string name="slideshow_shuffle_on">켜짐 · 모든 항목이 무작위 순서로 한 번씩 표시된 후에 반복됩니다.</string>
+    <string name="slideshow_shuffle_off">꺼짐 · 목록 순서대로 표시됩니다.</string>
+
+    <!-- Folders -->
+    <string name="colour_none">색상 없음</string>
+    <string name="colour_red">빨간색</string>
+    <string name="colour_amber">호박색</string>
+    <string name="colour_teal">청록색</string>
+    <string name="colour_blue">파란색</string>
+    <string name="colour_pink">분홍색</string>
+    <string name="folder_rename">폴더 이름 변경</string>
+    <string name="folder_create">만들기</string>
+    <string name="folder_move">이동</string>
+    <string name="folder_cover">커버</string>
+    <string name="folder_delete">폴더 삭제</string>
+    <string name="folder_delete_named">\'%1$s\' 폴더가 삭제됩니다.</string>
+    <string name="folder_delete_moves_to">안에 있는 모든 것이 \'%1$s\'(으)로 이동합니다. 아무것도 삭제되지 않으며 휴지통으로 가지도 않습니다.</string>
+    <string name="folder_delete_moves_home">안에 있는 모든 것이 홈 화면으로 이동합니다. 아무것도 삭제되지 않으며 휴지통으로 가지도 않습니다.</string>
+    <string name="folder_cover_recent">가장 최근 항목 사용</string>
+    <string name="folder_cover_empty">이 폴더에는 아직 표시할 것이 없습니다.</string>
+    <string name="folder_cover_current">현재 커버</string>
+    <string name="picker_move_folder">\'%1$s\' 이동</string>
+    <plurals name="picker_move_items">
+        <item quantity="other">항목 %1$d개 이동</item>
+    </plurals>
+    <string name="picker_folder_lead">폴더 안의 모든 것이 함께 이동합니다.</string>
+    <string name="picker_items_lead">항목은 최대 한 폴더에만 들어가므로, 이동하면 현재 폴더가 바뀝니다.</string>
+    <string name="picker_mixed_kinds">미디어, 파일, 노트, 음성 메모는 각각 자체 폴더가 있습니다. 폴더로 이동하려면 한 종류의 항목만 선택하세요.</string>
+    <string name="picker_home">홈 화면</string>
+    <string name="picker_up">위로</string>
+    <string name="picker_where_now">현재 위치</string>
+    <string name="picker_move_here">여기로 이동</string>
+    <string name="picker_move_into">\'%1$s\'(으)로 이동</string>
+    <string name="picker_move_home">홈 화면으로 이동</string>
+    <string name="colour_yellow">노란색</string>
+    <string name="colour_white">흰색</string>
+    <string name="colour_black">검은색</string>
+
+    <!-- Rename, delete and destroy -->
+    <string name="rename_item">항목 이름 변경</string>
+    <string name="rename_lead">항목을 내보낼 때 사용하는 이름입니다. 확장자는 그대로 유지됩니다. 확장자가 항목을 여는 방식과 내보낼 위치를 결정합니다.</string>
+    <string name="rename_refused">이름은 1자 이상이어야 하며, 점으로만 이루어질 수 없고, 슬래시를 포함할 수 없으며, 확장자를 포함해 최대 %1$d자입니다.</string>
+    <string name="delete_one_forever">%1$s을(를) 영구 삭제할까요?</string>
+    <plurals name="delete_many_forever">
+        <item quantity="other">항목 %1$d개를 영구 삭제할까요?</item>
+    </plurals>
+    <string name="delete_one">%1$s을(를) 삭제할까요?</string>
+    <plurals name="delete_many">
+        <item quantity="other">항목 %1$d개를 삭제할까요?</item>
+    </plurals>
+    <string name="delete_body_one_forever">이 보관함의 사본이 파기됩니다. 복구할 수 없습니다.</string>
+    <string name="delete_body_many_forever">이 보관함의 사본들이 파기됩니다. 복구할 수 없습니다.</string>
+    <string name="delete_body_trash">휴지통으로 이동했습니다. %1$d일 후 영구 삭제됩니다.</string>
+    <string name="delete_forever">영구 삭제</string>
+    <string name="keep">유지</string>
+    <string name="destroy_title">\'%1$s\'을(를) 파기할까요?</string>
+    <string name="destroy_body">이 보관함의 모든 사진, 동영상, 노트, 폴더가 사라집니다. 휴지통으로 가지 않으며 복구할 수 없습니다.</string>
+    <string name="destroy_others_safe">다른 보관함은 영향을 받지 않습니다.</string>
+    <string name="destroy_backup_file">백업 파일도 삭제됩니다. 그러지 않으면 복구 키트로 이 보관함의 전체 사본을 계속 열 수 있기 때문입니다. 클라우드 서비스가 자체 휴지통이나 버전 기록에 보관하는 사본은 이 앱이 손댈 수 없습니다.</string>
+    <string name="destroy_backup_folder">백업 폴더도 비워집니다. 그러지 않으면 복구 키트로 이 보관함의 전체 사본을 계속 열 수 있기 때문입니다. 클라우드 서비스가 자체 휴지통이나 버전 기록에 보관하는 사본은 이 앱이 손댈 수 없습니다.</string>
+    <string name="destroy_give_back">파일을 돌려받은 후 파기</string>
+    <string name="destroy_everything">안에 있는 모든 것 파기</string>
+    <string name="destroy_keep">보관함 유지</string>
+    <string name="destroy_gate_own">이 작업은 되돌릴 수 없습니다. 먼저 %1$s 보관함을 여는 암호 문구를 입력하세요. 보관함 목록의 암호 문구가 아니라 이 보관함 자체의 암호 문구입니다.</string>
+    <string name="destroy_gate_list">이 작업은 되돌릴 수 없습니다. 먼저 보관함 목록 암호 문구를 입력하세요.</string>
+    <string name="destroy_gate_lost">이 암호 문구를 잊으셨나요? 이 보관함 자체의 24개 단어로 되찾을 수 있습니다. 보관함 목록에서 메뉴를 열고 \'키트로 보관함 복구\'를 선택한 다음 거기서 파기하세요.</string>
+    <string name="destroy_continue">계속</string>
+    <string name="destroy_checking">확인 중…</string>
+    <string name="destroy_return_then">모든 파일을 꺼내고 확인하면 %1$s 보관함이 파기됩니다.</string>
+
+    <!-- Destination settings — Media, Notes and Memos -->
+    <string name="skip_short">짧게</string>
+    <string name="skip_usual">보통 간격</string>
+    <string name="skip_longer">길게</string>
+    <string name="skip_scene">장면 하나만큼</string>
+    <string name="orientation_auto">자동</string>
+    <string name="orientation_auto_detail">동영상이 휴대전화 방향에 따라 회전합니다</string>
+    <string name="orientation_landscape">가로</string>
+    <string name="orientation_landscape_detail">휴대전화를 어떻게 들든 동영상이 가로로 열립니다</string>
+    <string name="speed_0_5">0.5×</string>
+    <string name="speed_0_5_detail">절반 속도</string>
+    <string name="speed_0_75">0.75×</string>
+    <string name="speed_0_75_detail">조금 느리게</string>
+    <string name="speed_normal">보통</string>
+    <string name="speed_normal_detail">녹화된 그대로</string>
+    <string name="speed_1_25">1.25×</string>
+    <string name="speed_1_25_detail">조금 빠르게</string>
+    <string name="speed_1_5">1.5×</string>
+    <string name="speed_1_5_detail">1.5배 빠르게</string>
+    <string name="speed_2">2×</string>
+    <string name="speed_2_detail">2배속</string>
+    <string name="quality_standard">표준</string>
+    <string name="quality_standard_detail">64kbps · 1분당 약 0.5MB</string>
+    <string name="quality_high">높음</string>
+    <string name="quality_high_detail">128kbps · 1분당 약 1MB</string>
+    <string name="quality_highest">최고</string>
+    <string name="quality_highest_detail">256kbps · 1분당 약 2MB</string>
+    <string name="media_settings_intro">사진과 동영상을 열었을 때 보이고 재생되는 방식입니다.</string>
+    <string name="media_settings_viewing">보는 중</string>
+    <string name="media_keep_on">보는 동안 화면 켜 두기</string>
+    <string name="media_keep_on_on">켜짐 · 사진이나 동영상이 열려 있는 동안 화면이 켜져 있으며, 보관함도 함께 열려 있습니다.</string>
+    <string name="media_keep_on_off">꺼짐 · 휴대전화의 평소 타이머에 따라 화면이 꺼지며, 보관함도 함께 잠깁니다.</string>
+    <string name="media_brightness">보는 동안 최대 밝기</string>
+    <string name="media_brightness_on">켜짐 · 사진과 동영상을 최대 밝기로 엽니다. 닫으면 원래 밝기로 돌아옵니다.</string>
+    <string name="media_brightness_off">꺼짐 · 사진과 동영상을 휴대전화의 밝기로 엽니다.</string>
+    <string name="media_stretch">저해상도 사진 늘리기</string>
+    <string name="media_stretch_on">켜짐 · 화면보다 작은 사진을 화면에 맞게 확대합니다.</string>
+    <string name="media_stretch_off">꺼짐 · 화면보다 작은 사진을 원래 크기로 표시합니다.</string>
+    <string name="media_quality">최고 표시 품질</string>
+    <string name="media_quality_on">켜짐 · 사진을 원본 해상도로 열어 확대해도 세부 사항이 보입니다. 메모리와 배터리를 더 사용합니다.</string>
+    <string name="media_quality_off">꺼짐 · 사진을 화면 해상도로 엽니다. 확대하면 세부 사항이 덜 보입니다.</string>
+    <string name="playback_speed">재생 속도</string>
+    <string name="media_speed_footnote">음 높이는 그대로입니다.</string>
+    <string name="media_resume">동영상 이어서 재생</string>
+    <string name="media_resume_on">켜짐 · 마지막으로 멈춘 곳부터 동영상을 재생합니다.</string>
+    <string name="media_resume_off">꺼짐 · 동영상을 처음부터 재생하며, 멈춘 위치는 저장되지 않습니다.</string>
+    <string name="media_repeat">동영상 반복</string>
+    <string name="media_repeat_on">켜짐 · 동영상이 끝나면 처음부터 다시 재생합니다.</string>
+    <string name="media_repeat_off">꺼짐 · 동영상이 끝나면 멈춥니다.</string>
+    <string name="media_skip">두 번 탭하여 건너뛰기</string>
+    <string name="media_skip_footnote">동영상 오른쪽을 두 번 탭하면 앞으로, 왼쪽을 두 번 탭하면 뒤로 이동합니다.</string>
+    <string name="media_orientation">동영상 방향</string>
+    <string name="notes_settings_intro">모든 보관함의 모든 노트에 적용됩니다.</string>
+    <string name="notes_checklists">체크리스트</string>
+    <string name="notes_move_checked">체크한 항목을 아래로 이동</string>
+    <string name="notes_move_checked_on">켜짐 · 항목을 체크하면 목록에서 체크하지 않은 항목 아래로 이동합니다. 체크를 해제하면 다시 위로 올라갑니다.</string>
+    <string name="notes_move_checked_off">꺼짐 · 체크한 항목은 제자리에 있습니다.</string>
+    <string name="notes_keyboard">키보드</string>
+    <string name="notes_incognito">시크릿 키보드</string>
+    <string name="notes_incognito_on">켜짐 · 키보드에 노트의 단어를 학습하지 말라고 요청합니다. 대부분의 키보드는 따르지만 따르지 않는 키보드도 있을 수 있습니다.</string>
+    <string name="notes_incognito_off">꺼짐 · 키보드가 노트의 단어를 학습하여 다른 앱에서 추천할 수 있습니다.</string>
+    <string name="memos_settings_intro">음성 메모를 녹음하는 방식과, 열었을 때 재생되는 방식입니다.</string>
+    <string name="memos_quality">녹음 품질</string>
+    <string name="memos_quality_footnote">음성 메모는 녹음을 시작할 때의 품질을 유지합니다. 변경 사항은 다음 녹음부터 적용됩니다.</string>
+    <string name="memos_stereo">스테레오 녹음</string>
+    <string name="memos_stereo_on">켜짐 · 음성 메모를 2채널로 녹음하며 크기는 약 2배입니다. 지원하지 않는 휴대전화는 모노로 녹음합니다.</string>
+    <string name="memos_stereo_off">꺼짐 · 음성 메모를 1채널로 녹음합니다.</string>
+    <string name="memos_bluetooth">블루투스 마이크 사용</string>
+    <string name="memos_bluetooth_on">켜짐 · 연결된 블루투스 헤드셋이 통화 품질의 모노로 녹음합니다. 품질과 스테레오 설정은 적용되지 않습니다. 연결된 헤드셋이 없으면 휴대전화 마이크로 녹음합니다.</string>
+    <string name="memos_bluetooth_off">꺼짐 · 휴대전화 마이크로 녹음합니다. 블루투스 헤드셋은 품질이나 스테레오 설정 없이 통화 품질의 모노로 녹음합니다.</string>
+    <string name="memos_playback">재생</string>
+    <string name="memos_speed_footnote">음 높이는 그대로입니다. 동영상은 이 설정이 아니라 \'미디어\'의 속도를 따릅니다.</string>
+    <string name="memos_skip_silence">무음 구간 건너뛰기</string>
+    <string name="memos_skip_silence_on">켜짐 · 음성 메모를 재생할 때 무음 구간을 건너뜁니다.</string>
+    <string name="memos_skip_silence_off">꺼짐 · 무음 구간까지 그대로 재생합니다.</string>
+
+    <!-- Notes -->
+    <string name="note_title">제목</string>
+    <string name="note_body">노트</string>
+    <string name="note_edit">노트 편집</string>
+    <string name="note_placeholder">작성 시작</string>
+    <string name="note_too_long">이 노트는 %1$d바이트이며 한도는 %2$d바이트입니다. 한도는 글자 수가 아닌 바이트 기준이므로, 악센트 문자, 이모티콘, 라틴 문자가 아닌 문자는 각각 1보다 많이 계산됩니다.</string>
+    <string name="note_pin">고정</string>
+    <string name="note_unpin">고정 해제</string>
+    <string name="note_delete">노트 삭제</string>
+    <string name="format_checklist">체크리스트</string>
+    <string name="format_bullet">글머리 기호 목록</string>
+    <string name="format_numbered">번호 매기기 목록</string>
+    <string name="format_heading">제목</string>
+    <string name="format_bold">굵게</string>
+    <string name="format_italic">기울임꼴</string>
+    <string name="format_strike">취소선</string>
+    <string name="note_completed">완료: %1$s</string>
+    <string name="note_attached_image">첨부 이미지</string>
+    <string name="note_attachment_missing">이 첨부 파일은 더 이상 보관함에 없습니다.</string>
+    <string name="note_attachment_missing_label">없는 첨부 파일 %1$s</string>
+
+    <!-- Image editor -->
+    <!-- Aspect ratios: the numbers are the same in every language; write them the way the language writes a ratio. -->
+    <string name="aspect_free">자유</string>
+    <string name="aspect_1_1">1:1</string>
+    <string name="aspect_4_3">4:3</string>
+    <string name="aspect_3_2">3:2</string>
+    <string name="aspect_16_9">16:9</string>
+    <string name="filter_original">원본</string>
+    <string name="filter_mono">흑백</string>
+    <string name="filter_warm">따뜻하게</string>
+    <string name="filter_cool">차갑게</string>
+    <string name="filter_fade">페이드</string>
+    <string name="filter_punch">선명하게</string>
+    <string name="width_fine">가늘게</string>
+    <string name="width_medium">중간</string>
+    <string name="width_bold">굵게</string>
+    <string name="editor_save_note">저장하면 새 항목이 추가되고 원본은 유지됩니다.</string>
+    <string name="editor_saving">저장 중…</string>
+    <string name="editor_save_copy">사본 저장</string>
+    <string name="editor_discard_title">편집 내용을 삭제할까요?</string>
+    <string name="editor_discard_body">사진이 원래대로 돌아갑니다. 다른 것은 바뀌지 않습니다.</string>
+    <string name="editor_discard">삭제</string>
+    <string name="editor_keep_editing">계속 편집</string>
+    <string name="editor_discard_edits">편집 내용 삭제</string>
+    <string name="editor_title">편집</string>
+    <string name="tool_crop">자르기</string>
+    <string name="tool_straighten">수평 맞추기</string>
+    <string name="tool_filters">필터</string>
+    <string name="tool_light">밝기</string>
+    <string name="tool_markup">마크업</string>
+    <string name="editor_crop_hint">모서리나 테두리를 드래그하세요.</string>
+    <string name="editor_rotate_left">왼쪽으로 회전</string>
+    <string name="editor_rotate_right">오른쪽으로 회전</string>
+    <string name="editor_flip_horizontal">좌우 반전</string>
+    <string name="editor_flip_vertical">상하 반전</string>
+    <string name="editor_straighten_value">수평 맞추기 \u0020· \u0020%1$s°</string>
+    <string name="editor_strength">강도</string>
+    <string name="editor_brightness">밝기</string>
+    <string name="editor_contrast">대비</string>
+    <string name="editor_saturation">채도</string>
+    <string name="editor_warmth">색온도</string>
+    <string name="editor_erase_hint">선을 터치하면 지워집니다.</string>
+    <string name="editor_draw_hint">사진 위를 드래그하여 그리세요.</string>
+    <string name="editor_eraser">지우개</string>
+    <string name="editor_reset">초기화</string>
+
+    <!-- Voice memo -->
+    <string name="memo_recorded">녹음됨</string>
+    <string name="memo_permission_body">녹음하려면 마이크가 필요합니다. 여기서 녹음한 것은 기기를 떠나지 않습니다. 보관함에 바로 기록되며 이 권한은 그 용도로만 사용됩니다. 다른 용도로 마이크를 켜지 않습니다.</string>
+    <string name="memo_speak">말하면 바로 이 보관함에 들어갑니다</string>
+    <string name="memo_trial">음성 메모를 저장하면 30일 체험 기간이 시작됩니다. 체험 기간은 보관함에 처음 무언가가 들어올 때 시작되며, 이것이 그 처음이 됩니다.</string>
+    <string name="memo_allow_microphone">마이크 허용</string>
+    <string name="memo_save">보관함에 저장</string>
+    <string name="memo_position">이 녹음의 재생 위치</string>
+    <string name="memo_minutes_seconds">%1$s %2$s</string>
+    <string name="memo_recording_length">녹음 중, %1$s</string>
+    <string name="memo_recorded_length">녹음됨, %1$s</string>
+    <string name="memo_nothing_yet">아직 녹음한 것이 없습니다</string>
+    <string name="memo_discard_title">이 녹음을 삭제할까요?</string>
+    <string name="memo_discard_body">이 녹음은 저장되지 않았으므로 나가면 사라집니다. 보관함에 이미 있는 것에는 영향이 없습니다.</string>
+    <string name="memo_keep_recording">계속 녹음</string>
+    <string name="memo_already_running">이미 녹음 중입니다.</string>
+    <string name="memo_could_not_record">지금은 보관함이 녹음을 받을 수 없습니다.</string>
+    <string name="memo_mic_failed">마이크를 시작할 수 없습니다.</string>
+
+    <!-- Camera -->
+    <string name="camera_recording_failed">보관함이 녹화를 받을 수 없습니다.</string>
+    <string name="camera_permission_body">카메라로 무언가를 찍으려면 권한이 필요합니다. 여기서 찍은 것은 갤러리로 가지 않습니다. 보관함에 바로 기록되며 이 권한은 그 용도로만 사용됩니다.</string>
+    <string name="camera_allow">카메라 허용</string>
+    <string name="camera_close">카메라 닫기</string>
+    <string name="camera_switch_back">후면 카메라로 전환</string>
+    <string name="camera_switch_front">전면 카메라로 전환</string>
+    <string name="camera_take_photo">사진 찍기</string>
+    <string name="camera_open_receipt">보관함에서 열기</string>
+    <string name="camera_saving">촬영한 것을 보관함에 저장하는 중</string>
+    <string name="camera_receipt">마지막 촬영, 보관함에 저장됨</string>
+    <string name="camera_none">이 기기에는 카메라가 없습니다.</string>
+    <string name="camera_no_sizes">이 카메라는 사용 가능한 크기를 알려주지 않습니다.</string>
+    <string name="camera_no_still">이 카메라에는 사진 크기가 없습니다.</string>
+    <string name="camera_taken">다른 앱이 카메라를 사용하고 있습니다.</string>
+    <string name="camera_not_opened">카메라를 열 수 없습니다.</string>
+    <string name="camera_photo_failed">사진을 찍을 수 없습니다.</string>
+    <string name="camera_recording_refused">이 기기에서 녹화를 시작할 수 없습니다.</string>
+    <string name="camera_preview_failed">카메라 미리보기를 시작할 수 없습니다.</string>
+
+    <!-- Backup and restore -->
+    <string name="backup_turn_on">백업 켜기</string>
+    <string name="backup_choose_where">백업 위치 선택</string>
+    <string name="backup_now">지금 백업</string>
+    <string name="backup_backed_up_to">백업 위치</string>
+    <string name="backup_how_it_works">백업 작동 방식</string>
+    <string name="backup_stop">백업 중지</string>
+    <string name="backup_caption_off">복사하기 전에 이 휴대전화에서 암호화됩니다.</string>
+    <string name="backup_caption_file">변경 후 몇 분 뒤와 이 보관함을 잠글 때 보관함 전체를 복사합니다.</string>
+    <string name="backup_caption_folder">변경할 때마다, 그리고 이 보관함을 잠글 때 복사합니다.</string>
+    <string name="backup_last_copied">마지막 복사 %1$s · %2$s</string>
+    <string name="backup_is_off">백업이 꺼져 있습니다</string>
+    <string name="backup_only_here">이 보관함은 이 휴대전화에만 있습니다 · %1$s</string>
+    <string name="backup_checking">폴더 확인 중…</string>
+    <string name="backup_up_to_date">최신 상태</string>
+    <plurals name="backup_changes_to_copy">
+        <item quantity="other">복사할 변경 사항 %1$d개</item>
+    </plurals>
+    <string name="backup_copying">복사 중…</string>
+    <string name="backup_progress">%1$s/%2$s</string>
+    <plurals name="backup_files_failed">
+        <item quantity="other">파일 %1$d개를 복사하지 못했습니다</item>
+    </plurals>
+    <string name="backup_partial_line">다음에 다시 시도합니다.</string>
+    <string name="backup_unreachable_file">백업 파일에 접근할 수 없음</string>
+    <string name="backup_unreachable_folder">폴더에 접근할 수 없음</string>
+    <string name="backup_unreachable_line">삭제되었거나, 보관 중인 앱에서 로그아웃되었을 수 있습니다.</string>
+    <string name="backup_no_space">공간 부족</string>
+    <string name="backup_no_space_line">백업을 넘기려면 %1$s의 여유 공간이 더 필요합니다.</string>
+    <string name="backup_just_now">방금</string>
+    <string name="backup_before_title">백업을 켜기 전에</string>
+    <string name="backup_before_words">복원하려면 24개 단어가 필요합니다</string>
+    <string name="backup_before_words_body">암호 문구로는 백업을 열 수 없습니다. 이 휴대전화와 단어를 모두 잃어버리면 나를 포함해 누구도 열 수 없습니다.</string>
+    <string name="backup_before_provider">서비스 제공업체는 백업 크기와 변경 시각을 볼 수 있습니다</string>
+    <string name="backup_before_provider_body">이름, 날짜, 앨범, 파일 내용은 절대 볼 수 없습니다.</string>
+    <string name="backup_before_one_vault">이 백업은 이 보관함 전용입니다</string>
+    <string name="backup_before_one_vault_body">보관함마다 별도의 백업이 필요합니다.</string>
+    <string name="backup_back_up_to">백업 위치</string>
+    <string name="backup_no_destinations">이 휴대전화에 클라우드 앱이나 SD 카드가 없습니다. 클라우드 서비스 앱을 설치하고 로그인한 다음 여기로 돌아오세요.</string>
+    <string name="backup_dest_cloud">백업 파일 하나, 변경 후 업데이트</string>
+    <string name="backup_dest_volume">폴더, 변경할 때마다 업데이트</string>
+    <string name="backup_how_copied">복사되는 것</string>
+    <string name="backup_how_copied_body">이 휴대전화에서 암호화한 이 보관함의 파일과, 복구 키트로 여는 암호화된 보관함 목록입니다. 암호 문구와 그것으로 여는 파일은 이 휴대전화에 남습니다.</string>
+    <string name="backup_how_when">복사 시점</string>
+    <string name="backup_how_when_body">변경할 때마다, 아무것도 누를 필요 없이 복사됩니다. SD 카드 폴더는 몇 초 안에 업데이트되며 변경된 것만 복사합니다. 클라우드 앱의 백업 파일에는 보관함 전체가 들어 있으므로, 변경을 멈춘 지 몇 분 후 또는 잠글 때 즉시 다시 기록됩니다. 한 번도 열지 않은 보관함은 복사되지 않습니다.</string>
+    <string name="backup_how_restoring">복원</string>
+    <string name="backup_how_restoring_body">백업은 암호 문구가 아니라 24개 단어로 복원합니다. 이 휴대전화와 그 단어를 모두 잃어버리면 나를 포함해 누구도 백업을 읽을 수 없습니다.</string>
+    <string name="backup_how_provider">서비스 제공업체가 볼 수 있는 것</string>
+    <string name="backup_how_provider_body">클라우드 앱은 파일 하나의 크기와 변경 시각만 봅니다. 내용은 봉인되어 있어 파일 개수나 크기를 알 수 없습니다. SD 카드 폴더에서는 파일 개수, 일정 단위로 올림한 각 파일의 크기, 각각의 변경 시각이 보입니다. 16MB가 넘는 항목은 묶음으로 보이며, 그 패턴으로 이 앱의 백업임을 알아볼 수 있습니다. 둘 다 이름, 날짜, 앨범, 파일 내용은 볼 수 없습니다.</string>
+    <string name="backup_how_per_vault">보관함마다 백업 하나</string>
+    <string name="backup_how_per_vault_body">보관함마다 별도의 백업이 필요합니다. 모든 백업에는 같은 암호화된 보관함 목록도 들어 있으므로, 두 개를 볼 수 있는 사람은 둘이 같은 사람의 것임을 알 수 있습니다.</string>
+    <string name="backup_how_destinations">클라우드 앱과 SD 카드</string>
+    <string name="backup_how_destinations_body">클라우드 앱에는 보관함 전체가 담긴 파일 하나가 전달되며, 서비스 제공업체는 크기와 변경 시각만 볼 수 있도록 봉인됩니다. 매번 전체가 다시 기록됩니다. SD 카드에는 변경된 것만 복사하는 폴더가 만들어집니다. 이 휴대전화 자체의 저장 공간은 제공되지 않습니다. 그곳의 사본은 휴대전화와 함께 사라지기 때문입니다.</string>
+    <string name="backup_how_deleting">삭제 및 중지</string>
+    <string name="backup_how_deleting_body">여기서 삭제하면 다음 복사 때 백업에서도 삭제됩니다. 서비스 제공업체가 휴지통이나 버전 기록에 보관하는 사본은 이 앱이 손댈 수 없습니다. 복사가 중단된 경우 이전 백업 파일도 마찬가지입니다. 백업을 중지해도 백업은 그대로 남습니다.</string>
+    <string name="backup_stop_title">이 보관함의 백업을 중지할까요?</string>
+    <string name="backup_stop_body">이미 만든 백업은 그대로 남습니다. 없애려면 서비스 제공업체에서 삭제하세요.</string>
+    <string name="backup_keep">계속 백업</string>
+    <string name="backup_on_sd_card">백업이 SD 카드에 있습니다</string>
+    <string name="restore_into_list">이 목록에 있는 보관함의 백업(클라우드 앱의 파일이나 SD 카드의 폴더)을 선택하세요. 이 목록으로 돌아옵니다.</string>
+    <string name="restore_lead">클라우드 앱에 저장한 백업 파일이나 SD 카드의 폴더를 선택하세요. 복구 키트의 24개 단어가 필요합니다. 암호 문구로는 백업을 열 수 없습니다.</string>
+    <string name="restore_choose_file">백업 파일 선택</string>
+    <string name="restore_copying">파일 복사 중… %2$d개 중 %1$d개</string>
+    <string name="import_title">보관함 가져오기</string>
+    <string name="import_lead">.vault 파일이나, 클라우드 앱 또는 SD 카드에 저장한 백업에서 보관함을 되돌립니다.</string>
+    <string name="import_choose_file">파일 선택</string>
+    <string name="import_vault_file">.vault 파일</string>
+    <string name="import_list_full">이 목록이 가득 찼습니다. 보관함을 하나 삭제하여 공간을 만든 다음 다시 가져오세요.</string>
+    <string name="import_failed">열리지 않았습니다. 암호 문구가 틀렸거나, 이 앱이 읽을 수 있는 .vault 파일이 아닙니다.</string>
+    <string name="import_passphrase_label">이 파일의 암호 문구</string>
+    <string name="import_importing">가져오는 중</string>
+    <string name="import_action">보관함 가져오기</string>
+    <string name="import_backup_here">이 목록에 있는 보관함의 백업입니다.</string>
+    <string name="import_restore_vault">보관함 복원</string>
+    <string name="import_other_list">이 백업은 다른 보관함 목록의 것입니다. 그 목록의 복구 키트에 있는 24개 단어를 입력하세요.</string>
+    <string name="import_own_list">이 목록과는 별개인 독립된 보관함 목록으로 돌아오며, 자체 암호 문구로 열립니다. 24개 단어는 바뀌지 않습니다.</string>
+    <string name="import_no_room">이 휴대전화에는 보관함 목록을 더 추가할 공간이 없습니다.</string>
+    <string name="import_restore_list">보관함 목록 복원</string>
+    <string name="import_copying">파일 복사 중…</string>
+    <string name="import_vault_restored">보관함이 복원되었습니다</string>
+    <string name="import_list_restored">보관함 목록이 복원되었습니다</string>
+    <string name="import_vault_restored_body">원래 보관함 목록으로 돌아왔습니다. 보려면 그 목록을 암호 문구로 여세요.</string>
+    <string name="import_list_restored_body">열려면 앱을 잠그고 그 암호 문구를 입력하세요.</string>
+
+    <!-- Sizes and units -->
+    <string name="size_bytes">%1$dB</string>
+    <string name="size_kb">%1$skB</string>
+    <string name="size_mb">%1$sMB</string>
+    <string name="size_gb">%1$sGB</string>
+    <string name="size_tb">%1$sTB</string>
+    <string name="size_pb">%1$sPB</string>
+
+    <!-- Unvault and the encrypted archive -->
+    <plurals name="unvault_items">
+        <item quantity="other">항목 %1$d개를 보관함에서 꺼내기</item>
+    </plurals>
+    <plurals name="unvault_selected_body">
+        <item quantity="other">선택한 항목 %1$d개를 복호화하여 내보내고 확인한 다음 보관함에서 삭제합니다. 선택하지 않은 것은 모두 그대로 있습니다.</item>
+    </plurals>
+    <plurals name="unvault_all_body">
+        <item quantity="other">이 보관함의 항목 %1$d개를 모두 복호화하여 내보내고 확인한 다음 보관함에서 삭제합니다. 완료되면 보관함은 비고 파일은 다시 평범한 파일이 됩니다.</item>
+    </plurals>
+    <string name="unvault_checked">각 파일을 다시 읽어 비교한 후에 암호화된 사본을 삭제합니다. 일치하지 않는 것은 보관함에 남고 목록 파일에 기록됩니다.</string>
+    <string name="unvault_where">위치</string>
+    <string name="unvault_gallery">사진 및 동영상</string>
+    <string name="unvault_folder_chosen">선택한 폴더</string>
+    <string name="unvault_choose_folder">폴더 선택</string>
+    <string name="unvault_remove_details">사진 세부정보 삭제</string>
+    <string name="unvault_details_kept">내보낸 사진에는 위치를 포함해 원래 정보가 모두 남습니다.</string>
+    <string name="unvault_passphrase_needed">계속하려면 암호 문구를 입력하세요. 생체 인식으로는 할 수 없습니다.</string>
+    <string name="unvault_passphrase_needed_own">계속하려면 이 보관함 자체의 암호 문구를 입력하세요. 보관함 목록 암호 문구나 생체 인식으로는 할 수 없습니다.</string>
+    <string name="unvault_wrong_passphrase">이 보관함이 열리지 않았습니다.</string>
+    <string name="unvault_progress">%2$d개 중 %1$d개 꺼냄</string>
+    <string name="unvault_progress_left">%2$d개 중 %1$d개 꺼냄, 보관함에 %3$d개 남음</string>
+    <string name="unvault_busy">보관함에서 꺼내는 중</string>
+    <string name="archive_title">새 기기로 옮기시나요?</string>
+    <string name="archive_body">새 휴대전화에서 열 수 있는 암호화된 .vault 파일을 하나 저장합니다. 파일 자체의 암호 문구를 정하세요. 보관함을 여는 암호 문구와는 다르며, 다른 기기에서 필요합니다. 이 보관함이 비워지지 않으며 휴지통의 항목은 포함되지 않습니다.</string>
+    <string name="archive_passphrase_label">파일 암호 문구</string>
+    <string name="archive_save">암호화된 보관 파일 저장</string>
+
+    <!-- Sharing -->
+    <string name="lifespan_day">24시간</string>
+    <string name="lifespan_week">7일</string>
+    <string name="lifespan_month">30일</string>
+    <string name="share_trial_ended">체험 기간이 끝났습니다</string>
+    <string name="share_trial_ended_body">공유를 보내려면 일회성 구매가 필요합니다. 받은 공유를 열고, 내 것을 열고 보고 내보내는 것은 계속 무료입니다.</string>
+    <string name="share_lead_contact">%1$s 님의 휴대전화에서만 열 수 있는 암호화된 파일을 하나 만듭니다. 전달할 코드는 없습니다.</string>
+    <string name="share_lead_code">암호화된 파일 하나와 네 단어 코드를 만듭니다. 받는 사람이 열려면 이 앱과 코드가 필요합니다.</string>
+    <string name="share_who">열 수 있는 사람</string>
+    <string name="share_contact_detail">%1$s 님의 휴대전화에서 열림, 코드 없음</string>
+    <string name="share_anyone">코드가 있는 누구나</string>
+    <string name="share_anyone_detail">보안 수준이 낮습니다. 파일과 단어를 가진 사람은 누구나 열 수 있습니다.</string>
+    <string name="share_how_long">열 수 있는 기간</string>
+    <string name="share_no_limit">제한 없음</string>
+    <string name="share_no_limit_detail">언제든 열 수 있음</string>
+    <string name="share_open_once">한 번만 열기</string>
+    <string name="share_open_once_detail">한 번 열면 다시 열 수 없음</string>
+    <string name="share_expires">만료</string>
+    <string name="share_expires_detail">%1$s까지 열 수 있음</string>
+    <string name="share_limits_contact">이 제한은 %1$s 님 휴대전화의 앱이 지키며, 다른 휴대전화에서는 파일을 열 수 없습니다. 파일을 보낸 후에는 되돌릴 수 없습니다.</string>
+    <string name="share_limits_code">이 제한은 파일을 여는 휴대전화의 앱이 지킵니다. 파일을 보낸 후에는 되돌릴 수 없습니다.</string>
+    <string name="share_photo_carries">사진에 담긴 정보</string>
+    <string name="share_remove_details">세부정보 삭제</string>
+    <string name="share_as_is">그대로 보내기</string>
+    <string name="share_as_is_detail">위치, 날짜, 카메라 정보도 함께 전송됩니다</string>
+    <string name="share_sealing">봉인 중</string>
+    <string name="share_try_again">다시 시도</string>
+    <string name="share_create">공유 만들기</string>
+    <string name="share_less_secure">연락처로 보내는 것보다 보안 수준이 낮습니다</string>
+    <string name="share_risk_any_phone">파일과 네 단어를 가진 사람은 누구나 어떤 휴대전화에서든 열 수 있습니다.</string>
+    <string name="share_risk_once">\'한 번만 열기\'는 휴대전화당 한 번입니다. 전달되면 다시 열립니다.</string>
+    <string name="share_risk_same_chat">파일과 같은 채팅방에서 단어를 보내면 둘 다 넘겨주는 셈입니다.</string>
+    <string name="share_risk_guessing">파일 사본을 가진 사람은 제한 없이 단어를 계속 추측할 수 있습니다.</string>
+    <string name="share_pair_first">한 사람과만 공유하려면 먼저 그 사람과 페어링하세요.</string>
+    <string name="share_pair">다른 사람과 페어링</string>
+    <string name="share_code_title">코드</string>
+    <string name="share_code_label">공유 코드: %1$s</string>
+    <string name="share_code_separately">코드는 파일과 다른 방법으로 보내세요.</string>
+    <string name="share_code_both">둘 다 가진 사람은 누구나 열 수 있습니다. 파일과 같은 채팅방에 코드를 입력하면 둘 다 한 번에 넘겨주는 셈입니다.</string>
+    <string name="share_code_once">이 코드는 한 번만 표시되며 저장되지 않습니다. 지금 복사하세요.</string>
+    <string name="share_send_file">파일 보내기…</string>
+    <string name="share_copy_code">코드 복사</string>
+    <string name="share_sealed_to">%1$s 님에게 봉인됨</string>
+    <string name="share_sealed_body">%1$s 님만 열 수 있습니다. 파일은 그 사람의 휴대전화에 봉인되어 있어 보낼 코드가 없습니다.</string>
+    <string name="share_save_device">기기에 저장</string>
+    <string name="share_saved">저장했습니다. 보낼 때 사용하는 앱에서 \'파일\'로 첨부하세요.</string>
+    <string name="share_save_failed">파일을 저장할 수 없습니다. 다시 시도하거나 대신 보내세요.</string>
+    <string name="share_save_hint">또는 저장한 다음 \'파일\'에서 첨부하세요. 그러면 보낼 때 사용하는 앱은 어떤 앱이 파일을 만들었는지 알 수 없습니다.</string>
+    <string name="share_refused_trash">휴지통의 항목은 공유할 수 없습니다.</string>
+    <string name="share_refused_no_length">이 동영상의 길이를 읽을 수 없어 공유할 수 없습니다.</string>
+    <string name="share_refused_too_long">%1$d초보다 긴 동영상은 공유할 수 없습니다.</string>
+
+    <!-- Opening a share -->
+    <string name="share_open_title">공유 열기</string>
+    <string name="share_open_reading">파일을 읽는 중</string>
+    <string name="share_open_enter_code">코드와 함께 보낸 경우 코드를 입력하세요.</string>
+    <string name="share_open_code_hint">보낸 사람이 파일과 다른 방법으로 네 단어를 알려 주었을 것입니다.</string>
+    <string name="share_open_failed">이 공유를 열 수 없습니다.</string>
+    <string name="share_open_check">네 단어와, 받은 파일이 맞는지 확인하세요.</string>
+    <string name="share_open_action">공유 열기</string>
+    <string name="share_open_no_contacts">이 휴대전화는 연락처를 읽을 수 없어, 이 휴대전화에 봉인된 공유를 여기서 열 수 없습니다.</string>
+    <string name="share_open_contacts">연락처 열기</string>
+    <string name="share_open_view">보기</string>
+    <string name="share_open_keep">이 보관함에 보관</string>
+    <string name="share_open_keep_needs_purchase">공유를 보관하려면 일회성 구매가 필요합니다. 나가면 아무것도 저장되지 않습니다.</string>
+    <string name="share_open_leave">보관하지 않고 나가면 아무것도 저장되지 않습니다.</string>
+    <string name="share_open_cannot_keep">이 공유는 보관할 수 없습니다. 나가면 아무것도 저장되지 않습니다.</string>
+    <string name="share_open_sealed_here">이 공유는 이 휴대전화에 봉인되었습니다. 여는 데 코드가 필요 없습니다.</string>
+    <string name="share_open_open">열기</string>
+    <string name="share_open_newer">이 공유는 더 최신 버전의 앱에서 만들어졌습니다. 열려면 이 앱을 업데이트하세요.</string>
+    <string name="share_open_already_opened">이 공유는 한 번만 열 수 있도록 설정되었으며 이미 열렸습니다.</string>
+    <string name="share_open_expired">이 공유는 %1$s에 만료되었습니다.</string>
+    <string name="share_open_code_correct">코드가 맞습니다. 이 제한은 이 휴대전화의 앱이 지키며, 보낸 사람이 해제할 수 없습니다.</string>
+    <string name="share_open_limit_once">보낸 사람이 한 번만 열 수 있도록 설정했습니다. 이 제한은 이 휴대전화의 앱이 지킵니다.</string>
+    <string name="share_open_limit_expiry">보낸 사람이 %1$s부터 열 수 없도록 설정했습니다. 이 제한은 이 휴대전화의 앱이 지킵니다.</string>
+
+    <!-- Contacts and pairing -->
+    <string name="contacts_waiting">대기 중</string>
+    <string name="contacts_invite_sent">초대 보냄 - 답장 대기 중</string>
+    <string name="contacts_reply_sent">답장 보냄 - 확인 대기 중</string>
+    <string name="contacts_confirmation_ready">확인 파일을 보낼 준비 완료</string>
+    <string name="contacts_add">연락처 추가</string>
+    <string name="contacts_together">함께 있을 때</string>
+    <string name="contacts_together_detail">서로의 코드를 스캔합니다. 가장 강력한 페어링 방법입니다.</string>
+    <string name="contacts_not_together">떨어져 있을 때</string>
+    <string name="contacts_not_together_detail">초대 파일과 네 단어를 보냅니다.</string>
+    <string name="contacts_have_invite">초대를 받았습니다</string>
+    <string name="contacts_have_invite_detail">받은 파일을 열고 상대방의 네 단어를 입력합니다.</string>
+    <string name="contacts_empty">아직 연락처가 없습니다. 직접 만나거나 초대를 보내 누군가와 페어링하면, 그 사람에게 코드 없이 파일을 보낼 수 있습니다.</string>
+    <string name="contacts_remove_named">%1$s 삭제</string>
+    <string name="contacts_unreadable">이 휴대전화는 연락처를 읽을 수 없습니다.</string>
+    <string name="contacts_unreadable_body">연락처 목록은 이 기기가 보유하던 키에 잠겨 있는데, 그 키가 사라졌습니다. 다른 휴대전화에 복원하면 이런 상태가 됩니다. 목록 자체는 그대로이지만, 여기서는 그것을 열 수 없습니다.\n\n다시 시작하면 이 휴대전화에 새 페어링 코드가 부여됩니다. 페어링했던 모든 사람이 다시 스캔해야 합니다.</string>
+    <string name="contacts_new_identity">새 ID로 시작</string>
+    <string name="contacts_new_identity_title">새 ID로 시작할까요?</string>
+    <string name="contacts_new_identity_body">읽을 수 없는 연락처 목록이 삭제되고 이 휴대전화에 새 페어링 코드가 부여됩니다. 페어링했던 모든 사람이 다시 스캔해야 합니다.</string>
+    <string name="contacts_start_again">다시 시작</string>
+    <string name="contacts_remove_title">%1$s 님을 삭제할까요?</string>
+    <string name="contacts_remove_body">이미 보낸 것은 그대로 남습니다. 다시 페어링할 수 있습니다.</string>
+    <string name="pairing_title">연락처 페어링</string>
+    <string name="pairing_saved">%1$s 님을 저장했습니다. 이제 상대방이 내 코드를 스캔하게 하세요.</string>
+    <string name="pairing_show">이 화면을 상대방 휴대전화에 보여준 다음 상대방의 코드를 스캔하세요. 서로의 코드를 스캔해야 합니다.</string>
+    <string name="pairing_in_person">직접 만나서 스캔하는 것이 가장 강력한 페어링 방법입니다. 누군가에게 파일을 보내기 전까지는 아무것도 이 휴대전화를 떠나지 않습니다.</string>
+    <string name="pairing_scan">상대방 코드 스캔</string>
+    <string name="pairing_your_code">내 페어링 코드</string>
+    <string name="pairing_camera_permission">코드를 읽으려면 카메라 권한이 필요합니다. 카메라에 보이는 것은 기록되지 않습니다. 프레임은 해독된 후 버려지며, 이 권한은 그 용도로만 사용됩니다.</string>
+    <string name="pairing_point">카메라를 상대방 휴대전화의 코드에 맞추세요.</string>
+    <string name="pairing_camera_looking">카메라, 페어링 코드를 찾는 중</string>
+    <string name="pairing_who">누구인가요? 이름은 나만 보며, 이 휴대전화에 저장되고 어디에도 전송되지 않습니다.</string>
+    <string name="pairing_save">연락처 저장</string>
+    <string name="remote_invite_title">초대하기</string>
+    <string name="remote_answer_title">초대에 응답</string>
+    <string name="remote_important">중요</string>
+    <string name="remote_name_too_long">이름이 너무 깁니다. 더 짧게 입력하세요.</string>
+    <string name="remote_name_yours">이름은 나만 보며 이 휴대전화에 남습니다.</string>
+    <string name="remote_who_inviting">누구를 초대하시나요?</string>
+    <string name="remote_make_invite">초대 만들기</string>
+    <string name="remote_invite_ready">초대 준비 완료</string>
+    <string name="remote_invite_send">%1$s 님에게 초대 파일을 보내세요. 그런 다음 이 네 단어를 다른 방법으로 전달하세요. 통화 중이나 직접 만나서 말해 주세요.</string>
+    <string name="remote_your_words">내 네 단어: %1$s</string>
+    <string name="remote_invite_strict">파일과 이 단어를 가진 사람은 누구나 이 연락처가 될 수 있습니다. 단어는 %1$s 님에게만 알려주고, 절대 파일과 같은 채팅방에서 보내지 마세요.</string>
+    <string name="remote_open_reply">%1$s 님의 답장 열기</string>
+    <string name="remote_send_invite_again">초대 파일 다시 보내기</string>
+    <string name="remote_waiting_reply_today">%1$s 님의 답장을 기다리는 중입니다. 이 초대는 %2$s에 끝납니다.</string>
+    <string name="remote_waiting_reply_tomorrow">%1$s 님의 답장을 기다리는 중입니다. 이 초대는 내일 %2$s에 끝납니다.</string>
+    <string name="remote_send_invite">초대 파일 보내기</string>
+    <string name="remote_cancel_invite">초대 취소</string>
+    <string name="remote_now_contact">%1$s 님이 이제 연락처에 있습니다.</string>
+    <string name="remote_send_confirmation_body">상대방도 나를 추가할 수 있도록 이 확인 파일을 보내세요.</string>
+    <string name="remote_send_confirmation_again">확인 파일 다시 보내기</string>
+    <string name="remote_send_confirmation">확인 파일 보내기</string>
+    <string name="remote_open_invite">초대 파일 열기</string>
+    <string name="remote_who_sent">누가 보냈나요?</string>
+    <string name="remote_their_words">상대방의 네 단어</string>
+    <string name="remote_know_sender">보낸 사람을 알고 있을 때만 계속하세요. 초대를 만든 사람이 연락처가 됩니다.</string>
+    <string name="remote_make_reply">답장 만들기</string>
+    <string name="remote_send_reply_title">답장 보내기</string>
+    <string name="remote_send_reply_body">%1$s 님에게 이 답장 파일을 보내세요.</string>
+    <string name="remote_open_confirmation">%1$s 님의 확인 파일 열기</string>
+    <string name="remote_send_reply_again">답장 파일 다시 보내기</string>
+    <string name="remote_waiting_confirmation_today">%1$s 님의 확인을 기다리는 중입니다. %2$s에 끝납니다.</string>
+    <string name="remote_waiting_confirmation_tomorrow">%1$s 님의 확인을 기다리는 중입니다. 내일 %2$s에 끝납니다.</string>
+    <string name="remote_send_reply">답장 파일 보내기</string>
+    <string name="remote_ended">이 초대가 끝났습니다</string>
+    <string name="remote_ended_reply">답장이 일치하지 않아 이 초대가 끝났습니다. 네 단어를 정확히 입력했는지, 두 사람 모두 최신 버전의 앱을 사용하는지 확인하세요.</string>
+    <string name="remote_ended_this">끝났습니다</string>
+    <string name="remote_ended_confirmation">확인 파일이 일치하지 않아 끝났습니다. %1$s 님에게 새 초대를 만들어 달라고 하고, 네 단어를 함께 확인하세요.</string>
+    <string name="remote_ended_expired">이 초대가 끝났습니다. 초대는 24시간 동안 유효합니다.</string>
+    <string name="remote_ended_already">이 초대는 이미 끝났습니다.</string>
+    <string name="remote_own_invite">내 초대입니다</string>
+    <string name="remote_own_invite_body">이 휴대전화 자신의 초대입니다.</string>
+    <string name="remote_unreadable_body">연락처 목록이 이 기기에 더 이상 없는 키에 잠겨 있습니다. 해결 방법은 \'연락처\'에서 안내합니다.</string>
+    <string name="remote_new_invite">새 초대 만들기</string>
+
+    <!-- Removing the originals from the gallery -->
+    <string name="originals_title">갤러리에서 원본을 삭제할까요?</string>
+    <string name="originals_removed">갤러리에서 원본을 삭제했습니다.</string>
+    <plurals name="originals_photos">
+        <item quantity="other">사진 %1$d장</item>
+    </plurals>
+    <plurals name="originals_videos">
+        <item quantity="other">동영상 %1$d개</item>
+    </plurals>
+    <plurals name="originals_in_vault">
+        <item quantity="other">%1$s이(가) 이제 이 보관함에 있습니다. Android에서 확인을 요청합니다.</item>
+    </plurals>
+    <plurals name="originals_stay">
+        <item quantity="other">나머지 %1$d개는 여기서 삭제할 수 없어 갤러리에 남습니다.</item>
+    </plurals>
+
+    <!-- Lock screen warnings -->
+    <string name="warning_rooted">이 기기는 루팅된 것으로 보입니다. 루트 권한이 있는 다른 앱이 보관함이 열려 있는 동안 메모리를 읽을 수 있습니다.</string>
+    <string name="warning_debuggable">디버그 가능한 빌드입니다. 보관함이 열려 있는 동안 USB를 통해 메모리를 읽을 수 있습니다.</string>
+    <string name="warning_debugger">지금 이 앱에 디버거가 연결되어 있습니다.</string>
+    <plurals name="warning_accessibility">
+        <item quantity="other">접근성 서비스 %1$d개가 실행 중입니다. 이런 서비스는 여기서 연 것을 포함해 화면에 표시된 내용을 읽을 수 있습니다.</item>
+    </plurals>
+
+    <!-- Covers — the calculator, the music player and the voice recorder -->
+    <string name="calc_divide_by_zero">0으로 나눌 수 없습니다</string>
+    <string name="calc_undefined">정의되지 않음</string>
+    <string name="calc_infinity">무한대</string>
+    <string name="calc_invalid_format">잘못된 형식</string>
+    <string name="pattern_draw">패턴을 그리세요</string>
+    <string name="pattern_wrong">잘못된 패턴</string>
+    <string name="music_unknown_track">알 수 없는 곡</string>
+    <string name="music_unknown_artist">알 수 없는 아티스트</string>
+    <string name="music_unknown_album">알 수 없는 앨범</string>
+    <string name="music_tracks">곡</string>
+    <string name="music_albums">앨범</string>
+    <string name="music_artists">아티스트</string>
+    <string name="music_shuffle_all">전체 셔플</string>
+    <plurals name="music_track_count">
+        <item quantity="other">%1$d곡</item>
+    </plurals>
+    <string name="music_close_player">플레이어 닫기</string>
+    <string name="music_nothing_playing">재생 중인 곡 없음</string>
+    <string name="music_shuffle_on">셔플 켜짐</string>
+    <string name="music_shuffle_off">셔플 꺼짐</string>
+    <string name="music_previous">이전</string>
+    <string name="music_next">다음</string>
+    <string name="music_repeat_one">한 곡 반복</string>
+    <string name="music_repeat_all">전체 반복</string>
+    <string name="music_repeat_off">반복 꺼짐</string>
+    <string name="music_tap_to_open">탭하여 플레이어 열기</string>
+    <string name="music_loading">라이브러리 불러오는 중…</string>
+    <string name="music_none">이 기기에 음악이 없습니다</string>
+    <string name="music_none_line">추가한 노래가 여기에 표시됩니다.</string>
+    <string name="music_access_off">음악 액세스가 꺼져 있습니다</string>
+    <string name="music_access_off_line">이 기기의 음악을 재생하려면 설정에서 \'음악 및 오디오\'를 켜세요.</string>
+    <string name="recorder_default_title">녹음 %1$s</string>
+    <plurals name="recorder_count">
+        <item quantity="other">녹음 %1$d개 · %2$s</item>
+    </plurals>
+    <string name="recorder_search">녹음 검색</string>
+    <string name="recorder_hide_controls">컨트롤 숨기기</string>
+    <string name="recorder_show_controls">컨트롤 표시</string>
+    <string name="recorder_paused">일시중지됨</string>
+    <string name="recorder_resume">다시 시작</string>
+    <string name="recorder_delete_title">\'%1$s\'을(를) 삭제할까요?</string>
+    <string name="recorder_delete_body">이 녹음이 이 기기에서 삭제됩니다.</string>
+    <string name="recorder_none">아직 녹음이 없습니다</string>
+    <string name="recorder_mic_off">마이크 액세스가 꺼져 있습니다</string>
+    <string name="recorder_none_line">녹음 버튼을 눌러 녹음하세요.</string>
+    <string name="recorder_mic_off_line">녹음하려면 설정에서 \'마이크\'를 켜세요.</string>
+    <string name="recorder_no_match">\'%1$s\'과(와) 일치하는 녹음이 없습니다</string>
+    <string name="recorder_paused_length">일시중지됨, %1$s</string>
+
+    <!-- The unlock digest — what happened since the last unlock -->
+    <string name="digest_altered">이 이벤트 기록은 %1$d번째 항목에서 변경되었습니다.</string>
+    <string name="digest_not_opened_since">%1$s 이후 열리지 않았습니다.</string>
+    <plurals name="digest_recoveries">
+        <item quantity="other">복구 키트가 %1$d번 사용되어 이 보관함이 열렸습니다.</item>
+    </plurals>
+    <plurals name="digest_failed">
+        <item quantity="other">잠금 해제 시도가 %1$d번 실패했습니다.</item>
+    </plurals>
+    <plurals name="digest_imported">
+        <item quantity="other">항목 %1$d개를 가져왔습니다.</item>
+    </plurals>
+    <plurals name="digest_deleted">
+        <item quantity="other">원본 파일 %1$d개를 삭제했습니다.</item>
+    </plurals>
+    <string name="digest_biometric">생체 인식 등록 정보가 바뀌어 생체 인식 잠금 해제가 무효화되었습니다.</string>
+    <string name="digest_dev_options">이 기기에서 개발자 옵션 또는 USB 디버깅이 사용 설정되었습니다.</string>
+    <string name="digest_root">이 기기의 루팅 상태가 바뀌었습니다.</string>
+    <string name="digest_data_cleared">이 앱의 데이터가 삭제된 것으로 보입니다.</string>
+    <string name="digest_new_device">이 보관함은 설정했던 기기와 다른 기기에서 실행 중입니다.</string>
+    <string name="digest_clock">이 기기의 시계가 과거로 되돌려졌습니다.</string>
+    <string name="vault_passphrase_heading">암호 문구</string>
+    <string name="vault_passphrase_state_list">보관함 목록의 암호 문구로 열립니다.</string>
+    <string name="vault_passphrase_state_own">자체 암호 문구로만 열립니다.</string>
+    <string name="vault_passphrase_add">암호 문구 추가</string>
+    <string name="vault_passphrase_add_supporting">그 암호 문구로만 열리게 됩니다</string>
+    <string name="vault_passphrase_change">암호 문구 변경</string>
+    <string name="vault_passphrase_remove">암호 문구 제거</string>
+    <string name="vault_passphrase_remove_supporting">보관함 목록의 암호 문구로 열리게 됩니다</string>
+    <string name="vault_passphrase_added">암호 문구를 추가했습니다.</string>
+    <string name="vault_passphrase_changed">암호 문구를 변경했습니다.</string>
+    <string name="vault_passphrase_removed">암호 문구를 제거했습니다.</string>
+    <string name="vault_passphrase_add_lead">추가하면 %1$s은(는) 이 암호 문구로만 열립니다. 보관함 목록의 암호 문구나 목록의 복구 키트로는 열리지 않으므로, %1$s 전용 복구 키트가 만들어집니다.</string>
+    <string name="vault_passphrase_list_label">보관함 목록 암호 문구</string>
+    <string name="vault_passphrase_list_supporting">이 앱의 보관함 목록을 여는 암호 문구입니다.</string>
+    <string name="vault_passphrase_list_empty">보관함 목록을 여는 암호 문구를 입력하세요.</string>
+    <string name="vault_passphrase_new_again">새 암호 문구 다시 입력</string>
+    <string name="vault_passphrase_backups_heading">이전 백업</string>
+    <string name="vault_passphrase_add_backups">지금까지 저장된 백업에서는 %1$s이(가) 계속 보관함 목록의 암호 문구로 열립니다.</string>
+    <string name="vault_passphrase_add_button">암호 문구 추가</string>
+    <string name="vault_passphrase_adding">추가하는 중…</string>
+    <string name="vault_passphrase_change_lead">%1$s의 복구 키트는 그대로이며, 그 24개 단어로 계속 열 수 있습니다. 보관함 목록의 암호 문구로는 여전히 열리지 않습니다.</string>
+    <string name="vault_passphrase_current_label">현재 암호 문구</string>
+    <string name="vault_passphrase_current_empty">이 보관함의 현재 암호 문구를 입력하세요.</string>
+    <string name="vault_passphrase_change_backups">지금까지 저장된 백업에서는 %1$s이(가) 이전 암호 문구로 열립니다.</string>
+    <string name="vault_passphrase_changing">변경하는 중…</string>
+    <string name="vault_passphrase_remove_opens">보관함 목록의 암호 문구로 열립니다</string>
+    <string name="vault_passphrase_remove_opens_body">%1$s은(는) 자체 암호 문구 없이 목록에서 바로 열립니다.</string>
+    <string name="vault_passphrase_remove_kit">목록의 복구 키트로 복구할 수 있습니다</string>
+    <string name="vault_passphrase_remove_kit_body">목록의 24개 단어로 %1$s을(를) 복구할 수 있습니다. 보관함 자체의 24개 단어로도 계속 열 수 있으며, 취소할 수 없습니다.</string>
+    <string name="vault_passphrase_remove_captures">침입자 촬영이 홈으로 옮겨집니다</string>
+    <string name="vault_passphrase_remove_captures_body">이 보관함의 기록은 홈 화면의 침입자 촬영에 합쳐지고, 보관함 자체의 촬영 설정은 꺼집니다.</string>
+    <string name="vault_passphrase_removing">제거하는 중…</string>
+    <plurals name="kit_remaining_views_fewer">
+        <item quantity="other">계속하면 이후 메뉴에서 %1$d번 더 볼 수 있습니다. 그 이후에는 다시 표시할 수 없으며, 적어 둔 사본이 유일한 사본이 됩니다.</item>
+    </plurals>
+    <string name="kit_remaining_views_none">이 앱은 이미 표시할 수 있는 횟수를 모두 사용했으므로, 계속한 후에는 다시 표시할 수 없습니다. 적어 둔 사본이 유일한 사본이 됩니다.</string>
+    <!-- `third-party-notices`. The Open-source licences row and its two screens. -->
+    <string name="licences_title">오픈소스 라이선스</string>
+    <plurals name="licences_drawer_line">
+        <item quantity="other">라이브러리 %1$d개와 라이선스</item>
+    </plurals>
+    <string name="licences_lead">%1$s은(는) 아래 라이브러리로 만들어졌습니다. 각 라이브러리는 아래에 표시된 고유한 라이선스에 따라 사용됩니다.</string>
+    <string name="licences_open_action">라이선스 열기</string>
+    <string name="licences_version">버전 %1$s</string>
+    <string name="licences_source">소스</string>
+    <string name="licences_licence">라이선스</string>
+</resources>

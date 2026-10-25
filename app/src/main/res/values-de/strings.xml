@@ -1,0 +1,1759 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      The app's text — `app-languages`. Every string a person reads is here, grouped by the
+      screen it appears on, with a comment heading each group. The eight translations keep
+      this file's key order so a reviewer can read them side by side.
+
+      Left in code on purpose, in every language (`app-languages` D4):
+      - Log lines, exception and require() messages: read in logcat and crash reports,
+        never on a screen.
+      - Data written into files and read back by code: the export manifest and its
+        reasons, export stamps and EXIF/XMP fields, file and folder names the app finds
+        again by name (the gallery's "Vault" export folder, a received share's "Shared item" fallback name),
+        container and blob names, preference keys and MIME types.
+      - The recovery and share-code words: the BIP-39 English list in res/raw. A kit
+        written down under one language has to open the vault under another.
+      - The calculator's notation (sin, cos, tan, ln, log, π, e, EXP, AC, DEL, INV,
+        DEG/RAD) and the language names on the Language sheet, which are each language's
+        own name for itself.
+      - The debug-only Crash log screen and its drawer row, which ship in no release build.
+    -->
+
+    <!--
+      The application label: "Kova", the owner's name for the app (2026-10-25). It
+      replaced "Toolbox", an agent-drafted category name nobody chose. It is the same
+      in every locale.
+
+      This is what notifications, Settings > Apps, the app-info page, storage,
+      battery, the permission manager and every runtime permission dialog read. An
+      activity-alias label does not reach it and no runtime API overrides it, so
+      whatever stands here is what a cover identity says about itself the moment any
+      of those surfaces appears. With "Vault" here, granting the recorder its
+      microphone read "Allow Vault to record audio?" over a voice recorder, which is
+      why it must never be "Vault" or any identity's name.
+
+      P2-22 left this as "Vault" on two arguments. The first — that a label other than
+      an alias's imposes a build-time choice on every install including the honest
+      default — is true, and is the price: a user who never wears a cover sees "Vault"
+      on their home screen (the alias label, unchanged) and this word in Settings. The
+      second — that it would desync the label from the name the Play listing is
+      approved under — is simply wrong. The Play Console title is a separate field
+      from android:label; the two differ routinely and nothing couples them.
+    -->
+    <string name="app_name">Kova</string>
+
+    <!--
+      Launcher identity labels — P2-22. These are the words the launcher and recents
+      show, in the device's language (`app-languages` D5); LauncherIdentity names these
+      same resources, and LauncherIdentityScanTest fails the build if the two disagree.
+    -->
+    <string name="identity_vault">Tresor</string>
+
+    <!--
+      P2-24's cover identities. Ordinary names for ordinary apps: the cover has to be
+      a believable instance of the thing it claims to be, and a clever name is the
+      first thing that makes somebody look twice.
+    -->
+    <string name="identity_calculator">Rechner</string>
+    <string name="identity_musicplayer">Musik</string>
+    <string name="identity_voicerecorder">Sprachrekorder</string>
+
+    <!-- Language — the drawer row and the Language sheet -->
+    <!-- Not a phrase: the tag of the language this file is written in. Each translation
+         names its own (ja, ko, pt-BR, …). System default's line reads it to say which
+         language the device's setting resolves to. -->
+    <string name="language_resource_tag">de</string>
+    <string name="language_german">Deutsch</string>
+    <string name="language_english">Englisch</string>
+    <string name="language_spanish">Spanisch</string>
+    <string name="language_french">Französisch</string>
+    <string name="language_portuguese_brazil">Portugiesisch (Brasilien)</string>
+    <string name="language_japanese">Japanisch</string>
+    <string name="language_korean">Koreanisch</string>
+    <string name="language_chinese_simplified">Chinesisch (vereinfacht)</string>
+    <string name="language_chinese_traditional">Chinesisch (traditionell)</string>
+    <string name="language_title">Sprache</string>
+    <string name="language_system_default">Systemstandard</string>
+    <string name="language_explainer">Ändert nur die Sprache dieser App. Die Sprache deines Telefons bleibt, wie sie ist.</string>
+    <string name="language_suggested">Vorschläge</string>
+    <string name="language_all">Alle Sprachen</string>
+    <string name="language_system_default_detail">%1$s – folgt deinem Telefon</string>
+    <string name="language_changed">Sprache auf %1$s umgestellt</string>
+    <string name="drawer_language">Sprache \u0020· \u0020%1$s</string>
+
+    <!-- Messages — unlock, backup, restore and vault lifecycle (MainActivity) -->
+    <string name="backup_incomplete">Diese Sicherungsdatei ist unvollständig – sie stammt vielleicht von einer Sicherung, die nicht fertig wurde.</string>
+    <string name="backup_unreadable">Die Sicherung konnte nicht gelesen werden. Prüfe, ob die App, in der sie liegt, angemeldet ist.</string>
+    <string name="backup_other_list">Diese Sicherung gehört zu einer anderen Tresorliste. Hole sie mit „Tresor aus einer Datei importieren“ zurück.</string>
+    <string name="bio_invalidated">Die biometrische Entsperrung ist aus, weil sich deine biometrischen Daten geändert haben. Verwende deine Passphrase.</string>
+    <string name="bio_after_migration">Die biometrische Entsperrung ist nach diesem Update aus. Schalte sie in den Einstellungen wieder ein.</string>
+    <string name="vault_newer_version">Dieser Tresor wurde zuletzt mit einer neueren Version der App geöffnet. Deine Dateien sind sicher und nichts wurde verändert. Aktualisiere die App, um ihn zu öffnen.</string>
+    <string name="vault_index_relinked">Der Index dieses Tresors musste nach einem Fehler neu verknüpft werden. Alles wurde gefunden, nichts ging verloren.</string>
+    <string name="vault_index_unreadable">Dieser Tresor konnte nicht geöffnet werden. Sein Index fehlt oder ist beschädigt, und in den Dateien des Tresors wurde kein anderer gefunden. Dein Wiederherstellungs-Kit kann ihn wiederherstellen.</string>
+    <string name="capture_not_saved">Diese Aufnahme konnte nicht im Tresor gespeichert werden.</string>
+    <string name="backup_folder_on_phone">Dieser Ordner liegt auf diesem Telefon. Eine Sicherung hier geht mit dem Telefon verloren – wähle eine Cloud-App oder eine SD-Karte.</string>
+    <string name="restore_device_not_empty">Auf diesem Gerät ist schon ein Tresor. Eine Sicherung lässt sich nur auf ein leeres Gerät wiederherstellen.</string>
+    <string name="restore_open_vaults_first">Öffne zuerst deine Tresore.</string>
+    <string name="restore_file_not_opened">Die Sicherungsdatei konnte nicht geöffnet werden.</string>
+    <string name="restore_file_unreadable">Die Sicherungsdatei konnte nicht gelesen werden. Prüfe, ob die App, in der sie liegt, angemeldet ist.</string>
+    <string name="restore_no_backup_in_folder">In diesem Ordner wurde keine Sicherung gefunden.</string>
+    <string name="capture_mode_permission_denied">Dieser Modus braucht die Berechtigung, nach der gerade gefragt wurde. Er ist aus.</string>
+    <string name="decoy_trial_notice">Ein Köder-Tresor importiert echte Fotos, und der 30-tägige Testzeitraum beginnt mit dem ersten Element, das in einen Tresor kommt. Verschiebe das, wenn du ihn lieber mit deinen eigenen Sachen beginnen möchtest.</string>
+    <string name="vault_list_not_saved">Das konnte nicht gespeichert werden.</string>
+    <string name="editor_could_not_open">Dieses Element konnte nicht zum Bearbeiten geöffnet werden.</string>
+    <string name="folder_name_length">Ein Ordnername braucht mindestens ein und höchstens %1$d Zeichen.</string>
+    <string name="folder_name_duplicate">Hier gibt es schon einen Ordner mit diesem Namen.</string>
+    <string name="folder_cycle">Ein Ordner kann nicht in sich selbst liegen.</string>
+    <string name="vault_destroy_failed">„%1$s“ konnte nicht entfernt werden. Nichts darin ging verloren.</string>
+    <string name="share_create_failed">Die Freigabe konnte nicht erstellt werden. Vielleicht ist auf dem Gerät nicht genug Platz.</string>
+    <string name="setup_vault_not_created">Der Tresor konnte nicht erstellt werden. Versuche es noch einmal.</string>
+    <string name="decoy_choose_photos_first">Wähle zuerst die Fotos aus.</string>
+    <string name="decoy_set_passphrase_first">Lege zuerst die Passphrase des Köder-Tresors fest.</string>
+    <string name="decoy_passphrase_in_use">Diese Passphrase öffnet schon einen Tresor auf diesem Gerät. Geh zurück und wähle eine andere.</string>
+    <string name="decoy_no_room">Auf diesem Gerät ist kein Platz für einen weiteren Tresor.</string>
+    <string name="decoy_passphrase_needed">Auf diesem Gerät gibt es schon einen Köder-Tresor, und ein neuer könnte ihn überschreiben. Geh zurück und gib auch die Passphrase des Köder-Tresors ein.</string>
+    <string name="decoy_not_created">Damit wurde kein Tresor erstellt.</string>
+    <string name="recovery_words_wrong_backup">Diese Wörter öffnen diese Sicherung nicht.</string>
+    <string name="import_words_wrong_backup">Diese Wörter öffnen diese Sicherung nicht.</string>
+    <string name="recovery_list_not_here">Die Tresorliste dieser Sicherung ist nicht auf diesem Telefon. Entsperre und wähle dann im Menü „Tresor aus einer Datei importieren“.</string>
+    <string name="this_vault">diesen Tresor</string>
+    <string name="that_vault">Dieser Tresor</string>
+    <string name="backup_open_vault_first_file">Öffne zuerst den Tresor, den du sichern möchtest. Eine Sicherung enthält einen Tresor.</string>
+    <string name="backup_open_vault_first_folder">Öffne zuerst den Tresor, den du sichern möchtest. Ein Ordner enthält einen Tresor.</string>
+    <string name="backup_folder_another_vault">Dieser Ordner enthält schon einen anderen Tresor von diesem Gerät. Jeder Tresor braucht einen eigenen Ordner – eine Sicherung hier würde löschen, was darin ist.</string>
+    <string name="backup_folder_another_install">Dieser Ordner enthält schon eine andere Sicherung. Wähle einen leeren Ordner oder einen, den dieser Tresor gefüllt hat – eine Sicherung hier würde löschen, was darin ist.</string>
+    <plurals name="vault_destroy_items_left">
+        <item quantity="one">%1$d Element konnte nicht ausgegeben werden, deshalb wurde dieser Tresor behalten. Alles, was noch darin ist, bleibt unverändert.</item>
+        <item quantity="other">%1$d Elemente konnten nicht ausgegeben werden, deshalb wurde dieser Tresor behalten. Alles, was noch darin ist, bleibt unverändert.</item>
+    </plurals>
+    <string name="kit_print_job">Wiederherstellungs-Kit für den Tresor</string>
+    <string name="panic_wrong_passphrase">Diese Passphrase öffnet diese Tresorliste nicht.</string>
+    <string name="panic_wrong_phrase">Das ist nicht deine Panik-Phrase.</string>
+    <string name="panic_too_close">Zu ähnlich wie deine Passphrase – ein Tippfehler könnte sie auslösen. Wähle etwas anderes.</string>
+    <string name="panic_in_use">Diese Phrase öffnet schon eine Tresorliste. Wähle eine andere.</string>
+    <string name="panic_no_room">Auf diesem Gerät ist kein Platz für eine weitere Phrase.</string>
+    <string name="panic_cleared">Deine alte Panik-Phrase funktioniert hier nicht mehr, deshalb ist sie aus. Lege eine neue fest.</string>
+    <string name="panic_not_saved">Das wurde nicht gespeichert. Versuche es noch einmal.</string>
+    <string name="pairing_not_a_code">Das ist kein Kopplungscode.</string>
+    <string name="pairing_newer_app">Dieser Code stammt von einer neueren Version der App. Aktualisiere die App, um ihn zu scannen.</string>
+    <string name="pairing_own_code">Das ist der eigene Code dieses Telefons.</string>
+    <string name="pairing_already_known">Du hast diesen Kontakt schon, als %1$s.</string>
+    <string name="remote_not_an_invite">Das ist keine Einladungsdatei.</string>
+    <string name="remote_wrong_reply">Diese Datei ist nicht die Antwort von %1$s auf diese Einladung.</string>
+    <string name="remote_wrong_confirmation">Diese Datei ist nicht die Bestätigung von %1$s.</string>
+    <string name="memo_notifications_off">Benachrichtigungen sind aus, deshalb steht „Stopp“ nicht in der Benachrichtigungsleiste.</string>
+    <string name="memo_too_short">Das war zu kurz, um es zu behalten.</string>
+    <string name="vault_list_full">Diese Liste ist voll. Entferne einen Tresor, um Platz zu schaffen.</string>
+    <string name="vault_not_created">Dieser Tresor konnte nicht erstellt werden.</string>
+    <string name="vault_not_opened">Dieser Tresor konnte nicht geöffnet werden.</string>
+    <string name="bio_prompt_unlock_title">Tresor entsperren</string>
+    <string name="bio_prompt_use_passphrase">Passphrase verwenden</string>
+    <string name="purchase_unavailable">Der Kauf ist auf diesem Gerät gerade nicht möglich (Code %1$d). Nichts, was du schon hast, ist betroffen.</string>
+    <plurals name="imports_failed">
+        <item quantity="one">%1$d Import wurde nicht abgeschlossen. Nichts wurde hinzugefügt. Versuche es noch einmal.</item>
+        <item quantity="other">%1$d Importe wurden nicht abgeschlossen. Nichts wurde hinzugefügt. Versuche es noch einmal.</item>
+    </plurals>
+
+    <!-- Notifications — the foreground work and the recording -->
+    <string name="notification_working">Wird ausgeführt</string>
+    <string name="notification_channel_import">Import</string>
+    <string name="notification_channel_archive">Archiv</string>
+    <string name="notification_channel_export">Export</string>
+    <string name="notification_channel_recording">Aufnahme</string>
+    <string name="notification_recording">Aufnahme läuft</string>
+    <string name="notification_stop">Stopp</string>
+
+    <!-- The printed recovery kit -->
+    <string name="kit_print_heading">Wiederherstellungs-Kit für den Tresor</string>
+    <string name="kit_print_line_1">Diese 24 Wörter öffnen diesen Tresor. Bewahre dieses Blatt sicher auf.</string>
+    <string name="kit_print_line_2">Sie lassen sich weder ändern noch widerrufen.</string>
+
+    <!-- Biometric unlock — the screen, the drawer row and the first-run step -->
+    <string name="bio_name">Biometrische Entsperrung</string>
+    <string name="bio_lead">Ein schnellerer Weg hinein, der deine Passphrase nie ersetzt.</string>
+    <string name="bio_row_fingerprint">Entsperrung per Fingerabdruck</string>
+    <string name="bio_row_face">Entsperrung per Gesichtserkennung</string>
+    <string name="bio_row_both">Entsperrung per Gesicht &amp; Fingerabdruck</string>
+    <string name="bio_on">An</string>
+    <string name="bio_off">Aus</string>
+    <string name="bio_line_not_set_up">Noch nicht eingerichtet. Tippe, um es in den Geräteeinstellungen einzurichten.</string>
+    <string name="bio_line_not_available_now">Gerade nicht verfügbar – der Sensor reagiert nicht.</string>
+    <string name="bio_line_needs_update">Braucht ein Sicherheitsupdate vom Gerätehersteller, bevor der Tresor es nutzen kann.</string>
+    <string name="bio_unsupported">Auf diesem Gerät nicht unterstützt.</string>
+    <string name="bio_unsupported_face">Auf diesem Gerät nicht unterstützt. Seine Gesichtserkennung ist nicht sicher genug, um verschlüsselte Daten zu schützen.</string>
+    <string name="bio_unsupported_fingerprint">Auf diesem Gerät nicht unterstützt. Sein Fingerabdrucksensor ist nicht sicher genug, um verschlüsselte Daten zu schützen.</string>
+    <string name="bio_drawer_not_set_up">Nicht eingerichtet</string>
+    <string name="bio_drawer_not_available_now">Gerade nicht verfügbar</string>
+    <string name="bio_drawer_needs_update">Braucht ein Sicherheitsupdate</string>
+    <string name="bio_drawer_not_supported">Auf diesem Gerät nicht unterstützt</string>
+    <string name="bio_fact_how">So öffnest du den Tresor</string>
+    <string name="bio_fact_how_fingerprint">Wenn der Tresor gesperrt ist, fragt Android nach deinem Fingerabdruck. Berühre den Sensor und der Tresor öffnet sich.</string>
+    <string name="bio_fact_how_face">Wenn der Tresor gesperrt ist, fragt Android nach deinem Gesicht. Schau auf den Bildschirm und tippe zur Bestätigung – ein bloßer Blick öffnet den Tresor nie.</string>
+    <string name="bio_fact_how_both">Wenn der Tresor gesperrt ist, achtet Android gleichzeitig auf dein Gesicht und deinen Fingerabdruck. Berühre den Sensor oder schau auf den Bildschirm und tippe zur Bestätigung – was du zuerst nutzt, öffnet den Tresor.</string>
+    <string name="bio_fact_how_unnamed">Wenn der Tresor gesperrt ist, fragt Android nach dem biometrischen Merkmal, das auf diesem Gerät eingerichtet ist.</string>
+    <string name="bio_fact_fingerprint_only">Nur mit deinem Fingerabdruck</string>
+    <string name="bio_fact_fingerprint_only_body">Android entscheidet, welche biometrischen Merkmale Apps nutzen dürfen, nicht diese App. Öffne in den Geräteeinstellungen die Gesichtsentsperrung und schalte die Nutzung in Apps aus – dann öffnet nur dein Fingerabdruck den Tresor.</string>
+    <string name="bio_fact_turns_off">Sie schaltet sich aus, wenn sich deine biometrischen Daten ändern</string>
+    <string name="bio_fact_turns_off_fingerprint">Wenn du in den Geräteeinstellungen einen Fingerabdruck hinzufügst oder entfernst, schaltet sich das aus. Entsperre mit deiner Passphrase und schalte es dann im Menü unter „Biometrische Entsperrung“ wieder ein.</string>
+    <string name="bio_fact_turns_off_face">Wenn du in den Geräteeinstellungen ein Gesicht hinzufügst oder entfernst, schaltet sich das aus. Entsperre mit deiner Passphrase und schalte es dann im Menü unter „Biometrische Entsperrung“ wieder ein.</string>
+    <string name="bio_fact_turns_off_both">Wenn du in den Geräteeinstellungen ein Gesicht oder einen Fingerabdruck hinzufügst oder entfernst, schaltet sich das aus. Entsperre mit deiner Passphrase und schalte es dann im Menü unter „Biometrische Entsperrung“ wieder ein.</string>
+    <string name="bio_fact_turns_off_unnamed">Wenn du in den Geräteeinstellungen ein biometrisches Merkmal hinzufügst oder entfernst, schaltet sich das aus. Entsperre mit deiner Passphrase und schalte es dann im Menü unter „Biometrische Entsperrung“ wieder ein.</string>
+    <string name="bio_fact_passphrase">Deine Passphrase öffnet den Tresor immer</string>
+    <string name="bio_fact_passphrase_body">Die biometrische Entsperrung ist ein zweiter Weg hinein, kein Ersatz. Wenn du deine Passphrase vergisst, kommst du damit nicht hinein – mit deinem Wiederherstellungs-Kit schon.</string>
+    <string name="bio_button_fallback">Biometrie verwenden</string>
+    <string name="bio_enable_title">Biometrische Entsperrung einschalten</string>
+
+    <!-- Calculator cover — how it opens -->
+    <string name="method_sequence">Tastenfolge</string>
+    <string name="method_sequence_line">Tippe deine Folge und halte dann = gedrückt.</string>
+    <string name="method_sequence_pattern">Tastenfolge, dann Muster</string>
+    <string name="method_sequence_pattern_line">Tippe deine Folge, halte = gedrückt und zeichne dann dein Muster auf die Punkte, die erscheinen.</string>
+    <string name="method_hold_pattern">Halten, dann Muster</string>
+    <string name="method_hold_pattern_line">Halte eine Stelle deiner Wahl 2 Sekunden lang gedrückt und zeichne dann dein Muster auf die Punkte, die erscheinen.</string>
+    <string name="method_choose_lead">Wähle, wie du über dieses Symbol den Passphrase-Bildschirm öffnest. Eingerichtet wird es im nächsten Schritt.</string>
+
+    <!-- Intruder capture — where an attempt failed -->
+    <string name="capture_where_music">Musikplayer</string>
+    <string name="capture_where_recorder">Sprachrekorder</string>
+    <string name="capture_where_calculator">Rechner</string>
+    <string name="capture_where_cover">Tarnung</string>
+    <string name="capture_where_pattern">%1$s: falsches Muster</string>
+    <string name="capture_where_pattern_dots">%1$s: falsches Muster auf den angezeigten Punkten</string>
+    <string name="capture_where_pattern_lockout">%1$s: Muster während der Sperre versucht</string>
+    <string name="capture_where_pattern_lockout_dots">%1$s: Muster während der Sperre auf den angezeigten Punkten versucht</string>
+    <string name="capture_where_wrong_fingerprint">Sperrbildschirm: falscher Fingerabdruck</string>
+    <string name="capture_where_wrong_face">Sperrbildschirm: falsches Gesicht</string>
+    <string name="capture_where_wrong_both">Sperrbildschirm: falsches Gesicht oder falscher Fingerabdruck</string>
+    <string name="capture_where_wrong_biometric">Sperrbildschirm: falsches biometrisches Merkmal</string>
+    <string name="capture_where_wrong_passphrase">Sperrbildschirm: falsche Passphrase</string>
+    <string name="capture_where_vault_passphrase">Tresor-Passphrase: falsche Passphrase</string>
+
+    <!-- Passphrase strength — the meter under every passphrase field -->
+    <string name="strength_add_another_word">Füge ein oder zwei weitere Wörter hinzu. Ungewöhnliche Wörter helfen am meisten.</string>
+    <string name="strength_default_suggestions_use_few_words">Verwende mehrere Wörter, die nicht zusammengehören.</string>
+    <string name="strength_default_suggestions_no_need_symbols">Symbole, Ziffern und Großbuchstaben braucht es hier nicht – die Länge zählt.</string>
+    <string name="strength_dictionary_warning_passwords_top10">Das ist eines der zehn häufigsten Passwörter überhaupt.</string>
+    <string name="strength_dictionary_warning_passwords_top100">Das ist eines der hundert häufigsten Passwörter überhaupt.</string>
+    <string name="strength_dictionary_warning_passwords_very_common">Das ist ein sehr häufiges Passwort und würde früh erraten.</string>
+    <string name="strength_dictionary_warning_passwords_similar">Das ähnelt einem Passwort, das schon weit verbreitet ist.</string>
+    <string name="strength_dictionary_warning_english_wikipedia_itself">Ein einzelnes Wort für sich ist schnell erraten.</string>
+    <string name="strength_dictionary_warning_etc_names_themselves">Ein Name für sich ist schnell erraten.</string>
+    <string name="strength_dictionary_warning_etc_names_common">Häufige Namen sind schnell erraten.</string>
+    <string name="strength_dictionary_suggestions_capitalization">Ein Großbuchstabe am Anfang bringt fast nichts. Füge lieber ein Wort hinzu.</string>
+    <string name="strength_dictionary_suggestions_all_uppercase">Nur Großbuchstaben sind etwa so leicht zu erraten wie nur Kleinbuchstaben.</string>
+    <string name="strength_dictionary_suggestions_reversed">Ein rückwärts geschriebenes Wort ist kaum schwerer zu erraten.</string>
+    <string name="strength_dictionary_suggestions_l33t">Buchstaben durch ähnliche Zeichen zu ersetzen, etwa 4 für a, wird schon erwartet.</string>
+    <string name="strength_spatial_warning_straight_rows_of_keys">Eine gerade Tastenreihe gehört zu den ersten Versuchen.</string>
+    <string name="strength_spatial_warning_short_keyboard_patterns">Kurze Muster auf der Tastatur sind schnell erraten.</string>
+    <string name="strength_spatial_suggestions_use_longer_keyboard_pattern">Verwende Wörter statt einer Form auf der Tastatur.</string>
+    <string name="strength_repeat_warning_like_aaa">Ein wiederholtes Zeichen ist so schnell erraten wie ein einzelnes.</string>
+    <string name="strength_repeat_warning_like_abcabcabc">Ein wiederholter Block ist kaum schwerer zu erraten als der Block allein.</string>
+    <string name="strength_repeat_suggestions_avoid_repeated_words">Ein Wort oder einen Buchstaben zu wiederholen bringt sehr wenig. Füge ein anderes Wort hinzu.</string>
+    <string name="strength_sequence_warning_like_abcor6543">Folgen wie abc oder 6543 werden sofort erraten.</string>
+    <string name="strength_sequence_suggestions_avoid_sequences">Vermeide Buchstaben oder Zahlen in fortlaufender Reihenfolge.</string>
+    <string name="strength_regex_warning_recent_years">Jahreszahlen der letzten Zeit gehören zu den ersten Versuchen.</string>
+    <string name="strength_regex_suggestions_avoid_recent_years">Lass Jahreszahlen weg, besonders solche, die dir etwas bedeuten.</string>
+    <string name="strength_date_warning_dates">Daten sind schnell erraten, auch solche, die nur du kennst.</string>
+    <string name="strength_date_suggestions_avoid_dates">Lass Daten weg, besonders solche, die dir etwas bedeuten.</string>
+    <string name="strength_very_weak">Sehr schwach</string>
+    <string name="strength_weak">Schwach</string>
+    <string name="strength_fair">Mittel</string>
+    <string name="strength_almost">Fast</string>
+    <string name="strength_strong_enough">Stark genug</string>
+    <string name="strength_count">%1$d von %2$d Zeichen</string>
+    <string name="passphrase_requirement">Mindestens %1$d Zeichen. Ein paar ungewöhnliche Wörter schlagen ein kompliziertes Wort.</string>
+    <string name="passphrase_too_weak">Diese Passphrase ist zu leicht zu erraten. Füge ein oder zwei weitere Wörter hinzu.</string>
+
+    <!-- First vault and the lock screen -->
+    <string name="passphrase_label">Passphrase</string>
+    <string name="passphrase_again_label">Noch einmal eingeben</string>
+    <string name="passphrase_mismatch">Die beiden Eingaben stimmen nicht überein.</string>
+    <string name="setup_title">Passphrase wählen</string>
+    <string name="setup_lead">Sie lässt sich nicht zurücksetzen. Als Nächstes siehst du ein Wiederherstellungs-Kit aus 24 Wörtern, den einzigen anderen Weg in diesen Tresor. Verlierst du beides, ist alles darin für immer weg.</string>
+    <string name="setup_preparing">Speicher wird vorbereitet</string>
+    <string name="setup_create">Tresor erstellen</string>
+    <string name="setup_restore_backup">Sicherung wiederherstellen</string>
+    <string name="unlock_welcome">Willkommen zurück</string>
+    <string name="unlock_lead">Gib deine Passphrase ein, um diesen Tresor zu öffnen.</string>
+    <string name="unlock_failed">Damit wurde kein Tresor geöffnet.</string>
+    <string name="unlock_action">Entsperren</string>
+    <string name="unlock_forgot">Passphrase vergessen?</string>
+    <string name="unlock_busy">Wird entsperrt</string>
+    <string name="passphrase_hide">Passphrase ausblenden</string>
+    <string name="passphrase_show">Passphrase anzeigen</string>
+    <string name="passphrase_match">Beide Eingaben stimmen überein</string>
+
+    <!-- Photo details — the sheet, and the export and share lines -->
+    <string name="photo_details_privacy">Datenschutz</string>
+    <string name="photo_details_custom">Benutzerdefiniert</string>
+    <!-- Joining a list: "%1$s" is everything before the last item, already joined with list_separator. -->
+    <string name="list_separator">,\u0020</string>
+    <string name="list_and">%1$s und %2$s</string>
+    <string name="list_or">%1$s oder %2$s</string>
+    <string name="exif_noun_location">Standort</string>
+    <string name="exif_noun_camera">Kamerainfos</string>
+    <string name="exif_noun_the_date">das Datum</string>
+    <string name="exif_noun_date">Datum</string>
+    <string name="exif_noun_software">Bearbeitungsverlauf</string>
+    <string name="exif_export_names_only">Aus exportierten JPEG-Fotos werden nur Namen, Bildunterschriften und Kommentare entfernt. Andere Formate werden unverändert geschrieben.</string>
+    <plurals name="exif_export_removed">
+        <item quantity="one">%1$s wird aus exportierten JPEG-Fotos entfernt.</item>
+        <item quantity="other">%1$s werden aus exportierten JPEG-Fotos entfernt.</item>
+    </plurals>
+    <plurals name="exif_export_kept">
+        <item quantity="one">%1$s bleibt erhalten.</item>
+        <item quantity="other">%1$s bleiben erhalten.</item>
+    </plurals>
+    <plurals name="exif_export_kept_sorted">
+        <item quantity="one">%1$s bleibt erhalten, damit deine Galerie sie weiterhin sortiert.</item>
+        <item quantity="other">%1$s bleiben erhalten, damit deine Galerie sie weiterhin sortiert.</item>
+    </plurals>
+    <string name="exif_export_summary">%1$s Andere Formate werden unverändert geschrieben.</string>
+    <string name="exif_share_names_only">Nur Namen, Bildunterschriften und Kommentare.</string>
+    <string name="exif_share_removed">Ohne %1$s.</string>
+    <string name="exif_share_kept">Behält %1$s.</string>
+    <string name="photo_details_title">Fotodetails</string>
+    <string name="photo_details_lead">Wähle, was aus einem Foto entfernt wird, bevor es den Tresor verlässt.</string>
+    <string name="photo_details_privacy_row">Datenschutz (empfohlen)</string>
+    <string name="photo_details_privacy_detail">Entfernt Standort, Kamerainfos und Bearbeitungsverlauf</string>
+    <string name="photo_details_custom_detail">Wähle, was entfernt wird.</string>
+    <string name="photo_details_remove_heading">Entfernen</string>
+    <string name="photo_details_removed">Entfernt</string>
+    <string name="photo_details_kept">Behalten</string>
+    <string name="photo_details_import_heading">Beim Importieren</string>
+    <string name="photo_details_import_row">Aus importierten Fotos entfernen</string>
+    <string name="photo_details_import_on">An · Lässt sich für ein Foto nach dem Import nicht rückgängig machen.</string>
+    <string name="photo_details_footer">Nur JPEG-Fotos – andere Formate bleiben genau so, wie sie sind. Jede Bereinigung entfernt außerdem Namen, Bildunterschriften, Kommentare, markierte Personen und alles, was die App nicht kennt, und behält, was ein Foto zur richtigen Darstellung braucht, auch Bewegung und HDR.</string>
+    <string name="photo_details_location">Standort</string>
+    <string name="photo_details_location_covers">GPS-Position, Höhe und Richtung</string>
+    <string name="photo_details_camera">Kamerainfos</string>
+    <string name="photo_details_camera_covers">Hersteller, Modell, Objektiv, Seriennummern und Einstellungen</string>
+    <string name="photo_details_date">Datum und Uhrzeit</string>
+    <string name="photo_details_date_covers">Wann es aufgenommen und zuletzt geändert wurde</string>
+    <string name="photo_details_software">Software und Bearbeitungsverlauf</string>
+    <string name="photo_details_software_covers">Die Apps, die es erstellt oder bearbeitet haben</string>
+
+    <!-- Drawer — appearance -->
+    <string name="appearance">Darstellung</string>
+    <string name="appearance_system">System</string>
+    <string name="appearance_light">Hell</string>
+    <string name="appearance_dark">Dunkel</string>
+
+    <!-- Drawer — the vault's rows and the install's -->
+    <string name="drawer_trash">Papierkorb</string>
+    <string name="drawer_backup">Sicherung</string>
+    <string name="drawer_intruder_capture">Eindringlingsaufnahme</string>
+    <string name="drawer_open_share">Freigabe öffnen…</string>
+    <string name="drawer_unvault_everything">Alles aus dem Tresor holen</string>
+    <string name="drawer_destroy_vault">Tresor vernichten</string>
+    <string name="drawer_purchase">Kauf \u0020· \u0020%1$s</string>
+    <string name="drawer_app_identity">App-Identität \u0020· \u0020%1$s</string>
+    <string name="drawer_face_down">Sperre bei umgedrehtem Gerät</string>
+    <string name="face_down_no_sensor">Dieses Gerät hat keinen Bewegungssensor und kann nicht erkennen, wann es umgedreht liegt.</string>
+    <string name="face_down_lead">Dreh dein Telefon um und leg es ab, um den Tresor zu sperren.</string>
+    <string name="face_down_switch">Sperre bei umgedrehtem Gerät verwenden</string>
+    <string name="face_down_lock_after">Sperren nach</string>
+    <string name="face_down_immediately">Sofort</string>
+    <string name="face_down_locks_at_once">Sperrt sofort</string>
+    <string name="face_down_locks_after">Sperrt nach %1$s</string>
+    <string name="face_down_timeout_line">Dein Bildschirm schaltet sich nach %1$s aus, und das sperrt den Tresor zuerst.</string>
+    <plurals name="face_down_seconds">
+        <item quantity="one">%1$d Sekunde</item>
+        <item quantity="other">%1$d Sekunden</item>
+    </plurals>
+    <plurals name="face_down_minutes">
+        <item quantity="one">%1$d Minute</item>
+        <item quantity="other">%1$d Minuten</item>
+    </plurals>
+    <string name="drawer_decoy">Köder-Tresor</string>
+    <string name="drawer_decoy_set_up">Eingerichtet – ein zweiter lässt sich nicht anlegen.</string>
+    <string name="drawer_set_up_decoy">Köder-Tresor einrichten</string>
+    <string name="drawer_panic">Panik-Zugang</string>
+    <string name="drawer_photo_details">Fotodetails \u0020· \u0020%1$s</string>
+    <string name="drawer_contacts">Kontakte</string>
+    <string name="drawer_recover_vault">Tresor mit seinem Kit wiederherstellen</string>
+    <string name="drawer_restore_vault">Tresor aus einer Sicherung wiederherstellen</string>
+    <string name="drawer_import_vault">Tresor aus einer Datei importieren</string>
+    <string name="drawer_capture_waiting">Eine Eindringlingsaufnahme wartet</string>
+
+    <!-- Purchase — the screen, the drawer row and the trial -->
+    <string name="trial_blocked">Dein Testzeitraum ist vorbei. Öffnen, Ansehen und Exportieren von allem in deinen Tresoren bleiben uneingeschränkt – kaufe die App einmalig unter „Kauf“ im Menü, um mehr hinzuzufügen.</string>
+    <plurals name="trial_reminder">
+        <item quantity="one">Noch %1$d Tag in deinem Testzeitraum. Öffnen, Ansehen und Exportieren bleiben so oder so uneingeschränkt.</item>
+        <item quantity="other">Noch %1$d Tage in deinem Testzeitraum. Öffnen, Ansehen und Exportieren bleiben so oder so uneingeschränkt.</item>
+    </plurals>
+    <string name="purchase_title">Kauf</string>
+    <plurals name="purchase_days_from_first">
+        <item quantity="one">%1$d Tag, ab dem ersten Element, das du hinzufügst</item>
+        <item quantity="other">%1$d Tage, ab dem ersten Element, das du hinzufügst</item>
+    </plurals>
+    <plurals name="purchase_days_left">
+        <item quantity="one">Noch %1$d Tag</item>
+        <item quantity="other">Noch %1$d Tage</item>
+    </plurals>
+    <string name="purchase_owned_body">Hinzufügen zu deinen Tresoren, Erstellen von Tresoren und Senden von Freigaben sind uneingeschränkt. Der Kauf gehört zu deinem Google-Konto und kommt bei einer Neuinstallation zurück.</string>
+    <string name="purchase_pending_body">Google Play wartet, bis deine Zahlung abgeschlossen ist. Dann wird alles freigeschaltet – du musst diesen Bildschirm nicht offen lassen.</string>
+    <string name="purchase_trial_body">Wenn der Testzeitraum endet, enden das Hinzufügen zu einem Tresor, das Erstellen von Tresoren und das Senden von Freigaben. Öffnen, Ansehen und Exportieren von allem, was schon in deinen Tresoren ist – und das Öffnen von Freigaben, die du bekommst –, enden nie, ob bezahlt oder nicht.</string>
+    <string name="purchase_one_payment">Eine Zahlung. Kein Abo, nichts verlängert sich.</string>
+    <string name="purchase_buy_for">Für %1$s kaufen</string>
+    <string name="purchase_buy">Kaufen</string>
+    <string name="purchase_state_owned">Gekauft</string>
+    <string name="purchase_state_pending">Zahlung ausstehend</string>
+    <string name="purchase_state_not_started">Testzeitraum nicht begonnen</string>
+    <plurals name="purchase_state_trial_left">
+        <item quantity="one">Testzeitraum, noch %1$d Tag</item>
+        <item quantity="other">Testzeitraum, noch %1$d Tage</item>
+    </plurals>
+    <string name="purchase_state_trial">Testzeitraum</string>
+    <string name="purchase_state_ended">Testzeitraum beendet</string>
+
+    <!-- App identity — the screen and the sheet that commits a choice -->
+    <string name="identity_screen_title">App-Identität</string>
+    <string name="identity_screen_lead">Wähle den Namen und das Symbol, die diese App im Launcher und in den letzten Apps zeigt. Jede Variante öffnet diesen Tresor, und keine öffnet ihn ohne deine Passphrase oder ein biometrisches Merkmal, das du eingerichtet hast.</string>
+    <string name="identity_current">Wird gerade angezeigt</string>
+    <string name="identity_opens_vault">Öffnet direkt den Tresor</string>
+    <string name="identity_opens_calculator">Öffnet zuerst einen Rechner</string>
+    <string name="identity_opens_calculator_setup">Öffnet zuerst einen Rechner – muss eingerichtet werden</string>
+    <string name="identity_opens_music">Öffnet zuerst einen Musikplayer</string>
+    <string name="identity_opens_music_setup">Öffnet zuerst einen Musikplayer – muss eingerichtet werden</string>
+    <string name="identity_opens_recorder">Öffnet zuerst einen Sprachrekorder</string>
+    <string name="identity_opens_recorder_setup">Öffnet zuerst einen Sprachrekorder – muss eingerichtet werden</string>
+    <string name="identity_calculator_weak">Die schwächste der Tarnungen – ihre Geste ist eine kurze Tastenfolge.</string>
+    <string name="identity_calculator_weak_unset">Nur mit einer Tastenfolge ist sie die schwächste der Tarnungen.</string>
+    <string name="identity_boundary_title">Was eine Identität nicht ändert</string>
+    <string name="identity_boundary_body">Die Android-Einstellungen, die App-Infoseite und jede Benachrichtigung während eines Imports zeigen diese App weiterhin unter ihrem echten Namen. Eine Identität ändert den Launcher und die letzten Apps, sonst nichts.</string>
+    <string name="identity_commit_body">Diese Änderung entfernt angeheftete Verknüpfungen und jede Platzierung der App auf dem Startbildschirm. Du kannst sie danach wieder platzieren.</string>
+    <string name="identity_rationale_music">Ein Musikplayer, der deine Musik nicht sehen kann, ist nicht überzeugend – er würde mit einer leeren Mediathek öffnen. Dieses Symbol braucht Zugriff auf die Audiodateien auf diesem Gerät.</string>
+    <string name="identity_rationale_recorder">Ein Sprachrekorder, der das Mikrofon nicht nutzen kann, ist nicht überzeugend – seine Aufnahmetaste würde nichts tun. Dieses Symbol braucht Zugriff auf das Mikrofon.</string>
+    <string name="identity_blocked_music">Android fragt aus der App heraus nicht noch einmal. Der Zugriff auf Audio lässt sich auf der Einstellungsseite dieser App unter „Berechtigungen“ ändern.</string>
+    <string name="identity_blocked_recorder">Android fragt aus der App heraus nicht noch einmal. Der Zugriff auf das Mikrofon lässt sich auf der Einstellungsseite dieser App unter „Berechtigungen“ ändern.</string>
+    <string name="identity_use_icon">Dieses Symbol verwenden</string>
+    <string name="identity_set_up">Einrichten</string>
+    <string name="identity_ask_again">Noch einmal fragen</string>
+    <string name="identity_open_settings">Einstellungen öffnen</string>
+
+    <!-- Shared words -->
+    <string name="state_expanded">Ausgeklappt</string>
+    <string name="state_collapsed">Eingeklappt</string>
+    <string name="action_continue">Weiter</string>
+    <string name="action_done">Fertig</string>
+    <string name="action_save">Speichern</string>
+    <string name="action_back">Zurück</string>
+    <string name="action_cancel">Abbrechen</string>
+    <string name="action_remove">Entfernen</string>
+    <string name="action_not_now">Nicht jetzt</string>
+    <string name="menu">Menü</string>
+    <string name="action_saving">Wird gespeichert</string>
+    <string name="rename">Umbenennen</string>
+    <string name="delete">Löschen</string>
+    <string name="more">Mehr</string>
+    <string name="pause">Pause</string>
+    <string name="play">Abspielen</string>
+    <string name="seek">Position</string>
+    <string name="slideshow">Diashow</string>
+    <string name="speed">Tempo</string>
+    <plurals name="seconds">
+        <item quantity="one">%1$d Sekunde</item>
+        <item quantity="other">%1$d Sekunden</item>
+    </plurals>
+    <string name="undo">Rückgängig</string>
+    <string name="redo">Wiederholen</string>
+    <string name="export">Exportieren</string>
+    <plurals name="minutes">
+        <item quantity="one">%1$d Minute</item>
+        <item quantity="other">%1$d Minuten</item>
+    </plurals>
+    <string name="start_recording">Aufnahme starten</string>
+    <string name="stop_recording">Aufnahme beenden</string>
+    <string name="warning">Warnung</string>
+
+    <!-- Cover setup — recording how a cover opens -->
+    <string name="setup_cover_choose_title">Wie möchtest du sie öffnen?</string>
+    <string name="setup_cover_draw_shape">Zeichne jetzt deine Form</string>
+    <string name="setup_cover_record">Geste aufnehmen</string>
+    <string name="setup_cover_draw_again">Noch einmal zeichnen</string>
+    <string name="setup_cover_do_again">Noch einmal</string>
+    <string name="setup_cover_mismatch_title">Das war eine andere Geste</string>
+    <string name="setup_cover_hold_title">Stelle zum Halten wählen</string>
+    <string name="setup_cover_hold_again_title">Noch einmal halten</string>
+    <string name="setup_cover_hold_mismatch_title">Das war eine andere Stelle</string>
+    <string name="setup_cover_hold_mismatch">Das zweite Halten war an einer anderen Stelle, deshalb wurde keines behalten.</string>
+    <string name="setup_cover_start_over">Neu beginnen</string>
+    <string name="setup_cover_done_title">Alles bereit</string>
+    <string name="setup_cover_hold_line">Halte eine beliebige Stelle auf dem Bildschirm 2 Sekunden lang gedrückt. Diese Stelle ruft die Punkte auf – egal, was dort gerade angezeigt wird.</string>
+    <string name="setup_cover_hold_again_line">Halte dieselbe Stelle noch einmal gedrückt.</string>
+    <string name="setup_cover_hold_early_line">Halte 2 Sekunden lang gedrückt.</string>
+    <string name="setup_cover_too_short">Das war zu kurz. Eine Geste braucht mindestens %1$s.</string>
+    <string name="setup_cover_so_far">%1$s bisher. Noch %2$d.</string>
+    <string name="setup_cover_at_cap">%1$s – mehr merkt sie sich nicht. %2$s</string>
+    <string name="setup_cover_enough">%1$s. %2$s</string>
+    <string name="setup_cover_keys_again">Drücke dieselben Tasten noch einmal. Drücke „AC“, um neu zu beginnen.</string>
+    <string name="setup_cover_keys">Drücke die Tasten, die du verwenden möchtest – es kann eine ganz normale Rechnung sein. Jede Taste zählt, auch „DEL“. Falsche Taste gedrückt? Drücke „AC“, um neu zu beginnen.</string>
+    <string name="setup_cover_shape_again">Zeichne dieselbe Form noch einmal.</string>
+    <string name="setup_cover_shape_music">Zeichne eine Form, die mindestens fünf der neun Punkte verbindet, in einer Reihenfolge, die du dir merkst. Sie wird nicht mehr angezeigt, sobald dieser Bildschirm schließt.</string>
+    <string name="setup_cover_shape_recorder">Zeichne eine Form, die mindestens fünf der neun Punkte verbindet, in einer Reihenfolge, die du dir merkst. Keine Aufnahme, die du hier machst, wird behalten.</string>
+    <string name="setup_cover_finish_keys">Halte „=“ gedrückt, um abzuschließen.</string>
+    <string name="setup_cover_finish_shape">Heb den Finger, um abzuschließen.</string>
+    <plurals name="setup_cover_key_count">
+        <item quantity="one">%1$d Taste</item>
+        <item quantity="other">%1$d Tasten</item>
+    </plurals>
+    <plurals name="setup_cover_node_count">
+        <item quantity="one">%1$d Punkt</item>
+        <item quantity="other">%1$d Punkte</item>
+    </plurals>
+    <string name="setup_cover_mismatch_sequence">Die zweite Folge stimmte nicht mit der ersten überein, deshalb wurde keine behalten. Neu zu beginnen ist die einzige sichere Antwort: Würde die erste behalten, könnte ein zweiter Glückstreffer zwischen zwei halb erinnerten Gesten wählen, und du würdest auf ein Ziel hin üben, das du nicht sehen kannst.</string>
+    <string name="setup_cover_mismatch_pattern">Das zweite Muster stimmte nicht mit dem ersten überein, deshalb wurde keines behalten. Neu zu beginnen ist die einzige sichere Antwort: Würde das erste behalten, könnte ein zweiter Glückstreffer zwischen zwei halb erinnerten Gesten wählen, und du würdest auf ein Ziel hin üben, das du nicht sehen kannst.</string>
+    <string name="setup_cover_sequence_kept">Deine Folge bleibt erhalten – nur die Form beginnt neu.</string>
+    <string name="setup_cover_spot_kept">Deine Stelle bleibt erhalten – nur die Form beginnt neu.</string>
+    <string name="setup_cover_nothing_changed">Nichts hat sich geändert. Dein Launcher zeigt weiterhin das bisherige Symbol.</string>
+    <string name="setup_cover_done_vault">Dieses Symbol öffnet den Bildschirm, der nach deiner Passphrase fragt.</string>
+    <string name="setup_cover_done_route">So erreichst du von diesem Symbol aus den Passphrase-Bildschirm:</string>
+    <string name="setup_cover_done_hidden_dots">Deine Form funktioniert jederzeit auch auf den verborgenen Punkten.</string>
+    <plurals name="setup_cover_route_keys_shape">
+        <item quantity="one">Drücke %1$s auf dem Rechner, halte dann „=“ gedrückt, und die Punkte erscheinen. Zeichne darauf deine Form: %2$d Punkt.</item>
+        <item quantity="other">Drücke %1$s auf dem Rechner, halte dann „=“ gedrückt, und die Punkte erscheinen. Zeichne darauf deine Form: %2$d Punkte.</item>
+    </plurals>
+    <string name="setup_cover_wrong_key">Wenn du eine falsche Taste drückst, drücke „AC“ und beginne neu.</string>
+    <string name="setup_cover_remember">Niemand kann diese Geste für dich wiederherstellen, und die App zeigt sie dir nicht noch einmal – wenn du dich lieber nicht darauf verlassen willst, sie dir zu merken, wechsle über das Menü zurück zum eigenen Symbol des Tresors, solange du noch kannst.</string>
+    <string name="setup_cover_route_keys">Drücke %1$s auf dem Rechner und halte dann „=“ gedrückt. Wenn du eine falsche Taste drückst, drücke „AC“ und beginne neu.</string>
+    <plurals name="setup_cover_route_shape">
+        <item quantity="one">Zeichne die gewählte Form über den Bildschirm – %1$d Punkt – und heb den Finger.</item>
+        <item quantity="other">Zeichne die gewählte Form über den Bildschirm – %1$d Punkte – und heb den Finger.</item>
+    </plurals>
+    <plurals name="setup_cover_route_hold">
+        <item quantity="one">Halte die gewählte Stelle – %1$s – 2 Sekunden lang gedrückt, und die Punkte erscheinen. Zeichne darauf deine Form: %2$d Punkt.</item>
+        <item quantity="other">Halte die gewählte Stelle – %1$s – 2 Sekunden lang gedrückt, und die Punkte erscheinen. Zeichne darauf deine Form: %2$d Punkte.</item>
+    </plurals>
+    <string name="hold_place">%1$s, %2$s</string>
+    <string name="hold_row_top">Oberste Reihe</string>
+    <string name="hold_row_second">Zweite Reihe</string>
+    <string name="hold_row_third">Dritte Reihe</string>
+    <string name="hold_row_bottom">Unterste Reihe</string>
+    <string name="hold_column_left">links</string>
+    <string name="hold_column_centre">Mitte</string>
+    <string name="hold_column_right">rechts</string>
+
+    <!-- Panic credential -->
+    <string name="panic_status_on">Panik-Zugang ist an</string>
+    <string name="panic_status_off">Panik-Zugang ist aus</string>
+    <string name="panic_fact_survives">Diese Tresorliste bleibt</string>
+    <string name="panic_fact_survives_body">Auf dem Sperrbildschirm eingegeben, öffnet deine Panik-Phrase diese Tresorliste wie gewohnt, und jeder Tresor, der nicht darauf steht, lässt sich auf diesem Gerät nie wieder öffnen.</string>
+    <string name="panic_fact_way_in">Sie zerstört den Zugang, nicht die Dateien</string>
+    <string name="panic_fact_way_in_body">Die anderen Tresore bleiben als unlesbare Daten auf diesem Gerät. Ihre Wiederherstellungs-Kits aus 24 Wörtern öffnen sie weiterhin.</string>
+    <string name="panic_fact_silent">Nichts bestätigt, dass es funktioniert hat</string>
+    <string name="panic_fact_silent_body">Wer zusieht, sieht eine ganz normale Entsperrung.</string>
+    <string name="panic_fact_backup">Sie leert auch deinen Sicherungsordner</string>
+    <string name="panic_fact_backup_body">Kopien, die dein Cloud-Anbieter im eigenen Papierkorb oder Versionsverlauf behält, liegen außerhalb der Reichweite dieser App.</string>
+    <string name="panic_change">Panik-Phrase ändern</string>
+    <string name="panic_turn_it_off">Ausschalten</string>
+    <string name="panic_turn_off_title">Panik-Phrase ausschalten</string>
+    <string name="panic_turn_off">Ausschalten</string>
+    <string name="panic_set_title">Panik-Phrase festlegen</string>
+    <string name="panic_your_passphrase">Deine Passphrase</string>
+    <string name="panic_passphrase_hint">Die, mit der du diese Tresorliste geöffnet hast.</string>
+    <string name="panic_phrase_label">Panik-Phrase</string>
+    <string name="panic_turn_on">Einschalten</string>
+    <string name="panic_forgot_title">Vergessene Panik-Phrase löschen</string>
+    <string name="panic_forgot_body">Deine Passphrase schaltet die Panik-Phrase aus. Danach kannst du eine neue festlegen.</string>
+    <string name="panic_clear">Panik-Phrase löschen</string>
+    <string name="panic_current_label">Aktuelle Panik-Phrase</string>
+    <string name="panic_forgot">Panik-Phrase vergessen?</string>
+    <string name="panic_new_label">Neue Panik-Phrase</string>
+    <string name="panic_phrase_requirement">%1$s Keiner deiner Passphrasen ähnlich – geprüft werden kann nur die Passphrase dieser Liste.</string>
+    <string name="panic_label_again">%1$s wiederholen</string>
+
+    <!-- Vault names -->
+    <string name="vault_name_label">Name</string>
+    <string name="vault_name_empty">Gib dem Tresor einen Namen.</string>
+    <string name="vault_name_too_long">Dieser Name ist für diesen Tresor zu lang.</string>
+
+    <!-- Decoy — building a vault you can hand over -->
+    <string name="decoy_captured_during_setup">aufgenommen, während dieser Tresor erstellt wurde – ein heute aufgenommenes Foto gehört nicht in einen Tresor, der Monate alt wirken soll</string>
+    <string name="decoy_step">Schritt %1$d von %2$d</string>
+    <string name="decoy_leave">Einrichtung des Köder-Tresors verlassen</string>
+    <string name="decoy_intro_title">Ein Tresor, den du herausgeben kannst</string>
+    <string name="decoy_intro_lead">Ein gewöhnlicher Tresor mit eigener Passphrase, mit Dingen, die jemand ruhig sehen darf.</string>
+    <string name="decoy_start">Starten</string>
+    <string name="decoy_fact_used">Er muss benutzt aussehen</string>
+    <string name="decoy_fact_used_body">Ein leerer Tresor täuscht niemanden. Dieser bekommt Fotos, die du auswählst, und Daten und einen Verlauf, die nach Monaten normaler Nutzung aussehen.</string>
+    <string name="decoy_fact_photos">Die Fotos sind deine eigenen</string>
+    <string name="decoy_fact_photos_body">Sie stammen von diesem Gerät. Mit der App wird nichts mitgeliefert, denn mitgelieferte Inhalte wären auf jedem Telefon gleich. Wem du diesen Tresor gibst, sieht diese Fotos – wähle also solche, die du zeigen möchtest.</string>
+    <string name="decoy_fact_own">Dein eigener Tresor bleibt, wo er ist</string>
+    <string name="decoy_fact_own_body">So entsteht daneben ein zweiter Tresor. Nichts auf diesem Gerät wird verschoben, geändert oder entfernt, und der Tresor, den du gerade geöffnet hast, bleibt davon unberührt.</string>
+    <string name="decoy_fact_cost">Was das kostet</string>
+    <string name="decoy_photos_title">Fotos auswählen</string>
+    <string name="decoy_photos_lead">Zwischen %1$d und %2$d Stück, verteilt über mindestens %3$d Wochen.</string>
+    <string name="decoy_choose_to_continue">Fotos auswählen, um fortzufahren</string>
+    <string name="decoy_not_plausible">Noch keine glaubwürdige Auswahl</string>
+    <string name="decoy_choose_photos">Fotos auswählen</string>
+    <string name="decoy_choose_again">Neu auswählen</string>
+    <string name="decoy_nothing_chosen">Noch nichts ausgewählt. Die Auswahl zeigt deine Fotomediathek; die App liest sie nicht und sieht nie, was du nicht auswählst.</string>
+    <plurals name="decoy_summary_in">
+        <item quantity="one">%1$d kommt hinein.</item>
+        <item quantity="other">%1$d kommen hinein.</item>
+    </plurals>
+    <plurals name="decoy_summary_kept">
+        <item quantity="one">%1$d behält das Aufnahmedatum</item>
+        <item quantity="other">%1$d behalten das Aufnahmedatum</item>
+    </plurals>
+    <plurals name="decoy_summary_assigned">
+        <item quantity="one">%1$d hat keins und bekommt eins</item>
+        <item quantity="other">%1$d haben keins und bekommen eins</item>
+    </plurals>
+    <string name="decoy_summary_dates">%1$s.</string>
+    <string name="decoy_summary_dates_assigned">%1$s, %2$s.</string>
+    <plurals name="decoy_summary_declined">
+        <item quantity="one">%1$d ausgelassen: %2$s.</item>
+        <item quantity="other">%1$d ausgelassen: %2$s.</item>
+    </plurals>
+    <string name="decoy_summary_truncated">Nur die ersten %1$d wurden übernommen – mehr ist kein Köder-Tresor mehr, sondern eine zweite Mediathek.</string>
+    <string name="decoy_gate_enough">Genug Elemente: %1$d, Minimum ist %2$d.</string>
+    <string name="decoy_gate_not_enough">Nicht genug Elemente. Du hast %1$d, Minimum ist %2$d – wähle neu und füge mindestens %3$d hinzu.</string>
+    <plurals name="decoy_gate_spread">
+        <item quantity="one">Sie decken %1$d Woche ab, Minimum ist %2$d.</item>
+        <item quantity="other">Sie decken %1$d Wochen ab, Minimum ist %2$d.</item>
+    </plurals>
+    <plurals name="decoy_gate_not_spread">
+        <item quantity="one">Sie decken %1$d Woche ab, Minimum ist %2$d. Wähle neu und füge ältere Fotos hinzu oder solche ohne eigenes Datum – sie bekommen ein Datum aus den Monaten vor heute.</item>
+        <item quantity="other">Sie decken %1$d Wochen ab, Minimum ist %2$d. Wähle neu und füge ältere Fotos hinzu oder solche ohne eigenes Datum – sie bekommen ein Datum aus den Monaten vor heute.</item>
+    </plurals>
+    <plurals name="decoy_age_months">
+        <item quantity="one">Dieser Tresor wirkt bis zu %1$d Monat alt.</item>
+        <item quantity="other">Dieser Tresor wirkt bis zu %1$d Monate alt.</item>
+    </plurals>
+    <plurals name="decoy_age_install">
+        <item quantity="one">Diese App wurde vor %1$d Tag installiert, deshalb kann dieser Tresor glaubwürdig nicht älter sein – eine Dateiliste zeigt das Installationsdatum ganz ohne Passphrase. Sein Verlauf deckt diese Tage ab; den Rest tragen die Fotos.</item>
+        <item quantity="other">Diese App wurde vor %1$d Tagen installiert, deshalb kann dieser Tresor glaubwürdig nicht älter sein – eine Dateiliste zeigt das Installationsdatum ganz ohne Passphrase. Sein Verlauf deckt diese Tage ab; den Rest tragen die Fotos.</item>
+    </plurals>
+    <string name="decoy_requirement_met">Anforderung erfüllt</string>
+    <string name="decoy_requirement_not_met">Anforderung nicht erfüllt</string>
+    <string name="decoy_name_title">Benennen und absperren</string>
+    <string name="decoy_name_lead">Diesen Namen sieht jeder als Erstes, der diesen Tresor öffnet, und diese Passphrase würdest du herausgeben.</string>
+    <string name="decoy_name_hint">Wähle etwas Gewöhnliches – einen Namen, den ein Tresor mit Urlaubsfotos haben würde.</string>
+    <string name="decoy_passphrase_label">Passphrase für den Köder-Tresor</string>
+    <string name="decoy_passphrase_note">Diese Passphrase muss sich von der unterscheiden, die deinen eigenen Tresor öffnet. Auf dem Sperrbildschirm eingegeben, öffnet sie diesen Tresor und sonst nichts.</string>
+    <string name="decoy_building">%1$s wird erstellt</string>
+    <string name="decoy_building_body">Speicher wird vorbereitet, dann werden die Fotos importiert. Das dauert einen Moment und darf nicht unterbrochen werden.</string>
+    <string name="decoy_ready_title">Bereit zum Erstellen</string>
+    <string name="decoy_ready_lead">Noch wurde nichts geschrieben. Erst die Bestätigung deiner eigenen Passphrase startet es.</string>
+    <string name="decoy_confirm_passphrase">Passphrase bestätigen</string>
+    <string name="decoy_fact_made">Was entsteht</string>
+    <plurals name="decoy_fact_made_body">
+        <item quantity="one">Ein Tresor namens %1$s mit %2$d deiner Fotos, mit Daten und einem Entsperrverlauf über die Monate davor.</item>
+        <item quantity="other">Ein Tresor namens %1$s mit %2$d deiner Fotos, mit Daten und einem Entsperrverlauf über die Monate davor.</item>
+    </plurals>
+    <string name="decoy_fact_this_vault">Was mit diesem Tresor passiert</string>
+    <string name="decoy_fact_this_vault_body">Nichts. Dein eigener Tresor bleibt unberührt – er kann dadurch nicht überschrieben werden, und nach seiner Passphrase wird nicht gefragt, um ihn zu schützen.</string>
+    <string name="decoy_fact_end_up">Wo du landest</string>
+    <string name="decoy_fact_end_up_body">Der letzte Schritt bringt dich in den neuen Tresor, damit du siehst, was jemand mit seiner Passphrase finden würde. Danach kommst du hierher zurück.</string>
+    <string name="decoy_other_vaults">Ich habe andere Tresore auf diesem Gerät</string>
+    <string name="decoy_other_vaults_hint">Nur wenn du eine zweite Passphrase hast, die auf dem Sperrbildschirm etwas öffnet.</string>
+    <plurals name="decoy_entries_added">
+        <item quantity="one">%1$d Eintrag hinzugefügt.</item>
+        <item quantity="other">%1$d Einträge hinzugefügt.</item>
+    </plurals>
+    <string name="decoy_handover_title">Das wird man sehen</string>
+    <string name="decoy_handover_lead">Wer die Passphrase dieses Tresors auf dem Sperrbildschirm eingibt, erreicht genau das und sonst nichts. Du siehst es so, wie die andere Person es sehen würde.</string>
+    <string name="decoy_show_words">Wiederherstellungswörter anzeigen</string>
+    <string name="decoy_fact_no_way_across">Von hier aus führt kein Weg hinüber</string>
+    <string name="decoy_fact_no_way_across_body">Wer diese Passphrase hat, erreicht diesen Tresor und kommt nicht weiter. Dass dein eigener existiert, ist nicht zu sehen, geschweige denn zu öffnen – genau darum geht es.</string>
+    <string name="decoy_fact_nothing_names">Nichts hier verweist auf den anderen</string>
+    <string name="decoy_fact_nothing_names_body">Dieser Tresor weiß nicht, dass dein eigener existiert, und nichts auf diesem Bildschirm auch nicht. Für jeden, der ihn öffnet, ist das das ganze Gerät.</string>
+    <string name="decoy_fact_inside">Was darin ist</string>
+    <plurals name="decoy_fact_inside_body">
+        <item quantity="one">%1$d Foto mit dem Aufnahmedatum und ein Entsperrverlauf, der nach Monaten normaler Nutzung aussieht.</item>
+        <item quantity="other">%1$d Fotos mit ihrem Aufnahmedatum und ein Entsperrverlauf, der nach Monaten normaler Nutzung aussieht.</item>
+    </plurals>
+    <string name="decoy_fact_back">Dann geht es zurück zu deinem eigenen Tresor</string>
+    <string name="decoy_fact_back_body">Das Aufschreiben der Wiederherstellungswörter ist der letzte Schritt. Danach schließt sich dieser Tresor und dein eigener öffnet sich wieder, dort, wo du warst.</string>
+    <string name="decoy_vaults_label">Tresore</string>
+    <string name="decoy_confirm_title">Bestätige, dass du es bist</string>
+    <string name="decoy_confirm_body">Gib die Passphrase des Tresors ein, den du geöffnet hast. Das erlaubt nur das Erstellen des Köder-Tresors.</string>
+    <string name="decoy_confirm_wrong">Das ist nicht die Passphrase des Tresors, den du geöffnet hast.</string>
+    <string name="decoy_checking">Wird geprüft</string>
+    <string name="decoy_build">Köder-Tresor erstellen</string>
+    <string name="decoy_preserve_title">Andere Tresore auf diesem Gerät</string>
+    <string name="decoy_preserve_body">Nur für eine zweite Passphrase, die auf dem Sperrbildschirm etwas öffnet – einen Köder-Tresor, den du schon erstellt hast, oder einen wiederhergestellten Tresor. Tresore auf deiner eigenen Liste gehören nicht dazu und sind nie gefährdet.</string>
+    <string name="decoy_preserve_warning">Die App kann einen Tresor, den sie nicht öffnen kann, nicht finden und ihm deshalb auch nicht ausweichen. Jeder solche Tresor, dessen Passphrase hier nicht eingegeben wird, kann vom neuen überschrieben werden.</string>
+    <string name="decoy_preserve_label">Passphrase eines zu behaltenden Tresors</string>
+    <string name="decoy_preserve_add">Zur Liste hinzufügen</string>
+    <string name="decoy_preserve_empty">Nichts hinzugefügt. Für die meisten ist eine leere Liste richtig.</string>
+    <string name="decoy_preserve_entry">Passphrase %1$d</string>
+    <string name="decoy_preserve_remove">Passphrase %1$d entfernen</string>
+
+    <!-- Onboarding — the first-run steps -->
+    <string name="onboarding_welcome_title">Fotos, die sonst niemand öffnen kann</string>
+    <string name="onboarding_welcome_lead">Alles, was du hier hineinlegst, wird auf diesem Gerät verschlüsselt und bleibt darauf. Es gibt kein Konto, keinen Server und für uns keine Möglichkeit, etwas davon zu sehen – diese App kann überhaupt nicht ins Internet.</string>
+    <string name="onboarding_welcome_steps">Die Einrichtung hat acht kurze Schritte. Keiner davon ist Pflicht, und du kannst es dir später in den Einstellungen anders überlegen.</string>
+    <string name="onboarding_get_started">Los geht’s</string>
+    <string name="onboarding_have_backup">Ich habe eine Sicherung zum Wiederherstellen</string>
+    <string name="onboarding_passphrase_lead">Nur das öffnet deinen Tresor. Es lässt sich nicht zurücksetzen.</string>
+    <string name="onboarding_fact_no_reset">Kein Zurücksetzen, kein Konto</string>
+    <string name="onboarding_fact_no_reset_body">Niemand kann das für dich wiederherstellen – nicht wir, niemand. Genau darum geht es, und genau das ist das Risiko.</string>
+    <string name="onboarding_fact_kit_next">Als Nächstes bekommst du ein Wiederherstellungs-Kit</string>
+    <string name="onboarding_fact_kit_next_body">Vierundzwanzig Wörter, die diesen Tresor öffnen, wenn du die Passphrase vergisst. Das ist der einzige andere Weg hinein.</string>
+    <string name="onboarding_kit_title">Schreib sie auf</string>
+    <string name="onboarding_kit_lead">Vierundzwanzig Wörter, die diesen Tresor öffnen, falls die Passphrase je verloren geht. Danach kannst du sie noch 3-mal über das Menü ansehen. Dann sind sie für immer aus dieser App verschwunden.</string>
+    <string name="onboarding_fact_anyone">Wer diese Wörter hat, kann diesen Tresor öffnen</string>
+    <string name="onboarding_fact_anyone_body">Sie lassen sich weder ändern noch widerrufen. Bewahre das Papier dort auf, wo jemand, der deine Sachen durchsucht, nicht nachsehen würde.</string>
+    <string name="onboarding_fact_backup_words">Eine Sicherung wird mit diesen Wörtern wiederhergestellt, nicht mit deiner Passphrase</string>
+    <string name="onboarding_fact_backup_words_body">Wenn du später eine Kopie in einem Cloud-Ordner aufbewahrst, sind diese Wörter das Einzige, was sie lesen kann.</string>
+    <string name="onboarding_kit_type">Tippe „%1$s“, um zu bestätigen, dass du sie aufgeschrieben hast.</string>
+    <string name="onboarding_capture_title">Sieh, wer hineinwollte</string>
+    <string name="onboarding_capture_lead">Nach einem fehlgeschlagenen Entsperrversuch nimmt das Telefon unbemerkt auf, wer es gerade hält.</string>
+    <string name="onboarding_fact_failed_unlock">Nur bei einem fehlgeschlagenen Entsperrversuch</string>
+    <string name="onboarding_fact_failed_unlock_body">Bei einer erfolgreichen Entsperrung wird nichts aufgenommen, und nichts verlässt dieses Gerät – jede Aufnahme wird so versiegelt, dass nur deine Passphrase sie lesen kann, und wartet unter Eindringlingsaufnahme auf dich.</string>
+    <string name="onboarding_fact_permission">Jeder Modus fragt nach seiner eigenen Berechtigung</string>
+    <string name="onboarding_fact_permission_body">Schalte einen ein und Android fragt genau nach dem, was dieser Modus braucht. Lehnst du ab, bleibt der Modus aus; sonst ändert sich nichts.</string>
+    <string name="onboarding_decoy_title">Ein Tresor, den du herausgeben kannst</string>
+    <string name="onboarding_decoy_lead">Ein zweiter Tresor mit eigener Passphrase, mit Dingen, die jemand ruhig sehen darf.</string>
+    <string name="onboarding_fact_used_body">Ein leerer Tresor täuscht niemanden. Dieser bekommt Fotos, die du auswählst, mit Daten und einem Verlauf, die nach Monaten normaler Nutzung aussehen.</string>
+    <string name="onboarding_fact_choose">Du wählst die Fotos aus</string>
+    <string name="onboarding_fact_choose_body">Sie stammen von diesem Gerät und sind deine eigenen. Wem du diesen Tresor gibst, sieht sie – wähle also solche, die du zeigen möchtest.</string>
+    <string name="onboarding_fact_trial">Damit beginnt dein 30-tägiger Testzeitraum</string>
+    <string name="onboarding_fact_trial_body">Ein Köder-Tresor importiert echte Fotos, und der Testzeitraum beginnt mit dem ersten Element, das in einen Tresor kommt. Überspring das, wenn du ihn lieber mit deinen eigenen Sachen beginnen möchtest.</string>
+    <string name="onboarding_backup_title">Eine Kopie woanders aufbewahren</string>
+    <string name="onboarding_backup_lead">Wenn dieses Telefon verloren geht oder kaputtgeht, geht alles im Tresor mit – außer es gibt eine Kopie.</string>
+    <string name="onboarding_panic_title">Eine Passphrase, die die anderen verschließt</string>
+    <string name="onboarding_panic_lead">Auf dem Sperrbildschirm eingegeben, öffnet sie einen Tresor und verschließt jeden anderen auf diesem Gerät dauerhaft.</string>
+    <string name="onboarding_panic_set_up">Panik-Zugang einrichten</string>
+    <string name="onboarding_fact_ordinary">Es sieht aus wie eine normale Entsperrung</string>
+    <string name="onboarding_fact_ordinary_body">Gleicher Bildschirm, gleiches Tempo, nichts zu sehen. Genau darum geht es – wer zusieht, erfährt nichts.</string>
+    <string name="onboarding_fact_way_in_body">Die anderen Tresore bleiben als unlesbare Daten auf diesem Gerät, und ihre Wiederherstellungs-Kits aus 24 Wörtern öffnen sie weiterhin. So bekommst du sie zurück.</string>
+    <string name="onboarding_identity_title">Lass es wie etwas anderes aussehen</string>
+    <string name="onboarding_identity_lead">Die App kann auf deinem Startbildschirm als Rechner, Musikplayer oder Sprachrekorder auftreten.</string>
+    <string name="onboarding_finish">Einrichtung abschließen</string>
+    <string name="onboarding_choose_identity">Identität wählen</string>
+    <string name="onboarding_fact_disguise">Die Tarnung ist echt und funktioniert</string>
+    <string name="onboarding_fact_disguise_body">Der Launcher-Eintrag und die Karte in den letzten Apps ändern sich beide. Hinein kommst du mit einer Geste, die du auf der Tarnung selbst ausführst.</string>
+    <string name="onboarding_fact_hides">Sie verbirgt die App, nicht die Dateien</string>
+    <string name="onboarding_fact_hides_body">Wer den Speicher dieses Geräts lesen kann oder die Android-Einstellungen öffnet, kann trotzdem erkennen, dass die App hier ist. Deine Passphrase – oder ein eingerichtetes biometrisches Merkmal – ist weiterhin das Einzige, was einen Tresor öffnet.</string>
+    <string name="onboarding_fact_rehearse">Du übst die Geste zweimal</string>
+    <string name="onboarding_fact_rehearse_body">Einmal zum Aufnehmen, einmal aus dem Gedächtnis. Ein Auslöser, den du nicht wiederholen kannst, ist ein Tresor, den du nicht öffnen kannst.</string>
+
+    <!-- Intruder capture — the modes -->
+    <string name="capture_mode_photo">Foto</string>
+    <string name="capture_mode_audio">Audio</string>
+    <string name="capture_mode_video">Video</string>
+    <string name="capture_mode_photo_line">Ein Standbild mit der Frontkamera</string>
+    <string name="capture_mode_audio_line">Ein kurzer Ausschnitt über das Mikrofon</string>
+    <string name="capture_mode_video_line">Ein kurzer Clip mit Ton</string>
+    <string name="capture_no_front_camera">Dieses Gerät hat keine Frontkamera.</string>
+    <string name="capture_sheet_lead">Aufgenommen nach einem fehlgeschlagenen Entsperrversuch.</string>
+    <string name="capture_sheet_photo">Ein Standbild mit der Frontkamera.</string>
+    <string name="capture_sheet_audio">Ein paar Sekunden über das Mikrofon.</string>
+    <string name="capture_sheet_video">Ein paar Sekunden Bild und Ton.</string>
+    <string name="capture_sheet_no_front">Dieses Gerät hat keine Frontkamera, deshalb sind Foto und Video nicht verfügbar.</string>
+    <!-- Intruder capture — the home screen's timeline, its flows and its notices -->
+    <string name="intruder_capture_settings">Aufnahmeeinstellungen</string>
+    <string name="intruder_today">Heute</string>
+    <string name="intruder_yesterday">Gestern</string>
+    <string name="intruder_empty_off_title">Nichts aufgenommen</string>
+    <string name="intruder_empty_off_body">Schalte einen Modus ein, und das Telefon nimmt unbemerkt auf, wer es nicht entsperren kann.</string>
+    <string name="intruder_empty_off_action">Auswählen, was aufgenommen wird</string>
+    <string name="intruder_empty_on_title">Noch nichts aufgenommen</string>
+    <string name="intruder_empty_on_body">%1$s an. Nach einem fehlgeschlagenen Entsperrversuch erscheint hier eine Aufnahme.</string>
+    <string name="intruder_empty_on_action">Ändern, was aufgenommen wird</string>
+    <string name="intruder_left_moved">In %1$s verschoben</string>
+    <string name="intruder_left_exported">Exportiert</string>
+    <string name="intruder_left_deleted">Gelöscht</string>
+    <string name="intruder_row_description">%1$s. %2$s, %3$s.</string>
+    <string name="intruder_row_description_left">%1$s. %2$s, %3$s. %4$s.</string>
+    <string name="intruder_move_to_vault">In Tresor verschieben</string>
+    <string name="intruder_export">Exportieren</string>
+    <plurals name="intruder_capture_count">
+        <item quantity="one">%1$d Aufnahme</item>
+        <item quantity="other">%1$d Aufnahmen</item>
+    </plurals>
+    <string name="intruder_move_failed">Diese Aufnahmen konnten nicht verschoben werden. Es wurde nichts geändert.</string>
+    <plurals name="intruder_delete_title">
+        <item quantity="one">%1$d Aufnahme endgültig löschen?</item>
+        <item quantity="other">%1$d Aufnahmen endgültig löschen?</item>
+    </plurals>
+    <plurals name="intruder_delete_body">
+        <item quantity="one">Die Aufnahme wird vernichtet und kann nicht wiederhergestellt werden. Ihre Zeile bleibt in der Zeitleiste.</item>
+        <item quantity="other">Die Aufnahmen werden vernichtet und können nicht wiederhergestellt werden. Ihre Zeilen bleiben in der Zeitleiste.</item>
+    </plurals>
+    <plurals name="intruder_export_title">
+        <item quantity="one">%1$d Aufnahme exportieren</item>
+        <item quantity="other">%1$d Aufnahmen exportieren</item>
+    </plurals>
+    <plurals name="intruder_export_body">
+        <item quantity="one">Die Aufnahme wird entschlüsselt, hinausgeschrieben, geprüft und dann aus der Eindringlingsaufnahme entfernt. Ihre Zeile bleibt in der Zeitleiste.</item>
+        <item quantity="other">Die %1$d Aufnahmen werden entschlüsselt, hinausgeschrieben, geprüft und dann aus der Eindringlingsaufnahme entfernt. Ihre Zeilen bleiben in der Zeitleiste.</item>
+    </plurals>
+    <string name="intruder_export_checked">Jede Datei wird zurückgelesen und verglichen, bevor ihre verschlüsselte Kopie gelöscht wird. Was nicht übereinstimmt, bleibt in der Eindringlingsaufnahme und wird im Manifest aufgeführt.</string>
+    <string name="intruder_export_wrong_passphrase">Das ist nicht die Passphrase, die diese Liste von Tresoren öffnet.</string>
+    <string name="intruder_export_progress_left">%1$d von %2$d draußen, %3$d noch gespeichert</string>
+    <string name="intruder_export_busy">Wird exportiert</string>
+    <string name="intruder_blank">Ist schwarz geblieben</string>
+    <string name="intruder_silent">Ist stumm geblieben</string>
+    <string name="intruder_permission_camera_off">Kameraberechtigung ausgeschaltet</string>
+    <string name="intruder_permission_camera_on">Kameraberechtigung wieder eingeschaltet</string>
+    <string name="intruder_permission_microphone_off">Mikrofonberechtigung ausgeschaltet</string>
+    <string name="intruder_permission_microphone_on">Mikrofonberechtigung wieder eingeschaltet</string>
+    <string name="intruder_permission_stopped">Bemerkt %1$s · %2$s gestoppt</string>
+    <string name="intruder_permission_resumed">Bemerkt %1$s · %2$s nimmt wieder auf</string>
+    <string name="intruder_permission_noticed">Bemerkt %1$s</string>
+    <string name="capture_banner_camera_one">%1$s nimmt nicht auf. Die Kameraberechtigung ist aus.</string>
+    <string name="capture_banner_camera_many">%1$s nehmen nicht auf. Die Kameraberechtigung ist aus.</string>
+    <string name="capture_banner_microphone_one">%1$s nimmt nicht auf. Die Mikrofonberechtigung ist aus.</string>
+    <string name="capture_banner_microphone_many">%1$s nehmen nicht auf. Die Mikrofonberechtigung ist aus.</string>
+    <string name="capture_turn_back_on">Wieder einschalten</string>
+    <string name="capture_sheet_no_camera">Nimmt nicht auf · Kameraberechtigung aus</string>
+    <string name="capture_sheet_no_microphone">Nimmt nicht auf · Mikrofonberechtigung aus</string>
+    <string name="capture_auto_reset">Android kann die Berechtigungen dieser App entfernen, wenn sie einige Monate nicht genutzt wird. Dann würde die Aufnahme stoppen.</string>
+    <string name="capture_keep_permissions">Berechtigungen behalten</string>
+    <string name="intruder_subtitle_description">Tresor: %1$s</string>
+
+    <!-- Recovery kit — showing, re-showing and entering the 24 words -->
+    <string name="kit_acknowledgement">Ich habe verstanden</string>
+    <string name="kit_title_list">Dein Wiederherstellungs-Kit</string>
+    <string name="kit_title_vault">Wiederherstellungs-Kit für %1$s</string>
+    <string name="kit_title_short">Wiederherstellungs-Kit</string>
+    <string name="kit_body_list">Diese 24 Wörter sind der einzige Weg zurück in die Tresore, die deine Passphrase öffnet, falls du sie vergisst. Schreib sie der Reihe nach auf und bewahre das Papier sicher auf.\n\nWer diese Wörter hat, kann diese Tresore öffnen, auch alle, die du später hinzufügst. Ein Tresor mit eigener Passphrase gehört nicht dazu – er hat ein eigenes Kit. Diese Wörter lassen sich weder ändern noch widerrufen.</string>
+    <string name="kit_body_list_backup">Wenn du diesen Tresor je in einem Cloud-Ordner sicherst, stellen diese Wörter ihn wieder her – nicht deine Passphrase. Verlierst du dieses Gerät und dieses Blatt zusammen, kann niemand die Sicherung öffnen, auch du nicht.</string>
+    <string name="kit_body_vault">Diese 24 Wörter sind der einzige Weg zurück in %1$s, falls du die gerade festgelegte Passphrase vergisst. Schreib sie der Reihe nach auf und bewahre das Papier sicher auf.\n\nDie Passphrase, die deine Tresorliste öffnet, öffnet diesen nicht, und das Wiederherstellungs-Kit dieser Liste auch nicht. Verlierst du die Passphrase und dieses Blatt, ist alles in %1$s für immer weg.\n\nWer diese Wörter hat, kann %1$s öffnen. Sie lassen sich weder ändern noch widerrufen.</string>
+    <string name="kit_type_acknowledgement">Tippe „%1$s“, um zu bestätigen, dass du sie aufgeschrieben hast und weißt, dass sich die Passphrase nicht zurücksetzen lässt.</string>
+    <string name="kit_print">Drucken</string>
+    <string name="kit_last_view">Letzte Ansicht – das lässt sich nicht noch einmal anzeigen.</string>
+    <plurals name="kit_views_left_after">
+        <item quantity="one">Nach dieser noch %1$d Ansicht.</item>
+        <item quantity="other">Nach dieser noch %1$d Ansichten.</item>
+    </plurals>
+    <string name="kit_remaining_views">Nach dem Fortfahren kannst du sie noch 3-mal über das Menü ansehen. Nach dem dritten Mal lassen sie sich nicht mehr anzeigen, und deine Abschrift ist die einzige.</string>
+    <string name="drawer_kit">Wiederherstellungs-Kit \u0020· \u0020%1$s</string>
+    <string name="kit_cannot_show">Nicht mehr anzeigbar</string>
+    <plurals name="kit_views_left">
+        <item quantity="one">Noch %1$d Ansicht</item>
+        <item quantity="other">Noch %1$d Ansichten</item>
+    </plurals>
+    <string name="kit_exhausted">Dein Wiederherstellungs-Kit wurde so oft angezeigt, wie es geht. Diese App kann es nicht noch einmal zeigen. Bewahre deine Abschrift sicher auf.</string>
+    <string name="kit_enter_list">Gib deine Passphrase ein, um es anzuzeigen.</string>
+    <string name="kit_enter_vault">Gib die Passphrase für %1$s ein, um es anzuzeigen.</string>
+    <string name="kit_last_time">Das ist das letzte Mal, dass dein Wiederherstellungs-Kit angezeigt werden kann. Sobald du den nächsten Bildschirm verlässt, lässt es sich nicht mehr anzeigen – achte also darauf, dass alle 24 Wörter aufgeschrieben sind. %1$s</string>
+    <plurals name="kit_views_more">
+        <item quantity="one">Du kannst dein Wiederherstellungs-Kit noch %1$d-mal ansehen. Jetzt anzusehen verbraucht eine Ansicht, danach bleiben %2$d. %3$s</item>
+        <item quantity="other">Du kannst dein Wiederherstellungs-Kit noch %1$d-mal ansehen. Jetzt anzusehen verbraucht eine Ansicht, danach bleiben %2$d. %3$s</item>
+    </plurals>
+    <string name="kit_wrong_list">Diese Passphrase öffnet diese Liste nicht.</string>
+    <string name="kit_wrong_vault">Diese Passphrase öffnet diesen Tresor nicht.</string>
+    <string name="kit_passphrase_for">Passphrase für %1$s</string>
+    <string name="kit_open_failed">Dein Wiederherstellungs-Kit konnte nicht geöffnet werden. Versuche es noch einmal.</string>
+    <string name="kit_show">Wiederherstellungs-Kit anzeigen</string>
+    <string name="kit_words_open_nothing">Diese Wörter öffnen keinen Tresor auf diesem Gerät.</string>
+    <string name="kit_new_passphrase_title">Neue Passphrase wählen</string>
+    <string name="kit_enter_title">Kit eingeben</string>
+    <string name="kit_enter_lead">Tippe die 24 Wörter aus deinem Wiederherstellungs-Kit ein, eins pro Feld.</string>
+    <string name="kit_add_backup_file">Sicherungsdatei hinzufügen</string>
+    <string name="kit_lost_files">Auch Dateien verloren? Wähle die Sicherung, die du in deiner Cloud-App oder auf einer SD-Karte gespeichert hast, dann kommen sie mit zurück.</string>
+    <string name="kit_sd_backup">Sicherung auf SD-Karte</string>
+    <string name="kit_backup_file">Sicherungsdatei</string>
+    <string name="kit_new_passphrase_restoring">Wähle die Passphrase, mit der dieses Telefon deine Tresore öffnet. Deine 24 Wörter ändern sich nicht. Behalte das Papier.</string>
+    <string name="kit_new_passphrase_lead">Dein Wiederherstellungs-Kit stimmt. Wähle die Passphrase, mit der du deine Tresore ab jetzt öffnest – deine alte funktioniert dann nicht mehr. Deine 24 Wörter ändern sich nicht. Behalte das Papier.</string>
+    <string name="kit_passphrase_in_use">Diese Passphrase öffnet schon etwas auf diesem Telefon. Wähle eine andere.</string>
+    <string name="kit_new_passphrase_label">Neue Passphrase</string>
+    <string name="kit_mismatch">Die beiden Eingaben stimmen nicht überein.</string>
+    <string name="kit_setting_passphrase">Passphrase wird festgelegt</string>
+    <string name="kit_set_passphrase">Passphrase festlegen</string>
+    <string name="kit_recover_title">Tresor wiederherstellen</string>
+    <string name="kit_recover_lead">Tippe die 24 Wörter aus dem eigenen Wiederherstellungs-Kit eines Tresors ein, eins pro Feld. Er öffnet sich von dieser Liste mit der Passphrase, die du gerade verwendet hast – steht er schon darauf, fragt er nicht mehr nach seiner eigenen –, sodass du diese Wörter nicht mehr brauchst.\n\nDateien kommen dadurch nicht zurück – der Speicher des Tresors muss schon auf diesem Gerät sein.</string>
+    <string name="kit_recover_name">Namen auf dieser Liste</string>
+    <string name="kit_recover_name_hint">Der Name eines Tresors steht auf der Liste, auf der er war, deshalb braucht dieser hier einen Namen.</string>
+    <string name="kit_recovering">Wird wiederhergestellt</string>
+    <string name="kit_recover_action">Tresor wiederherstellen</string>
+    <string name="kit_not_a_word">kein Wort</string>
+    <string name="kit_word">Wort %1$d</string>
+    <string name="kit_word_wrong">Wort %1$d, keines der 24 Wörter</string>
+    <plurals name="kit_words_to_check">
+        <item quantity="one">Noch %1$d Wort zu prüfen.</item>
+        <item quantity="other">Noch %1$d Wörter zu prüfen.</item>
+    </plurals>
+    <string name="kit_checksum_failed">Das sind alles echte Wörter, aber die Kombination stimmt nicht – wahrscheinlich ist die Reihenfolge falsch. Vergleiche sie der Reihe nach mit deinem Kit.</string>
+
+    <!-- Vault list — the list, a new vault, editing a vault, a vault's own passphrase -->
+    <string name="vault_icon_home">Zuhause</string>
+    <string name="vault_icon_family">Familie</string>
+    <string name="vault_icon_person">Person</string>
+    <string name="vault_icon_child">Kind</string>
+    <string name="vault_icon_favourite">Favorit</string>
+    <string name="vault_icon_pets">Haustiere</string>
+    <string name="vault_icon_work">Arbeit</string>
+    <string name="vault_icon_id">Ausweis</string>
+    <string name="vault_icon_bank">Bank</string>
+    <string name="vault_icon_savings">Ersparnisse</string>
+    <string name="vault_icon_receipts">Belege</string>
+    <string name="vault_icon_documents">Dokumente</string>
+    <string name="vault_icon_medical">Gesundheit</string>
+    <string name="vault_icon_school">Schule</string>
+    <string name="vault_icon_travel">Reisen</string>
+    <string name="vault_icon_car">Auto</string>
+    <string name="vault_icon_camera">Kamera</string>
+    <string name="vault_icon_music">Musik</string>
+    <string name="vault_icon_books">Bücher</string>
+    <string name="vault_icon_celebration">Feier</string>
+    <string name="vault_icon_star">Stern</string>
+    <string name="vault_icon_diamond">Diamant</string>
+    <string name="vault_icon_shopping">Einkaufen</string>
+    <string name="vault_icon_archive">Archiv</string>
+    <string name="vault_list_lock">Sperren</string>
+    <string name="vault_new">Neuer Tresor</string>
+    <string name="first_vault_name">Mein Tresor</string>
+    <string name="vault_list_lead">Eine Passphrase öffnet diese Liste und alles darauf.</string>
+    <string name="vault_list_lead_locked">Eine Passphrase öffnet diese Liste. Als gesperrt markierte Tresore brauchen ihre eigene.</string>
+    <string name="vault_list_empty">Keine Tresore auf dieser Liste.</string>
+    <string name="vault_list_empty_body">Alles, was du hier erstellst, öffnet die Passphrase, die du gerade verwendet hast.</string>
+    <string name="vault_list_create">Tresor erstellen</string>
+    <string name="vault_row_locked">Gesperrt – hat eine eigene Passphrase</string>
+    <string name="vault_row_list_passphrase">Öffnet mit der Passphrase dieser Liste</string>
+    <string name="vault_row_options">Optionen für %1$s</string>
+    <string name="vault_edit">Tresor bearbeiten</string>
+    <string name="vault_flow_name_title">Benenne deinen Tresor</string>
+    <string name="vault_flow_name_lead">Diesen Namen und dieses Abzeichen siehst du in deiner Tresorliste.</string>
+    <string name="vault_flow_opens_title">Wie soll sich %1$s öffnen?</string>
+    <string name="vault_flow_opens_lead">Du kannst später unter „Tresor bearbeiten“ eine Passphrase hinzufügen, ändern oder entfernen.</string>
+    <string name="vault_opens_list">Mit deiner Tresorliste</string>
+    <string name="vault_opens_list_detail">Öffnet sich direkt aus der Liste, mit der Passphrase, die du schon verwendet hast.</string>
+    <string name="vault_opens_own">Mit eigener Passphrase</string>
+    <string name="vault_opens_own_detail">Nur seine eigene Passphrase öffnet ihn. Er bekommt ein eigenes Wiederherstellungs-Kit und eine eigene Eindringlingsaufnahme.</string>
+    <string name="vault_flow_passphrase_title">Wähle eine Passphrase für %1$s</string>
+    <string name="vault_flow_passphrase_lead">Nur diese Passphrase öffnet %1$s. Die Passphrase deiner Tresorliste öffnet ihn nicht, und auch nicht das Wiederherstellungs-Kit der Liste – deshalb bekommt %1$s ein eigenes Wiederherstellungs-Kit.</string>
+    <string name="vault_flow_capture_title">Sieh, wer %1$s öffnen will</string>
+    <string name="vault_flow_capture_lead">Nach einer falschen Passphrase für %1$s zeichnet das Telefon unauffällig auf, wer es gerade hält.</string>
+    <string name="vault_capture_fact">Nur %1$s kann sie sehen</string>
+    <string name="vault_capture_fact_body">Jede Aufnahme wird für %1$s versiegelt und wartet darin, unter „Eindringlingsaufnahme“ in seinem Menü. Nichts in deiner Tresorliste zeigt sie.</string>
+    <string name="vault_discard_new_title">Diesen Tresor verwerfen?</string>
+    <string name="vault_discard_new_body">Es wurde noch nichts erstellt.</string>
+    <string name="vault_discard_add_title">Diese Passphrase verwerfen?</string>
+    <string name="vault_discard_add_body">%1$s öffnet sich weiterhin mit der Passphrase deiner Tresorliste.</string>
+    <string name="vault_capture_not_enrolled">Die Eindringlingsaufnahme wurde für %1$s nicht eingeschaltet. Schalte sie unter „Eindringlingsaufnahme“ in seinem Menü ein.</string>
+    <string name="vault_passphrase_label">Passphrase für diesen Tresor</string>
+    <string name="vault_creating">Wird erstellt…</string>
+    <string name="vault_open_named">%1$s öffnen</string>
+    <string name="vault_has_own_passphrase">Dieser Tresor hat eine eigene Passphrase.</string>
+    <string name="vault_open_wrong">Diese Passphrase hat %1$s nicht geöffnet.</string>
+    <string name="vault_opening">Wird geöffnet</string>
+    <string name="vault_open">Tresor öffnen</string>
+    <string name="vault_colour">Farbe</string>
+    <string name="vault_icon">Symbol</string>
+    <string name="vault_icon_letter">Buchstabe</string>
+    <!-- A sample of a letter, shown on the Letter icon before the vault has a name. -->
+    <!-- The name an imported vault is given on the list. From then on it is the vault's own name. -->
+    <string name="imported_vault">Importierter Tresor</string>
+
+    <!-- Vault grid — destinations, filters, sorting and the add line -->
+    <string name="add_photos_or_videos">Fotos oder Videos hinzufügen</string>
+    <string name="add_files">Dateien hinzufügen</string>
+    <string name="destination_media">Medien</string>
+    <string name="destination_files">Dateien</string>
+    <string name="destination_notes">Notizen</string>
+    <string name="destination_memos">Memos</string>
+    <string name="added_to">Zu %1$s hinzugefügt.</string>
+    <string name="media_filter_all">Alle</string>
+    <string name="media_filter_photos">Fotos</string>
+    <string name="media_filter_videos">Videos</string>
+    <string name="sort_newest">Neueste zuerst</string>
+    <string name="sort_oldest">Älteste zuerst</string>
+    <string name="sort_recently_added">Zuletzt hinzugefügt zuerst</string>
+    <string name="sort_first_added">Zuerst hinzugefügt zuerst</string>
+    <string name="sort_name_az">Name A–Z</string>
+    <string name="sort_name_za">Name Z–A</string>
+    <string name="sort_last_edited">Zuletzt bearbeitet</string>
+    <string name="media_filter_show_all">Alle anzeigen</string>
+    <string name="media_filter_show_photos">Fotos anzeigen</string>
+    <string name="media_filter_show_videos">Videos anzeigen</string>
+    <string name="view_as_list">Als Liste anzeigen</string>
+    <string name="view_as_grid">Als Raster anzeigen</string>
+
+    <!-- Vault grid — the bar, selection, the add button and empty states -->
+    <string name="grid_selected">%1$d ausgewählt</string>
+    <string name="folder_options">Ordneroptionen</string>
+    <plurals name="item_count">
+        <item quantity="one">%1$d Element</item>
+        <item quantity="other">%1$d Elemente</item>
+    </plurals>
+    <string name="sort_current">Wird verwendet</string>
+    <string name="sort_alphabetical">Alphabetisch, nicht numerisch</string>
+    <string name="folder_new">Neuer Ordner</string>
+    <string name="grid_destination_settings">Einstellungen für %1$s</string>
+    <string name="grid_trash_and_settings">Papierkorb und Einstellungen</string>
+    <string name="fab_camera">Kamera</string>
+    <string name="fab_voice_memo">Sprachmemo</string>
+    <string name="fab_new_note">Neue Notiz</string>
+    <string name="fab_actions">Aktionen</string>
+    <string name="fab_close_actions">Aktionen schließen</string>
+    <string name="fab_no_camera">Nicht auf diesem Gerät</string>
+    <string name="select_all">Alle auswählen</string>
+    <string name="move_to_folder">In Ordner verschieben</string>
+    <string name="remove_from_folder">Aus Ordner entfernen</string>
+    <string name="share_securely">Sicher teilen</string>
+    <string name="unvault_selected">Auswahl aus dem Tresor holen</string>
+    <string name="delete_selected">Auswahl löschen</string>
+    <string name="restore_selected">Auswahl wiederherstellen</string>
+    <string name="delete_selected_forever">Auswahl endgültig löschen</string>
+    <string name="leave_selection">Auswahl verlassen</string>
+    <string name="all_vaults">Alle Tresore</string>
+    <string name="select">Auswählen</string>
+    <string name="pinned">Angeheftet</string>
+    <string name="kind_video">Video</string>
+    <string name="kind_audio">Audio</string>
+    <string name="kind_file">Datei</string>
+    <string name="empty_media">Dieser Tresor ist leer.</string>
+    <string name="empty_media_line">Fotos und Videos, die du hinzufügst, werden verschlüsselt, bevor sie den Speicher berühren.</string>
+    <string name="empty_files">Noch keine Dateien.</string>
+    <string name="empty_files_line">Dokumente und alles andere, was diese App nicht öffnen kann, werden hier verschlüsselt aufbewahrt.</string>
+    <string name="empty_notes">Noch keine Notizen.</string>
+    <string name="empty_notes_line">Notizen, die du schreibst, werden in diesem Tresor gespeichert und verlassen ihn nie.</string>
+    <string name="empty_memos">Noch keine Aufnahmen.</string>
+    <string name="empty_memos_line">Sprachmemos werden schon beim Aufnehmen verschlüsselt.</string>
+    <string name="empty_add_photos">Fotos hinzufügen</string>
+    <string name="empty_add_media">Medien hinzufügen</string>
+    <string name="empty_create_note">Notiz erstellen</string>
+    <string name="empty_create_memo">Memo aufnehmen</string>
+    <string name="search">Suchen</string>
+    <string name="search_no_match">Keine Treffer.</string>
+    <string name="search_no_match_line">Die Suche durchsucht Namen, Ordner und Tags.</string>
+    <string name="folder_empty">Dieser Ordner ist leer.</string>
+    <string name="folder_empty_line">Importiere etwas hinein oder verschiebe Elemente von irgendwo im Tresor hierher.</string>
+    <string name="trash_empty">Der Papierkorb ist leer.</string>
+    <string name="trash_empty_line">Gelöschte Elemente bleiben %1$d Tage hier und werden dann vernichtet.</string>
+    <string name="section_edited">Bearbeitet %1$s</string>
+    <string name="section_added">Hinzugefügt %1$s</string>
+
+    <!-- Viewer — one item, full screen -->
+    <string name="viewer_thumbnail_set">Vorschaubild auf %1$s gesetzt.</string>
+    <string name="viewer_frame_unusable">Dieses Bild konnte nicht verwendet werden.</string>
+    <string name="viewer_rotate">Drehen</string>
+    <string name="viewer_edit_image">Bild bearbeiten</string>
+    <string name="viewer_opening">Wird geöffnet …</string>
+    <string name="viewer_could_not_open">Dieses Element konnte nicht geöffnet werden.</string>
+    <string name="viewer_export_item">Dieses Element exportieren</string>
+    <plurals name="viewer_skip_forward">
+        <item quantity="one">%1$d Sekunde vor</item>
+        <item quantity="other">%1$d Sekunden vor</item>
+    </plurals>
+    <plurals name="viewer_skip_back">
+        <item quantity="one">%1$d Sekunde zurück</item>
+        <item quantity="other">%1$d Sekunden zurück</item>
+    </plurals>
+    <string name="viewer_set_folder_cover">Als Ordnercover festlegen</string>
+    <string name="viewer_use_frame">Dieses Bild als Vorschaubild verwenden</string>
+
+    <!-- Settings rows — a choice revealed in place -->
+    <string name="reveal_choose">%1$s wählen</string>
+    <string name="reveal_close">%1$s schließen</string>
+    <string name="reveal_shown">%1$s eingeblendet</string>
+    <string name="reveal_hidden">%1$s ausgeblendet</string>
+    <string name="reveal_speed">Geschwindigkeit</string>
+    <string name="reveal_speeds">Geschwindigkeiten</string>
+    <string name="reveal_length">Länge</string>
+    <string name="reveal_lengths">Längen</string>
+    <string name="reveal_way">Art</string>
+    <string name="reveal_ways">Arten</string>
+    <string name="reveal_quality">Qualität</string>
+    <string name="reveal_qualities">Qualitätsstufen</string>
+
+    <!-- Slideshow -->
+    <string name="slideshow_speed_quick">Zügig</string>
+    <string name="slideshow_speed_usual">Das übliche Tempo</string>
+    <string name="slideshow_speed_slow">Zeit, jedes einzelne anzusehen</string>
+    <string name="slideshow_end">Diashow beenden</string>
+    <string name="slideshow_play">Diashow abspielen</string>
+    <string name="slideshow_pause">Diashow pausieren</string>
+    <string name="slideshow_options">Diashow-Optionen</string>
+    <string name="slideshow_options_lead">Die Diashow wartet, solange diese geöffnet sind, und läuft weiter, wenn du sie schließt.</string>
+    <string name="slideshow_speed_footnote">Wie lange jedes Foto angezeigt wird. Videos laufen bis zum Ende.</string>
+    <string name="slideshow_repeat">Wiederholen</string>
+    <string name="slideshow_repeat_on">An · Nach dem letzten Element beginnt die Diashow wieder beim ersten.</string>
+    <string name="slideshow_repeat_off">Aus · Die Diashow endet nach dem letzten Element.</string>
+    <string name="slideshow_shuffle">Zufällige Reihenfolge</string>
+    <string name="slideshow_shuffle_on">An · Jedes Element erscheint einmal in zufälliger Reihenfolge, bevor sich eines wiederholt.</string>
+    <string name="slideshow_shuffle_off">Aus · Elemente erscheinen in der Reihenfolge deiner Liste.</string>
+
+    <!-- Folders -->
+    <string name="colour_none">Keine Farbe</string>
+    <string name="colour_red">Rot</string>
+    <string name="colour_amber">Bernstein</string>
+    <string name="colour_teal">Petrol</string>
+    <string name="colour_blue">Blau</string>
+    <string name="colour_pink">Rosa</string>
+    <string name="folder_rename">Ordner umbenennen</string>
+    <string name="folder_create">Erstellen</string>
+    <string name="folder_move">Verschieben</string>
+    <string name="folder_cover">Cover</string>
+    <string name="folder_delete">Ordner löschen</string>
+    <string name="folder_delete_named">„%1$s“ wird entfernt.</string>
+    <string name="folder_delete_moves_to">Alles darin wird nach „%1$s“ verschoben. Nichts wird gelöscht und nichts landet im Papierkorb.</string>
+    <string name="folder_delete_moves_home">Alles darin wird auf den Startbildschirm verschoben. Nichts wird gelöscht und nichts landet im Papierkorb.</string>
+    <string name="folder_cover_recent">Neuestes Element verwenden</string>
+    <string name="folder_cover_empty">In diesem Ordner gibt es noch nichts anzuzeigen.</string>
+    <string name="folder_cover_current">Aktuelles Cover</string>
+    <string name="picker_move_folder">„%1$s“ verschieben</string>
+    <plurals name="picker_move_items">
+        <item quantity="one">%1$d Element verschieben</item>
+        <item quantity="other">%1$d Elemente verschieben</item>
+    </plurals>
+    <string name="picker_folder_lead">Alles im Ordner wird mit verschoben.</string>
+    <string name="picker_items_lead">Ein Element liegt in höchstens einem Ordner, deshalb ersetzt das Verschieben den bisherigen Ordner.</string>
+    <string name="picker_mixed_kinds">Medien, Dateien, Notizen und Memos haben jeweils eigene Ordner. Um in einen Ordner zu verschieben, wähle Elemente einer Art aus.</string>
+    <string name="picker_home">Startbildschirm</string>
+    <string name="picker_up">Nach oben</string>
+    <string name="picker_where_now">aktueller Ort</string>
+    <string name="picker_move_here">Hierher verschieben</string>
+    <string name="picker_move_into">Nach „%1$s“ verschieben</string>
+    <string name="picker_move_home">Auf den Startbildschirm verschieben</string>
+    <string name="colour_yellow">Gelb</string>
+    <string name="colour_white">Weiß</string>
+    <string name="colour_black">Schwarz</string>
+
+    <!-- Rename, delete and destroy -->
+    <string name="rename_item">Element umbenennen</string>
+    <string name="rename_lead">Unter diesem Namen wird das Element exportiert. Die Endung bleibt, wie sie ist – sie bestimmt, wie das Element geöffnet und wohin es exportiert wird.</string>
+    <string name="rename_refused">Ein Name braucht mindestens ein Zeichen, darf nicht nur aus Punkten bestehen, keinen Schrägstrich enthalten und ist einschließlich Endung höchstens %1$d Zeichen lang.</string>
+    <string name="delete_one_forever">%1$s endgültig löschen?</string>
+    <plurals name="delete_many_forever">
+        <item quantity="one">%1$d Element endgültig löschen?</item>
+        <item quantity="other">%1$d Elemente endgültig löschen?</item>
+    </plurals>
+    <string name="delete_one">%1$s löschen?</string>
+    <plurals name="delete_many">
+        <item quantity="one">%1$d Element löschen?</item>
+        <item quantity="other">%1$d Elemente löschen?</item>
+    </plurals>
+    <string name="delete_body_one_forever">Die Kopie in diesem Tresor wird vernichtet. Sie kann nicht wiederhergestellt werden.</string>
+    <string name="delete_body_many_forever">Die Kopien in diesem Tresor werden vernichtet. Sie können nicht wiederhergestellt werden.</string>
+    <string name="delete_body_trash">In den Papierkorb verschoben. Wird nach %1$d Tagen endgültig gelöscht.</string>
+    <string name="delete_forever">Endgültig löschen</string>
+    <string name="keep">Behalten</string>
+    <string name="destroy_title">„%1$s“ vernichten?</string>
+    <string name="destroy_body">Alles in diesem Tresor verschwindet – jedes Foto, Video, jede Notiz und jeder Ordner. Nichts landet im Papierkorb, und nichts kann wiederhergestellt werden.</string>
+    <string name="destroy_others_safe">Deine anderen Tresore sind nicht betroffen.</string>
+    <string name="destroy_backup_file">Auch seine Sicherungsdatei wird gelöscht – sonst würde dein Wiederherstellungs-Kit weiterhin eine vollständige Kopie dieses Tresors öffnen. Kopien, die dein Anbieter in seinem eigenen Papierkorb oder Versionsverlauf aufbewahrt, liegen außerhalb der Reichweite dieser App.</string>
+    <string name="destroy_backup_folder">Auch sein Sicherungsordner wird geleert – sonst würde dein Wiederherstellungs-Kit weiterhin eine vollständige Kopie dieses Tresors öffnen. Kopien, die dein Anbieter in seinem eigenen Papierkorb oder Versionsverlauf aufbewahrt, liegen außerhalb der Reichweite dieser App.</string>
+    <string name="destroy_give_back">Erst meine Dateien zurückgeben, dann vernichten</string>
+    <string name="destroy_everything">Alles darin vernichten</string>
+    <string name="destroy_keep">Tresor behalten</string>
+    <string name="destroy_gate_own">Das lässt sich nicht rückgängig machen. Gib zuerst die Passphrase ein, die %1$s öffnet – seine eigene, nicht die deiner Tresorliste.</string>
+    <string name="destroy_gate_list">Das lässt sich nicht rückgängig machen. Gib zuerst die Passphrase deiner Tresorliste ein.</string>
+    <string name="destroy_gate_lost">Passphrase verloren? Die eigenen 24 Wörter dieses Tresors holen ihn zurück. Öffne in der Tresorliste das Menü, wähle „Tresor mit seinem Kit wiederherstellen“ und vernichte ihn dann von dort.</string>
+    <string name="destroy_continue">Weiter</string>
+    <string name="destroy_checking">Wird geprüft …</string>
+    <string name="destroy_return_then">Sobald jede Datei draußen und geprüft ist, wird %1$s vernichtet.</string>
+
+    <!-- Destination settings — Media, Notes and Memos -->
+    <string name="skip_short">Ein kurzer Sprung</string>
+    <string name="skip_usual">Der übliche Sprung</string>
+    <string name="skip_longer">Ein längerer Sprung</string>
+    <string name="skip_scene">Über eine Szene hinweg</string>
+    <string name="orientation_auto">Automatisch</string>
+    <string name="orientation_auto_detail">Videos drehen sich mit deinem Smartphone</string>
+    <string name="orientation_landscape">Querformat</string>
+    <string name="orientation_landscape_detail">Videos öffnen im Querformat, egal wie du dein Smartphone hältst</string>
+    <string name="speed_0_5">0,5×</string>
+    <string name="speed_0_5_detail">Halbe Geschwindigkeit</string>
+    <string name="speed_0_75">0,75×</string>
+    <string name="speed_0_75_detail">Etwas langsamer</string>
+    <string name="speed_normal">Normal</string>
+    <string name="speed_normal_detail">Wie aufgenommen</string>
+    <string name="speed_1_25">1,25×</string>
+    <string name="speed_1_25_detail">Etwas schneller</string>
+    <string name="speed_1_5">1,5×</string>
+    <string name="speed_1_5_detail">Anderthalbfach</string>
+    <string name="speed_2">2×</string>
+    <string name="speed_2_detail">Doppelte Geschwindigkeit</string>
+    <string name="quality_standard">Standard</string>
+    <string name="quality_standard_detail">64 kbit/s · etwa 0,5 MB pro Minute</string>
+    <string name="quality_high">Hoch</string>
+    <string name="quality_high_detail">128 kbit/s · etwa 1 MB pro Minute</string>
+    <string name="quality_highest">Am höchsten</string>
+    <string name="quality_highest_detail">256 kbit/s · etwa 2 MB pro Minute</string>
+    <string name="media_settings_intro">Wie Fotos und Videos aussehen und abgespielt werden, wenn du sie öffnest.</string>
+    <string name="media_settings_viewing">Beim Ansehen</string>
+    <string name="media_keep_on">Bildschirm beim Ansehen anlassen</string>
+    <string name="media_keep_on_on">An · Der Bildschirm bleibt an, solange ein Foto oder Video geöffnet ist, und der Tresor bleibt mit ihm offen.</string>
+    <string name="media_keep_on_off">Aus · Der Bildschirm geht nach dem üblichen Timer deines Smartphones aus, und der Tresor sperrt sich mit ihm.</string>
+    <string name="media_brightness">Volle Helligkeit beim Ansehen</string>
+    <string name="media_brightness_on">An · Fotos und Videos öffnen mit voller Helligkeit. Deine Helligkeit kehrt zurück, wenn du sie schließt.</string>
+    <string name="media_brightness_off">Aus · Fotos und Videos öffnen mit der Helligkeit deines Smartphones.</string>
+    <string name="media_stretch">Fotos mit geringer Auflösung strecken</string>
+    <string name="media_stretch_on">An · Ein Foto, das kleiner als der Bildschirm ist, wird auf Bildschirmgröße vergrößert.</string>
+    <string name="media_stretch_off">Aus · Ein Foto, das kleiner als der Bildschirm ist, wird in seiner eigenen Größe angezeigt.</string>
+    <string name="media_quality">Höchste Anzeigequalität</string>
+    <string name="media_quality_on">An · Fotos öffnen in voller Auflösung, für Details beim Zoomen. Braucht mehr Speicher und Akku.</string>
+    <string name="media_quality_off">Aus · Fotos öffnen in Bildschirmauflösung. Beim Zoomen sind weniger Details zu sehen.</string>
+    <string name="playback_speed">Wiedergabegeschwindigkeit</string>
+    <string name="media_speed_footnote">Die Tonhöhe bleibt gleich.</string>
+    <string name="media_resume">Videos fortsetzen</string>
+    <string name="media_resume_on">An · Ein Video beginnt dort, wo du es zuletzt angehalten hast.</string>
+    <string name="media_resume_off">Aus · Videos beginnen von vorn, und wo du aufhörst, wird nicht gespeichert.</string>
+    <string name="media_repeat">Video wiederholen</string>
+    <string name="media_repeat_on">An · Ein Video beginnt am Ende wieder von vorn.</string>
+    <string name="media_repeat_off">Aus · Ein Video stoppt an seinem Ende.</string>
+    <string name="media_skip">Zum Springen doppeltippen</string>
+    <string name="media_skip_footnote">Doppeltippe auf die rechte Seite eines Videos, um vorzuspringen, und auf die linke, um zurückzuspringen.</string>
+    <string name="media_orientation">Videoausrichtung</string>
+    <string name="notes_settings_intro">Diese gelten für jede Notiz, in jedem Tresor.</string>
+    <string name="notes_checklists">Checklisten</string>
+    <string name="notes_move_checked">Abgehakte Einträge nach unten verschieben</string>
+    <string name="notes_move_checked_on">An · Ein abgehakter Eintrag rutscht unter die nicht abgehakten seiner Liste. Entfernst du den Haken, wandert er wieder nach oben.</string>
+    <string name="notes_move_checked_off">Aus · Abgehakte Einträge bleiben, wo sie sind.</string>
+    <string name="notes_keyboard">Tastatur</string>
+    <string name="notes_incognito">Inkognito-Tastatur</string>
+    <string name="notes_incognito_on">An · Deine Tastatur wird gebeten, keine Wörter aus deinen Notizen zu lernen. Die meisten Tastaturen halten sich daran, manche vielleicht nicht.</string>
+    <string name="notes_incognito_off">Aus · Deine Tastatur kann Wörter aus deinen Notizen lernen und sie in anderen Apps vorschlagen.</string>
+    <string name="memos_settings_intro">Wie Memos aufgenommen werden und wie sie abgespielt werden, wenn du sie öffnest.</string>
+    <string name="memos_quality">Aufnahmequalität</string>
+    <string name="memos_quality_footnote">Ein Memo behält die Qualität, mit der es begonnen wurde. Eine Änderung gilt ab dem nächsten.</string>
+    <string name="memos_stereo">Stereoaufnahme</string>
+    <string name="memos_stereo_on">An · Memos werden in zwei Kanälen aufgenommen, bei etwa doppelter Größe. Ein Smartphone, das das nicht kann, nimmt in Mono auf.</string>
+    <string name="memos_stereo_off">Aus · Memos werden in einem Kanal aufgenommen.</string>
+    <string name="memos_bluetooth">Bluetooth-Mikrofon verwenden</string>
+    <string name="memos_bluetooth_on">An · Ein verbundenes Bluetooth-Headset nimmt das Memo auf, in Anrufqualität und in Mono – Qualität und Stereo gelten dafür nicht. Ist keines verbunden, nimmt das Mikrofon deines Smartphones auf.</string>
+    <string name="memos_bluetooth_off">Aus · Das Mikrofon deines Smartphones nimmt Memos auf. Ein Bluetooth-Headset nimmt in Anrufqualität und in Mono auf, ohne Qualität oder Stereo.</string>
+    <string name="memos_playback">Wiedergabe</string>
+    <string name="memos_speed_footnote">Die Tonhöhe bleibt gleich. Videos folgen der Geschwindigkeit unter „Medien“, nicht dieser.</string>
+    <string name="memos_skip_silence">Stille überspringen</string>
+    <string name="memos_skip_silence_on">An · Stille Abschnitte werden beim Abspielen eines Memos übersprungen.</string>
+    <string name="memos_skip_silence_off">Aus · Memos werden samt ihrer Pausen abgespielt.</string>
+
+    <!-- Notes -->
+    <string name="note_title">Titel</string>
+    <string name="note_body">Notiz</string>
+    <string name="note_edit">Notiz bearbeiten</string>
+    <string name="note_placeholder">Losschreiben</string>
+    <string name="note_too_long">Diese Notiz ist %1$d Byte groß, das Limit liegt bei %2$d. Das Limit zählt Bytes statt Zeichen, deshalb zählen Buchstaben mit Akzenten, Emojis und nicht lateinische Schriften jeweils mehr als eins.</string>
+    <string name="note_pin">Anheften</string>
+    <string name="note_unpin">Loslösen</string>
+    <string name="note_delete">Notiz löschen</string>
+    <string name="format_checklist">Checkliste</string>
+    <string name="format_bullet">Aufzählung</string>
+    <string name="format_numbered">Nummerierte Liste</string>
+    <string name="format_heading">Überschrift</string>
+    <string name="format_bold">Fett</string>
+    <string name="format_italic">Kursiv</string>
+    <string name="format_strike">Durchgestrichen</string>
+    <string name="note_completed">Erledigt: %1$s</string>
+    <string name="note_attached_image">Angehängtes Bild</string>
+    <string name="note_attachment_missing">Dieser Anhang ist nicht mehr im Tresor.</string>
+    <string name="note_attachment_missing_label">Fehlender Anhang %1$s</string>
+
+    <!-- Image editor -->
+    <!-- Aspect ratios: the numbers are the same in every language; write them the way the language writes a ratio. -->
+    <string name="aspect_free">Frei</string>
+    <string name="aspect_1_1">1:1</string>
+    <string name="aspect_4_3">4:3</string>
+    <string name="aspect_3_2">3:2</string>
+    <string name="aspect_16_9">16:9</string>
+    <string name="filter_original">Original</string>
+    <string name="filter_mono">Mono</string>
+    <string name="filter_warm">Warm</string>
+    <string name="filter_cool">Kühl</string>
+    <string name="filter_fade">Verblasst</string>
+    <string name="filter_punch">Kräftig</string>
+    <string name="width_fine">Fein</string>
+    <string name="width_medium">Mittel</string>
+    <string name="width_bold">Kräftig</string>
+    <string name="editor_save_note">Beim Speichern entsteht ein neues Element, das Original bleibt erhalten.</string>
+    <string name="editor_saving">Wird gespeichert …</string>
+    <string name="editor_save_copy">Kopie speichern</string>
+    <string name="editor_discard_title">Diese Bearbeitungen verwerfen?</string>
+    <string name="editor_discard_body">Das Bild wird wieder so, wie es war. Sonst ändert sich nichts.</string>
+    <string name="editor_discard">Verwerfen</string>
+    <string name="editor_keep_editing">Weiter bearbeiten</string>
+    <string name="editor_discard_edits">Bearbeitungen verwerfen</string>
+    <string name="editor_title">Bearbeiten</string>
+    <string name="tool_crop">Zuschneiden</string>
+    <string name="tool_straighten">Ausrichten</string>
+    <string name="tool_filters">Filter</string>
+    <string name="tool_light">Licht</string>
+    <string name="tool_markup">Markieren</string>
+    <string name="editor_crop_hint">Ziehe an den Ecken oder am Rahmen selbst.</string>
+    <string name="editor_rotate_left">Nach links drehen</string>
+    <string name="editor_rotate_right">Nach rechts drehen</string>
+    <string name="editor_flip_horizontal">Horizontal spiegeln</string>
+    <string name="editor_flip_vertical">Vertikal spiegeln</string>
+    <string name="editor_straighten_value">Ausrichten \u0020· \u0020%1$s°</string>
+    <string name="editor_strength">Stärke</string>
+    <string name="editor_brightness">Helligkeit</string>
+    <string name="editor_contrast">Kontrast</string>
+    <string name="editor_saturation">Sättigung</string>
+    <string name="editor_warmth">Wärme</string>
+    <string name="editor_erase_hint">Tippe auf einen Strich, um ihn zu entfernen.</string>
+    <string name="editor_draw_hint">Ziehe über das Bild, um zu zeichnen.</string>
+    <string name="editor_eraser">Radierer</string>
+    <string name="editor_reset">Zurücksetzen</string>
+
+    <!-- Voice memo -->
+    <string name="memo_recorded">Aufgenommen</string>
+    <string name="memo_permission_body">Für die Aufnahme wird das Mikrofon gebraucht. Nichts, was hier aufgenommen wird, verlässt das Gerät – es wird direkt in den Tresor geschrieben, und diese Berechtigung dient nur dazu. Sie schaltet das Mikrofon für nichts anderes ein.</string>
+    <string name="memo_speak">Sprich, und es landet direkt in diesem Tresor</string>
+    <string name="memo_trial">Mit dem Speichern eines Memos beginnt deine 30-tägige Testphase. Die Uhr startet mit dem ersten Element, das in einem Tresor landet, und das wäre dieses.</string>
+    <string name="memo_allow_microphone">Mikrofon erlauben</string>
+    <string name="memo_save">Im Tresor speichern</string>
+    <string name="memo_position">Position in dieser Aufnahme</string>
+    <string name="memo_minutes_seconds">%1$s %2$s</string>
+    <string name="memo_recording_length">Aufnahme läuft, %1$s</string>
+    <string name="memo_recorded_length">Aufgenommen, %1$s</string>
+    <string name="memo_nothing_yet">Noch nichts aufgenommen</string>
+    <string name="memo_discard_title">Diese Aufnahme verwerfen?</string>
+    <string name="memo_discard_body">Die Aufnahme wurde nicht gespeichert und geht verloren, wenn du gehst. Was schon im Tresor ist, bleibt unberührt.</string>
+    <string name="memo_keep_recording">Weiter aufnehmen</string>
+    <string name="memo_already_running">Es läuft bereits eine Aufnahme.</string>
+    <string name="memo_could_not_record">Der Tresor konnte gerade keine Aufnahme annehmen.</string>
+    <string name="memo_mic_failed">Das Mikrofon konnte nicht starten.</string>
+
+    <!-- Camera -->
+    <string name="camera_recording_failed">Der Tresor konnte keine Aufnahme annehmen.</string>
+    <string name="camera_permission_body">Die Kamera braucht eine Berechtigung, bevor sie etwas aufnehmen kann. Nichts, was hier aufgenommen wird, landet in der Galerie – es wird direkt in den Tresor geschrieben, und diese Berechtigung dient nur dazu.</string>
+    <string name="camera_allow">Kamera erlauben</string>
+    <string name="camera_close">Kamera schließen</string>
+    <string name="camera_switch_back">Zur Rückkamera wechseln</string>
+    <string name="camera_switch_front">Zur Frontkamera wechseln</string>
+    <string name="camera_take_photo">Foto aufnehmen</string>
+    <string name="camera_open_receipt">Im Tresor öffnen</string>
+    <string name="camera_saving">Aufnahme wird im Tresor gespeichert</string>
+    <string name="camera_receipt">Letzte Aufnahme, im Tresor gespeichert</string>
+    <string name="camera_none">Dieses Gerät hat keine Kamera.</string>
+    <string name="camera_no_sizes">Diese Kamera meldet keine verwendbaren Größen.</string>
+    <string name="camera_no_still">Diese Kamera bietet keine Fotogröße an.</string>
+    <string name="camera_taken">Die Kamera wird gerade von etwas anderem verwendet.</string>
+    <string name="camera_not_opened">Die Kamera konnte nicht geöffnet werden.</string>
+    <string name="camera_photo_failed">Das Foto konnte nicht aufgenommen werden.</string>
+    <string name="camera_recording_refused">Dieses Gerät wollte keine Aufnahme starten.</string>
+    <string name="camera_preview_failed">Die Kamera wollte keine Vorschau starten.</string>
+
+    <!-- Backup and restore -->
+    <string name="backup_turn_on">Sicherung aktivieren</string>
+    <string name="backup_choose_where">Speicherort für die Sicherung wählen</string>
+    <string name="backup_now">Jetzt sichern</string>
+    <string name="backup_backed_up_to">Gesichert in</string>
+    <string name="backup_how_it_works">So funktioniert die Sicherung</string>
+    <string name="backup_stop">Sicherung beenden</string>
+    <string name="backup_caption_off">Auf diesem Smartphone verschlüsselt, bevor es kopiert wird.</string>
+    <string name="backup_caption_file">Kopiert den ganzen Tresor ein paar Minuten nach deinen Änderungen und wenn du diesen Tresor sperrst.</string>
+    <string name="backup_caption_folder">Kopiert nach jeder Änderung und wenn du diesen Tresor sperrst.</string>
+    <string name="backup_last_copied">Zuletzt kopiert %1$s · %2$s</string>
+    <string name="backup_is_off">Sicherung ist aus</string>
+    <string name="backup_only_here">Dieser Tresor ist nur auf diesem Smartphone · %1$s</string>
+    <string name="backup_checking">Ordner wird geprüft …</string>
+    <string name="backup_up_to_date">Auf dem neuesten Stand</string>
+    <plurals name="backup_changes_to_copy">
+        <item quantity="one">%1$d Änderung zu kopieren</item>
+        <item quantity="other">%1$d Änderungen zu kopieren</item>
+    </plurals>
+    <string name="backup_copying">Wird kopiert …</string>
+    <string name="backup_progress">%1$s von %2$s</string>
+    <plurals name="backup_files_failed">
+        <item quantity="one">%1$d Datei wurde nicht kopiert</item>
+        <item quantity="other">%1$d Dateien wurden nicht kopiert</item>
+    </plurals>
+    <string name="backup_partial_line">Beim nächsten Mal wird es erneut versucht.</string>
+    <string name="backup_unreachable_file">Sicherungsdatei nicht erreichbar</string>
+    <string name="backup_unreachable_folder">Ordner nicht erreichbar</string>
+    <string name="backup_unreachable_line">Vielleicht wurde er gelöscht, oder die App, in der er liegt, wurde abgemeldet.</string>
+    <string name="backup_no_space">Nicht genug Speicherplatz</string>
+    <string name="backup_no_space_line">Es werden %1$s mehr freier Speicher gebraucht, um die Sicherung zu übergeben.</string>
+    <string name="backup_just_now">gerade eben</string>
+    <string name="backup_before_title">Bevor du die Sicherung aktivierst</string>
+    <string name="backup_before_words">Zum Wiederherstellen brauchst du deine 24 Wörter</string>
+    <string name="backup_before_words_body">Deine Passphrase kann keine Sicherung öffnen. Gehen dieses Smartphone und die Wörter beide verloren, kann niemand sie öffnen – auch du nicht.</string>
+    <string name="backup_before_provider">Der Anbieter sieht die Größe der Sicherung und wann sie sich geändert hat</string>
+    <string name="backup_before_provider_body">Nie einen Namen, ein Datum, ein Album oder den Inhalt einer Datei.</string>
+    <string name="backup_before_one_vault">Diese Sicherung gilt nur für diesen Tresor</string>
+    <string name="backup_before_one_vault_body">Jeder Tresor braucht eine eigene Sicherung.</string>
+    <string name="backup_back_up_to">Sichern in</string>
+    <string name="backup_no_destinations">Keine Cloud-App und keine SD-Karte auf diesem Smartphone. Installiere die App deines Cloud-Anbieters, melde dich an und komm hierher zurück.</string>
+    <string name="backup_dest_cloud">Eine Sicherungsdatei, nach Änderungen aktualisiert</string>
+    <string name="backup_dest_volume">Ein Ordner, nach jeder Änderung aktualisiert</string>
+    <string name="backup_how_copied">Was kopiert wird</string>
+    <string name="backup_how_copied_body">Die Dateien dieses Tresors, auf diesem Smartphone verschlüsselt, und die verschlüsselte Liste der Tresore, die dein Wiederherstellungs-Kit öffnet. Deine Passphrase und die Datei, die sie entsperrt, bleiben auf diesem Smartphone.</string>
+    <string name="backup_how_when">Wann kopiert wird</string>
+    <string name="backup_how_when_body">Nach jeder Änderung, ohne dass du etwas drücken musst. Ein Ordner auf der SD-Karte wird innerhalb von Sekunden aktualisiert und kopiert nur, was sich geändert hat. Die Sicherungsdatei einer Cloud-App enthält den ganzen Tresor, daher wird sie ein paar Minuten nach deiner letzten Änderung neu geschrieben, oder sofort, wenn du sperrst. Ein Tresor, den du nie öffnest, wird nie kopiert.</string>
+    <string name="backup_how_restoring">Wiederherstellen</string>
+    <string name="backup_how_restoring_body">Eine Sicherung wird mit deinen 24 Wörtern wiederhergestellt, nicht mit deiner Passphrase. Gehen dieses Smartphone und diese Wörter beide verloren, kann niemand die Sicherung lesen, auch du nicht.</string>
+    <string name="backup_how_provider">Was der Anbieter sehen kann</string>
+    <string name="backup_how_provider_body">Eine Cloud-App sieht eine Datei: ihre Größe und wann sie sich geändert hat. Der Inhalt ist versiegelt, also kann sie deine Dateien weder zählen noch messen. Ein Ordner auf der SD-Karte zeigt, wie viele Dateien es gibt, die Größe jeder einzelnen, auf eine feste Stufe aufgerundet, und wann sich jede geändert hat – Elemente über 16 MB erscheinen als Gruppe, und das Muster könnte sie als Sicherung dieser App erkennbar machen. Keiner von beiden sieht einen Namen, ein Datum, ein Album oder irgendetwas in einer Datei.</string>
+    <string name="backup_how_per_vault">Eine Sicherung pro Tresor</string>
+    <string name="backup_how_per_vault_body">Jeder Tresor braucht seine eigene Sicherung. Jede Sicherung enthält außerdem dieselbe verschlüsselte Liste von Tresoren, wer also zwei davon sehen kann, erkennt, dass sie zusammengehören.</string>
+    <string name="backup_how_destinations">Cloud-Apps und SD-Karten</string>
+    <string name="backup_how_destinations_body">Eine Cloud-App erhält eine Datei mit dem ganzen Tresor, so versiegelt, dass der Anbieter nur ihre Größe sieht und wann sie sich geändert hat. Sie wird jedes Mal vollständig neu geschrieben. Eine SD-Karte erhält einen Ordner, der nur kopiert, was sich geändert hat. Der eigene Speicher dieses Smartphones wird nicht angeboten – eine Kopie dort geht mit dem Smartphone verloren.</string>
+    <string name="backup_how_deleting">Löschen und Beenden</string>
+    <string name="backup_how_deleting_body">Was du hier löschst, wird beim nächsten Kopieren aus der Sicherung entfernt. Kopien, die dein Anbieter in seinem Papierkorb oder Versionsverlauf aufbewahrt, liegen außerhalb der Reichweite dieser App – auch eine frühere Sicherungsdatei, falls ein Kopiervorgang unterbrochen wurde. Wenn du die Sicherung beendest, bleibt die Sicherung, wo sie ist.</string>
+    <string name="backup_stop_title">Sicherung dieses Tresors beenden?</string>
+    <string name="backup_stop_body">Die bereits erstellte Sicherung bleibt, wo sie ist. Lösche sie über deinen Anbieter, wenn sie weg soll.</string>
+    <string name="backup_keep">Weiter sichern</string>
+    <string name="backup_on_sd_card">Sicherung liegt auf einer SD-Karte</string>
+    <string name="restore_into_list">Wähle die Sicherung eines Tresors auf dieser Liste – die Datei in deiner Cloud-App oder den Ordner auf deiner SD-Karte. Er kommt zurück auf diese Liste.</string>
+    <string name="restore_lead">Wähle die Sicherungsdatei, die du in deiner Cloud-App gespeichert hast, oder den Ordner auf deiner SD-Karte. Du brauchst die 24 Wörter aus deinem Wiederherstellungs-Kit – deine Passphrase kann keine Sicherung öffnen.</string>
+    <string name="restore_choose_file">Sicherungsdatei wählen</string>
+    <string name="restore_copying">Dateien werden kopiert … %1$d von %2$d</string>
+    <string name="import_title">Tresor importieren</string>
+    <string name="import_lead">Hol einen Tresor aus einer .vault-Datei zurück oder aus einer Sicherung in deiner Cloud-App oder auf einer SD-Karte.</string>
+    <string name="import_choose_file">Datei wählen</string>
+    <string name="import_vault_file">.vault-Datei</string>
+    <string name="import_list_full">Diese Liste ist voll. Entferne einen Tresor daraus, um Platz zu schaffen, und importiere dann erneut.</string>
+    <string name="import_failed">Das ließ sich nicht öffnen. Entweder ist die Passphrase falsch, oder das ist keine .vault-Datei, die diese App lesen kann.</string>
+    <string name="import_passphrase_label">Passphrase für diese Datei</string>
+    <string name="import_importing">Wird importiert</string>
+    <string name="import_action">Tresor importieren</string>
+    <string name="import_backup_here">Das ist die Sicherung eines Tresors auf dieser Liste.</string>
+    <string name="import_restore_vault">Tresor wiederherstellen</string>
+    <string name="import_other_list">Diese Sicherung stammt aus einer anderen Tresorliste. Gib die 24 Wörter aus dem Wiederherstellungs-Kit dieser Liste ein.</string>
+    <string name="import_own_list">Sie kommt als eigene Tresorliste zurück, getrennt von dieser, und wird mit ihrer eigenen Passphrase geöffnet. Ihre 24 Wörter ändern sich nicht.</string>
+    <string name="import_no_room">Auf diesem Smartphone ist kein Platz für eine weitere Tresorliste.</string>
+    <string name="import_restore_list">Tresorliste wiederherstellen</string>
+    <string name="import_copying">Dateien werden kopiert …</string>
+    <string name="import_vault_restored">Tresor wiederhergestellt</string>
+    <string name="import_list_restored">Tresorliste wiederhergestellt</string>
+    <string name="import_vault_restored_body">Er ist wieder auf seiner Tresorliste. Öffne diese Liste mit ihrer Passphrase, um ihn zu sehen.</string>
+    <string name="import_list_restored_body">Sperre die App und gib ihre Passphrase ein, um sie zu öffnen.</string>
+
+    <!-- Sizes and units -->
+    <string name="size_bytes">%1$d B</string>
+    <string name="size_kb">%1$s kB</string>
+    <string name="size_mb">%1$s MB</string>
+    <string name="size_gb">%1$s GB</string>
+    <string name="size_tb">%1$s TB</string>
+    <string name="size_pb">%1$s PB</string>
+
+    <!-- Unvault and the encrypted archive -->
+    <plurals name="unvault_items">
+        <item quantity="one">%1$d Element aus dem Tresor holen</item>
+        <item quantity="other">%1$d Elemente aus dem Tresor holen</item>
+    </plurals>
+    <plurals name="unvault_selected_body">
+        <item quantity="one">Das %1$d ausgewählte Element wird entschlüsselt, hinausgeschrieben, geprüft und dann aus dem Tresor entfernt. Alles, was du nicht ausgewählt hast, bleibt, wo es ist.</item>
+        <item quantity="other">Die %1$d ausgewählten Elemente werden entschlüsselt, hinausgeschrieben, geprüft und dann aus dem Tresor entfernt. Alles, was du nicht ausgewählt hast, bleibt, wo es ist.</item>
+    </plurals>
+    <plurals name="unvault_all_body">
+        <item quantity="one">Das %1$d Element in diesem Tresor wird entschlüsselt, hinausgeschrieben, geprüft und dann aus dem Tresor entfernt. Danach ist der Tresor leer, und deine Dateien sind wieder ganz normale Dateien.</item>
+        <item quantity="other">Alle %1$d Elemente in diesem Tresor werden entschlüsselt, hinausgeschrieben, geprüft und dann aus dem Tresor entfernt. Danach ist der Tresor leer, und deine Dateien sind wieder ganz normale Dateien.</item>
+    </plurals>
+    <string name="unvault_checked">Jede Datei wird zurückgelesen und verglichen, bevor ihre verschlüsselte Kopie gelöscht wird. Was nicht übereinstimmt, bleibt im Tresor und wird im Manifest aufgeführt.</string>
+    <string name="unvault_where">Wohin</string>
+    <string name="unvault_gallery">Fotos und Videos</string>
+    <string name="unvault_folder_chosen">Gewählter Ordner</string>
+    <string name="unvault_choose_folder">Ordner wählen</string>
+    <string name="unvault_remove_details">Fotodetails entfernen</string>
+    <string name="unvault_details_kept">Exportierte Fotos behalten alles, was sie mitbringen, auch ihren Standort.</string>
+    <string name="unvault_passphrase_needed">Gib deine Passphrase ein, um fortzufahren. Biometrisches Entsperren reicht dafür nicht.</string>
+    <string name="unvault_passphrase_needed_own">Gib die eigene Passphrase dieses Tresors ein, um fortzufahren. Die Passphrase deiner Tresorliste und biometrisches Entsperren reichen dafür nicht.</string>
+    <string name="unvault_wrong_passphrase">Damit ließ sich dieser Tresor nicht öffnen.</string>
+    <string name="unvault_progress">%1$d von %2$d draußen</string>
+    <string name="unvault_progress_left">%1$d von %2$d draußen, %3$d noch im Tresor</string>
+    <string name="unvault_busy">Wird aus dem Tresor geholt</string>
+    <string name="archive_title">Wechselst du auf ein neues Gerät?</string>
+    <string name="archive_body">Speichere eine verschlüsselte .vault-Datei, die du auf dem neuen Smartphone öffnen kannst. Wähle eine Passphrase für die Datei selbst – es ist nicht die, mit der du deine Tresore öffnest, und du brauchst sie auf dem anderen Gerät. Dieser Tresor wird dadurch nicht geleert, und Elemente im Papierkorb sind nicht enthalten.</string>
+    <string name="archive_passphrase_label">Passphrase für die Datei</string>
+    <string name="archive_save">Verschlüsseltes Archiv speichern</string>
+
+    <!-- Sharing -->
+    <string name="lifespan_day">24 Stunden</string>
+    <string name="lifespan_week">7 Tage</string>
+    <string name="lifespan_month">30 Tage</string>
+    <string name="share_trial_ended">Deine Testphase ist abgelaufen</string>
+    <string name="share_trial_ended_body">Zum Senden einer Freigabe brauchst du den einmaligen Kauf. Freigaben öffnen, die dir geschickt wurden, sowie deine eigenen Sachen öffnen, ansehen und exportieren bleiben kostenlos.</string>
+    <string name="share_lead_contact">Damit entsteht eine verschlüsselte Datei, die nur das Smartphone von %1$s öffnen kann. Es gibt keinen Code weiterzugeben.</string>
+    <string name="share_lead_code">Damit entstehen eine verschlüsselte Datei und ein Code aus vier Wörtern. Wer sie bekommt, braucht diese App und den Code, um sie zu öffnen.</string>
+    <string name="share_who">Wer das öffnen kann</string>
+    <string name="share_contact_detail">Öffnet sich auf dem Smartphone von %1$s, ohne Code</string>
+    <string name="share_anyone">Alle mit dem Code</string>
+    <string name="share_anyone_detail">Weniger sicher. Wer die Datei und die Wörter hat, kann sie öffnen.</string>
+    <string name="share_how_long">Wie lange es sich öffnen lässt</string>
+    <string name="share_no_limit">Unbegrenzt</string>
+    <string name="share_no_limit_detail">Öffnet sich, wann immer gewünscht</string>
+    <string name="share_open_once">Einmal öffnen</string>
+    <string name="share_open_once_detail">Öffnet sich einmal, dann nie wieder</string>
+    <string name="share_expires">Läuft ab</string>
+    <string name="share_expires_detail">Öffnet sich bis %1$s</string>
+    <string name="share_limits_contact">Diese Grenzen setzt die App auf dem Smartphone von %1$s durch, und kein anderes Smartphone kann die Datei öffnen. Sobald du die Datei gesendet hast, kannst du sie nicht zurückholen.</string>
+    <string name="share_limits_code">Diese Grenzen setzt die App auf dem Smartphone durch, das sie öffnet. Sobald du die Datei gesendet hast, kannst du sie nicht zurückholen.</string>
+    <string name="share_photo_carries">Was das Foto mitbringt</string>
+    <string name="share_remove_details">Details entfernen</string>
+    <string name="share_as_is">So senden, wie es ist</string>
+    <string name="share_as_is_detail">Standort, Datum und Kamerainfos gehen mit</string>
+    <string name="share_sealing">Wird versiegelt</string>
+    <string name="share_try_again">Erneut versuchen</string>
+    <string name="share_create">Freigabe erstellen</string>
+    <string name="share_less_secure">Weniger sicher als das Senden an einen Kontakt</string>
+    <string name="share_risk_any_phone">Wer die Datei und die vier Wörter hat, kann sie auf jedem Smartphone öffnen.</string>
+    <string name="share_risk_once">„Einmal öffnen“ heißt einmal pro Smartphone. Weitergegeben öffnet sie sich erneut.</string>
+    <string name="share_risk_same_chat">Wörter, die im selben Chat wie die Datei gesendet werden, verraten beides.</string>
+    <string name="share_risk_guessing">Wer eine Kopie der Datei behält, kann die Wörter unbegrenzt weiter raten.</string>
+    <string name="share_pair_first">Um nur mit einer Person zu teilen, kopple dich zuerst mit ihr.</string>
+    <string name="share_pair">Mit jemandem koppeln</string>
+    <string name="share_code_title">Der Code</string>
+    <string name="share_code_label">Freigabecode: %1$s</string>
+    <string name="share_code_separately">Sende den Code auf einem anderen Weg als die Datei.</string>
+    <string name="share_code_both">Wer beides hat, kann sie öffnen. Ein Code, der in denselben Chat wie die Datei getippt wird, verrät beides auf einmal.</string>
+    <string name="share_code_once">Dieser Code wird einmal angezeigt und nicht gespeichert. Kopiere ihn jetzt.</string>
+    <string name="share_send_file">Datei senden …</string>
+    <string name="share_copy_code">Code kopieren</string>
+    <string name="share_sealed_to">Versiegelt für %1$s</string>
+    <string name="share_sealed_body">Nur %1$s kann das öffnen. Die Datei ist für das Smartphone dieser Person versiegelt – kein Code zu senden.</string>
+    <string name="share_save_device">Auf dem Gerät speichern</string>
+    <string name="share_saved">Gespeichert. Hänge sie in der App, mit der du sendest, über „Dateien“ an.</string>
+    <string name="share_save_failed">Die Datei konnte nicht gespeichert werden. Versuche es erneut oder sende sie stattdessen.</string>
+    <string name="share_save_hint">Oder speichere sie und hänge sie über „Dateien“ an. Die App, mit der du sendest, kann dann nicht erkennen, welche App sie erstellt hat.</string>
+    <string name="share_refused_trash">Elemente im Papierkorb können nicht geteilt werden.</string>
+    <string name="share_refused_no_length">Die Länge dieses Videos lässt sich nicht lesen, deshalb kann es nicht geteilt werden.</string>
+    <string name="share_refused_too_long">Videos, die länger als %1$d Sekunden sind, können nicht geteilt werden.</string>
+
+    <!-- Opening a share -->
+    <string name="share_open_title">Freigabe öffnen</string>
+    <string name="share_open_reading">Datei wird gelesen</string>
+    <string name="share_open_enter_code">Wenn sie mit einem Code gesendet wurde, gib ihn ein.</string>
+    <string name="share_open_code_hint">Die sendende Person hat dir vier Wörter auf einem anderen Weg als die Datei gegeben.</string>
+    <string name="share_open_failed">Diese Freigabe konnte nicht geöffnet werden.</string>
+    <string name="share_open_check">Prüfe die vier Wörter und ob das die Datei ist, die dir gesendet wurde.</string>
+    <string name="share_open_action">Freigabe öffnen</string>
+    <string name="share_open_no_contacts">Dieses Smartphone kann seine Kontakte nicht lesen, deshalb lässt sich eine dafür versiegelte Freigabe hier nicht öffnen.</string>
+    <string name="share_open_contacts">Kontakte öffnen</string>
+    <string name="share_open_view">Ansehen</string>
+    <string name="share_open_keep">In diesem Tresor behalten</string>
+    <string name="share_open_keep_needs_purchase">Zum Behalten von Freigaben brauchst du den einmaligen Kauf. Wenn du gehst, wird nichts gespeichert.</string>
+    <string name="share_open_leave">Wenn du gehst, ohne sie zu behalten, wird nichts gespeichert.</string>
+    <string name="share_open_cannot_keep">Diese Freigabe kann nicht behalten werden. Wenn du gehst, wird nichts gespeichert.</string>
+    <string name="share_open_sealed_here">Diese Freigabe wurde für dieses Smartphone versiegelt. Zum Öffnen ist kein Code nötig.</string>
+    <string name="share_open_open">Öffnen</string>
+    <string name="share_open_newer">Diese Freigabe wurde mit einer neueren Version der App erstellt. Aktualisiere diese App, um sie zu öffnen.</string>
+    <string name="share_open_already_opened">Diese Freigabe sollte sich einmal öffnen lassen, und sie wurde bereits geöffnet.</string>
+    <string name="share_open_expired">Diese Freigabe ist am %1$s abgelaufen.</string>
+    <string name="share_open_code_correct">Der Code war richtig. Diese Grenze setzt die App auf diesem Smartphone durch, und die sendende Person kann sie nicht aufheben.</string>
+    <string name="share_open_limit_once">Die sendende Person hat festgelegt, dass sich das einmal öffnen lässt. Diese Grenze setzt die App auf diesem Smartphone durch.</string>
+    <string name="share_open_limit_expiry">Die sendende Person hat festgelegt, dass sich das ab %1$s nicht mehr öffnen lässt. Diese Grenze setzt die App auf diesem Smartphone durch.</string>
+
+    <!-- Contacts and pairing -->
+    <string name="contacts_waiting">Ausstehend</string>
+    <string name="contacts_invite_sent">Einladung gesendet – Antwort ausstehend</string>
+    <string name="contacts_reply_sent">Antwort gesendet – Bestätigung ausstehend</string>
+    <string name="contacts_confirmation_ready">Bestätigung bereit zum Senden</string>
+    <string name="contacts_add">Kontakt hinzufügen</string>
+    <string name="contacts_together">Zusammen</string>
+    <string name="contacts_together_detail">Scannt gegenseitig eure Codes. Die sicherste Art zu koppeln.</string>
+    <string name="contacts_not_together">Nicht zusammen</string>
+    <string name="contacts_not_together_detail">Sende eine Einladungsdatei und vier Wörter.</string>
+    <string name="contacts_have_invite">Ich habe eine Einladung</string>
+    <string name="contacts_have_invite_detail">Öffne die gesendete Datei und gib die vier Wörter ein.</string>
+    <string name="contacts_empty">Noch keine Kontakte. Kopple dich mit jemandem – zusammen oder über eine Einladung –, dann kannst du dieser Person eine Datei ohne Code senden.</string>
+    <string name="contacts_remove_named">%1$s entfernen</string>
+    <string name="contacts_unreadable">Dieses Smartphone kann seine Kontakte nicht lesen.</string>
+    <string name="contacts_unreadable_body">Die Kontaktliste ist an einen Schlüssel gebunden, den dieses Gerät hielt, und dieser Schlüssel ist weg – genau das bleibt zurück, wenn auf einem anderen Smartphone wiederhergestellt wird. Die Liste selbst ist unverändert; nichts hier kann sie öffnen.\n\nWenn du neu beginnst, erhält dieses Smartphone einen neuen Kopplungscode. Alle, mit denen du gekoppelt warst, müssen ihn erneut scannen.</string>
+    <string name="contacts_new_identity">Neue Identität beginnen</string>
+    <string name="contacts_new_identity_title">Neue Identität beginnen?</string>
+    <string name="contacts_new_identity_body">Die unlesbare Kontaktliste wird gelöscht, und dieses Smartphone erhält einen neuen Kopplungscode. Alle, mit denen du gekoppelt warst, müssen ihn erneut scannen.</string>
+    <string name="contacts_start_again">Neu beginnen</string>
+    <string name="contacts_remove_title">%1$s entfernen?</string>
+    <string name="contacts_remove_body">Was du bereits gesendet hast, bleibt gesendet. Ihr könnt euch erneut koppeln.</string>
+    <string name="pairing_title">Kontakt koppeln</string>
+    <string name="pairing_saved">%1$s gespeichert. Lass jetzt deinen Code scannen.</string>
+    <string name="pairing_show">Zeige das dem anderen Smartphone und scanne dann dessen Code. Ihr müsst beide den Code des anderen scannen.</string>
+    <string name="pairing_in_person">Persönliches Scannen ist die sicherste Art zu koppeln. Nichts davon verlässt dieses Smartphone, bis du jemandem eine Datei sendest.</string>
+    <string name="pairing_scan">Code der anderen Person scannen</string>
+    <string name="pairing_your_code">Dein Kopplungscode</string>
+    <string name="pairing_camera_permission">Die Kamera braucht eine Berechtigung, bevor sie einen Code lesen kann. Nichts, was sie sieht, wird aufgezeichnet – die Bilder werden dekodiert und verworfen, und diese Berechtigung dient nur dazu.</string>
+    <string name="pairing_point">Richte die Kamera auf den Code des anderen Smartphones.</string>
+    <string name="pairing_camera_looking">Kamera, sucht nach einem Kopplungscode</string>
+    <string name="pairing_who">Wer ist das? Der Name gehört nur dir – er wird auf diesem Smartphone gespeichert und nirgendwohin gesendet.</string>
+    <string name="pairing_save">Kontakt speichern</string>
+    <string name="remote_invite_title">Jemanden einladen</string>
+    <string name="remote_answer_title">Auf eine Einladung antworten</string>
+    <string name="remote_important">Wichtig</string>
+    <string name="remote_name_too_long">Dieser Name ist zu lang. Versuche einen kürzeren.</string>
+    <string name="remote_name_yours">Der Name gehört nur dir und bleibt auf diesem Smartphone.</string>
+    <string name="remote_who_inviting">Wen lädst du ein?</string>
+    <string name="remote_make_invite">Einladung erstellen</string>
+    <string name="remote_invite_ready">Einladung bereit</string>
+    <string name="remote_invite_send">Sende %1$s die Einladungsdatei. Gib dann diese vier Wörter auf einem anderen Weg weiter – sag sie bei einem Anruf oder persönlich.</string>
+    <string name="remote_your_words">Deine vier Wörter: %1$s</string>
+    <string name="remote_invite_strict">Wer die Datei und diese Wörter hat, kann zu diesem Kontakt werden. Gib die Wörter nur %1$s, nie im selben Chat wie die Datei.</string>
+    <string name="remote_open_reply">Antwort von %1$s öffnen</string>
+    <string name="remote_send_invite_again">Einladungsdatei erneut senden</string>
+    <string name="remote_waiting_reply_today">Warte auf die Antwort von %1$s. Diese Einladung endet um %2$s.</string>
+    <string name="remote_waiting_reply_tomorrow">Warte auf die Antwort von %1$s. Diese Einladung endet morgen um %2$s.</string>
+    <string name="remote_send_invite">Einladungsdatei senden</string>
+    <string name="remote_cancel_invite">Einladung abbrechen</string>
+    <string name="remote_now_contact">%1$s ist jetzt ein Kontakt.</string>
+    <string name="remote_send_confirmation_body">Sende diese Bestätigungsdatei, damit du ebenfalls hinzugefügt werden kannst.</string>
+    <string name="remote_send_confirmation_again">Bestätigungsdatei erneut senden</string>
+    <string name="remote_send_confirmation">Bestätigungsdatei senden</string>
+    <string name="remote_open_invite">Einladungsdatei öffnen</string>
+    <string name="remote_who_sent">Wer hat sie gesendet?</string>
+    <string name="remote_their_words">Die vier Wörter der anderen Person</string>
+    <string name="remote_know_sender">Fahre nur fort, wenn du weißt, wer das gesendet hat. Wer die Einladung erstellt hat, wird zum Kontakt.</string>
+    <string name="remote_make_reply">Antwort erstellen</string>
+    <string name="remote_send_reply_title">Deine Antwort senden</string>
+    <string name="remote_send_reply_body">Sende %1$s diese Antwortdatei.</string>
+    <string name="remote_open_confirmation">Bestätigung von %1$s öffnen</string>
+    <string name="remote_send_reply_again">Antwortdatei erneut senden</string>
+    <string name="remote_waiting_confirmation_today">Warte auf die Bestätigung von %1$s. Das endet um %2$s.</string>
+    <string name="remote_waiting_confirmation_tomorrow">Warte auf die Bestätigung von %1$s. Das endet morgen um %2$s.</string>
+    <string name="remote_send_reply">Antwortdatei senden</string>
+    <string name="remote_ended">Diese Einladung ist beendet</string>
+    <string name="remote_ended_reply">Diese Antwort passte nicht, deshalb ist die Einladung beendet. Prüft, ob die vier Wörter exakt eingegeben wurden und ob ihr beide die neueste Version der App habt.</string>
+    <string name="remote_ended_this">Das ist beendet</string>
+    <string name="remote_ended_confirmation">Diese Bestätigung passte nicht, deshalb ist der Vorgang beendet. Bitte %1$s, eine neue Einladung zu erstellen, und prüft die vier Wörter gemeinsam.</string>
+    <string name="remote_ended_expired">Diese Einladung ist beendet. Einladungen gelten 24 Stunden.</string>
+    <string name="remote_ended_already">Diese Einladung ist bereits beendet.</string>
+    <string name="remote_own_invite">Das ist deine eigene Einladung</string>
+    <string name="remote_own_invite_body">Das ist die Einladung dieses Smartphones selbst.</string>
+    <string name="remote_unreadable_body">Die Kontaktliste ist an einen Schlüssel gebunden, den dieses Gerät nicht mehr hat. Unter „Kontakte“ steht, was du tun kannst.</string>
+    <string name="remote_new_invite">Neue Einladung erstellen</string>
+
+    <!-- Removing the originals from the gallery -->
+    <string name="originals_title">Originale aus deiner Galerie entfernen?</string>
+    <string name="originals_removed">Die Originale wurden aus deiner Galerie entfernt.</string>
+    <plurals name="originals_photos">
+        <item quantity="one">%1$d Foto</item>
+        <item quantity="other">%1$d Fotos</item>
+    </plurals>
+    <plurals name="originals_videos">
+        <item quantity="one">%1$d Video</item>
+        <item quantity="other">%1$d Videos</item>
+    </plurals>
+    <plurals name="originals_in_vault">
+        <item quantity="one">%1$s ist jetzt in diesem Tresor. Android fragt dich nach einer Bestätigung.</item>
+        <item quantity="other">%1$s sind jetzt in diesem Tresor. Android fragt dich nach einer Bestätigung.</item>
+    </plurals>
+    <plurals name="originals_stay">
+        <item quantity="one">%1$d weiteres kann von hier aus nicht entfernt werden und bleibt in deiner Galerie.</item>
+        <item quantity="other">%1$d weitere können von hier aus nicht entfernt werden und bleiben in deiner Galerie.</item>
+    </plurals>
+
+    <!-- Lock screen warnings -->
+    <string name="warning_rooted">Dieses Gerät scheint gerootet zu sein. Eine andere App mit Root-Rechten kann den Speicher dieses Tresors lesen, während er geöffnet ist.</string>
+    <string name="warning_debuggable">Das ist ein debugfähiger Build. Sein Speicher kann über USB gelesen werden, während der Tresor geöffnet ist.</string>
+    <string name="warning_debugger">Gerade ist ein Debugger an diese App angehängt.</string>
+    <plurals name="warning_accessibility">
+        <item quantity="one">%1$d Bedienungshilfe-Dienst läuft. Ein solcher Dienst kann lesen, was auf dem Bildschirm steht, auch alles, was du hier öffnest.</item>
+        <item quantity="other">%1$d Bedienungshilfe-Dienste laufen. Ein solcher Dienst kann lesen, was auf dem Bildschirm steht, auch alles, was du hier öffnest.</item>
+    </plurals>
+
+    <!-- Covers — the calculator, the music player and the voice recorder -->
+    <string name="calc_divide_by_zero">Division durch null nicht möglich</string>
+    <string name="calc_undefined">Nicht definiert</string>
+    <string name="calc_infinity">Unendlich</string>
+    <string name="calc_invalid_format">Ungültiges Format</string>
+    <string name="pattern_draw">Muster zeichnen</string>
+    <string name="pattern_wrong">Falsches Muster</string>
+    <string name="music_unknown_track">Unbekannter Titel</string>
+    <string name="music_unknown_artist">Unbekannter Interpret</string>
+    <string name="music_unknown_album">Unbekanntes Album</string>
+    <string name="music_tracks">Titel</string>
+    <string name="music_albums">Alben</string>
+    <string name="music_artists">Interpreten</string>
+    <string name="music_shuffle_all">Alle zufällig abspielen</string>
+    <plurals name="music_track_count">
+        <item quantity="one">%1$d Titel</item>
+        <item quantity="other">%1$d Titel</item>
+    </plurals>
+    <string name="music_close_player">Player schließen</string>
+    <string name="music_nothing_playing">Keine Wiedergabe</string>
+    <string name="music_shuffle_on">Zufallswiedergabe an</string>
+    <string name="music_shuffle_off">Zufallswiedergabe aus</string>
+    <string name="music_previous">Zurück</string>
+    <string name="music_next">Weiter</string>
+    <string name="music_repeat_one">Einen Titel wiederholen</string>
+    <string name="music_repeat_all">Alle wiederholen</string>
+    <string name="music_repeat_off">Wiederholen aus</string>
+    <string name="music_tap_to_open">Tippen, um den Player zu öffnen</string>
+    <string name="music_loading">Mediathek wird geladen …</string>
+    <string name="music_none">Keine Musik auf diesem Gerät</string>
+    <string name="music_none_line">Songs, die du hinzufügst, erscheinen hier.</string>
+    <string name="music_access_off">Musikzugriff ist aus</string>
+    <string name="music_access_off_line">Aktiviere „Musik und Audio“ in den Einstellungen, um abzuspielen, was auf diesem Gerät ist.</string>
+    <string name="recorder_default_title">Aufnahme %1$s</string>
+    <plurals name="recorder_count">
+        <item quantity="one">%1$d Aufnahme · %2$s</item>
+        <item quantity="other">%1$d Aufnahmen · %2$s</item>
+    </plurals>
+    <string name="recorder_search">Aufnahmen suchen</string>
+    <string name="recorder_hide_controls">Steuerelemente ausblenden</string>
+    <string name="recorder_show_controls">Steuerelemente einblenden</string>
+    <string name="recorder_paused">Pausiert</string>
+    <string name="recorder_resume">Fortsetzen</string>
+    <string name="recorder_delete_title">„%1$s“ löschen?</string>
+    <string name="recorder_delete_body">Diese Aufnahme wird von diesem Gerät entfernt.</string>
+    <string name="recorder_none">Noch keine Aufnahmen</string>
+    <string name="recorder_mic_off">Mikrofonzugriff ist aus</string>
+    <string name="recorder_none_line">Tippe auf Aufnehmen, um eine zu erstellen.</string>
+    <string name="recorder_mic_off_line">Aktiviere „Mikrofon“ in den Einstellungen, um aufzunehmen.</string>
+    <string name="recorder_no_match">Keine Aufnahmen passen zu „%1$s“</string>
+    <string name="recorder_paused_length">Pausiert, %1$s</string>
+
+    <!-- The unlock digest — what happened since the last unlock -->
+    <string name="digest_altered">Dieses Ereignisprotokoll wurde bei Eintrag %1$d verändert.</string>
+    <string name="digest_not_opened_since">Seit %1$s nicht geöffnet.</string>
+    <plurals name="digest_recoveries">
+        <item quantity="one">%1$d Wiederherstellungs-Kit wurde verwendet, um diesen Tresor zu öffnen.</item>
+        <item quantity="other">%1$d Wiederherstellungs-Kits wurden verwendet, um diesen Tresor zu öffnen.</item>
+    </plurals>
+    <plurals name="digest_failed">
+        <item quantity="one">%1$d Entsperrversuch ist fehlgeschlagen.</item>
+        <item quantity="other">%1$d Entsperrversuche sind fehlgeschlagen.</item>
+    </plurals>
+    <plurals name="digest_imported">
+        <item quantity="one">%1$d Element importiert.</item>
+        <item quantity="other">%1$d Elemente importiert.</item>
+    </plurals>
+    <plurals name="digest_deleted">
+        <item quantity="one">%1$d Quelldatei gelöscht.</item>
+        <item quantity="other">%1$d Quelldateien gelöscht.</item>
+    </plurals>
+    <string name="digest_biometric">Biometrisches Entsperren wurde durch eine Änderung der registrierten Daten ungültig.</string>
+    <string name="digest_dev_options">Auf diesem Gerät wurden Entwickleroptionen oder USB-Debugging aktiviert.</string>
+    <string name="digest_root">Der Root-Status dieses Geräts hat sich geändert.</string>
+    <string name="digest_data_cleared">Die Daten dieser App wurden offenbar gelöscht.</string>
+    <string name="digest_new_device">Dieser Tresor läuft auf einem anderen Gerät als dem, auf dem er eingerichtet wurde.</string>
+    <string name="digest_clock">Die Uhr dieses Geräts wurde zurückgestellt.</string>
+    <string name="vault_passphrase_heading">Passphrase</string>
+    <string name="vault_passphrase_state_list">Öffnet mit der Passphrase deiner Tresorliste.</string>
+    <string name="vault_passphrase_state_own">Öffnet nur mit seiner eigenen Passphrase.</string>
+    <string name="vault_passphrase_add">Passphrase hinzufügen</string>
+    <string name="vault_passphrase_add_supporting">Nur diese Passphrase wird ihn öffnen</string>
+    <string name="vault_passphrase_change">Passphrase ändern</string>
+    <string name="vault_passphrase_remove">Passphrase entfernen</string>
+    <string name="vault_passphrase_remove_supporting">Die Passphrase deiner Tresorliste wird ihn öffnen</string>
+    <string name="vault_passphrase_added">Passphrase hinzugefügt.</string>
+    <string name="vault_passphrase_changed">Passphrase geändert.</string>
+    <string name="vault_passphrase_removed">Passphrase entfernt.</string>
+    <string name="vault_passphrase_add_lead">Danach öffnet nur diese Passphrase %1$s. Die Passphrase deiner Tresorliste öffnet ihn nicht mehr, und auch nicht das Wiederherstellungs-Kit der Liste – deshalb bekommt %1$s ein eigenes Wiederherstellungs-Kit.</string>
+    <string name="vault_passphrase_list_label">Passphrase der Tresorliste</string>
+    <string name="vault_passphrase_list_supporting">Die, mit der sich die Tresorliste dieser App öffnet.</string>
+    <string name="vault_passphrase_list_empty">Gib die Passphrase ein, die deine Tresorliste öffnet.</string>
+    <string name="vault_passphrase_new_again">Neue Passphrase wiederholen</string>
+    <string name="vault_passphrase_backups_heading">Frühere Sicherungen</string>
+    <string name="vault_passphrase_add_backups">Eine bis jetzt gespeicherte Sicherung öffnet %1$s weiterhin mit der Passphrase deiner Tresorliste.</string>
+    <string name="vault_passphrase_add_button">Passphrase hinzufügen</string>
+    <string name="vault_passphrase_adding">Wird hinzugefügt…</string>
+    <string name="vault_passphrase_change_lead">Das Wiederherstellungs-Kit für %1$s bleibt gleich, und seine 24 Wörter öffnen ihn weiterhin. Die Passphrase deiner Tresorliste öffnet ihn weiterhin nicht.</string>
+    <string name="vault_passphrase_current_label">Aktuelle Passphrase</string>
+    <string name="vault_passphrase_current_empty">Gib die aktuelle Passphrase dieses Tresors ein.</string>
+    <string name="vault_passphrase_change_backups">Eine bis jetzt gespeicherte Sicherung öffnet %1$s mit der alten Passphrase.</string>
+    <string name="vault_passphrase_changing">Wird geändert…</string>
+    <string name="vault_passphrase_remove_opens">Die Passphrase deiner Tresorliste öffnet ihn</string>
+    <string name="vault_passphrase_remove_opens_body">%1$s öffnet sich direkt aus der Liste, ohne eigene Passphrase.</string>
+    <string name="vault_passphrase_remove_kit">Das Wiederherstellungs-Kit deiner Liste deckt ihn ab</string>
+    <string name="vault_passphrase_remove_kit_body">Die 24 Wörter der Liste stellen %1$s wieder her. Seine eigenen 24 Wörter öffnen ihn ebenfalls weiterhin und lassen sich nicht widerrufen.</string>
+    <string name="vault_passphrase_remove_captures">Seine Eindringlingsaufnahmen ziehen um</string>
+    <string name="vault_passphrase_remove_captures_body">Sein Verlauf wird Teil der Eindringlingsaufnahme auf dem Startbildschirm, und seine eigenen Aufnahmeeinstellungen werden ausgeschaltet.</string>
+    <string name="vault_passphrase_removing">Wird entfernt…</string>
+    <plurals name="kit_remaining_views_fewer">
+        <item quantity="one">Nach dem Fortfahren kannst du sie noch %1$d-mal über das Menü ansehen. Danach lassen sie sich nicht mehr anzeigen, und deine Abschrift ist die einzige.</item>
+        <item quantity="other">Nach dem Fortfahren kannst du sie noch %1$d-mal über das Menü ansehen. Danach lassen sie sich nicht mehr anzeigen, und deine Abschrift ist die einzige.</item>
+    </plurals>
+    <string name="kit_remaining_views_none">Diese App hat sie bereits so oft angezeigt, wie sie kann. Nach dem Fortfahren lassen sie sich nicht mehr anzeigen, und deine Abschrift ist die einzige.</string>
+    <!-- `third-party-notices`. The Open-source licences row and its two screens. -->
+    <string name="licences_title">Open-Source-Lizenzen</string>
+    <plurals name="licences_drawer_line">
+        <item quantity="one">%1$d Bibliothek und ihre Lizenz</item>
+        <item quantity="other">%1$d Bibliotheken und ihre Lizenzen</item>
+    </plurals>
+    <string name="licences_lead">%1$s ist mit diesen Bibliotheken gebaut. Jede wird unter ihrer eigenen Lizenz verwendet, die unten steht.</string>
+    <string name="licences_open_action">Lizenz öffnen</string>
+    <string name="licences_version">Version %1$s</string>
+    <string name="licences_source">Quelle</string>
+    <string name="licences_licence">Lizenz</string>
+</resources>

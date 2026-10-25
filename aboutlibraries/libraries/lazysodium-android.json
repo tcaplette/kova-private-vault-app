@@ -1,0 +1,8 @@
+{
+  "uniqueId": "com.goterl:lazysodium-android",
+  "name": "lazysodium-android",
+  "website": "https://github.com/terl/lazysodium-android",
+  "scm": {
+    "url": "https://github.com/terl/lazysodium-android"
+  }
+}
