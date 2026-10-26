@@ -121,7 +121,7 @@ A self-built copy has no trial and no purchase. Everything in it works from the 
 
 ## Licence
 
-Kova is source-available under the [PolyForm Shield License 1.0.0](LICENSE). The third-party libraries and fonts it uses keep their own licences, and the app lists each one, with its full text, under Open-source licences in the menu.
+Kova is source-available under the [PolyForm Strict License 1.0.0](LICENSE), with one added permission. You may read the source and build Kova for your own personal use on your own devices. You may not distribute it, in source or built form, change it or build new works from it, or sell it or use it for any commercial purpose. The third-party libraries and fonts it uses keep their own licences, and the app lists each one, with its full text, under Open-source licences in the menu.
 
 ## Work in progress
 
