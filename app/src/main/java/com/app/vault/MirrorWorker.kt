@@ -25,7 +25,7 @@ import java.io.File
  * answer, so it does not ask). WorkManager does not throw without it — it catches
  * the `SecurityException` and reports `isConnected=false` permanently — so a
  * request carrying `NetworkType.CONNECTED` would sit in `ENQUEUED` for good, with
- * no crash and no log. `:app:checkDebugWorkConstraints` fails the build on any app
+ * no crash and no log. `:app:check<Variant>WorkConstraints` fails the build on any app
  * class that builds one, and `WorkConstraintsTest` proves nothing enqueued carries
  * one at runtime.
  *

@@ -57,7 +57,7 @@ class DeviceFixtures {
      * Output lands in the app's external files dir for `adb pull`, and the result
      * is committed to `app/src/androidTest/assets/fixtures/<version>/`.
      *
-     *     ./gradlew :app:connectedDebugAndroidTest \
+     *     ./gradlew :app:connectedPlayDebugAndroidTest \
      *       -Pandroid.testInstrumentationRunnerArguments.class=com.app.vault.DeviceFixtures \
      *       -Pandroid.testInstrumentationRunnerArguments.fixture=corpus
      */
@@ -244,7 +244,7 @@ class DeviceFixtures {
      * storage. `adb shell pm clear com.app.vault` removes all of it, and Gate 1
      * closes by doing exactly that.
      *
-     *     ./gradlew :app:connectedDebugAndroidTest \
+     *     ./gradlew :app:connectedPlayDebugAndroidTest \
      *       -Pandroid.testInstrumentationRunnerArguments.class=com.app.vault.DeviceFixtures \
      *       -Pandroid.testInstrumentationRunnerArguments.fixture=gate1
      */

@@ -187,6 +187,13 @@ fun VaultDrawerSheet(
      * same drawer.
      */
     onDestroyVault: () -> Unit = {},
+    /**
+     * `distribution-flavors`. Whether this build has a purchase at all — false on the
+     * `github` build, which has no trial and nothing to buy. False takes the Purchase
+     * row and its rule out entirely. Passed in, so this file still cannot ask about
+     * payment itself (`EntitlementScanTest`).
+     */
+    showPurchase: Boolean = true,
     /** I4's state, in words on the row that opens [PurchaseScreen]. */
     owned: Boolean,
     trialDaysRemaining: Int,
@@ -342,15 +349,17 @@ fun VaultDrawerSheet(
                     // Its own group, not the head of what follows: the rows below describe
                     // this install or one vault, and this one describes the account behind
                     // them and survives a reinstall.
-                    DrawerRow(
-                        label = stringResource(
-                            R.string.drawer_purchase,
-                            purchaseState(owned, purchasePending, trialStarted, trialDaysRemaining),
-                        ),
-                        icon = R.drawable.ic_workspace_premium,
-                        onClick = onPurchase,
-                    )
-                    Rule()
+                    if (showPurchase) {
+                        DrawerRow(
+                            label = stringResource(
+                                R.string.drawer_purchase,
+                                purchaseState(owned, purchasePending, trialStarted, trialDaysRemaining),
+                            ),
+                            icon = R.drawable.ic_workspace_premium,
+                            onClick = onPurchase,
+                        )
+                        Rule()
+                    }
 
                     if (vaultName != null) {
                         // The vault's drawer ------------------------------------

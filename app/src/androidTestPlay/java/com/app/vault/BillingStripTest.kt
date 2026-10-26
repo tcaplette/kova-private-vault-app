@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit
  *
  * Run:
  *
- *     ./gradlew :app:connectedDebugAndroidTest \
+ *     ./gradlew :app:connectedPlayDebugAndroidTest \
  *       -Pandroid.testInstrumentationRunnerArguments.billing=play
  *
  * Read: adb logcat -s VaultBilling:I

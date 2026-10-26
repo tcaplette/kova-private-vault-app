@@ -61,6 +61,33 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+
+    /**
+     * Two ways of getting the one app — `distribution-flavors`.
+     *
+     * `github` is what anyone builds from the public source: free and complete, with no
+     * trial, no purchase and no Play Billing in it. `play` is the build published to
+     * Google Play, with the 30-day trial and the one-time purchase `billing-entitlement`
+     * describes. Both are one product, so they share an `applicationId`; the builder's
+     * key and Play's key differ, so Android will not install one over the other.
+     *
+     * `BuildConfig.TRIAL` is the one switch shared source reads. Billing itself is split
+     * by source set (`src/play` and `src/github` each hold a `Billing.kt`), so the
+     * library never reaches the `github` APK. `github` is declared first so it is the
+     * variant Android Studio opens on.
+     */
+    flavorDimensions += "distribution"
+    productFlavors {
+        create("github") {
+            dimension = "distribution"
+            buildConfigField("boolean", "TRIAL", "false")
+        }
+        create("play") {
+            dimension = "distribution"
+            buildConfigField("boolean", "TRIAL", "true")
+        }
     }
 
     /**
@@ -282,9 +309,13 @@ dependencies {
     // stripped in the manifest, because the purchase flow is bindService IPC to
     // com.android.vending and needs no socket of ours. That is measured, not
     // assumed: P1-16 task 1 records connection, product query and a completed
-    // purchase on the stripped build, and :app:checkDebugPermissions is the gate
+    // purchase on the stripped build, and :app:checkPlayDebugPermissions is the gate
     // that stays untouched either way.
-    implementation(libs.billing.ktx)
+    //
+    // `play` only. The GitHub build has no trial and no purchase, so it carries none
+    // of this library: no classes, no notice, no BILLING permission. Its `Billing` is
+    // the stub in `src/github`.
+    "playImplementation"(libs.billing.ktx)
 
     // QR generation and decoding for pairing (P4-4). `zxing:core` is a plain Java
     // JAR — no AndroidManifest, so it cannot contribute a permission, and no
@@ -331,7 +362,7 @@ dependencies {
     // 1.2.x, and registerForActivityResult on a FragmentActivity needs 1.3.0+
     // (lint InvalidFragmentVersionForActivityResult, and it is a real hazard —
     // the photo-picker callbacks are registered on this Activity). No permission
-    // delta: :app:checkDebugPermissions is the proof, not the assumption.
+    // delta: :app:checkPlayDebugPermissions is the proof, not the assumption.
     constraints {
         implementation(libs.androidx.fragment) {
             because("registerForActivityResult on FragmentActivity requires fragment 1.3.0+")
@@ -355,7 +386,7 @@ dependencies {
     // states clearance is measured at ship scope and that a test-scope dependency
     // is explicitly *not* cleared, because it never enters the application
     // variant's merged manifest. This artifact therefore adds nothing to the
-    // release APK and triggers no I1 clearance run; `:app:checkDebugPermissions`
+    // release APK and triggers no I1 clearance run; `:app:check<Variant>Permissions`
     // reads the application variant and is unaffected. Nothing shipping gained a
     // dependency in P2-6.
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -376,11 +407,11 @@ dependencies {
 tasks.register<JavaExec>("renderPairingPoster") {
     group = "verification"
     description = "Renders a pairing payload to a PNG for the emulator's virtual scene."
-    dependsOn("compileDebugUnitTestKotlin")
+    dependsOn("compilePlayDebugUnitTestKotlin")
     classpath = files(
-        layout.buildDirectory.dir("intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes"),
-        layout.buildDirectory.dir("intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes"),
-        configurations.getByName("debugUnitTestRuntimeClasspath"),
+        layout.buildDirectory.dir("intermediates/built_in_kotlinc/playDebugUnitTest/compilePlayDebugUnitTestKotlin/classes"),
+        layout.buildDirectory.dir("intermediates/built_in_kotlinc/playDebug/compilePlayDebugKotlin/classes"),
+        configurations.getByName("playDebugUnitTestRuntimeClasspath"),
     )
     mainClass.set("com.app.vault.PairingPosterKt")
     doFirst {
@@ -472,7 +503,7 @@ abstract class CheckPermissions : DefaultTask() {
 // ---------------------------------------------------------------------------
 // The other half of a stripped permission.
 //
-// checkDebugPermissions proves a forbidden permission never reaches the merged
+// check<Variant>Permissions proves a forbidden permission never reaches the merged
 // manifest. This proves the opposite direction: that no app code depends on a
 // permission the manifest strips.
 //
@@ -916,19 +947,24 @@ androidComponents {
         variant.sources.res?.addGeneratedSourceDirectory(notices, GenerateNotices::outputDirectory)
     }
 
+    // One set of gates per debug variant — `githubDebug` and `playDebug` — each named
+    // from its variant and hooked to that variant's own assemble. Two flavors under the
+    // old fixed names would collide at configuration.
     onVariants(selector().withBuildType("debug")) { variant ->
         variant.androidResources.localeFilters.add("en-rXA")
+        val name = variant.name.replaceFirstChar { it.uppercase() }
+        val assemble = "assemble$name"
 
-        val bcCheck = tasks.register<CheckBouncyCastle>("checkDebugBouncyCastle") {
+        val bcCheck = tasks.register<CheckBouncyCastle>("check${name}BouncyCastle") {
             group = "verification"
             description =
-                "Fails the build if the debug APK's dex defines a BouncyCastle Argon2, ChaCha or Poly1305 class."
+                "Fails the build if the ${variant.name} APK's dex defines a BouncyCastle Argon2, ChaCha or Poly1305 class."
             apkDirectory.set(variant.artifacts.get(SingleArtifact.APK))
             loader.set(variant.artifacts.getBuiltArtifactsLoader())
         }
-        tasks.matching { it.name == "check" }.configureEach { dependsOn(bcCheck) }
+        tasks.matching { it.name == "check" || it.name == assemble }.configureEach { dependsOn(bcCheck) }
 
-        val workCheck = tasks.register<CheckWorkConstraints>("checkDebugWorkConstraints") {
+        val workCheck = tasks.register<CheckWorkConstraints>("check${name}WorkConstraints") {
             group = "verification"
             description =
                 "Fails the build if app code sets a work constraint that a stripped permission " +
@@ -942,16 +978,16 @@ androidComponents {
                 CheckWorkConstraints::allJars,
                 CheckWorkConstraints::allDirectories,
             )
-        tasks.matching { it.name == "assembleDebug" }.configureEach { dependsOn(workCheck) }
+        tasks.matching { it.name == assemble }.configureEach { dependsOn(workCheck) }
 
-        val check = tasks.register<CheckPermissions>("checkDebugPermissions") {
+        val check = tasks.register<CheckPermissions>("check${name}Permissions") {
             group = "verification"
             description =
                 "Fails the build if the merged manifest declares INTERNET or READ_MEDIA_* (invariant I1)."
             mergedManifest.set(variant.artifacts.get(SingleArtifact.MERGED_MANIFEST))
         }
-        // assembleDebug is not registered yet at onVariants time, so match lazily
+        // assemble<Variant> is not registered yet at onVariants time, so match lazily
         // rather than resolving it here.
-        tasks.matching { it.name == "assembleDebug" }.configureEach { dependsOn(check) }
+        tasks.matching { it.name == assemble }.configureEach { dependsOn(check) }
     }
 }

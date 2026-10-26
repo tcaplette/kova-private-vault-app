@@ -62,15 +62,17 @@ The photos are public-domain (CC0) images from Wikimedia Commons, and the music 
 
 ### Everywhere
 
-- **Offline only.** The app does not have Android's `INTERNET` permission, so it cannot open a network connection of its own. Backups go to a folder or cloud app you choose through Android's file picker, and the purchase is handled by the Google Play Store app.
+- **Offline only.** The app does not have Android's `INTERNET` permission, so it cannot open a network connection of its own. Backups go to a folder or cloud app you choose through Android's file picker, and on the Google Play version the purchase is handled by the Google Play Store app.
 - **Nine languages.** English, German, Spanish, French, Brazilian Portuguese, Japanese, Korean, and Simplified and Traditional Chinese, chosen in the app separately from the phone's language.
 - **Light, dark or system appearance.**
 
 ## Pricing
 
-Kova has a 30-day trial, which starts the first time you add something to a vault. After the trial, a one-time payment of **$8.99 USD** keeps adding to vaults, creating vaults and sending shares. There is no subscription.
+A copy you build yourself from this source is free and complete. It has no trial and no purchase, and nothing in it is ever locked.
 
-Opening, viewing and exporting everything in your vaults are never locked, paid or unpaid, and neither is opening a share someone sends you.
+The pre-built version on Google Play is for people who would rather not build it. It has a 30-day trial, which starts the first time you add something to a vault. After the trial, a one-time payment of **$8.99 USD** keeps adding to vaults, creating vaults and sending shares. There is no subscription.
+
+In either version, opening, viewing and exporting everything in your vaults are never locked, and neither is opening a share someone sends you.
 
 ## Building from source
 
@@ -85,10 +87,10 @@ You do not need to install Gradle. The wrapper in the repository downloads the v
 ### Build
 
 ```sh
-./gradlew :app:assembleRelease
+./gradlew :app:assembleGithubRelease
 ```
 
-The APK is written to `app/build/outputs/apk/release/app-release-unsigned.apk`. It is unsigned, and Android will not install an unsigned APK.
+The APK is written to `app/build/outputs/apk/github/release/app-github-release-unsigned.apk`. It is unsigned, and Android will not install an unsigned APK.
 
 ### Sign it with your own key
 
@@ -103,7 +105,7 @@ Then sign the APK. `apksigner` is in the SDK's `build-tools/<version>/` director
 
 ```sh
 apksigner sign --ks kova-release.jks --ks-key-alias kova \
-  --out kova.apk app/build/outputs/apk/release/app-release-unsigned.apk
+  --out kova.apk app/build/outputs/apk/github/release/app-github-release-unsigned.apk
 apksigner verify kova.apk
 ```
 
@@ -115,7 +117,7 @@ Turn on USB debugging on the phone, connect it, and run:
 adb install kova.apk
 ```
 
-A self-built copy runs the same code as the Google Play version, including the 30-day trial. The one-time purchase is made through Google Play.
+A self-built copy has no trial and no purchase. Everything in it works from the first launch, for as long as you use it.
 
 ## Licence
 

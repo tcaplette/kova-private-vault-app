@@ -25,7 +25,7 @@ import kotlin.math.roundToInt
  * Kept past the decision because the Argon2id constant is tuned per device and
  * P1-2 has to re-run this on real hardware. Spike code; deleted at Gate 0.
  *
- * Run:  ./gradlew :app:connectedDebugAndroidTest
+ * Run:  ./gradlew :app:connectedPlayDebugAndroidTest
  * Read: adb logcat -s VaultSpike:I   (the report is also written to filesDir)
  */
 @RunWith(AndroidJUnit4::class)

@@ -20,7 +20,7 @@ import java.security.SecureRandom
 
 /**
  * P1-6 — import, against OUTLINE P1-6's Verify: import works and
- * `:app:checkDebugPermissions` still passes.
+ * `:app:check<Variant>Permissions` still passes.
  *
  * These use real `content://` URIs from MediaStore. A `file://` URI would
  * exercise `openInputStream` while skipping the provider, the temporary grant and

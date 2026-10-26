@@ -52,7 +52,7 @@ import java.io.File
  * So it runs only when asked for by name:
  *
  * ```
- * ./gradlew :app:connectedDebugAndroidTest \
+ * ./gradlew :app:connectedPlayDebugAndroidTest \
  *   -Pandroid.testInstrumentationRunnerArguments.destructive=true
  * ```
  *

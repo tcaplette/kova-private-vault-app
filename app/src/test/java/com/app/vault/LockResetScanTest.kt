@@ -56,6 +56,10 @@ class LockResetScanTest {
         "shareSealedTo" to "beginShare", "shareContacts" to "beginShare",
         "mirrorDestination" to "openBackup",
         "setupProblem" to "onboarding step",
+        // `first-vault-naming`. The first vault's name and look, held before any keyring exists
+        // and cleared when the vault is created, so there is never a session for a lock to end.
+        "firstName" to "first run, before any keyring", "firstAppearance" to "first run, before any keyring",
+        "firstNameError" to "first run, before any keyring",
         // A recomposition key: a count of views spent this process, naming no kit and no list.
         "kitViewsSpent" to "recomposition key",
         // `destination-settings-and-slideshow` D5. A memo records through the lock, so what

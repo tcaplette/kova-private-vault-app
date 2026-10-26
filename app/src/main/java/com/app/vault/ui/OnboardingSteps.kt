@@ -583,7 +583,13 @@ internal fun CaptureModeRows(
 // --- step 5: decoy ----------------------------------------------------------
 
 @Composable
-fun DecoyStepScreen(configured: Boolean, onSetUp: () -> Unit, onContinue: () -> Unit) {
+fun DecoyStepScreen(
+    configured: Boolean,
+    onSetUp: () -> Unit,
+    onContinue: () -> Unit,
+    /** `distribution-flavors`. False on the `github` build, which has no trial to start. */
+    showsTrial: Boolean = true,
+) {
     OnboardingScaffold(
         title = stringResource(R.string.onboarding_decoy_title),
         lead = stringResource(R.string.onboarding_decoy_lead),
@@ -602,10 +608,12 @@ fun DecoyStepScreen(configured: Boolean, onSetUp: () -> Unit, onContinue: () -> 
             stringResource(R.string.onboarding_fact_choose),
             stringResource(R.string.onboarding_fact_choose_body)
         )
-        Fact(
-            stringResource(R.string.onboarding_fact_trial),
-            stringResource(R.string.onboarding_fact_trial_body)
-        )
+        if (showsTrial) {
+            Fact(
+                stringResource(R.string.onboarding_fact_trial),
+                stringResource(R.string.onboarding_fact_trial_body)
+            )
+        }
     }
 }
 

@@ -33,6 +33,11 @@ import android.content.Context
  * extends it (P2-5 owns clock-rollback detection). The worst case either way is
  * someone importing for free, which I4 already makes survivable.
  *
+ * **The trial is Play-only.** `distribution-flavors`: on the `github` build
+ * (`BuildConfig.TRIAL` false) no trial ever starts, [importAllowed] is always `true`,
+ * and there is no [reminder]. A copy built from the public source is free and complete;
+ * everything above describes the `play` build.
+ *
  * Stored in `SharedPreferences`, beside the onboarding flags and for the same
  * reason: `FORMAT.md` §2 enumerates `filesDir`, and a date is not worth a format
  * amendment. Its own prefs file rather than a third key in [Onboarding], because
@@ -79,6 +84,7 @@ object Entitlement {
      * what the absence check is for.
      */
     fun startTrialIfNeeded(context: Context) {
+        if (!BuildConfig.TRIAL) return
         val p = prefs(context)
         if (!p.contains(KEY_TRIAL_STARTED_AT)) {
             p.edit().putLong(KEY_TRIAL_STARTED_AT, System.currentTimeMillis()).apply()
@@ -111,12 +117,14 @@ object Entitlement {
      * three is access.
      */
     fun importAllowed(context: Context): Boolean {
+        if (!BuildConfig.TRIAL) return true
         if (!trialExpired(context)) return true
         return runCatching { purchasedProbe() }.getOrDefault(true)
     }
 
     /** The reminder for today, or null on all 28 other days of the trial. */
     fun reminder(context: Context): String? {
+        if (!BuildConfig.TRIAL) return null
         if (trialStartedAt(context) == 0L || trialExpired(context)) return null
         if (trialDay(context) !in REMINDER_DAYS.toList()) return null
         val left = daysRemaining(context)

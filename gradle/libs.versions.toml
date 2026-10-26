@@ -50,7 +50,7 @@ zxcvbn = "1.9.0"
 # AndroidManifest. It ships FILTERED — the allowlist sits beside its use in
 # app/build.gradle.kts (`BC_KEEP_*`) — so BouncyCastle's Argon2 and ChaCha20/Poly1305
 # never reach the APK and libsodium stays the only source of both
-# (`checkDebugBouncyCastle` enforces it).
+# (`check<Variant>BouncyCastle` enforces it).
 # Clearance at ship scope, version 1.79, 2026-10-06: :app:checkDebugPermissions read
 # the application variant's merged manifest at 13 permissions before the line and the
 # same 13 after it — zero delta, as a manifest-less JAR must give.

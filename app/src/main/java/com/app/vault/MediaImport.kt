@@ -19,7 +19,7 @@ class ImportResult(
  * The only route permitted by I1: `PickVisualMedia` and `OpenDocument` grant read
  * access to exactly the items the user chose, for as long as it takes to read
  * them, with nothing in the manifest. Every alternative needs `READ_MEDIA_*`,
- * which `:app:checkDebugPermissions` fails the build on.
+ * which `:app:check<Variant>Permissions` fails the build on.
  *
  * The source stream goes straight into the blob envelope. It is never copied to
  * a cache file, a temp file, or a `ByteArray` first — that would be plaintext

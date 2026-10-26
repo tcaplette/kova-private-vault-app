@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit
 /**
  * P1-8 task 1.8 — the runtime half of the `ACCESS_NETWORK_STATE` strip.
  *
- * `:app:checkDebugWorkConstraints` proves nothing *builds* a network constraint.
+ * `:app:check<Variant>WorkConstraints` proves nothing *builds* a network constraint.
  * This proves nothing *enqueued* carries one, which is a different claim: a
  * constraint could arrive through a code path the class scan cannot see.
  *

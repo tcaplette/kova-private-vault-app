@@ -513,14 +513,14 @@ class ScreenChromeDeviceTest {
             openDrawer()
             // Not scrolled: the export is on screen the moment the drawer opens.
             compose.onNodeWithText("Unvault Everything").assertIsDisplayed()
-            val purchase = drawerRowTop("Purchase")
             val trash = drawerRowTop("Trash")
             val backup = drawerRowTop("Backup")
             val share = drawerRowTop("Open a share")
             val export = drawerRowTop("Unvault Everything")
             val destroy = drawerRowTop("Destroy Vault")
 
-            assertOrder("in a vault", "Purchase", purchase, "Trash", trash)
+            // `distribution-flavors`: only the `play` build has a Purchase row.
+            if (BuildConfig.TRIAL) assertOrder("in a vault", "Purchase", drawerRowTop("Purchase"), "Trash", trash)
             assertOrder("in a vault", "Trash", trash, "Backup", backup)
             assertOrder("in a vault", "Backup", backup, "Open a share", share)
             assertOrder("in a vault", "Open a share", share, "Unvault Everything", export)
@@ -536,14 +536,15 @@ class ScreenChromeDeviceTest {
             await("the grid") { onGrid() }
             openHomeDrawer()
 
-            val homePurchase = drawerRowTop("Purchase")
             val homeIdentity = drawerRowTop("App identity")
             val homePanic = drawerRowTop("Panic credential")
             val homeIntruder = drawerRowTop("Intruder capture")
             val recover = drawerRowTop("Recover a vault with its kit")
             val licences = drawerRowTop("Open-source licences")
 
-            assertOrder("at home", "Purchase", homePurchase, "App identity", homeIdentity)
+            if (BuildConfig.TRIAL) {
+                assertOrder("at home", "Purchase", drawerRowTop("Purchase"), "App identity", homeIdentity)
+            }
             assertOrder("at home", "App identity", homeIdentity, "Panic credential", homePanic)
             // `intruder-captures-at-home`. An app setting, directly after the panic credential.
             assertOrder("at home", "Panic credential", homePanic, "Intruder capture", homeIntruder)
@@ -762,9 +763,13 @@ class ScreenChromeDeviceTest {
     /**
      * The vault's drawer opens with the home drawer's Purchase row — the same words — and it
      * opens the Purchase screen over the vault — `vault-drawer-trial-and-destroy-pinned`.
+     *
+     * `play` only: the `github` build has no Purchase row, which `GithubBuildDeviceTest`
+     * asserts on that build.
      */
     @Test
     fun theVaultsDrawerShowsTheTrialAndOpensThePurchase() {
+        assumeTrue("the Purchase row is the play build's", BuildConfig.TRIAL)
         ActivityScenario.launch(MainActivity::class.java).use { scenario ->
             compose.waitForIdle()
             unlock()

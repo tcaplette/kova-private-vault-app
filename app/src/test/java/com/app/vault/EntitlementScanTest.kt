@@ -71,12 +71,21 @@ class EntitlementScanTest {
         )
     }
 
+    /**
+     * Every source set that ships — `main`, and both `distribution-flavors` sets. Each
+     * flavor's `Billing.kt` is named `Billing.kt`, so [PERMITTED] covers both.
+     */
     private fun sources(): List<File> {
         var dir: File? = File(".").absoluteFile
         val rel = "src/main/java/com/app/vault"
         while (dir != null) {
-            listOf(File(dir, rel), File(dir, "app/$rel")).firstOrNull { it.isDirectory }
-                ?.let { d -> return d.walkTopDown().filter { it.extension == "kt" }.toList() }
+            listOf(dir, File(dir, "app")).firstOrNull { File(it, rel).isDirectory }?.let { app ->
+                val sets = listOf("main", "play", "github").map { File(app, "src/$it/java/com/app/vault") }
+                sets.filterNot { it.isDirectory }.let { missing ->
+                    if (missing.isNotEmpty()) throw AssertionError("missing source set(s): $missing")
+                }
+                return sets.flatMap { d -> d.walkTopDown().filter { it.extension == "kt" }.toList() }
+            }
             dir = dir.parentFile
         }
         throw AssertionError("could not locate the source package from ${File(".").absolutePath}")

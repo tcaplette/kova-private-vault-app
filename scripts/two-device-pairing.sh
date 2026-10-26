@@ -34,7 +34,7 @@ trap 'echo "artifacts in $WORK"' EXIT
 
 payload_of() {   # $1 = serial
   adb -s "$1" logcat -c
-  ( cd "$ROOT" && ./gradlew -q :app:connectedDebugAndroidTest \
+  ( cd "$ROOT" && ./gradlew -q :app:connectedPlayDebugAndroidTest \
       -Pandroid.testInstrumentationRunnerArguments.class=com.app.vault.PairingSceneTest#printThisInstallsPairingCode \
       -Pandroid.injected.testOnly=false >/dev/null 2>&1 ) || true
   adb -s "$1" logcat -d -s PairingScene:I | sed -n 's/.*PAYLOAD \([0-9a-f]*\).*/\1/p' | tail -1
@@ -54,7 +54,7 @@ echo "== step 3: start B with A's code on its wall =="
 
 echo "== step 4: B reads A's code through its camera =="
 ANDROID_SERIAL="$B" ; export ANDROID_SERIAL
-( cd "$ROOT" && ./gradlew :app:connectedDebugAndroidTest \
+( cd "$ROOT" && ./gradlew :app:connectedPlayDebugAndroidTest \
     -Pandroid.testInstrumentationRunnerArguments.class=com.app.vault.PairingSceneTest#theCameraPipelineDeliversFramesAndDecodesWhatIsInTheScene \
     -Pandroid.testInstrumentationRunnerArguments.pairing.payload="$A_PAYLOAD" )
 

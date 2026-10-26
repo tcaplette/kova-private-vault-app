@@ -36,11 +36,11 @@ import java.io.File
  * The release APK is signed with the local debug key, as the test APK is, so the test can drive
  * it; the test APK carries no app classes and runs against whichever build is installed:
  *
- *     ./gradlew :app:assembleRelease :app:assembleDebugAndroidTest
+ *     ./gradlew :app:assembleGithubRelease :app:assembleGithubDebugAndroidTest
  *     apksigner sign --ks ~/.android/debug.keystore --ks-pass pass:android \
- *       --out app-release-local.apk app/build/outputs/apk/release/app-release-unsigned.apk
+ *       --out app-release-local.apk app/build/outputs/apk/github/release/app-github-release-unsigned.apk
  *     adb -s emulator-5554 install -r app-release-local.apk
- *     adb -s emulator-5554 install -r app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+ *     adb -s emulator-5554 install -r app/build/outputs/apk/androidTest/github/debug/app-github-debug-androidTest.apk
  *     adb -s emulator-5554 shell am instrument -w -e class com.app.vault.ReadmeScreenshots \
  *       com.app.vault.test/androidx.test.runner.AndroidJUnitRunner
  *

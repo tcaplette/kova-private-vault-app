@@ -2494,8 +2494,11 @@ class MainActivity : FragmentActivity() {
         seenEpoch = AutoLock.awayEpoch
         // P1-16. Connects once per process; the answer lands in Billing.active and
         // is read from there. Nothing waits on it — no answer reads as entitled.
-        Billing.onChange = { runOnUiThread(::syncBilling) }
-        Billing.connect(this)
+        // `distribution-flavors`: the `github` build has no purchase to connect for.
+        if (BuildConfig.TRIAL) {
+            Billing.onChange = { runOnUiThread(::syncBilling) }
+            Billing.connect(this)
+        }
         setLocalizedContent {
             VaultTheme(appearance) {
                 Surface(color = VaultColors.Surface) {
@@ -2723,7 +2726,7 @@ class MainActivity : FragmentActivity() {
                     // was. Nothing waits on the answer — no answer reads as
                     // entitled, per I4.
                     LaunchedEffect(drawerState.isOpen) {
-                        if (drawerState.isOpen) {
+                        if (drawerState.isOpen && BuildConfig.TRIAL) {
                             syncBilling()
                             Billing.refresh()
                             Billing.loadPrice()
@@ -3386,7 +3389,9 @@ class MainActivity : FragmentActivity() {
                                 onDiscard = ::discardMemo,
                                 onBack = ::requestLeaveVoiceMemo,
                                 onUnsavedChange = { memoUnsaved = it },
-                                startsTrial = Entitlement.trialStartedAt(this@MainActivity) == 0L,
+                                // `distribution-flavors`: no trial on `github`, so no line.
+                                startsTrial = BuildConfig.TRIAL &&
+                                    Entitlement.trialStartedAt(this@MainActivity) == 0L,
                                 problem = voiceMemoProblem,
                                 // `voice-memo-layout`, D2. Listen-back reads the held memo's
                                 // blobs, under the memo's own key.
@@ -3432,7 +3437,8 @@ class MainActivity : FragmentActivity() {
                                     onContinue = { decoyStep = DecoyFlow.Step.Photos },
                                     // Only where first run is the caller: from
                                     // Settings the user is not being walked into it.
-                                    trialNotice = if (onboardingStep == null) null else
+                                    // Never on `github`, which has no trial.
+                                    trialNotice = if (onboardingStep == null || !BuildConfig.TRIAL) null else
                                         stringResource(R.string.decoy_trial_notice),
                                 )
 
@@ -6351,7 +6357,7 @@ class MainActivity : FragmentActivity() {
         refreshCapturePermissions()
         // `one-time-purchase` D3. A pending payment that cleared, or a refund, happened
         // while the app was away; Play's documented place to notice is the return.
-        Billing.refresh()
+        if (BuildConfig.TRIAL) Billing.refresh()
     }
 
     override fun onPause() {
@@ -6965,11 +6971,15 @@ class MainActivity : FragmentActivity() {
                 vaultEntries.firstOrNull { it.position == VaultKeyringSession.openVaultPosition() }
                     ?.let(::openDestroy)
             },
+            // `distribution-flavors`: the `github` build has nothing to buy, so no row.
+            showPurchase = BuildConfig.TRIAL,
             owned = owned,
             purchasePending = purchasePending,
             trialDaysRemaining = Entitlement.daysRemaining(this@MainActivity),
             trialStarted = Entitlement.trialStartedAt(this@MainActivity) != 0L,
-            onPurchase = closing { purchaseScreen = true },
+            // Unreachable on `github`, where the row is not drawn; guarded all the same so
+            // no route there can open the Purchase screen.
+            onPurchase = closing { if (BuildConfig.TRIAL) purchaseScreen = true },
             currentIdentity = identity,
             onIdentity = closing { identityScreen = true },
             biometricState = biometricState(),
@@ -7533,6 +7543,8 @@ class MainActivity : FragmentActivity() {
                 // for this process only: a restart that resumes this step draws it
                 // as untouched, and its "Not now" still moves the flow forward.
                 configured = decoyBuiltThisRun,
+                // `distribution-flavors`: no trial on `github`, so no trial fact.
+                showsTrial = BuildConfig.TRIAL,
                 onSetUp = ::openDecoy,
                 onContinue = ::completeOnboardingStep,
             )

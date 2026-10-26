@@ -30,8 +30,8 @@ WORK="$(mktemp -d)"
 PKG=com.app.vault
 RUNNER="$PKG.test/androidx.test.runner.AndroidJUnitRunner"
 CONTAINER=two-device.bin
-APK="$ROOT/app/build/outputs/apk/debug/app-debug.apk"
-TEST_APK="$ROOT/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+APK="$ROOT/app/build/outputs/apk/play/debug/app-play-debug.apk"
+TEST_APK="$ROOT/app/build/outputs/apk/androidTest/play/debug/app-play-debug-androidTest.apk"
 
 instrument() {   # serial, class#method, extra -e pairs...
   local serial="$1"; shift
@@ -45,7 +45,7 @@ instrument() {   # serial, class#method, extra -e pairs...
 }
 
 echo "== 0. build and install on both devices =="
-( cd "$ROOT" && ./gradlew -q :app:assembleDebug :app:assembleDebugAndroidTest )
+( cd "$ROOT" && ./gradlew -q :app:assemblePlayDebug :app:assemblePlayDebugAndroidTest )
 for S in "$A" "$B"; do
   adb -s "$S" install -r -t "$APK" >/dev/null
   adb -s "$S" install -r -t "$TEST_APK" >/dev/null

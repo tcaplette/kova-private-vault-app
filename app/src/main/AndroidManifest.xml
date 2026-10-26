@@ -8,7 +8,7 @@
       permission below was added by the task that needed it, is justified where it
       is declared, and is exercised by something this app actually runs.
 
-      :app:checkDebugPermissions enforces this against the MERGED manifest on every
+      :app:check<Variant>Permissions enforces this against the MERGED manifest on every
       debug build: INTERNET fails it, and so does every READ_MEDIA_* except
       READ_MEDIA_AUDIO, which `music-recorder-covers` declares by name for the music
       player cover.
@@ -38,7 +38,7 @@
       catches the SecurityException and returns NetworkState(isConnected=false)
       permanently. So a work request that ever sets a network constraint would
       never become eligible to run: no crash, no error, just an operation stuck
-      in ENQUEUED forever. :app:checkDebugWorkConstraints fails the build if any
+      in ENQUEUED forever. :app:check<Variant>WorkConstraints fails the build if any
       app class asks for one. (P1-8)
     -->
     <uses-permission
@@ -88,7 +88,7 @@
       front camera, a clip from the microphone, sealed into a vault on a failed
       unlock — so unlike the four above they carry no tools:node="remove".
 
-      Neither is forbidden: I1 bars INTERNET, and :app:checkDebugPermissions passes
+      Neither is forbidden: I1 bars INTERNET, and :app:check<Variant>Permissions passes
       with these present. The core product runs
       unchanged with all capture modes off and both permissions denied, which is the
       Verify. The store listing must say what they are for, the same obligation
@@ -131,7 +131,7 @@
       live cover: a system permission dialog reads the APPLICATION label, which is
       the vault's real name and which no alias label reaches (FORMAT.md §10).
 
-      Neither is forbidden: I1 bars INTERNET, and :app:checkDebugPermissions permits
+      Neither is forbidden: I1 bars INTERNET, and :app:check<Variant>Permissions permits
       READ_MEDIA_AUDIO by exact name while still failing on every other
       READ_MEDIA_*. The core product runs unchanged with the music identity never
       chosen and both denied. The store listing must say what they are for, the same

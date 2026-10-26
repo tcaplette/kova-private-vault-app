@@ -41,7 +41,7 @@ class PurchaseScreenshotTest {
 
     private companion object {
         const val DIR = "/data/local/tmp/purchase-screen"
-        const val PRICE = "$14.99"
+        const val PRICE = "$8.99"
     }
 
     private fun shot(name: String, content: @Composable () -> Unit, check: () -> Unit = {}) {

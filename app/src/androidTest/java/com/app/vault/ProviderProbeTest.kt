@@ -22,7 +22,7 @@ import java.security.SecureRandom
  * **To run it against a provider:**
  *  1. Sign in to that provider's app on the device.
  *  2. Open the vault, go to Settings → Backup, and choose a folder in it.
- *  3. `./gradlew :app:connectedDebugAndroidTest \
+ *  3. `./gradlew :app:connectedPlayDebugAndroidTest \
  *        -Pandroid.testInstrumentationRunnerArguments.class=com.app.vault.ProviderProbeTest`
  *  4. Record the result in `OUTLINE.md` under `cloud-mirror`, then repeat for the
  *     next provider.

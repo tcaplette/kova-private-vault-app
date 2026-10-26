@@ -57,7 +57,7 @@ class PairingScanTest {
             .findAll(manifest).map { it.groupValues[1] }.toSet()
         // The set as it stood before P4-4. A scanner reuses P2-17's CAMERA; zxing
         // is a plain JAR and declares nothing. Any addition fails here first and
-        // `:app:checkDebugPermissions` second.
+        // `:app:check<Variant>Permissions` second.
         assertEquals(
             setOf(
                 "android.permission.RECEIVE_BOOT_COMPLETED",
