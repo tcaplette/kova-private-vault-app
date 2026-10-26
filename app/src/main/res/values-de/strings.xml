@@ -686,7 +686,7 @@
     <!-- Onboarding — the first-run steps -->
     <string name="onboarding_welcome_title">Fotos, die sonst niemand öffnen kann</string>
     <string name="onboarding_welcome_lead">Alles, was du hier hineinlegst, wird auf diesem Gerät verschlüsselt und bleibt darauf. Es gibt kein Konto, keinen Server und für uns keine Möglichkeit, etwas davon zu sehen – diese App kann überhaupt nicht ins Internet.</string>
-    <string name="onboarding_welcome_steps">Die Einrichtung hat acht kurze Schritte. Keiner davon ist Pflicht, und du kannst es dir später in den Einstellungen anders überlegen.</string>
+    <string name="onboarding_welcome_steps">Die Einrichtung hat neun kurze Schritte. Keiner davon ist Pflicht, und du kannst es dir später in den Einstellungen anders überlegen.</string>
     <string name="onboarding_get_started">Los geht’s</string>
     <string name="onboarding_have_backup">Ich habe eine Sicherung zum Wiederherstellen</string>
     <string name="onboarding_passphrase_lead">Nur das öffnet deinen Tresor. Es lässt sich nicht zurücksetzen.</string>
@@ -900,7 +900,6 @@
     <string name="vault_icon_archive">Archiv</string>
     <string name="vault_list_lock">Sperren</string>
     <string name="vault_new">Neuer Tresor</string>
-    <string name="first_vault_name">Mein Tresor</string>
     <string name="vault_list_lead">Eine Passphrase öffnet diese Liste und alles darauf.</string>
     <string name="vault_list_lead_locked">Eine Passphrase öffnet diese Liste. Als gesperrt markierte Tresore brauchen ihre eigene.</string>
     <string name="vault_list_empty">Keine Tresore auf dieser Liste.</string>

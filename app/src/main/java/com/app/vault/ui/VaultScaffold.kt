@@ -107,6 +107,8 @@ fun VaultScaffold(
      */
     titleStyle: TextStyle? = null,
     onBack: (() -> Unit)? = null,
+    /** False while the screen's work is running: back stays drawn, disabled, so the bar does not shift. */
+    backEnabled: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
     /**
      * A leading control for screens that have no back — P2-7 puts the grid's lock
@@ -248,6 +250,7 @@ fun VaultScaffold(
                     // around the glyph, never by inflating the glyph".
                     IconButton(
                         onClick = onBack,
+                        enabled = backEnabled,
                         modifier = Modifier.size(Spacing.touchTarget),
                     ) {
                         Icon(

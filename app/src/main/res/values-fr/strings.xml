@@ -715,7 +715,7 @@
     <!-- Onboarding — the first-run steps -->
     <string name="onboarding_welcome_title">Des photos que personne d\'autre ne peut ouvrir</string>
     <string name="onboarding_welcome_lead">Tout ce que vous placez ici est chiffré sur cet appareil et y reste. Pas de compte, pas de serveur, et aucun moyen pour nous d\'en voir quoi que ce soit : cette application ne peut pas du tout accéder à Internet.</string>
-    <string name="onboarding_welcome_steps">La configuration comporte huit courtes étapes. Aucune n\'est obligatoire, et vous pourrez changer d\'avis plus tard dans les Paramètres.</string>
+    <string name="onboarding_welcome_steps">La configuration comporte neuf courtes étapes. Aucune n\'est obligatoire, et vous pourrez changer d\'avis plus tard dans les Paramètres.</string>
     <string name="onboarding_get_started">Commencer</string>
     <string name="onboarding_have_backup">J\'ai une sauvegarde à restaurer</string>
     <string name="onboarding_passphrase_lead">C\'est la seule chose qui ouvre votre coffre. Elle ne peut pas être réinitialisée.</string>
@@ -938,7 +938,6 @@
     <string name="vault_icon_archive">Archives</string>
     <string name="vault_list_lock">Verrouiller</string>
     <string name="vault_new">Nouveau coffre</string>
-    <string name="first_vault_name">Mon coffre</string>
     <string name="vault_list_lead">Une phrase secrète ouvre cette liste et tout ce qu\'elle contient.</string>
     <string name="vault_list_lead_locked">Une phrase secrète ouvre cette liste. Les coffres marqués Verrouillé ont besoin de la leur.</string>
     <string name="vault_list_empty">Aucun coffre dans cette liste.</string>

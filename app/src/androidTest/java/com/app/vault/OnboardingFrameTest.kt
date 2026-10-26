@@ -105,11 +105,11 @@ class OnboardingFrameTest {
         // value in its contentDescription, so a screen reader is not left with a
         // decorative bar.
         withFrame(Onboarding.Step.Backup) {
-            compose.onNodeWithText("Step 6 of 8").assertIsDisplayed()
-            compose.onNodeWithContentDescription("Step 6 of 8").assertExists()
+            compose.onNodeWithText("Step 7 of 9").assertIsDisplayed()
+            compose.onNodeWithContentDescription("Step 7 of 9").assertExists()
         }
         withFrame(Onboarding.Step.Identity) {
-            compose.onNodeWithText("Step 8 of 8").assertIsDisplayed()
+            compose.onNodeWithText("Step 9 of 9").assertIsDisplayed()
         }
     }
 
@@ -148,7 +148,7 @@ class OnboardingFrameTest {
         fun centreX(onBack: (() -> Unit)?): Float {
             var x = 0f
             withFrame(Onboarding.Step.Capture, onBack = onBack) {
-                val bounds = compose.onNodeWithText("Step 4 of 8").getBoundsInRoot()
+                val bounds = compose.onNodeWithText("Step 5 of 9").getBoundsInRoot()
                 x = ((bounds.left + bounds.right) / 2).value
             }
             return x

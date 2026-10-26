@@ -325,6 +325,12 @@ class VaultLifecycle(
          */
         firstVaultName: String = VaultKeyringSession.MIGRATED_NAME,
         /**
+         * `vault-appearance`. The colour and icon first run's Name and look chose for that
+         * vault. Null is the unchosen look at position 0, which the decoy flow and the
+         * restore paths keep.
+         */
+        firstVaultAppearance: VaultAppearance? = null,
+        /**
          * P2-2. The timestamp the vault-created log entry carries, and the only
          * thing this touches — not the slot, not the chaff, not the index, not the
          * session, all of which happen now whatever this says. The decoy flow is
@@ -436,6 +442,7 @@ class VaultLifecycle(
                 VaultKeyring.withKnownSlots(
                     VaultKeyring.withEntry(
                         VaultKeyring.empty(), keyringKey, 0, firstVaultName, vmk, metadataBlobId,
+                        appearance = (firstVaultAppearance ?: VaultAppearance.defaultFor(0)).pack(),
                     ),
                     known or slotBit(slotIndex),
                 ),

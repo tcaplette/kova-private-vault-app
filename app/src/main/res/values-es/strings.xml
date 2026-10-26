@@ -715,7 +715,7 @@
     <!-- Onboarding — the first-run steps -->
     <string name="onboarding_welcome_title">Fotos que nadie más puede abrir</string>
     <string name="onboarding_welcome_lead">Todo lo que guardas aquí se encripta en este dispositivo y se queda en él. No hay cuenta, ni servidor, ni forma de que veamos nada; esta app no puede conectarse a internet en absoluto.</string>
-    <string name="onboarding_welcome_steps">La configuración tiene ocho pasos cortos. Ninguno es obligatorio, y puedes cambiar de opinión después en Configuración.</string>
+    <string name="onboarding_welcome_steps">La configuración tiene nueve pasos cortos. Ninguno es obligatorio, y puedes cambiar de opinión después en Configuración.</string>
     <string name="onboarding_get_started">Empezar</string>
     <string name="onboarding_have_backup">Tengo una copia de seguridad para restaurar</string>
     <string name="onboarding_passphrase_lead">Es lo único que abre tu bóveda. No se puede restablecer.</string>
@@ -938,7 +938,6 @@
     <string name="vault_icon_archive">Archivo</string>
     <string name="vault_list_lock">Bloquear</string>
     <string name="vault_new">Nueva bóveda</string>
-    <string name="first_vault_name">Mi bóveda</string>
     <string name="vault_list_lead">Una frase de contraseña abre esta lista y todo lo que contiene.</string>
     <string name="vault_list_lead_locked">Una frase de contraseña abre esta lista. Las bóvedas marcadas como Bloqueada necesitan la suya.</string>
     <string name="vault_list_empty">No hay bóvedas en esta lista.</string>

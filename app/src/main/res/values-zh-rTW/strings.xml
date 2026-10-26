@@ -657,7 +657,7 @@
     <!-- Onboarding — the first-run steps -->
     <string name="onboarding_welcome_title">只有你能開啟的相片</string>
     <string name="onboarding_welcome_lead">你放進來的一切都會在這部裝置上加密，並一直留在裝置上。沒有帳戶，沒有伺服器，我們也無法看到其中任何內容——這個應用程式根本無法連上網際網路。</string>
-    <string name="onboarding_welcome_steps">設定只需要八個簡短步驟。所有步驟都不是必要的，你之後也可以在設定中改變主意。</string>
+    <string name="onboarding_welcome_steps">設定只需要九個簡短步驟。所有步驟都不是必要的，你之後也可以在設定中改變主意。</string>
     <string name="onboarding_get_started">開始使用</string>
     <string name="onboarding_have_backup">我有要還原的備份</string>
     <string name="onboarding_passphrase_lead">這是唯一能開啟你保險庫的東西。它無法重設。</string>
@@ -862,7 +862,6 @@
     <string name="vault_icon_archive">封存</string>
     <string name="vault_list_lock">鎖定</string>
     <string name="vault_new">新增保險庫</string>
-    <string name="first_vault_name">我的保險庫</string>
     <string name="vault_list_lead">一個密碼短語就能開啟這個清單和其中的一切。</string>
     <string name="vault_list_lead_locked">一個密碼短語就能開啟這個清單。標示為「已鎖定」的保險庫需要各自的密碼短語。</string>
     <string name="vault_list_empty">這個清單中沒有保險庫。</string>

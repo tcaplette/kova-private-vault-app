@@ -234,6 +234,8 @@ fun OnboardingScaffold(
 fun OnboardingFrame(
     step: Onboarding.Step,
     onBack: (() -> Unit)?,
+    /** False while the step's work is running: Back stays drawn, disabled, so the bar does not jump. */
+    backEnabled: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     val total = Onboarding.Step.entries.size
@@ -263,6 +265,7 @@ fun OnboardingFrame(
                 if (onBack != null) {
                     TextButton(
                         onClick = onBack,
+                        enabled = backEnabled,
                         modifier = Modifier
                             .align(Alignment.CenterStart)
                             .height(Spacing.touchTarget),

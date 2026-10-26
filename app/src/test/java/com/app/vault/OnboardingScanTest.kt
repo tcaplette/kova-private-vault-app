@@ -12,7 +12,7 @@ import java.io.File
  * `first-run-onboarding`.
  *
  * The order test is not ceremony. `Step.ordinal` **is** the sequence, so an enum
- * reordered by a refactor silently reorders first run — and four of the eight
+ * reordered by a refactor silently reorders first run — and five of the nine
  * positions are forced by behaviour rather than taste. A panic step that drifted
  * above the decoy step would enrol a credential that destroys nothing, with no
  * compiler error and no failing behaviour test anywhere else in the suite.
@@ -25,12 +25,12 @@ import java.io.File
 class OnboardingScanTest {
 
     @Test
-    fun theEightStepsAreInTheOrderFirstRunRequires() {
+    fun theNineStepsAreInTheOrderFirstRunRequires() {
         assertEquals(
-            "first-run-onboarding fixes this order and four of the positions are forced. " +
+            "first-run-onboarding fixes this order and five of the positions are forced. " +
                 "If you are here because a refactor reordered the enum, the refactor is wrong.",
             listOf(
-                "Passphrase", "Kit", "Fingerprint", "Capture",
+                "Name", "Passphrase", "Kit", "Fingerprint", "Capture",
                 "Decoy", "Backup", "Panic", "Identity",
             ),
             Onboarding.Step.entries.map { it.name },
@@ -144,8 +144,9 @@ class OnboardingScanTest {
 
     @Test
     fun positionsAreOneBasedAndContiguous() {
-        assertEquals(1, Onboarding.Step.Passphrase.position)
-        assertEquals(8, Onboarding.Step.Identity.position)
+        assertEquals(1, Onboarding.Step.Name.position)
+        assertEquals(2, Onboarding.Step.Passphrase.position)
+        assertEquals(9, Onboarding.Step.Identity.position)
         assertEquals(
             Onboarding.Step.entries.map { it.ordinal + 1 },
             Onboarding.Step.entries.map { it.position },
@@ -188,6 +189,12 @@ class OnboardingScanTest {
             Onboarding.Step.Fingerprint, Onboarding.Step.Capture.previousStep(),
         )
         assertNull("never back past the kit", Onboarding.Step.Fingerprint.previousStep())
+        assertNull("the vault exists by the kit, so there is nothing to go back to", Onboarding.Step.Kit.previousStep())
+        assertEquals(
+            "first-vault-naming: before the vault exists, the passphrase goes back to Name and look",
+            Onboarding.Step.Name, Onboarding.Step.Passphrase.previousStep(),
+        )
+        assertNull("Back on Name and look is the welcome, which is not a step", Onboarding.Step.Name.previousStep())
     }
 
     // --- nothing ends the flow early ----------------------------------------
@@ -196,7 +203,7 @@ class OnboardingScanTest {
      * The back gesture moves one step. It never ends first run.
      *
      * It used to: `dismissTop`'s onboarding branch ended the flow, and later offered
-     * to. Every user walks the eight steps, so back reaches `previousStep` and
+     * to. Every user walks the nine steps, so back reaches `previousStep` and
      * nothing else; where there is none, back leaves the app and the flow pauses.
      *
      * A source scan because the branch is one arm of a `when` in a long activity,
@@ -233,7 +240,7 @@ class OnboardingScanTest {
         val callers = Regex("""Onboarding\.finish\(""")
             .findAll(source("MainActivity.kt").readSource()).count()
         assertEquals(
-            "first-run-onboarding: every user walks the eight steps, so the callers " +
+            "first-run-onboarding: every user walks the nine steps, so the callers " +
                 "that end the flow are counted. A new one is a way out.",
             3, callers,
         )

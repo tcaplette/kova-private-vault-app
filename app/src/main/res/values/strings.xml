@@ -686,7 +686,7 @@
     <!-- Onboarding — the first-run steps -->
     <string name="onboarding_welcome_title">Photos nobody else can open</string>
     <string name="onboarding_welcome_lead">Everything you put in here is encrypted on this device and stays on it. There is no account, no server, and no way for us to see any of it — this app cannot reach the internet at all.</string>
-    <string name="onboarding_welcome_steps">Setting up takes eight short steps. None of them are required, and you can change your mind later in Settings.</string>
+    <string name="onboarding_welcome_steps">Setting up takes nine short steps. None of them are required, and you can change your mind later in Settings.</string>
     <string name="onboarding_get_started">Get started</string>
     <string name="onboarding_have_backup">I have a backup to restore</string>
     <string name="onboarding_passphrase_lead">This is the only thing that opens your vault. It cannot be reset.</string>
@@ -901,7 +901,6 @@
     <string name="vault_icon_archive">Archive</string>
     <string name="vault_list_lock">Lock</string>
     <string name="vault_new">New vault</string>
-    <string name="first_vault_name">My vault</string>
     <string name="vault_list_lead">One passphrase opens this list and everything on it.</string>
     <string name="vault_list_lead_locked">One passphrase opens this list. Vaults marked Locked need their own.</string>
     <string name="vault_list_empty">No vaults on this list.</string>

@@ -4,6 +4,10 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
@@ -11,6 +15,7 @@ import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.filter
 import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isToggleable
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
@@ -31,6 +36,7 @@ import com.app.vault.ui.CaptureStepScreen
 import com.app.vault.ui.DecoyStepScreen
 import com.app.vault.ui.FingerprintStepScreen
 import com.app.vault.ui.IdentityStepScreen
+import com.app.vault.ui.NameStep
 import com.app.vault.ui.OnboardingFrame
 import com.app.vault.ui.OnboardingWelcomeScreen
 import com.app.vault.ui.OnboardingLanguageScreen
@@ -406,11 +412,63 @@ class OnboardingStepScreenTest {
         // thought had just started.
         screen({
             OnboardingFrame(
-                step = Onboarding.Step.Passphrase,
+                step = Onboarding.Step.Name,
                 onBack = null,
             ) { }
         }) {
-            assertTrue("the flow must count from its first screen", count("Step 1 of 8") > 0)
+            assertTrue("the flow must count from its first screen", count("Step 1 of 9") > 0)
+        }
+    }
+
+    // --- Name and look, `first-vault-naming` ----------------------------------
+
+    /**
+     * Step 1 is New vault's Name and look, inside the frame: the badge, the field, both
+     * choosers, and a Continue that refuses an empty name under the field.
+     */
+    @Test
+    fun nameAndLookDrawsTheBadgeTheFieldAndBothChoosersAndRefusesAnEmptyName() {
+        var continued = 0
+        screen({
+            var name by remember { mutableStateOf("") }
+            var appearance by remember {
+                mutableStateOf(VaultAppearance.defaultFor(0))
+            }
+            var error by remember { mutableStateOf<String?>(null) }
+            OnboardingFrame(step = Onboarding.Step.Name, onBack = null) {
+                NameStep(
+                    name = name,
+                    onName = { name = it; error = null },
+                    appearance = appearance,
+                    onAppearance = { appearance = it },
+                    accepts = VaultKeyring::fits,
+                    error = error,
+                    onContinue = {
+                        error = if (name.isBlank()) ctx.getString(R.string.vault_name_empty) else null
+                        if (error == null) continued++
+                    },
+                )
+            }
+        }) {
+            assertTrue(count("Step 1 of 9") > 0)
+            assertTrue("the title", count("Name your vault") > 0)
+            assertTrue("the lead", count("You'll see this name and badge on your vault list.") > 0)
+            compose.onNode(hasSetTextAction()).assertExists()
+            assertTrue("the colour chooser", count("Colour") > 0)
+            compose.onNode(hasContentDescription("Teal")).assertExists()
+            assertTrue("the icon chooser", count("Icon") > 0)
+            compose.onNode(hasContentDescription("Home")).assertExists()
+
+            compose.onNodeWithText("Continue").performClick()
+            compose.waitForIdle()
+            assertTrue("an empty name is refused, under the field", count("Give the vault a name.") > 0)
+            assertEquals("an empty name must not leave the step", 0, continued)
+
+            compose.onNode(hasSetTextAction()).performTextInput("Family")
+            compose.onNodeWithText("Continue").performClick()
+            compose.waitForIdle()
+            assertEquals(0, count("Give the vault a name."))
+            assertEquals(1, continued)
         }
     }
 
@@ -420,7 +478,7 @@ class OnboardingStepScreenTest {
             screen({ OnboardingFrame(step = step, onBack = null) { } }) {
                 assertTrue(
                     "$step is not framed, so the flow's position jumps at it",
-                    count("Step ${step.position} of 8") > 0,
+                    count("Step ${step.position} of 9") > 0,
                 )
             }
         }

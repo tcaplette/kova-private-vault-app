@@ -1754,6 +1754,19 @@ class MainActivity : FragmentActivity() {
     private var setupProblem by mutableStateOf<String?>(null)
 
     /**
+     * `first-vault-naming` D3. The first vault's name and look, as Name and look left them.
+     * **Never saveable**: a saved instance bundle is written to disk by the system, and a
+     * vault's name lives nowhere outside the sealed keyring. A process that dies before
+     * "Create vault" starts again at the language screen, as [languageSeen] already does.
+     * Cleared once the vault exists.
+     */
+    private var firstName by mutableStateOf("")
+    private var firstAppearance by mutableStateOf(VaultAppearance.defaultFor(0))
+
+    /** Name and look's refusal, under its field — `first-vault-naming` D4. */
+    private var firstNameError by mutableStateOf<String?>(null)
+
+    /**
      * `cloud-mirror`. The backup screen and what it is doing.
      *
      * [restoringBackup] decides which job the folder picker is doing — it is the
@@ -3906,12 +3919,12 @@ class MainActivity : FragmentActivity() {
                         // on a screen that does not occupy one of the eight.
                         // `onboarding-language-screen`. First of all, before the welcome: every
                         // screen after it is read in the language chosen here.
-                        onboardingStep == Onboarding.Step.Passphrase && !languageSeen ->
+                        onboardingStep == Onboarding.Step.Name && !languageSeen ->
                             OnboardingLanguageScreen(
                                 onChoose = ::previewLanguage,
                                 onContinue = { languageSeen = true },
                             )
-                        onboardingStep == Onboarding.Step.Passphrase && !welcomeSeen -> {
+                        onboardingStep == Onboarding.Step.Name && !welcomeSeen -> {
                             // Back returns to the language screen, the one before it.
                             BackHandler { languageSeen = false }
                             OnboardingWelcomeScreen(
@@ -3923,14 +3936,26 @@ class MainActivity : FragmentActivity() {
                         onboardingStep != null -> OnboardingFrame(
                             step = onboardingStep!!,
                             onBack = onboardingStep!!.previousStep()
-                                ?.let { prev -> { advanceOnboarding(prev) } },
+                                ?.let { prev -> { if (!busy) advanceOnboarding(prev) } },
+                            // `first-vault-naming` D5. Drawn, and inert, while the vault is being written.
+                            backEnabled = !busy,
                         ) {
                             OnboardingStepContent(onboardingStep!!)
                         }
                         !hasVault -> VaultSetup(
-                            onCreate = { bytes, _ -> createVault(bytes) },
+                            onCreate = { bytes, _ -> createVault(bytes, firstName.trim(), firstAppearance) },
                             busy = busy,
                             progress = setupProgress,
+                            name = firstName,
+                            onName = {
+                                firstName = it
+                                firstNameError = null
+                            },
+                            appearance = firstAppearance,
+                            onAppearance = { firstAppearance = it },
+                            nameError = firstNameError,
+                            onNameContinue = ::firstNameContinue,
+                            problem = setupProblem,
                             onRestoreBackup = ::openBackup,
                         )
                         !keyringOpen -> VaultUnlockScreen(
@@ -4868,8 +4893,14 @@ class MainActivity : FragmentActivity() {
             // it back at that step. Back from the passphrase and the kit falls through
             // to the branches below, as it always has: there is no earlier step to
             // return to from either.
+            // `first-vault-naming` D5. While "Create vault" runs, back does nothing: the
+            // vault is being written and cannot be left half made.
+            onboardingStep == Onboarding.Step.Passphrase && busy -> Unit
             onboardingStep != null && onboardingStep!!.previousStep() != null ->
                 advanceOnboarding(onboardingStep!!.previousStep())
+            // Name and look is not the first screen: the welcome is before it, and back
+            // returns there as the welcome's own back returns to the language screen.
+            onboardingStep == Onboarding.Step.Name -> welcomeSeen = false
             // `cloud-mirror`, in the `when`'s position — above the archive import
             // for the same reason it is drawn above it. Nothing on it is a gate: a
             // user who opens Backup and thinks better of it goes back.
@@ -5904,6 +5935,20 @@ class MainActivity : FragmentActivity() {
      * Name and look's Continue — D4. The two checks that would otherwise only fail at the end, run
      * here so nobody walks four steps to be refused on the fifth. They run again at the commit.
      */
+    /**
+     * The first vault's Name and look Continue, in first run and on the no-vault setup
+     * screen — `first-vault-naming` D4. New vault's checks that a first vault can meet; with
+     * no keyring, "list full" cannot happen. True when the name is accepted.
+     */
+    private fun firstNameContinue(): Boolean {
+        firstNameError = when {
+            firstName.isBlank() -> getString(R.string.vault_name_empty)
+            !mayAddToVault() -> getString(Entitlement.BLOCKED)
+            else -> null
+        }
+        return firstNameError == null
+    }
+
     private fun nameStepContinue() {
         flowNameError = when {
             flowName.isBlank() -> getString(R.string.vault_name_empty)
@@ -6320,7 +6365,7 @@ class MainActivity : FragmentActivity() {
      * Argon2id costs ~460 ms (P1-3) and the chaff write is far longer, so both
      * run off the main thread. Doing either inline is an ANR on first launch.
      */
-    private fun createVault(passphrase: ByteArray) {
+    private fun createVault(passphrase: ByteArray, name: String, appearance: VaultAppearance) {
         // P1-16: creating a vault is adding to the app, and the gate goes before
         // any work — no chaff written, no Argon2id run, nothing to undo.
         if (!mayAddToVault()) {
@@ -6336,8 +6381,12 @@ class MainActivity : FragmentActivity() {
         setupProgress = 0 to 1
         thread {
             try {
-                // The first vault is named in the language the app is set up in; the name is stored.
-                lifecycleOps.create(passphrase, firstVaultName = getString(R.string.first_vault_name)) { done, total ->
+                // `first-vault-naming`. The name and look the user chose on Name and look.
+                lifecycleOps.create(
+                    passphrase,
+                    firstVaultName = name,
+                    firstVaultAppearance = appearance,
+                ) { done, total ->
                     setupProgress = done to total
                 }
                 // The kit is derived from the open vault's VMK and shown once. It
@@ -6357,6 +6406,9 @@ class MainActivity : FragmentActivity() {
                     decoySetUp = VaultKeyringSession.hasDecoy()
                     vaultEntries = VaultKeyringSession.vaults()
                     recoveryKit = words
+                    firstName = ""
+                    firstAppearance = VaultAppearance.defaultFor(0)
+                    firstNameError = null
                     loadIndex()
                     // `first-run-onboarding`. **The step advances here and only
                     // here.** The kit is derived from the vault that was just
@@ -6764,7 +6816,7 @@ class MainActivity : FragmentActivity() {
 
     private fun beginOnboarding() {
         if (!Onboarding.inProgress(this)) return
-        advanceOnboarding(Onboarding.Step.Passphrase)
+        advanceOnboarding(Onboarding.Step.Name)
     }
 
     /**
@@ -7416,8 +7468,21 @@ class MainActivity : FragmentActivity() {
     @Composable
     private fun OnboardingStepContent(step: Onboarding.Step) {
         when (step) {
+            Onboarding.Step.Name -> NameStep(
+                name = firstName,
+                onName = {
+                    firstName = it
+                    firstNameError = null
+                },
+                appearance = firstAppearance,
+                onAppearance = { firstAppearance = it },
+                accepts = VaultKeyring::fits,
+                error = firstNameError,
+                onContinue = { if (firstNameContinue()) advanceOnboarding(Onboarding.Step.Passphrase) },
+            )
+
             Onboarding.Step.Passphrase -> PassphraseStepScreen(
-                onCreate = ::createVault,
+                onCreate = { bytes -> createVault(bytes, firstName.trim(), firstAppearance) },
                 busy = busy,
                 progress = setupProgress,
                 problem = setupProblem,

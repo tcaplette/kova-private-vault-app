@@ -219,12 +219,15 @@ class OnboardingDeviceTest {
             "this test needs the emulator with no enrolled fingerprint — remove the enrolment and rerun",
             BiometricState.NotSetUp, state,
         )
-        // `biometric-unlock-screen`. The emulator declares a fingerprint and no face, so the
-        // layout read the activity's way is Fingerprint.
+        // `biometric-unlock-screen`. Every emulator declares a fingerprint; a Pixel 9 image
+        // declares a face as well, so the layout read the activity's way is Fingerprint or Both.
         val fingerprint = BiometricWrap.hasFingerprint(ctx)
         val face = BiometricWrap.hasFace(ctx)
         val layout = BiometricWrap.layout(state, fingerprint, face, BiometricWrap.allStrong(ctx))
-        assertEquals(BiometricLayout.Fingerprint, layout)
+        assertTrue(
+            "this test needs an emulator with a fingerprint sensor, but the layout was $layout",
+            layout == BiometricLayout.Fingerprint || layout == BiometricLayout.Both,
+        )
         screen({
             var step by remember { mutableStateOf(Onboarding.Step.Capture) }
             OnboardingFrame(step = step, onBack = step.previousStep()?.let { prev -> { step = prev } }) {
@@ -244,10 +247,14 @@ class OnboardingDeviceTest {
             compose.onNodeWithText("Back").performClick()
             compose.waitForIdle()
 
-            compose.onNodeWithText("Step 3 of 8").assertExists()
-            compose.onNodeWithText(ctx.getString(BiometricWrap.FINGERPRINT_ROW)).assertIsDisplayed()
+            compose.onNodeWithText("Step 4 of 9").assertExists()
+            // The live row is named for the layout; a fingerprint-only device also draws face
+            // as unavailable, and a device with both draws the one combined row.
+            compose.onNodeWithText(ctx.getString(BiometricWrap.liveName(layout)!!)).assertIsDisplayed()
             compose.onNodeWithText(ctx.getString(BiometricWrap.liveLine(BiometricState.NotSetUp)!!)).assertIsDisplayed()
-            compose.onNodeWithText(ctx.getString(BiometricWrap.FACE_ROW)).assertIsDisplayed()
+            if (layout == BiometricLayout.Fingerprint) {
+                compose.onNodeWithText(ctx.getString(BiometricWrap.FACE_ROW)).assertIsDisplayed()
+            }
             compose.onNodeWithText("Not now").assertIsDisplayed()
         }
     }

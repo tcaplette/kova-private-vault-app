@@ -657,7 +657,7 @@
     <!-- Onboarding — the first-run steps -->
     <string name="onboarding_welcome_title">只有你能打开的照片</string>
     <string name="onboarding_welcome_lead">你放进来的一切都会在此设备上加密，并一直留在设备上。没有账号，没有服务器，我们也无法看到其中任何内容——这个应用根本无法连接互联网。</string>
-    <string name="onboarding_welcome_steps">设置只需八个简短步骤。所有步骤都不是必需的，你之后也可以在设置中改变主意。</string>
+    <string name="onboarding_welcome_steps">设置只需九个简短步骤。所有步骤都不是必需的，你之后也可以在设置中改变主意。</string>
     <string name="onboarding_get_started">开始使用</string>
     <string name="onboarding_have_backup">我有要恢复的备份</string>
     <string name="onboarding_passphrase_lead">这是唯一能打开你保险库的东西。它无法重置。</string>
@@ -862,7 +862,6 @@
     <string name="vault_icon_archive">归档</string>
     <string name="vault_list_lock">锁定</string>
     <string name="vault_new">新建保险库</string>
-    <string name="first_vault_name">我的保险库</string>
     <string name="vault_list_lead">一个密码短语即可打开此列表及其中的一切。</string>
     <string name="vault_list_lead_locked">一个密码短语即可打开此列表。标记为“已锁定”的保险库需要各自的密码短语。</string>
     <string name="vault_list_empty">此列表中没有保险库。</string>

@@ -1,14 +1,21 @@
 package com.app.vault
 
+import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.app.vault.ui.ACKNOWLEDGEMENT
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Assume.assumeTrue
 import org.junit.Before
@@ -116,25 +123,41 @@ class OnboardingFlowTest {
         compose.waitUntil(timeoutMs) { exists(text) }
     }
 
-    /**
-     * The transition that was broken: passphrase entered, vault created, step 2.
-     *
-     * Asserts the *destination*, not that a button was tappable. The broken build
-     * would fail here on the timeout, having redrawn step 1.
-     */
-    @Test
-    fun creatingTheVaultAdvancesToTheRecoveryKit() {
-        // The welcome comes before the counter starts.
+    /** The language screen, then the welcome, then Get started — the doors before step 1. */
+    private fun throughTheWelcome() {
+        awaitText("System default")
+        compose.onNodeWithText("Continue").performClick()
         awaitText("Photos nobody else can open")
         compose.onNodeWithText("Get started").performClick()
+        awaitText("Step 1 of 9")
+    }
 
-        awaitText("Step 1 of 8")
+    /** Name and look, passed with a name — `first-vault-naming`. */
+    private fun nameTheVault(name: String = "Flow test") {
+        compose.onNodeWithText("Name").performTextInput(name)
+        compose.onNodeWithText("Continue").performClick()
+        awaitText("Step 2 of 9")
+    }
+
+    private fun createTheVault() {
         compose.onNodeWithText("Passphrase").performTextInput(PASS)
         compose.onNodeWithText("Enter it again").performTextInput(PASS)
         compose.onNodeWithText("Create vault").performClick()
-
         // Argon2id plus the install chaff write.
-        awaitText("Step 2 of 8", CREATE_TIMEOUT_MS)
+        awaitText("Step 3 of 9", CREATE_TIMEOUT_MS)
+    }
+
+    /**
+     * The transition that was broken: passphrase entered, vault created, the kit.
+     *
+     * Asserts the *destination*, not that a button was tappable. The broken build
+     * would fail here on the timeout, having redrawn the passphrase step.
+     */
+    @Test
+    fun creatingTheVaultAdvancesToTheRecoveryKit() {
+        throughTheWelcome()
+        nameTheVault()
+        createTheVault()
         assertTrue(
             "creating a vault must land on the recovery kit, not redraw the passphrase",
             exists("Write these down"),
@@ -143,24 +166,20 @@ class OnboardingFlowTest {
     }
 
     /**
-     * Continue on step 2 is inert until the acknowledgement is typed, and the flow
+     * Continue on the kit is inert until the acknowledgement is typed, and the flow
      * does not skip past a step whose gate has not been satisfied.
      */
     @Test
     fun theKitStepHoldsUntilAcknowledged() {
-        awaitText("Photos nobody else can open")
-        compose.onNodeWithText("Get started").performClick()
-        awaitText("Step 1 of 8")
-        compose.onNodeWithText("Passphrase").performTextInput(PASS)
-        compose.onNodeWithText("Enter it again").performTextInput(PASS)
-        compose.onNodeWithText("Create vault").performClick()
-        awaitText("Step 2 of 8", CREATE_TIMEOUT_MS)
+        throughTheWelcome()
+        nameTheVault()
+        createTheVault()
 
         compose.onNodeWithText("Continue").performClick()
         compose.waitForIdle()
         assertTrue(
             "an unacknowledged kit must not advance",
-            exists("Step 2 of 8"),
+            exists("Step 3 of 9"),
         )
 
     }
@@ -168,12 +187,77 @@ class OnboardingFlowTest {
     /** The welcome is the door, and it is not counted as a step. */
     @Test
     fun theWelcomeIsNotAStep() {
+        awaitText("System default")
+        compose.onNodeWithText("Continue").performClick()
         awaitText("Photos nobody else can open")
         assertTrue(
-            "the welcome must not occupy a place in the eight",
-            !exists("Step 1 of 8"),
+            "the welcome must not occupy a place in the nine",
+            !exists("Step 1 of 9"),
         )
         compose.onNodeWithText("Get started").performClick()
-        awaitText("Step 1 of 8")
+        awaitText("Step 1 of 9")
+    }
+
+    /**
+     * `first-vault-naming`. Name and look comes first, refuses an empty name under the
+     * field, keeps the name, colour and icon across Back from the passphrase step and
+     * across Back to the welcome, and the vault is created as chosen.
+     */
+    @Test
+    fun theFirstVaultIsNamedAndKeepsItsLookAcrossBack() {
+        throughTheWelcome()
+        awaitText("Name your vault")
+
+        // Empty: refused, under the field, and the step stays.
+        compose.onNodeWithText("Continue").performClick()
+        awaitText("Give the vault a name.")
+        assertTrue("an empty name must not leave the step", exists("Step 1 of 9"))
+
+        compose.onNodeWithText("Name").performTextInput("Family")
+        compose.onNodeWithContentDescription("Teal").performScrollTo().performClick()
+        compose.onNodeWithContentDescription("Home").performScrollTo().performClick()
+        compose.onNodeWithText("Continue").performClick()
+        awaitText("Step 2 of 9")
+
+        // Back from the passphrase step: all three kept.
+        compose.onNodeWithText("Back").performClick()
+        awaitText("Step 1 of 9")
+        compose.onNode(hasSetTextAction()).assertTextContains("Family")
+        compose.onNodeWithContentDescription("Teal").assertIsSelected()
+        compose.onNodeWithContentDescription("Home").assertIsSelected()
+
+        // Back to the welcome and in again: still kept.
+        compose.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        awaitText("Photos nobody else can open")
+        compose.onNodeWithText("Get started").performClick()
+        awaitText("Step 1 of 9")
+        compose.onNode(hasSetTextAction()).assertTextContains("Family")
+        compose.onNodeWithContentDescription("Teal").assertIsSelected()
+        compose.onNodeWithContentDescription("Home").assertIsSelected()
+
+        compose.onNodeWithText("Continue").performClick()
+        awaitText("Step 2 of 9")
+        createTheVault()
+
+        // Home is the first glyph, stored as 1.
+        val chosen = VaultAppearance(FolderColour.Teal, 1)
+        val entry = VaultKeyringSession.vaults().single()
+        assertEquals("Family", entry.name)
+        assertEquals(chosen, VaultAppearance.of(entry.appearance))
+
+        // On the list: the flow finished and the keyring reopened at the lock screen.
+        VaultLifecycle.lockNow()
+        Onboarding.finish(ctx)
+        compose.activityRule.scenario.recreate()
+        compose.onNode(hasSetTextAction()).performTextInput(PASS)
+        compose.onNodeWithText("Unlock").performClick()
+        compose.waitUntil(CREATE_TIMEOUT_MS) {
+            compose.onAllNodes(hasContentDescription("New vault")).fetchSemanticsNodes().isNotEmpty()
+        }
+        assertTrue("the list must show the vault under its chosen name", exists("Family"))
+        assertEquals(
+            "the list draws the badge from the entry",
+            chosen, VaultAppearance.of(VaultKeyringSession.vaults().single().appearance),
+        )
     }
 }

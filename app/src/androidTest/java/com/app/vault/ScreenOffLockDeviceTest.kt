@@ -4,13 +4,12 @@ import android.graphics.Bitmap
 import android.os.ParcelFileDescriptor
 import android.view.WindowManager
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.isToggleable
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
@@ -207,6 +206,10 @@ class ScreenOffLockDeviceTest {
             compose.onNode(hasText("Continue")).performClick()
             waitFor("the welcome") { showing("Get started") }
             compose.onNode(hasText("Get started")).performClick()
+            // `first-vault-naming`. Name and look comes before the passphrase.
+            waitFor("Name and look") { showing("Name your vault") }
+            compose.onNode(hasText("Name")).performTextInput(VaultKeyringSession.MIGRATED_NAME)
+            compose.onNode(hasText("Continue")).performClick()
             waitFor("the passphrase step") { showing("Enter it again") }
             compose.onNode(hasText("Passphrase")).performTextInput(KEYRING)
             compose.onNode(hasText("Enter it again")).performTextInput(KEYRING)
@@ -240,14 +243,19 @@ class ScreenOffLockDeviceTest {
             unlock()
             compose.onNode(hasContentDescription("New vault")).performClick()
             waitFor("the create screen") { showing(CREATE_MARK) }
-            compose.onNode(hasText("Name")).performTextInput("Kept")
-            // `vault-list-refresh` put the colour and icon choosers above the switch, so
-            // everything from here down is below the fold and is scrolled to first.
-            compose.onNode(isToggleable()).performScrollTo().performClick()
-            compose.onNode(hasText("Passphrase for this vault")).performScrollTo().performTextInput(OWN)
-            compose.onNode(hasText("Enter it again")).performScrollTo().performTextInput(OWN)
-            compose.onNode(hasText("Create vault")).performScrollTo().performClick()
-            waitFor("the vault's own kit") { showing(KIT_MARK) }
+            // `new-vault-setup-flow`. Name and look, How it opens, its passphrase, capture.
+            compose.onNode(hasText("Name") and hasSetTextAction()).performTextInput("Kept")
+            compose.onNode(hasText("Continue") and hasClickAction()).performClick()
+            waitFor("How it opens") { showing("How should Kept open?") }
+            compose.onNode(hasText("With its own passphrase") and hasClickAction()).performClick()
+            compose.onNode(hasText("Continue") and hasClickAction()).performClick()
+            waitFor("its passphrase") { showing("Choose a passphrase for Kept") }
+            compose.onNode(hasText("New passphrase") and hasSetTextAction()).performTextInput(OWN)
+            compose.onNode(hasText("New passphrase again") and hasSetTextAction()).performTextInput(OWN)
+            compose.onNode(hasText("Continue") and hasClickAction()).performClick()
+            waitFor("the capture step") { showing("See who tries to open Kept") }
+            compose.onNode(hasText("Create vault") and hasClickAction()).performClick()
+            waitFor("the vault's own kit") { showing("Recovery kit for Kept") }
             val firstWord = compose.onAllNodes(hasText("1. ", substring = true))
                 .fetchSemanticsNodes().first().config[SemanticsProperties.Text].first().text
 
@@ -266,7 +274,8 @@ class ScreenOffLockDeviceTest {
         const val KEYRING = "screen-off-lock-passphrase"
         const val OWN = "its-own-secret-phrase"
         const val LOCK_SCREEN = "Enter your passphrase to open this vault."
-        const val CREATE_MARK = "Give this vault its own passphrase"
+        /** New vault's first step, Name and look — `new-vault-setup-flow`. */
+        const val CREATE_MARK = "Name your vault"
         const val RECOVER_MARK = "Type the 24 words from your recovery kit"
         const val KIT_MARK = "to confirm you have written them down"
     }

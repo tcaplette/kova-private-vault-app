@@ -657,7 +657,7 @@
     <!-- Onboarding — the first-run steps -->
     <string name="onboarding_welcome_title">ほかの誰にも開けない写真</string>
     <string name="onboarding_welcome_lead">ここに入れたものはすべてこのデバイス上で暗号化され、このデバイスに留まります。アカウントもサーバーもなく、私たちがそれを見る方法もありません。このアプリはインターネットにまったく接続できません。</string>
-    <string name="onboarding_welcome_steps">設定は 8 つの短いステップで完了します。どれも必須ではなく、後から設定で変更できます。</string>
+    <string name="onboarding_welcome_steps">設定は 9 つの短いステップで完了します。どれも必須ではなく、後から設定で変更できます。</string>
     <string name="onboarding_get_started">始める</string>
     <string name="onboarding_have_backup">復元するバックアップがあります</string>
     <string name="onboarding_passphrase_lead">保管庫を開けるのはこれだけです。リセットはできません。</string>
@@ -862,7 +862,6 @@
     <string name="vault_icon_archive">アーカイブ</string>
     <string name="vault_list_lock">ロック</string>
     <string name="vault_new">新しい保管庫</string>
-    <string name="first_vault_name">マイ保管庫</string>
     <string name="vault_list_lead">1 つのパスフレーズで、このリストとそこにあるすべてが開きます。</string>
     <string name="vault_list_lead_locked">1 つのパスフレーズでこのリストが開きます。「ロック中」の保管庫には専用のパスフレーズが必要です。</string>
     <string name="vault_list_empty">このリストに保管庫はありません。</string>

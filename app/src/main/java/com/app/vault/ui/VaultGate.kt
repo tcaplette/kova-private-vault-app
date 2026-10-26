@@ -64,9 +64,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.activity.compose.BackHandler
 import com.app.vault.BiometricWrap
 import com.app.vault.PassphraseStrength
 import com.app.vault.R
+import com.app.vault.VaultAppearance
+import com.app.vault.VaultKeyring
 import com.app.vault.ui.theme.Spacing
 import com.app.vault.ui.theme.VaultColors
 
@@ -121,13 +124,29 @@ internal fun NoClipboard(content: @Composable () -> Unit) {
     CompositionLocalProvider(LocalTextToolbar provides NoTextToolbar, content = content)
 }
 
-/** Shown when no vault exists. */
+/**
+ * Shown when no vault exists — `first-vault-naming` D8.
+ *
+ * Two stages: New vault's Name and look, then the passphrase fields. The name and look are
+ * the host's, so going back from the fields finds them as they were left; the fields
+ * themselves are `remember`ed here and empty on return, which is right for a secret.
+ */
 @Composable
 fun VaultSetup(
     onCreate: (ByteArray, (Int, Int) -> Unit) -> Unit,
     busy: Boolean,
     progress: Pair<Int, Int>?,
+    name: String,
+    onName: (String) -> Unit,
+    appearance: VaultAppearance,
+    onAppearance: (VaultAppearance) -> Unit,
+    /** Name and look's refusal, under its field. */
+    nameError: String?,
+    /** Runs the name's checks; true moves on to the passphrase fields. */
+    onNameContinue: () -> Boolean,
     modifier: Modifier = Modifier,
+    /** Why the last attempt did not produce a vault, said on the stage that tried. */
+    problem: String? = null,
     /**
      * `cloud-mirror`. Restoring a backup, from the one screen a replacement device
      * actually lands on.
@@ -143,19 +162,53 @@ fun VaultSetup(
      */
     onRestoreBackup: (() -> Unit)? = null,
 ) {
+    // Plain `remember`, like the name it pairs with: nothing about this screen is saved.
+    var naming by remember { mutableStateOf(true) }
+
+    if (naming) {
+        // The first stage carries restore, so a replacement device still finds it on the
+        // first screen it lands on. No bar: there is nothing behind this, and the step's
+        // own heading names it — the bar's "Choose a passphrase" belongs to the next stage.
+        VaultScaffold(
+            title = stringResource(R.string.vault_flow_name_title),
+            modifier = modifier,
+            scrollable = false,
+            topBar = false,
+        ) {
+            NameStep(
+                name = name,
+                onName = onName,
+                appearance = appearance,
+                onAppearance = onAppearance,
+                accepts = VaultKeyring::fits,
+                error = nameError,
+                onContinue = { if (onNameContinue()) naming = false },
+                secondaryLabel = onRestoreBackup?.let { stringResource(R.string.setup_restore_backup) },
+                onSecondary = onRestoreBackup,
+            )
+        }
+        return
+    }
+
     var passphrase by remember { mutableStateOf("") }
     var confirm by remember { mutableStateOf("") }
-    var problem by remember { mutableStateOf<String?>(null) }
+    var localProblem by remember { mutableStateOf<String?>(null) }
+    val shown = localProblem ?: problem
     val verdict = rememberPassphraseVerdict(passphrase)
 
-    // First run: no back affordance, because there is nothing behind this. The
-    // content used to be vertically centred; P2-6 made it scroll instead, which is
+    // Back returns to Name and look, with the name and look kept. Not while the vault is
+    // being written: it cannot be left half made.
+    BackHandler(enabled = !busy) { naming = true }
+
+    // The content used to be vertically centred; P2-6 made it scroll instead, which is
     // what keeps the passphrase field reachable once the keyboard is up — centring
     // a screen that owns a text field is a layout arguing with the IME.
     NoClipboard {
     VaultScaffold(
         title = stringResource(R.string.setup_title),
         modifier = modifier,
+        onBack = { if (!busy) naming = true },
+        backEnabled = !busy,
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
@@ -191,7 +244,7 @@ fun VaultSetup(
 
         PassphraseField(
             value = passphrase,
-            onValueChange = { passphrase = it; problem = null },
+            onValueChange = { passphrase = it; localProblem = null },
             label = stringResource(R.string.passphrase_label),
             imeAction = ImeAction.Next,
             supporting = PassphraseRequirement,
@@ -202,7 +255,7 @@ fun VaultSetup(
         )
         PassphraseField(
             value = confirm,
-            onValueChange = { confirm = it; problem = null },
+            onValueChange = { confirm = it; localProblem = null },
             label = stringResource(R.string.passphrase_again_label),
             imeAction = ImeAction.Done,
             modifier = Modifier.padding(top = Spacing.md),
@@ -210,7 +263,7 @@ fun VaultSetup(
 
         // Specific on purpose. Nothing secret exists yet, so this is the one
         // screen where naming the problem costs nothing.
-        problem?.let {
+        shown?.let {
             Text(
                 text = it,
                 style = MaterialTheme.typography.bodyMedium,
@@ -224,13 +277,13 @@ fun VaultSetup(
         Button(
             onClick = {
                 val bytes = passphrase.toByteArray(Charsets.UTF_8)
-                problem = when {
+                localProblem = when {
                     // Re-checked here rather than trusting the meter, which is debounced.
                     !PassphraseStrength.clears(passphrase) -> tooWeak
                     passphrase != confirm -> mismatch
                     else -> null
                 }
-                if (problem == null) {
+                if (localProblem == null) {
                     passphrase = ""
                     confirm = ""
                     onCreate(bytes) { _, _ -> }
@@ -243,18 +296,6 @@ fun VaultSetup(
                 .padding(top = Spacing.xl),
         ) {
             Text(stringResource(R.string.setup_create), style = MaterialTheme.typography.labelLarge)
-        }
-
-        if (onRestoreBackup != null) {
-            TextButton(
-                onClick = onRestoreBackup,
-                enabled = !busy,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = Spacing.sm),
-            ) {
-                Text(stringResource(R.string.setup_restore_backup), style = MaterialTheme.typography.labelLarge)
-            }
         }
     }
     }

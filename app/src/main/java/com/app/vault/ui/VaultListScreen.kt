@@ -519,6 +519,9 @@ fun NameStep(
     accepts: (String) -> Boolean,
     error: String?,
     onContinue: () -> Unit,
+    /** The no-vault setup screen's restore — `first-vault-naming` D8. New vault and first run pass none. */
+    secondaryLabel: String? = null,
+    onSecondary: (() -> Unit)? = null,
 ) {
     OnboardingScaffold(
         title = stringResource(R.string.vault_flow_name_title),
@@ -527,6 +530,8 @@ fun NameStep(
         hero = { BadgeHero(name, appearance) },
         titleModifier = arrivalFocus(),
         onContinue = onContinue,
+        secondaryLabel = secondaryLabel,
+        onSecondary = onSecondary,
     ) {
         OutlinedTextField(
             value = name,

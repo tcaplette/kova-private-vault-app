@@ -715,7 +715,7 @@
     <!-- Onboarding — the first-run steps -->
     <string name="onboarding_welcome_title">Fotos que ninguém mais consegue abrir</string>
     <string name="onboarding_welcome_lead">Tudo o que você coloca aqui é criptografado neste dispositivo e fica nele. Não há conta, nem servidor, nem como vermos nada disso — este app não consegue acessar a internet de forma alguma.</string>
-    <string name="onboarding_welcome_steps">A configuração tem oito etapas curtas. Nenhuma é obrigatória, e você pode mudar de ideia depois nas Configurações.</string>
+    <string name="onboarding_welcome_steps">A configuração tem nove etapas curtas. Nenhuma é obrigatória, e você pode mudar de ideia depois nas Configurações.</string>
     <string name="onboarding_get_started">Começar</string>
     <string name="onboarding_have_backup">Tenho um backup para restaurar</string>
     <string name="onboarding_passphrase_lead">Esta é a única coisa que abre seu cofre. Ela não pode ser redefinida.</string>
@@ -938,7 +938,6 @@
     <string name="vault_icon_archive">Arquivo</string>
     <string name="vault_list_lock">Bloquear</string>
     <string name="vault_new">Novo cofre</string>
-    <string name="first_vault_name">Meu cofre</string>
     <string name="vault_list_lead">Uma frase secreta abre esta lista e tudo o que está nela.</string>
     <string name="vault_list_lead_locked">Uma frase secreta abre esta lista. Cofres marcados como Bloqueado precisam da própria.</string>
     <string name="vault_list_empty">Nenhum cofre nesta lista.</string>

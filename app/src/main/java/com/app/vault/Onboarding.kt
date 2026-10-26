@@ -38,15 +38,18 @@ object Onboarding {
     private const val KEY_DONE = "done"
 
     /**
-     * First run's eight steps, in the order they occur — `first-run-onboarding`.
+     * First run's nine steps, in the order they occur — `first-run-onboarding`.
      *
      * **The declaration order is the sequence.** `ordinal` is what advances, so
      * there is no second list to keep in step with this one and no way for the two
      * to disagree. `OnboardingTest` asserts the order, because an enum reordered by
      * a well-meaning refactor would silently reorder first run.
      *
-     * Four of these positions are forced by behaviour rather than chosen:
+     * Five of these positions are forced by behaviour rather than chosen:
      *
+     *  - [Name] precedes [Passphrase] because the vault is created at the passphrase
+     *    step's "Create vault", and it is created under the name and look chosen here
+     *    — `first-vault-naming`.
      *  - [Kit] follows [Passphrase] because the mnemonic is derived from the VMK at
      *    creation and shown exactly once.
      *  - [Decoy] precedes [Panic] because `VaultLifecycle.destroy` overwrites every
@@ -62,6 +65,7 @@ object Onboarding {
      *    performing the trigger.
      */
     enum class Step {
+        Name,
         Passphrase,
         Kit,
         Fingerprint,
@@ -75,16 +79,23 @@ object Onboarding {
         val next: Step? get() = entries.getOrNull(ordinal + 1)
 
         /**
-         * The step Back returns to, or null on the first step after the kit.
+         * The step Back returns to, or null on [Name], the kit and the first step after it.
          *
          * Every step is drawn on every device, so this is the one before, with nothing
          * to skip in reverse. Never back past the kit: the vault exists by then and
          * the mnemonic has been shown once — returning to either screen would offer to
          * create a second vault, or to redisplay words the flow has already discarded.
+         *
+         * Before the vault exists nothing has been created, so the passphrase goes back
+         * to [Name] and loses nothing — `first-vault-naming` D5. Back on [Name] is the
+         * welcome screen, which is not a step.
          */
-        fun previousStep(): Step? = entries.getOrNull(ordinal - 1)?.takeIf { it > Kit }
+        fun previousStep(): Step? = when (this) {
+            Passphrase -> Name
+            else -> entries.getOrNull(ordinal - 1)?.takeIf { it > Kit }
+        }
 
-        /** "Step 4 of 8", for the frame. One-based, because people count from one. */
+        /** "Step 4 of 9", for the frame. One-based, because people count from one. */
         val position: Int get() = ordinal + 1
     }
 
