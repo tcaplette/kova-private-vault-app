@@ -108,7 +108,8 @@ class VaultPassphraseManageScreenshotTest {
                 type("Vault list passphrase", PASS)
                 type("New passphrase", "too short")
                 type("New passphrase again", "too short")
-                compose.onNode(hasText("Add passphrase") and hasClickAction()).performScrollTo().performClick()
+                // `new-vault-setup-flow`: Add is stepped; the passphrases are step 1, refused there.
+                compose.onNode(hasText("Continue") and hasClickAction()).performClick()
                 await("the refusal") { text("too easy to guess") }
                 hideKeyboard(scenario)
                 compose.onNodeWithText("That passphrase is too easy to guess. Add another word or two.").performScrollTo()
@@ -117,13 +118,19 @@ class VaultPassphraseManageScreenshotTest {
                 retype("New passphrase", OWN)
                 retype("New passphrase again", OWN)
                 hideKeyboard(scenario)
-                compose.onNode(hasText("Add passphrase") and hasClickAction()).performScrollTo().performClick()
+                compose.onNode(hasText("Continue") and hasClickAction()).performClick()
+                await("the capture step") { text("See who tries to open") }
+                compose.onNode(hasText("Add passphrase") and hasClickAction()).performClick()
                 await("the kit") { text("I understand") }
                 shot("$p-04-kit-after-add")
 
+                val words = KitCheckWalk.wordsOnScreen(compose)
                 compose.onAllNodes(hasSetTextAction())[0].performScrollTo().performTextInput("I understand")
                 hideKeyboard(scenario)
                 compose.onNode(hasText("Continue") and hasClickAction()).performScrollTo().performClick()
+                // `recovery-practice` D5. The kit check follows the kit while Extra Security is on.
+                KitCheckWalk.pass(compose, words)
+                hideKeyboard(scenario)
                 await("the status line") { text("Passphrase added.") }
                 compose.onNode(hasText("Remove passphrase") and hasClickAction()).performScrollTo()
                 shot("$p-05-edit-vault-protected-status")

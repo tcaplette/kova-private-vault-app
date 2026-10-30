@@ -91,7 +91,8 @@ class OnboardingScanTest {
         assertTrue(
             "the kit step must gate its forward action on the typed acknowledgement — the " +
                 "words are shown exactly once",
-            kit.contains("continueEnabled = acknowledged"),
+            // `recovery-practice` D5: `ready` is the typed phrase; the check follows Continue.
+            kit.contains("val ready = typed.trim() == phrase") && kit.contains("continueEnabled = ready"),
         )
     }
 

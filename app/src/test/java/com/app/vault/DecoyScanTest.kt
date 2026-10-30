@@ -165,7 +165,11 @@ class DecoyScanTest {
     private fun returnWiringGaps(code: String): List<String> = buildList {
         if (!code.contains("private fun returnFromDecoy()")) add("no way back at all")
         if (!code.contains("lifecycleOps.reopen(")) add("does not use the shared round trip")
-        if (!code.contains("onContinue = ::returnFromDecoy")) add("nothing triggers the return")
+        // `recovery-practice` D5: the kit's Continue reaches the return directly while Extra
+        // Security is off, and through a passed kit check while it is on. Both must be wired.
+        if (!code.contains("then = ::returnFromDecoy") || !code.contains("kitPassed(::returnFromDecoy)")) {
+            add("nothing triggers the return")
+        }
         if (!code.contains("ExportAuth.confirms(slotsFile, auth.copyOf())")) {
             add("the owner's passphrase is consumed by the check instead of kept")
         }

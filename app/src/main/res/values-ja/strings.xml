@@ -129,7 +129,7 @@
     <string name="kit_print_job">保管庫の復元キット</string>
     <string name="panic_wrong_passphrase">そのパスフレーズではこの保管庫リストを開けません。</string>
     <string name="panic_wrong_phrase">それはパニックフレーズではありません。</string>
-    <string name="panic_too_close">パスフレーズに近すぎます。入力ミス 1 つで作動するおそれがあります。別のものを選んでください。</string>
+    <string name="panic_too_close">パスフレーズに似すぎています。一方のつもりでもう一方を入力してしまうおそれがあります。共通点の少ないフレーズを選んでください。</string>
     <string name="panic_in_use">そのフレーズはすでに保管庫リストを開きます。別のものを選んでください。</string>
     <string name="panic_no_room">このデバイスには、これ以上フレーズを追加する空きがありません。</string>
     <string name="panic_cleared">以前のパニックフレーズはここでは使えなくなったため、オフになっています。新しいものを設定してください。</string>
@@ -161,11 +161,6 @@
     <string name="notification_channel_recording">録音</string>
     <string name="notification_recording">録音中</string>
     <string name="notification_stop">停止</string>
-
-    <!-- The printed recovery kit -->
-    <string name="kit_print_heading">保管庫の復元キット</string>
-    <string name="kit_print_line_1">この 24 個の単語でこの保管庫を開けます。このページは安全な場所に保管してください。</string>
-    <string name="kit_print_line_2">これらの単語は変更も取り消しもできません。</string>
 
     <!-- Biometric unlock — the screen, the drawer row and the first-run step -->
     <string name="bio_name">生体認証によるロック解除</string>
@@ -521,7 +516,7 @@
     <string name="panic_status_on">パニック用の認証情報はオンです</string>
     <string name="panic_status_off">パニック用の認証情報はオフです</string>
     <string name="panic_fact_survives">この保管庫リストは残ります</string>
-    <string name="panic_fact_survives_body">ロック画面でパニックフレーズを入力すると、この保管庫リストはいつもどおり開き、リストにないすべての保管庫はこのデバイスで二度と開かなくなります。</string>
+    <string name="panic_fact_survives_body">ロック画面でパニックフレーズを入力すると、この保管庫リストはいつもどおり開き、リストにないすべての保管庫はこのデバイスで開かなくなります。</string>
     <string name="panic_fact_way_in">壊すのは入り口で、ファイルではありません</string>
     <string name="panic_fact_way_in_body">ほかの保管庫は読み取れないデータとしてこのデバイスに残ります。24 語の復元キットがあれば、今後も開けます。</string>
     <string name="panic_fact_silent">作動したことは何も示されません</string>
@@ -688,7 +683,7 @@
     <string name="onboarding_backup_title">別の場所にコピーを残す</string>
     <string name="onboarding_backup_lead">このスマートフォンを紛失したり壊れたりすると、コピーがない限り保管庫の中身もすべて失われます。</string>
     <string name="onboarding_panic_title">ほかを閉じるパスフレーズ</string>
-    <string name="onboarding_panic_lead">ロック画面で入力すると、1 つの保管庫が開き、このデバイスのほかの保管庫はすべて永久に閉じられます。</string>
+    <string name="onboarding_panic_lead">ロック画面で入力すると、1 つの保管庫が開き、このデバイスのほかの保管庫はすべて閉じられます。</string>
     <string name="onboarding_panic_set_up">パニック用の認証情報を設定</string>
     <string name="onboarding_fact_ordinary">普通のロック解除に見えます</string>
     <string name="onboarding_fact_ordinary_body">同じ画面、同じ速さで、何も見えません。それが目的です。見ている人には何もわかりません。</string>
@@ -779,7 +774,7 @@
     <string name="kit_title_list">あなたの復元キット</string>
     <string name="kit_title_vault">%1$s の復元キット</string>
     <string name="kit_title_short">復元キット</string>
-    <string name="kit_body_list">パスフレーズを忘れた場合、この 24 個の単語が、パスフレーズで開く保管庫に戻る唯一の方法です。順番どおりに書き留め、その紙を安全な場所に保管してください。\n\nこれらの単語を持つ人は誰でも、後から追加するものも含めてそれらの保管庫を開けます。専用のパスフレーズを設定した保管庫は含まれず、専用のキットがあります。これらの単語は変更も取り消しもできません。</string>
+    <string name="kit_body_list">パスフレーズを忘れた場合、この 24 個の単語で、パスフレーズで開く保管庫に戻れます。順番どおりに書き留め、その紙を安全な場所に保管してください。\n\nこれらの単語を持つ人は誰でも、後から追加するものも含めてそれらの保管庫を開けます。専用のパスフレーズを設定した保管庫は含まれず、専用のキットがあります。これらの単語は変更も取り消しもできません。</string>
     <string name="kit_body_list_backup">この保管庫をクラウドフォルダにバックアップした場合、復元に使うのはパスフレーズではなくこれらの単語です。このデバイスとこのページを一緒に失うと、バックアップはあなたを含め誰にも開けなくなります。</string>
     <string name="kit_body_vault">今設定したパスフレーズを忘れた場合、この 24 個の単語が %1$s に戻る唯一の方法です。順番どおりに書き留め、その紙を安全な場所に保管してください。\n\n保管庫リストを開くパスフレーズではこれは開けず、そのリストの復元キットでも開けません。パスフレーズとこのページの両方を失うと、%1$s の中身はすべて永久に失われます。\n\nこれらの単語を持つ人は誰でも %1$s を開けます。変更も取り消しもできません。</string>
     <string name="kit_type_acknowledgement">書き留めたこと、そしてパスフレーズはリセットできないことを理解したことを確認するため、「%1$s」と入力してください。</string>
@@ -1693,4 +1688,56 @@
     <string name="licences_version">バージョン %1$s</string>
     <string name="licences_source">ソース</string>
     <string name="licences_licence">ライセンス</string>
+
+    <!-- recovery-practice: passphrase practice, the kit check, Extra Security and the printed kit -->
+    <string name="practice_title">パスフレーズを練習する</string>
+    <string name="practice_lead_fingerprint">最近は指紋で保管庫を開いています。パスフレーズを忘れないよう、入力してください。</string>
+    <string name="practice_lead_face">最近は顔認証で保管庫を開いています。パスフレーズを忘れないよう、入力してください。</string>
+    <string name="practice_lead_both">最近は顔認証または指紋で保管庫を開いています。パスフレーズを忘れないよう、入力してください。</string>
+    <string name="practice_lead_biometric">最近は生体認証で保管庫を開いています。パスフレーズを忘れないよう、入力してください。</string>
+    <string name="practice_check">確認</string>
+    <string name="practice_checking">確認しています…</string>
+    <string name="practice_skip">スキップ</string>
+    <string name="practice_wrong">パスフレーズが違います。</string>
+    <string name="practice_forgot_panel_fingerprint">お忘れですか？指紋で保管庫はすでに開いているので、今すぐ新しいパスフレーズを選べます。復元キットは必要ありません。</string>
+    <string name="practice_forgot_panel_face">お忘れですか？顔認証で保管庫はすでに開いているので、今すぐ新しいパスフレーズを選べます。復元キットは必要ありません。</string>
+    <string name="practice_forgot_panel_both">お忘れですか？顔認証または指紋で保管庫はすでに開いているので、今すぐ新しいパスフレーズを選べます。復元キットは必要ありません。</string>
+    <string name="practice_forgot_panel_biometric">お忘れですか？生体認証で保管庫はすでに開いているので、今すぐ新しいパスフレーズを選べます。復元キットは必要ありません。</string>
+    <string name="practice_set_new">今すぐ新しいパスフレーズを設定</string>
+    <string name="practice_new_title">新しいパスフレーズ</string>
+    <string name="practice_new_lead">これから保管庫を開くのに使うパスフレーズを選んでください。古いパスフレーズは使えなくなります。24 個の単語は変わりません。</string>
+    <string name="practice_saving">保存しています…</string>
+    <string name="practice_confirm_title">本人確認</string>
+    <string name="practice_confirm_needed_fingerprint">新しいパスフレーズを保存するには、指紋で確認してください。</string>
+    <string name="practice_confirm_needed_face">新しいパスフレーズを保存するには、顔認証で確認してください。</string>
+    <string name="practice_confirm_needed_both">新しいパスフレーズを保存するには、顔認証または指紋で確認してください。</string>
+    <string name="practice_confirm_needed_biometric">新しいパスフレーズを保存するには、生体認証で確認してください。</string>
+    <string name="practice_changed">パスフレーズを変更しました。復元キットは引き続き使えます。</string>
+    <string name="kit_check_title">控えを確認</string>
+    <string name="kit_check_lead">記憶ではなく、紙を見ながらこれらの単語を入力してください。</string>
+    <string name="kit_check_action">単語を確認</string>
+    <string name="kit_check_see_again">単語をもう一度見る</string>
+    <string name="kit_check_mismatch">キットの単語 %1$d ではありません。</string>
+    <string name="drawer_extra_security">追加のセキュリティ</string>
+    <string name="drawer_extra_security_on">パスフレーズの練習とキットの確認はオンです</string>
+    <string name="drawer_extra_security_off">オフ。パスフレーズの練習とキットの確認は行いません</string>
+    <string name="kit_print_title">復元キット</string>
+    <string name="kit_print_for_list">対象: 保管庫リスト</string>
+    <string name="kit_print_for_vault">対象: %1$s</string>
+    <string name="kit_print_date">印刷日: %1$s</string>
+    <string name="kit_print_anyone_list">これらの単語を持つ人は誰でも保管庫リストを開けます。変更も取り消しもできません。</string>
+    <string name="kit_print_anyone_vault">これらの単語を持つ人は誰でも %1$s を開けます。変更も取り消しもできません。</string>
+    <string name="kit_print_how_heading">このページの使い方</string>
+    <string name="kit_print_list_step_1">アプリを開き、ロック解除画面に進みます。</string>
+    <string name="kit_print_list_step_2">「%1$s」をタップします。</string>
+    <string name="kit_print_list_step_3">24 個の単語を順番どおりに入力し、新しいパスフレーズを選びます。</string>
+    <string name="kit_print_vault_step_1">アプリを開き、保管庫リストのロックを解除します。</string>
+    <string name="kit_print_vault_step_2">メニューを開き、「%1$s」をタップします。</string>
+    <string name="kit_print_vault_step_3">24 個の単語を順番どおりに入力し、%1$s の新しいパスフレーズを選びます。</string>
+    <string name="kit_print_backups">これらの単語でバックアップも開けます。</string>
+    <string name="kit_print_keep_heading">保管場所</string>
+    <string name="kit_print_keep_body">パスポートやその他の重要書類と一緒など、安全で人目につかない場所に保管してください。写真に撮ったり、スマートフォンに保存したりしないでください。このページとパスフレーズの両方を失うと、誰も保管庫を取り戻せません。</string>
+    <plurals name="practice_right">
+        <item quantity="other">正解です。次の練習は %1$d 日後です。</item>
+    </plurals>
 </resources>

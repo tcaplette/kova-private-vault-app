@@ -129,7 +129,7 @@
     <string name="kit_print_job">保险库恢复套件</string>
     <string name="panic_wrong_passphrase">该密码短语无法打开此保险库列表。</string>
     <string name="panic_wrong_phrase">这不是你的紧急短语。</string>
-    <string name="panic_too_close">与你的密码短语太接近，一个输入错误就可能触发它。请另选一个。</string>
+    <string name="panic_too_close">与你的密码短语太相似，你可能会把其中一个当成另一个输入。请选择一个与它几乎没有共同之处的短语。</string>
     <string name="panic_in_use">该短语已能打开一个保险库列表。请另选一个。</string>
     <string name="panic_no_room">此设备上没有空间再添加短语了。</string>
     <string name="panic_cleared">你之前的紧急短语在这里已失效，因此已关闭。请设置一个新的。</string>
@@ -161,11 +161,6 @@
     <string name="notification_channel_recording">录音</string>
     <string name="notification_recording">正在录音</string>
     <string name="notification_stop">停止</string>
-
-    <!-- The printed recovery kit -->
-    <string name="kit_print_heading">保险库恢复套件</string>
-    <string name="kit_print_line_1">这 24 个单词可以打开此保险库。请妥善保管此页。</string>
-    <string name="kit_print_line_2">这些单词无法更改或作废。</string>
 
     <!-- Biometric unlock — the screen, the drawer row and the first-run step -->
     <string name="bio_name">生物识别解锁</string>
@@ -521,7 +516,7 @@
     <string name="panic_status_on">紧急凭据已开启</string>
     <string name="panic_status_off">紧急凭据已关闭</string>
     <string name="panic_fact_survives">此保险库列表会保留下来</string>
-    <string name="panic_fact_survives_body">在锁定界面输入紧急短语后，此保险库列表会照常打开，而不在其中的所有保险库将在此设备上永久无法打开。</string>
+    <string name="panic_fact_survives_body">在锁定界面输入紧急短语后，此保险库列表会照常打开，而不在其中的所有保险库将无法在此设备上打开。</string>
     <string name="panic_fact_way_in">它销毁的是入口，而不是文件</string>
     <string name="panic_fact_way_in_body">其他保险库会作为无法读取的数据留在此设备上。它们的 24 词恢复套件仍可以打开它们。</string>
     <string name="panic_fact_silent">不会有任何提示表明它已生效</string>
@@ -688,7 +683,7 @@
     <string name="onboarding_backup_title">在别处保留一份副本</string>
     <string name="onboarding_backup_lead">如果这部手机丢失或损坏，保险库中的一切都会随之消失——除非有一份副本。</string>
     <string name="onboarding_panic_title">一个能关闭其他保险库的密码短语</string>
-    <string name="onboarding_panic_lead">在锁定界面输入它，会打开一个保险库，并永久关闭此设备上的其他所有保险库。</string>
+    <string name="onboarding_panic_lead">在锁定界面输入它，会打开一个保险库，并关闭此设备上的其他所有保险库。</string>
     <string name="onboarding_panic_set_up">设置紧急凭据</string>
     <string name="onboarding_fact_ordinary">看起来就像一次普通的解锁</string>
     <string name="onboarding_fact_ordinary_body">同样的界面，同样的速度，什么也看不出来。这正是意义所在——旁观者一无所获。</string>
@@ -779,7 +774,7 @@
     <string name="kit_title_list">你的恢复套件</string>
     <string name="kit_title_vault">%1$s的恢复套件</string>
     <string name="kit_title_short">恢复套件</string>
-    <string name="kit_body_list">如果你忘记了密码短语，这 24 个单词是重新进入你的密码短语所打开的保险库的唯一方法。请按顺序抄下来，并把纸放在安全的地方。\n\n任何持有这些单词的人都能打开这些保险库，包括你以后添加的保险库。你设置了独立密码短语的保险库不在其中——它有自己的套件。这些单词无法更改或作废。</string>
+    <string name="kit_body_list">如果你忘记了密码短语，可以用这 24 个单词重新进入你的密码短语所打开的保险库。请按顺序抄下来，并把纸放在安全的地方。\n\n任何持有这些单词的人都能打开这些保险库，包括你以后添加的保险库。你设置了独立密码短语的保险库不在其中——它有自己的套件。这些单词无法更改或作废。</string>
     <string name="kit_body_list_backup">如果你将此保险库备份到云文件夹，恢复它靠的是这些单词，而不是你的密码短语。同时丢失此设备和这一页，任何人——包括你——都无法打开备份。</string>
     <string name="kit_body_vault">如果你忘记了刚刚设置的密码短语，这 24 个单词是重新进入%1$s的唯一方法。请按顺序抄下来，并把纸放在安全的地方。\n\n打开你保险库列表的密码短语打不开这个保险库，该列表的恢复套件也打不开。密码短语和这一页都丢失，%1$s中的一切将永远消失。\n\n任何持有这些单词的人都能打开%1$s。它们无法更改或作废。</string>
     <string name="kit_type_acknowledgement">输入“%1$s”以确认你已将它们抄下，并知道密码短语无法重置。</string>
@@ -1693,4 +1688,56 @@
     <string name="licences_version">版本 %1$s</string>
     <string name="licences_source">来源</string>
     <string name="licences_licence">许可</string>
+
+    <!-- recovery-practice: passphrase practice, the kit check, Extra Security and the printed kit -->
+    <string name="practice_title">练习你的密码短语</string>
+    <string name="practice_lead_fingerprint">你最近一直用指纹打开保险库。请输入密码短语，以免忘记。</string>
+    <string name="practice_lead_face">你最近一直用人脸打开保险库。请输入密码短语，以免忘记。</string>
+    <string name="practice_lead_both">你最近一直用人脸或指纹打开保险库。请输入密码短语，以免忘记。</string>
+    <string name="practice_lead_biometric">你最近一直用生物识别打开保险库。请输入密码短语，以免忘记。</string>
+    <string name="practice_check">检查</string>
+    <string name="practice_checking">正在检查…</string>
+    <string name="practice_skip">跳过</string>
+    <string name="practice_wrong">这不是你的密码短语。</string>
+    <string name="practice_forgot_panel_fingerprint">忘记了？你的指纹已经打开了保险库，所以现在就可以设置新的密码短语，无需恢复套件。</string>
+    <string name="practice_forgot_panel_face">忘记了？你的人脸已经打开了保险库，所以现在就可以设置新的密码短语，无需恢复套件。</string>
+    <string name="practice_forgot_panel_both">忘记了？你的人脸或指纹已经打开了保险库，所以现在就可以设置新的密码短语，无需恢复套件。</string>
+    <string name="practice_forgot_panel_biometric">忘记了？生物识别已经打开了保险库，所以现在就可以设置新的密码短语，无需恢复套件。</string>
+    <string name="practice_set_new">立即设置新密码短语</string>
+    <string name="practice_new_title">新密码短语</string>
+    <string name="practice_new_lead">选择今后用来打开保险库的密码短语。旧的将不再有效。你的 24 个单词不会改变。</string>
+    <string name="practice_saving">正在保存…</string>
+    <string name="practice_confirm_title">确认是你本人</string>
+    <string name="practice_confirm_needed_fingerprint">请用指纹确认，以保存新的密码短语。</string>
+    <string name="practice_confirm_needed_face">请用人脸确认，以保存新的密码短语。</string>
+    <string name="practice_confirm_needed_both">请用人脸或指纹确认，以保存新的密码短语。</string>
+    <string name="practice_confirm_needed_biometric">请用生物识别确认，以保存新的密码短语。</string>
+    <string name="practice_changed">密码短语已更改。你的恢复套件仍然有效。</string>
+    <string name="kit_check_title">核对你的副本</string>
+    <string name="kit_check_lead">请照着纸上抄写这些单词，不要凭记忆。</string>
+    <string name="kit_check_action">核对单词</string>
+    <string name="kit_check_see_again">再看一遍单词</string>
+    <string name="kit_check_mismatch">这不是你套件上的第 %1$d 个单词。</string>
+    <string name="drawer_extra_security">额外安全</string>
+    <string name="drawer_extra_security_on">密码短语练习和套件核对已开启</string>
+    <string name="drawer_extra_security_off">已关闭。不进行密码短语练习和套件核对</string>
+    <string name="kit_print_title">恢复套件</string>
+    <string name="kit_print_for_list">用于：你的保险库列表</string>
+    <string name="kit_print_for_vault">用于：%1$s</string>
+    <string name="kit_print_date">打印于 %1$s</string>
+    <string name="kit_print_anyone_list">任何持有这些单词的人都能打开你的保险库列表。它们无法更改或作废。</string>
+    <string name="kit_print_anyone_vault">任何持有这些单词的人都能打开%1$s。它们无法更改或作废。</string>
+    <string name="kit_print_how_heading">如何使用这一页</string>
+    <string name="kit_print_list_step_1">打开应用，进入解锁界面。</string>
+    <string name="kit_print_list_step_2">点按“%1$s”。</string>
+    <string name="kit_print_list_step_3">按顺序输入 24 个单词，然后设置新的密码短语。</string>
+    <string name="kit_print_vault_step_1">打开应用并解锁你的保险库列表。</string>
+    <string name="kit_print_vault_step_2">打开菜单，点按“%1$s”。</string>
+    <string name="kit_print_vault_step_3">按顺序输入 24 个单词，然后为%1$s设置新的密码短语。</string>
+    <string name="kit_print_backups">这些单词也能打开你的备份。</string>
+    <string name="kit_print_keep_heading">存放位置</string>
+    <string name="kit_print_keep_body">放在安全、私密的地方，例如和护照或其他重要文件放在一起。不要拍照，也不要存放在手机上。如果这一页和密码短语都丢失，任何人都无法找回你的保险库。</string>
+    <plurals name="practice_right">
+        <item quantity="other">正确。下次练习在 %1$d 天后。</item>
+    </plurals>
 </resources>

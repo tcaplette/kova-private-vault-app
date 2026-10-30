@@ -1,5 +1,6 @@
 package com.app.vault
 
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.hasContentDescription
@@ -182,6 +183,33 @@ class OnboardingFlowTest {
             exists("Step 3 of 9"),
         )
 
+    }
+
+    /**
+     * `recovery-practice` D5. The kit step holds the check as its second screen: still step 3 of
+     * nine (step 2 of the flow's own steps after Name), Back from the check is the words with the
+     * acknowledgement kept, and only a passed check moves on.
+     */
+    @Test
+    fun theKitStepEndsWithTheCheckAndStaysOneStep() {
+        throughTheWelcome()
+        nameTheVault()
+        createTheVault()
+        val words = KitCheckWalk.wordsOnScreen(compose)
+        compose.onAllNodes(hasSetTextAction())[0].performScrollTo().performTextInput(ctx.getString(ACKNOWLEDGEMENT))
+        compose.onNodeWithText("Continue").performClick()
+        compose.waitUntil(10_000) { KitCheckWalk.showing(compose) }
+        assertTrue("the check is part of the kit step", exists("Step 3 of 9"))
+
+        compose.onNodeWithText("Back").performClick()
+        compose.waitUntil(10_000) { exists("Write these down") }
+        assertTrue("still the kit step", exists("Step 3 of 9"))
+        compose.onNodeWithText("Continue").assertIsEnabled()
+        compose.onNodeWithText("Continue").performClick()
+
+        KitCheckWalk.pass(compose, words)
+        awaitText("Step 4 of 9")
+        assertTrue("still nine steps", exists("of 9"))
     }
 
     /** The welcome is the door, and it is not counted as a step. */

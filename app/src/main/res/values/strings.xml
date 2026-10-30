@@ -130,7 +130,7 @@
     <string name="kit_print_job">Vault recovery kit</string>
     <string name="panic_wrong_passphrase">That passphrase does not open this vault list.</string>
     <string name="panic_wrong_phrase">That isn\'t your panic phrase.</string>
-    <string name="panic_too_close">Too close to your passphrase — one typo could trigger it. Choose something different.</string>
+    <string name="panic_too_close">Too much like your passphrase — you could type one for the other. Choose a phrase that shares little with it.</string>
     <string name="panic_in_use">That phrase already opens a vault list. Choose another.</string>
     <string name="panic_no_room">No room for another phrase on this device.</string>
     <string name="panic_cleared">Your old panic phrase no longer works here, so it is off. Set a new one.</string>
@@ -163,11 +163,6 @@
     <string name="notification_channel_recording">Recording</string>
     <string name="notification_recording">Recording</string>
     <string name="notification_stop">Stop</string>
-
-    <!-- The printed recovery kit -->
-    <string name="kit_print_heading">Vault recovery kit</string>
-    <string name="kit_print_line_1">These 24 words open this vault. Keep this page safe.</string>
-    <string name="kit_print_line_2">They cannot be changed or cancelled.</string>
 
     <!-- Biometric unlock — the screen, the drawer row and the first-run step -->
     <string name="bio_name">Biometric unlock</string>
@@ -539,7 +534,7 @@
     <string name="panic_status_on">Panic credential is on</string>
     <string name="panic_status_off">Panic credential is off</string>
     <string name="panic_fact_survives">This vault list survives</string>
-    <string name="panic_fact_survives_body">Typed at the lock screen, your panic phrase opens this vault list as usual, and every vault not on it stops opening on this device, permanently.</string>
+    <string name="panic_fact_survives_body">Typed at the lock screen, your panic phrase opens this vault list as usual, and every vault not on it stops opening on this device.</string>
     <string name="panic_fact_way_in">It destroys the way in, not the files</string>
     <string name="panic_fact_way_in_body">The other vaults stay on this device as unreadable data. Their 24-word recovery kits still open them.</string>
     <string name="panic_fact_silent">Nothing confirms it worked</string>
@@ -717,7 +712,7 @@
     <string name="onboarding_backup_title">Keep a copy somewhere else</string>
     <string name="onboarding_backup_lead">If this phone is lost or broken, everything in the vault goes with it — unless there is a copy.</string>
     <string name="onboarding_panic_title">A passphrase that closes the others</string>
-    <string name="onboarding_panic_lead">Typed at the lock screen, it opens one vault and permanently shuts every other one on this device.</string>
+    <string name="onboarding_panic_lead">Typed at the lock screen, it opens one vault and shuts every other one on this device.</string>
     <string name="onboarding_panic_set_up">Set up a panic credential</string>
     <string name="onboarding_fact_ordinary">It looks like an ordinary unlock</string>
     <string name="onboarding_fact_ordinary_body">Same screen, same speed, nothing to see. That is the point — anyone watching learns nothing.</string>
@@ -814,7 +809,7 @@
     <string name="kit_title_list">Your recovery kit</string>
     <string name="kit_title_vault">Recovery kit for %1$s</string>
     <string name="kit_title_short">Recovery kit</string>
-    <string name="kit_body_list">These 24 words are the only way back into the vaults your passphrase opens, if you forget it. Write them down in order and keep the paper somewhere safe.\n\nAnyone who has these words can open those vaults, including any you add later. A vault you give its own passphrase is not among them — it has a kit of its own. These words cannot be changed or cancelled.</string>
+    <string name="kit_body_list">If you forget your passphrase, these 24 words get you back into the vaults it opens. Write them down in order and keep the paper somewhere safe.\n\nAnyone who has these words can open those vaults, including any you add later. A vault you give its own passphrase is not among them — it has a kit of its own. These words cannot be changed or cancelled.</string>
     <string name="kit_body_list_backup">If you ever back this vault up to a cloud folder, these words are what restore it — not your passphrase. Lose this device and this page together and the backup cannot be opened by anyone, including you.</string>
     <string name="kit_body_vault">These 24 words are the only way back into %1$s if you forget the passphrase you just set. Write them down in order and keep the paper somewhere safe.\n\nThe passphrase that opens your vault list will not open this one, and neither will the recovery kit for that list. Lose both the passphrase and this page and everything in %1$s is gone for good.\n\nAnyone who has these words can open %1$s. They cannot be changed or cancelled.</string>
     <string name="kit_type_acknowledgement">Type \"%1$s\" to confirm you have written them down and know the passphrase cannot be reset.</string>
@@ -1759,4 +1754,57 @@
     <string name="licences_licence">Licence</string>
     <!-- Version, then licence name: two values, no words of its own. -->
     <string name="licences_row_line" translatable="false">%1$s · %2$s</string>
+
+    <!-- recovery-practice: passphrase practice, the kit check, Extra Security and the printed kit -->
+    <string name="practice_title">Practice your passphrase</string>
+    <string name="practice_lead_fingerprint">You\'ve been opening your vaults with your fingerprint. Type your passphrase so you don\'t forget it.</string>
+    <string name="practice_lead_face">You\'ve been opening your vaults with your face. Type your passphrase so you don\'t forget it.</string>
+    <string name="practice_lead_both">You\'ve been opening your vaults with your face or fingerprint. Type your passphrase so you don\'t forget it.</string>
+    <string name="practice_lead_biometric">You\'ve been opening your vaults with a biometric. Type your passphrase so you don\'t forget it.</string>
+    <string name="practice_check">Check</string>
+    <string name="practice_checking">Checking…</string>
+    <string name="practice_skip">Skip</string>
+    <string name="practice_wrong">That\'s not your passphrase.</string>
+    <string name="practice_forgot_panel_fingerprint">Forgotten it? Your fingerprint has already opened your vaults, so you can choose a new passphrase now. You won\'t need your recovery kit.</string>
+    <string name="practice_forgot_panel_face">Forgotten it? Your face has already opened your vaults, so you can choose a new passphrase now. You won\'t need your recovery kit.</string>
+    <string name="practice_forgot_panel_both">Forgotten it? Your face or fingerprint has already opened your vaults, so you can choose a new passphrase now. You won\'t need your recovery kit.</string>
+    <string name="practice_forgot_panel_biometric">Forgotten it? A biometric has already opened your vaults, so you can choose a new passphrase now. You won\'t need your recovery kit.</string>
+    <string name="practice_set_new">Set a new passphrase now</string>
+    <string name="practice_new_title">New passphrase</string>
+    <string name="practice_new_lead">Choose the passphrase you\'ll use to open your vaults from now on. Your old one stops working. Your 24 words don\'t change.</string>
+    <string name="practice_saving">Saving…</string>
+    <string name="practice_confirm_title">Confirm it\'s you</string>
+    <string name="practice_confirm_needed_fingerprint">Confirm with your fingerprint to save your new passphrase.</string>
+    <string name="practice_confirm_needed_face">Confirm with your face to save your new passphrase.</string>
+    <string name="practice_confirm_needed_both">Confirm with your face or fingerprint to save your new passphrase.</string>
+    <string name="practice_confirm_needed_biometric">Confirm with your biometric to save your new passphrase.</string>
+    <string name="practice_changed">Passphrase changed. Your recovery kit still works.</string>
+    <string name="kit_check_title">Check your copy</string>
+    <string name="kit_check_lead">Type these words from your paper, not from memory.</string>
+    <string name="kit_check_action">Check words</string>
+    <string name="kit_check_see_again">See the words again</string>
+    <string name="kit_check_mismatch">This isn\'t word %1$d on your kit.</string>
+    <string name="drawer_extra_security">Extra Security</string>
+    <string name="drawer_extra_security_on">Passphrase practice and kit check are on</string>
+    <string name="drawer_extra_security_off">Off. No passphrase practice or kit check</string>
+    <string name="kit_print_title">Recovery kit</string>
+    <string name="kit_print_for_list">For: your vault list</string>
+    <string name="kit_print_for_vault">For: %1$s</string>
+    <string name="kit_print_date">Printed %1$s</string>
+    <string name="kit_print_anyone_list">Anyone with these words can open your vault list. They can\'t be changed or cancelled.</string>
+    <string name="kit_print_anyone_vault">Anyone with these words can open %1$s. They can\'t be changed or cancelled.</string>
+    <string name="kit_print_how_heading">How to use this page</string>
+    <string name="kit_print_list_step_1">Open the app and go to its unlock screen.</string>
+    <string name="kit_print_list_step_2">Tap “%1$s”.</string>
+    <string name="kit_print_list_step_3">Type the 24 words in order, then choose a new passphrase.</string>
+    <string name="kit_print_vault_step_1">Open the app and unlock your vault list.</string>
+    <string name="kit_print_vault_step_2">Open the menu and tap “%1$s”.</string>
+    <string name="kit_print_vault_step_3">Type the 24 words in order, then choose a new passphrase for %1$s.</string>
+    <string name="kit_print_backups">These words also open your backups.</string>
+    <string name="kit_print_keep_heading">Where to keep it</string>
+    <string name="kit_print_keep_body">Somewhere safe and private, such as with your passport or other important papers. Don\'t photograph it or keep it on your phone. If you lose this page and your passphrase, nobody can get your vaults back.</string>
+    <plurals name="practice_right">
+        <item quantity="one">That\'s right. Next practice in %1$d day.</item>
+        <item quantity="other">That\'s right. Next practice in %1$d days.</item>
+    </plurals>
 </resources>

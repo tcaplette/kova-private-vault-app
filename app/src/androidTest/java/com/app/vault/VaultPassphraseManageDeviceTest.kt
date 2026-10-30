@@ -585,9 +585,12 @@ class VaultPassphraseManageDeviceTest {
 
                 compose.waitUntil(30_000) { compose.onAllNodes(hasText("I understand", substring = true)).fetchSemanticsNodes().isNotEmpty() }
                 assertTrue("the vault's own kit copy", compose.onAllNodes(hasText("the passphrase you just set", substring = true)).fetchSemanticsNodes().isNotEmpty())
+                val words = KitCheckWalk.wordsOnScreen(compose)
                 val ack = compose.onAllNodes(hasSetTextAction())[0]
                 ack.performScrollTo().performTextInput("I understand")
                 compose.onNode(hasText("Continue") and hasClickAction()).performScrollTo().performClick()
+                // `recovery-practice` D5. Extra Security is on by default, so the check follows.
+                KitCheckWalk.pass(compose, words)
 
                 compose.waitUntil(15_000) { compose.onAllNodes(hasText("Passphrase added.")).fetchSemanticsNodes().isNotEmpty() }
                 compose.onNodeWithText("Opens only with its own passphrase.").performScrollTo().assertIsDisplayed()

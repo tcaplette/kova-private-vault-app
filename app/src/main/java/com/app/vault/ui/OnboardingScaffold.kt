@@ -16,10 +16,13 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +39,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.app.vault.Onboarding
@@ -81,6 +86,17 @@ fun OnboardingScaffold(
      */
     continueLabel: String = stringResource(R.string.action_continue),
     continueEnabled: Boolean = true,
+    /**
+     * `recovery-practice` D3/D4. The forward action is running: a progress ring before
+     * [continueLabel], which then names the work ("Checking…"), and the button does not take a
+     * second press.
+     */
+    continueBusy: Boolean = false,
+    /**
+     * A sentence under the forward action, announced politely — why the last press did not
+     * finish, said where the press was made.
+     */
+    footnote: String? = null,
     /** The step's own work — enrol, choose, set up. Secondary to Continue. */
     secondaryLabel: String? = null,
     onSecondary: (() -> Unit)? = null,
@@ -189,15 +205,34 @@ fun OnboardingScaffold(
 
             Button(
                 onClick = onContinue,
-                enabled = continueEnabled,
+                enabled = continueEnabled && !continueBusy,
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = Spacing.touchTarget),
             ) {
+                if (continueBusy) {
+                    CircularProgressIndicator(
+                        strokeWidth = 2.dp,
+                        color = LocalContentColor.current,
+                        modifier = Modifier.size(18.dp),
+                    )
+                    Spacer(Modifier.width(Spacing.sm))
+                }
                 Text(
                     text = continueLabel,
                     style = MaterialTheme.typography.labelLarge,
                     textAlign = TextAlign.Center,
+                )
+            }
+            footnote?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = VaultColors.Error,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = Spacing.sm)
+                        .semantics { liveRegion = LiveRegionMode.Polite },
                 )
             }
         }

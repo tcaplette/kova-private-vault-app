@@ -180,11 +180,17 @@ fun RecorderCover(
     holdArea: Int? = null,
     /** D2. A 2-second hold in [holdArea]: the activity brings up the dots. */
     onHold: () -> Unit = {},
+    /**
+     * `recents-shows-identity` D3. Drawn as the recent-apps card's picture: the recordings,
+     * listed. No recorder, no timer, no playback, no trigger and no system-bar change — this
+     * copy sits beneath the live screen for the whole session.
+     */
+    still: Boolean = false,
 ) {
     RecorderTheme {
         // Live only — `persist` is false exactly when setup hosts the cover. The top of the
         // window is then the vault's bar, and the cover's icons over it went dark-on-dark.
-        if (persist) CoverSystemBars()
+        if (persist && !still) CoverSystemBars()
         Box(
             modifier
                 .fillMaxSize()
@@ -192,13 +198,14 @@ fun RecorderCover(
         ) {
             RecorderScreen(
                 hasPermission = hasPermission,
-                onTrigger = onTrigger,
-                persist = persist,
-                onProgress = onProgress,
-                showDots = showDots,
-                dotsError = dotsError,
-                holdArea = holdArea,
-                onHold = onHold,
+                onTrigger = if (still) ({}) else onTrigger,
+                persist = persist && !still,
+                onProgress = onProgress.takeIf { !still },
+                showDots = showDots && !still,
+                dotsError = dotsError && !still,
+                holdArea = holdArea.takeIf { !still },
+                onHold = if (still) ({}) else onHold,
+                still = still,
             )
         }
     }
@@ -214,9 +221,10 @@ private fun RecorderScreen(
     dotsError: Boolean,
     holdArea: Int?,
     onHold: () -> Unit,
+    still: Boolean,
 ) {
     val context = LocalContext.current
-    val recorder = remember { Recorder() }
+    val recorder = remember(still) { if (still) null else Recorder() }
 
     var recordings by remember { mutableStateOf(RecorderStore.recordings(context)) }
     var query by remember { mutableStateOf("") }
@@ -235,7 +243,7 @@ private fun RecorderScreen(
     val levels = remember { FloatArray(RING) }
     var readings by remember { mutableIntStateOf(0) }
 
-    val playback = rememberRecorderPlayback()
+    val playback = rememberRecorderPlayback(still)
 
     // §8's reduced motion. Compose does not honour the system's animator scale on its
     // own — `voice-memo-layout` measured it — so it is read and the moves snap.
@@ -251,7 +259,7 @@ private fun RecorderScreen(
         // Unreachable while `RecordControl` is disabled, and kept as the guard rather
         // than the request that used to be here: nothing in this cover may raise a
         // system dialog carrying the application label.
-        if (!hasPermission) return
+        if (!hasPermission || recorder == null) return
         val file = RecorderStore.newFile(context)
         if (!recorder.start(context, file)) return
         // The list and its controls are about to give way to the recording view, and audio
@@ -266,6 +274,7 @@ private fun RecorderScreen(
 
     fun stopRecording() {
         val file = currentFile ?: return
+        val recorder = recorder ?: return
         if (persist) {
             val duration = recorder.stop(file)
             if (duration > 0L) {
@@ -287,7 +296,7 @@ private fun RecorderScreen(
     // The timer and the waveform, while capture runs. Sixteen readings a second is smooth
     // to the eye on a scrolling waveform and is not a per-frame wake-up.
     LaunchedEffect(recording, paused) {
-        while (recording && !paused) {
+        while (recording && !paused && recorder != null) {
             elapsedMs = recorder.elapsedMs()
             levels[readings % RING] = recorder.level()
             readings++
@@ -300,7 +309,7 @@ private fun RecorderScreen(
             // A capture running when the screen goes away is discarded, not filed: it
             // ends without the user having ended it, and half a recording nobody asked
             // for is worse than none.
-            currentFile?.let { recorder.discard(it) }
+            currentFile?.let { recorder?.discard(it) }
         }
     }
 
@@ -402,10 +411,10 @@ private fun RecorderScreen(
     val onRecord = { if (recording) stopRecording() else startRecording() }
     val onPause = {
         if (paused) {
-            recorder.resume()
+            recorder?.resume()
             paused = false
         } else {
-            recorder.pause()
+            recorder?.pause()
             paused = true
         }
     }
@@ -1205,7 +1214,10 @@ private fun RowControl(
  * No media session and no notification, for [MusicPlayerState]'s reason: a media
  * notification carries the application label onto the lock screen.
  */
-class RecorderPlayback internal constructor(private val player: ExoPlayer) {
+class RecorderPlayback internal constructor(
+    /** Null in still mode — `recents-shows-identity` D3: the card's picture plays nothing. */
+    private val player: ExoPlayer?,
+) {
 
     var current by mutableStateOf<RecorderStore.Recording?>(null)
         private set
@@ -1219,6 +1231,7 @@ class RecorderPlayback internal constructor(private val player: ExoPlayer) {
     val durationMs: Long get() = current?.durationMs ?: 0L
 
     fun play(file: java.io.File, recording: RecorderStore.Recording) {
+        val player = player ?: return
         player.setMediaItem(MediaItem.fromUri(file.toURI().toString()))
         player.prepare()
         player.play()
@@ -1232,6 +1245,7 @@ class RecorderPlayback internal constructor(private val player: ExoPlayer) {
      * the seek bar and times are right before play is pressed.
      */
     fun load(file: java.io.File, recording: RecorderStore.Recording) {
+        val player = player ?: return
         // Cleared first: a player left wanting to play would start the new item on prepare.
         player.playWhenReady = false
         player.setMediaItem(MediaItem.fromUri(file.toURI().toString()))
@@ -1242,16 +1256,18 @@ class RecorderPlayback internal constructor(private val player: ExoPlayer) {
     }
 
     fun toggle() {
+        val player = player ?: return
         if (player.isPlaying) player.pause() else player.play()
         playing = player.isPlaying
     }
 
     fun pause() {
-        player.pause()
+        player?.pause()
         playing = false
     }
 
     fun seekTo(ms: Long) {
+        val player = player ?: return
         player.seekTo(ms.coerceAtLeast(0L))
         positionMs = player.currentPosition
     }
@@ -1259,12 +1275,13 @@ class RecorderPlayback internal constructor(private val player: ExoPlayer) {
     /** Stop if this is what is loaded — the delete path, so a file is not played after it is gone. */
     fun stopIf(recording: RecorderStore.Recording) {
         if (current?.name != recording.name) return
-        player.stop()
+        player?.stop()
         current = null
         playing = false
     }
 
     internal fun tick() {
+        val player = player ?: return
         if (player.playbackState == Player.STATE_ENDED) {
             // The end returns to the start, paused — the next play is the whole recording
             // again, not a tap that does nothing, as the vault's memo screen does.
@@ -1277,8 +1294,9 @@ class RecorderPlayback internal constructor(private val player: ExoPlayer) {
 }
 
 @Composable
-private fun rememberRecorderPlayback(): RecorderPlayback {
+private fun rememberRecorderPlayback(still: Boolean): RecorderPlayback {
     val context = LocalContext.current
+    if (still) return remember { RecorderPlayback(null) }
     val player = remember { ExoPlayer.Builder(context).build() }
     val playback = remember(player) { RecorderPlayback(player) }
     DisposableEffect(player) {

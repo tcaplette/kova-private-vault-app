@@ -4,7 +4,8 @@ import android.content.Context
 import java.security.MessageDigest
 
 /**
- * BIP39 encoding of a vault master key — P1-12.
+ * BIP39 encoding of a 32-byte key — P1-12: the keyring key for the list's kit, a VMK for
+ * the kit of a vault with its own passphrase.
  *
  * 32 bytes of entropy, plus the first 8 bits of its SHA-256 as a checksum, is 264
  * bits; 264 / 11 is 24, and 2^11 is the size of the wordlist. That is the whole
@@ -14,7 +15,7 @@ import java.security.MessageDigest
  *
  * **BIP39's seed derivation is deliberately absent.** The standard turns a
  * mnemonic into a 512-bit wallet seed with PBKDF2 and an optional passphrase.
- * None of that applies: these words *are* the VMK, because P1-12 has to recover a
+ * None of that applies: these words *are* the key, because P1-12 has to recover a
  * vault on an install where nothing survives to unwrap anything with. Putting a
  * KDF between the words and the key would break exactly the property the design
  * needs. Do not "finish" this implementation.

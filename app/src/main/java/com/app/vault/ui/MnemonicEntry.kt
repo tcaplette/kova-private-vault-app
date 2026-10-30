@@ -15,6 +15,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -27,7 +28,9 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -90,6 +93,18 @@ fun MnemonicWordEntry(
      * completion source.
      */
     count: Int = Mnemonic.WORD_COUNT,
+    /**
+     * The kit positions these fields stand for, 0-based — `recovery-practice` D5. Set, each
+     * field is labelled and described "Word N" from its position, and the fields lay out one
+     * per row: three short fields need no two-up grid, and "Word 19" needs the room in German.
+     */
+    positions: List<Int>? = null,
+    /**
+     * A sentence per field that the host found wrong, or null — the kit check's mismatch line.
+     * It takes the field's error state and is announced politely; the first field holding one
+     * takes focus, so the user lands on what to correct.
+     */
+    errors: List<String?>? = null,
 ) {
     val requesters = remember(count) { List(count) { FocusRequester() } }
     val viewRequesters = remember(count) { List(count) { BringIntoViewRequester() } }
@@ -126,8 +141,13 @@ fun MnemonicWordEntry(
         focus((position + tokens.size).coerceAtMost(count - 1))
     }
 
+    val firstError = errors?.indexOfFirst { it != null } ?: -1
+    LaunchedEffect(errors) {
+        if (firstError >= 0) focus(firstError)
+    }
+
     Column(modifier = modifier.fillMaxWidth()) {
-        (0 until count).chunked(2).forEach { pair ->
+        (0 until count).chunked(if (positions != null) 1 else 2).forEach { pair ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(Spacing.sm),
@@ -140,22 +160,33 @@ fun MnemonicWordEntry(
                         focused != position &&
                         word.isNotEmpty() &&
                         mnemonic.completions(word, limit = 1).firstOrNull() != word
-                    val wordLabel = stringResource(if (wrong) R.string.kit_word_wrong else R.string.kit_word, position + 1)
+                    val mismatch = errors?.getOrNull(position)
+                    val number = (positions?.getOrNull(position) ?: position) + 1
+                    val wordLabel = when {
+                        wrong -> stringResource(R.string.kit_word_wrong, number)
+                        // The sentence names the position itself: "This isn't word 11 on your kit."
+                        mismatch != null -> mismatch
+                        else -> stringResource(R.string.kit_word, number)
+                    }
 
                     OutlinedTextField(
                         value = word,
                         onValueChange = { change(position, it) },
                         enabled = enabled,
                         singleLine = true,
-                        isError = wrong,
+                        isError = wrong || mismatch != null,
                         // **Numbered only when the count needs numbering — P4-3.**
                         // Twenty-four words are numbered because a transcriber
                         // cannot see the order of a mnemonic; four words in a row
                         // are their own structure, and numbering them is furniture.
-                        label = if (count == Mnemonic.WORD_COUNT) {
-                            { Text("${position + 1}") }
-                        } else {
-                            null
+                        label = when {
+                            positions != null -> {
+                                { Text(stringResource(R.string.kit_word, number)) }
+                            }
+                            count == Mnemonic.WORD_COUNT -> {
+                                { Text("${position + 1}") }
+                            }
+                            else -> null
                         },
                         textStyle = VaultMono.bodyLarge,
                         // The app's own completions come from the row below; the IME is
@@ -170,11 +201,22 @@ fun MnemonicWordEntry(
                             },
                         ),
                         keyboardActions = KeyboardActions(onNext = { focus(position + 1) }),
-                        supportingText = if (!wrong) null else {
+                        supportingText = when {
                             // Named, not merely tinted — §6.4. A red outline alone is
                             // unreachable to a screen reader and invisible to a good
                             // number of people looking straight at it.
-                            { Text(stringResource(R.string.kit_not_a_word)) }
+                            wrong -> {
+                                { Text(stringResource(R.string.kit_not_a_word)) }
+                            }
+                            mismatch != null -> {
+                                {
+                                    Text(
+                                        mismatch,
+                                        modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+                                    )
+                                }
+                            }
+                            else -> null
                         },
                         modifier = Modifier
                             .weight(1f)

@@ -92,8 +92,8 @@ import com.app.vault.ui.theme.VaultColors
  *    decision instead of by whatever happened to be drawn.
  * 2. **The install** — what the app is and what it does on this device, in the order the
  *    settings screen fixed: how it presents itself — App identity, then Language
- *    (`app-languages`) — then the concealment and hardware controls, then Photo details
- *    and Contacts.
+ *    (`app-languages`) — then the concealment and hardware controls, the recovery kit and
+ *    Extra Security (`recovery-practice`), then Photo details and Contacts.
  * 3. **Recovering a vault with its kit**, last, below its own rule. A way *in* to a vault
  *    that is not on the keyring yet. A group whose rows are all absent takes its rule
  *    with it: a rule above nothing is a rule about a group that is not there.
@@ -240,6 +240,12 @@ fun VaultDrawerSheet(
      */
     listKitViewsLeft: Int = 0,
     onListKit: () -> Unit = {},
+    /**
+     * `recovery-practice` D7. Extra Security, on by default: passphrase practice and the kit
+     * check. One switch for the device, so a home-drawer row only.
+     */
+    extraSecurityOn: Boolean = true,
+    onToggleExtraSecurity: () -> Unit = {},
     /**
      * The open vault's own kit's views left, or null when the vault has no passphrase of its
      * own — and so no kit of its own and no row.
@@ -475,6 +481,18 @@ fun VaultDrawerSheet(
                             badged = capturesUnseen,
                         )
                         DrawerRow(kitViewsLabel(listKitViewsLeft), R.drawable.ic_description, onListKit)
+                        // `recovery-practice` D7. Directly after the kit: both rows are about
+                        // keeping a way back in. A switch, its state in words, and no
+                        // confirmation — it is reversed as easily as it is made.
+                        DrawerRow(
+                            label = stringResource(R.string.drawer_extra_security),
+                            icon = R.drawable.ic_shield_lock,
+                            onClick = onToggleExtraSecurity,
+                            supporting = stringResource(
+                                if (extraSecurityOn) R.string.drawer_extra_security_on else R.string.drawer_extra_security_off,
+                            ),
+                            checked = extraSecurityOn,
+                        )
                         // `exif-strip-choice`. An install setting, not a vault one: one
                         // selection for the device, naming no vault, which is the trade every
                         // other entry in `GridPreference` makes for the same I8 reason.

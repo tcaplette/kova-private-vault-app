@@ -174,10 +174,12 @@ class VaultSetupFlowDeviceTest {
         await("the capture step") { text("See who tries to open $name") }
     }
 
-    /** The kit's typed acknowledgement, then its Continue. */
+    /** The kit's typed acknowledgement, its Continue, then the kit check — `recovery-practice` D5. */
     private fun putTheKitAway() {
+        val words = KitCheckWalk.wordsOnScreen(compose)
         compose.onAllNodes(hasSetTextAction())[0].performScrollTo().performTextInput("I understand")
         button("Continue").performScrollTo().performClick()
+        KitCheckWalk.pass(compose, words)
     }
 
     private fun enrolmentFor(name: String): Set<Capture.Mode>? {

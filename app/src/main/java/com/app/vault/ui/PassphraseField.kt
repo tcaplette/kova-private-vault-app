@@ -26,6 +26,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.app.vault.R
@@ -106,27 +107,7 @@ fun PassphraseField(
             ?: KeyboardActions.Default,
         visualTransformation =
             if (revealed) VisualTransformation.None else PasswordVisualTransformation(),
-        trailingIcon = {
-            IconButton(
-                onClick = { revealed = !revealed },
-                // §7.1's floor, met by padding around the glyph rather than by
-                // inflating it — the icon stays 24dp.
-                modifier = Modifier.size(Spacing.touchTarget),
-            ) {
-                Icon(
-                    painter = painterResource(
-                        if (revealed) R.drawable.ic_visibility_off else R.drawable.ic_visibility
-                    ),
-                    // Fixed wording, not "Show $label": the labels include
-                    // "Enter it again", and "Show Enter it again" is not a sentence
-                    // a screen reader should have to say. Which field the control
-                    // belongs to is carried by its position inside that field.
-                    contentDescription = stringResource(if (revealed) R.string.passphrase_hide else R.string.passphrase_show),
-                    tint = VaultColors.OnSurfaceVariant,
-                    modifier = Modifier.size(24.dp),
-                )
-            }
-        },
+        trailingIcon = { RevealToggle(revealed) { revealed = !revealed } },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
             autoCorrectEnabled = false,
@@ -134,6 +115,82 @@ fun PassphraseField(
         ),
         modifier = modifier.fillMaxWidth(),
     )
+}
+
+/**
+ * [PassphraseField] over a [TextFieldValue] — `recovery-practice` D3.
+ *
+ * For the one screen that must select what was typed: a wrong practice entry keeps focus with
+ * its text selected for retyping, and a `String` field cannot hold a selection. Everything else
+ * is the field above, so the two cannot diverge on what makes a passphrase field one.
+ */
+@Composable
+fun PassphraseField(
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
+    label: String,
+    modifier: Modifier = Modifier,
+    imeAction: ImeAction = ImeAction.Done,
+    enabled: Boolean = true,
+    isError: Boolean = false,
+    supporting: String? = null,
+    announce: Boolean = false,
+    onImeAction: (() -> Unit)? = null,
+) {
+    var revealed by remember { mutableStateOf(false) }
+
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label) },
+        singleLine = true,
+        enabled = enabled,
+        isError = isError,
+        supportingText = supporting?.let {
+            {
+                Text(
+                    it,
+                    modifier = if (announce) Modifier.semantics { liveRegion = LiveRegionMode.Polite }
+                    else Modifier,
+                )
+            }
+        },
+        keyboardActions = onImeAction?.let { run -> KeyboardActions(onAny = { run() }) }
+            ?: KeyboardActions.Default,
+        visualTransformation =
+            if (revealed) VisualTransformation.None else PasswordVisualTransformation(),
+        trailingIcon = { RevealToggle(revealed) { revealed = !revealed } },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Password,
+            autoCorrectEnabled = false,
+            imeAction = imeAction,
+        ),
+        modifier = modifier.fillMaxWidth(),
+    )
+}
+
+/** The show/hide control both fields carry. */
+@Composable
+private fun RevealToggle(revealed: Boolean, onToggle: () -> Unit) {
+    IconButton(
+        onClick = onToggle,
+        // §7.1's floor, met by padding around the glyph rather than by
+        // inflating it — the icon stays 24dp.
+        modifier = Modifier.size(Spacing.touchTarget),
+    ) {
+        Icon(
+            painter = painterResource(
+                if (revealed) R.drawable.ic_visibility_off else R.drawable.ic_visibility
+            ),
+            // Fixed wording, not "Show $label": the labels include
+            // "Enter it again", and "Show Enter it again" is not a sentence
+            // a screen reader should have to say. Which field the control
+            // belongs to is carried by its position inside that field.
+            contentDescription = stringResource(if (revealed) R.string.passphrase_hide else R.string.passphrase_show),
+            tint = VaultColors.OnSurfaceVariant,
+            modifier = Modifier.size(24.dp),
+        )
+    }
 }
 
 /**

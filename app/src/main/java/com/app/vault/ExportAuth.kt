@@ -20,22 +20,24 @@ import java.io.File
 object ExportAuth {
 
     /**
-     * Whether [passphrase] opens the currently open vault.
+     * Whether [passphrase] is the open list's — what opened what is on screen.
      *
      * [passphrase] is zeroed here on every path. There is deliberately no
      * `String` overload.
      *
-     * [captureStore] — `intruder-captures-at-home` D9: the export's source is the open
-     * keyring's capture store, which is on screen with no vault open. The same derivation and
-     * the same comparison; only the precondition is the keyring's rather than a vault's.
+     * **The precondition is the open keyring, not an open vault.** The answer is the list's
+     * home slot either way, and two callers have no vault open by construction: the capture
+     * export (`intruder-captures-at-home` D9, its source is the keyring's capture store) and the
+     * decoy flow, started from the home drawer. A vault-open precondition refused every right
+     * answer in the decoy flow — found on the device during `recovery-practice`.
      */
-    fun confirms(slotsFile: File, passphrase: ByteArray, captureStore: Boolean = false): Boolean {
+    fun confirms(slotsFile: File, passphrase: ByteArray): Boolean {
         // `vault-keyring`. **What a slot yields is a keyring key now**, so the
         // comparison that used to be "the same vault" is "the same keyring". It is the
         // same question the gate always asked — is this the passphrase that opens what
         // is on screen — one level up, and it is still answered against a real
         // derivation rather than a session flag.
-        if (if (captureStore) !VaultKeyringSession.isOpen else !VaultSession.isUnlocked) {
+        if (!VaultKeyringSession.isOpen) {
             passphrase.fill(0)
             return false
         }

@@ -100,11 +100,16 @@ fun RecoveryKitScreen(
      * new kit; fewer when a vault's passphrase is added again and its count was carried.
      */
     createdViewsLeft: Int = com.app.vault.VaultKeyring.KIT_VIEWS,
+    /**
+     * `recovery-practice` D5. The creation form reopened from the kit check: the acknowledgement
+     * was already typed for these words, so it starts typed and Continue is available at once.
+     */
+    acknowledged: Boolean = false,
 ) {
-    var typed by remember { mutableStateOf("") }
     // `app-languages`: the phrase in the app's language; the instruction and this read the same one.
     val phrase = stringResource(ACKNOWLEDGEMENT)
-    val acknowledged = status != null || typed.trim().equals(phrase, ignoreCase = false)
+    var typed by remember { mutableStateOf(if (acknowledged && status == null) phrase else "") }
+    val ready = status != null || typed.trim().equals(phrase, ignoreCase = false)
 
     // At creation: no back affordance, and `MainActivity.dismissTop` does not list this
     // form. A gesture that dismissed the words before they were written down would cost
@@ -178,7 +183,7 @@ fun RecoveryKitScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             OutlinedButton(onClick = onPrint) { Text(stringResource(R.string.kit_print)) }
-            Button(onClick = onContinue, enabled = acknowledged) {
+            Button(onClick = onContinue, enabled = ready) {
                 Text(stringResource(if (status != null) R.string.action_done else R.string.action_continue))
             }
         }

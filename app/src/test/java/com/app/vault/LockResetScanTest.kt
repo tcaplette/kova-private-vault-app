@@ -26,6 +26,8 @@ class LockResetScanTest {
         "photoDetailsPreset" to "setting", "photoDetailsCustom" to "setting",
         "noteSettings" to "setting", "memoSettings" to "setting",
         "bioEnabled" to "setting", "captureModes" to "setting", "exportTree" to "setting",
+        // `recovery-practice` D7. One switch for the device, read at start and on each toggle.
+        "extraSecurityOn" to "setting",
         // Facts about the device, the install or the purchase.
         "faceDownAvailable" to "device", "screenTimeoutMs" to "device", "bioState" to "device", "bioAllStrong" to "device",
         "bioButtonLabel" to "device", "cameraPermitted" to "device",
@@ -36,6 +38,9 @@ class LockResetScanTest {
         "price" to "purchase", "billingRev" to "purchase", "decoyBuiltThisRun" to "process",
         // The cover is raised, not cleared.
         "coverShowing" to "raised by onStart",
+        // `recents-shows-identity` D1, D4. Set in onUserLeaveHint and cleared by returnFromLeave
+        // in onStart and onResume: the activity's arrival and departure, not the session's.
+        "leaving" to "cleared by returnFromLeave",
         // The cover's own unlock state, owned by the activity's start and stop like the
         // cover itself: read in onStart, cleared in onStop (hideCoverDots) and on an
         // accepted trigger. None of it is the session's.

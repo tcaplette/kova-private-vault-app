@@ -131,7 +131,7 @@
     <string name="kit_print_job">Kit de recuperação do cofre</string>
     <string name="panic_wrong_passphrase">Essa frase secreta não abre esta lista de cofres.</string>
     <string name="panic_wrong_phrase">Essa não é sua frase de pânico.</string>
-    <string name="panic_too_close">Parecida demais com sua frase secreta — um erro de digitação poderia acioná-la. Escolha algo diferente.</string>
+    <string name="panic_too_close">Parecida demais com sua frase secreta — você poderia digitar uma no lugar da outra. Escolha uma frase que tenha pouco em comum com ela.</string>
     <string name="panic_in_use">Essa frase já abre uma lista de cofres. Escolha outra.</string>
     <string name="panic_no_room">Não há espaço para outra frase neste dispositivo.</string>
     <string name="panic_cleared">Sua frase de pânico antiga não funciona mais aqui, então ela está desativada. Defina uma nova.</string>
@@ -165,11 +165,6 @@
     <string name="notification_channel_recording">Gravação</string>
     <string name="notification_recording">Gravando</string>
     <string name="notification_stop">Parar</string>
-
-    <!-- The printed recovery kit -->
-    <string name="kit_print_heading">Kit de recuperação do cofre</string>
-    <string name="kit_print_line_1">Estas 24 palavras abrem este cofre. Guarde esta página em segurança.</string>
-    <string name="kit_print_line_2">Elas não podem ser alteradas nem canceladas.</string>
 
     <!-- Biometric unlock — the screen, the drawer row and the first-run step -->
     <string name="bio_name">Desbloqueio biométrico</string>
@@ -557,7 +552,7 @@
     <string name="panic_status_on">A credencial de pânico está ativada</string>
     <string name="panic_status_off">A credencial de pânico está desativada</string>
     <string name="panic_fact_survives">Esta lista de cofres continua</string>
-    <string name="panic_fact_survives_body">Digitada na tela de bloqueio, sua frase de pânico abre esta lista de cofres normalmente, e todo cofre que não está nela deixa de abrir neste dispositivo, para sempre.</string>
+    <string name="panic_fact_survives_body">Digitada na tela de bloqueio, sua frase de pânico abre esta lista de cofres normalmente, e todo cofre que não está nela deixa de abrir neste dispositivo.</string>
     <string name="panic_fact_way_in">Ela destrói a entrada, não os arquivos</string>
     <string name="panic_fact_way_in_body">Os outros cofres ficam neste dispositivo como dados ilegíveis. Os kits de recuperação de 24 palavras deles ainda os abrem.</string>
     <string name="panic_fact_silent">Nada confirma que funcionou</string>
@@ -746,7 +741,7 @@
     <string name="onboarding_backup_title">Guarde uma cópia em outro lugar</string>
     <string name="onboarding_backup_lead">Se este celular for perdido ou quebrar, tudo o que está no cofre vai junto — a menos que exista uma cópia.</string>
     <string name="onboarding_panic_title">Uma frase secreta que fecha as outras</string>
-    <string name="onboarding_panic_lead">Digitada na tela de bloqueio, ela abre um cofre e fecha para sempre todos os outros deste dispositivo.</string>
+    <string name="onboarding_panic_lead">Digitada na tela de bloqueio, ela abre um cofre e fecha todos os outros deste dispositivo.</string>
     <string name="onboarding_panic_set_up">Configurar uma credencial de pânico</string>
     <string name="onboarding_fact_ordinary">Parece um desbloqueio comum</string>
     <string name="onboarding_fact_ordinary_body">Mesma tela, mesma velocidade, nada para ver. Esse é o objetivo — quem estiver olhando não descobre nada.</string>
@@ -847,7 +842,7 @@
     <string name="kit_title_list">Seu kit de recuperação</string>
     <string name="kit_title_vault">Kit de recuperação de %1$s</string>
     <string name="kit_title_short">Kit de recuperação</string>
-    <string name="kit_body_list">Estas 24 palavras são a única forma de voltar aos cofres que sua frase secreta abre, caso você a esqueça. Anote-as em ordem e guarde o papel em um lugar seguro.\n\nQuem tiver estas palavras pode abrir esses cofres, inclusive os que você adicionar depois. Um cofre com frase secreta própria não está entre eles — ele tem o próprio kit. Estas palavras não podem ser alteradas nem canceladas.</string>
+    <string name="kit_body_list">Se você esquecer sua frase secreta, estas 24 palavras levam você de volta aos cofres que ela abre. Anote-as em ordem e guarde o papel em um lugar seguro.\n\nQuem tiver estas palavras pode abrir esses cofres, inclusive os que você adicionar depois. Um cofre com frase secreta própria não está entre eles — ele tem o próprio kit. Estas palavras não podem ser alteradas nem canceladas.</string>
     <string name="kit_body_list_backup">Se algum dia você fizer backup deste cofre em uma pasta na nuvem, são estas palavras que o restauram — não sua frase secreta. Perca este dispositivo e esta página juntos e ninguém poderá abrir o backup, nem você.</string>
     <string name="kit_body_vault">Estas 24 palavras são a única forma de voltar a %1$s se você esquecer a frase secreta que acabou de definir. Anote-as em ordem e guarde o papel em um lugar seguro.\n\nA frase secreta que abre sua lista de cofres não vai abrir este, e o kit de recuperação dessa lista também não. Perca a frase secreta e esta página e tudo em %1$s some para sempre.\n\nQuem tiver estas palavras pode abrir %1$s. Elas não podem ser alteradas nem canceladas.</string>
     <string name="kit_type_acknowledgement">Digite “%1$s” para confirmar que você as anotou e sabe que a frase secreta não pode ser redefinida.</string>
@@ -1815,4 +1810,57 @@
     <string name="licences_version">Versão %1$s</string>
     <string name="licences_source">Origem</string>
     <string name="licences_licence">Licença</string>
+
+    <!-- recovery-practice: passphrase practice, the kit check, Extra Security and the printed kit -->
+    <string name="practice_title">Pratique sua frase secreta</string>
+    <string name="practice_lead_fingerprint">Você tem aberto seus cofres com sua impressão digital. Digite sua frase secreta para não esquecê-la.</string>
+    <string name="practice_lead_face">Você tem aberto seus cofres com seu rosto. Digite sua frase secreta para não esquecê-la.</string>
+    <string name="practice_lead_both">Você tem aberto seus cofres com seu rosto ou sua impressão digital. Digite sua frase secreta para não esquecê-la.</string>
+    <string name="practice_lead_biometric">Você tem aberto seus cofres com a biometria. Digite sua frase secreta para não esquecê-la.</string>
+    <string name="practice_check">Verificar</string>
+    <string name="practice_checking">Verificando…</string>
+    <string name="practice_skip">Pular</string>
+    <string name="practice_wrong">Essa não é sua frase secreta.</string>
+    <string name="practice_forgot_panel_fingerprint">Esqueceu? Sua impressão digital já abriu seus cofres, então você pode escolher uma nova frase secreta agora. Você não vai precisar do seu kit de recuperação.</string>
+    <string name="practice_forgot_panel_face">Esqueceu? Seu rosto já abriu seus cofres, então você pode escolher uma nova frase secreta agora. Você não vai precisar do seu kit de recuperação.</string>
+    <string name="practice_forgot_panel_both">Esqueceu? Seu rosto ou sua impressão digital já abriu seus cofres, então você pode escolher uma nova frase secreta agora. Você não vai precisar do seu kit de recuperação.</string>
+    <string name="practice_forgot_panel_biometric">Esqueceu? A biometria já abriu seus cofres, então você pode escolher uma nova frase secreta agora. Você não vai precisar do seu kit de recuperação.</string>
+    <string name="practice_set_new">Definir uma nova frase secreta agora</string>
+    <string name="practice_new_title">Nova frase secreta</string>
+    <string name="practice_new_lead">Escolha a frase secreta que você vai usar para abrir seus cofres daqui em diante. A antiga deixa de funcionar. Suas 24 palavras não mudam.</string>
+    <string name="practice_saving">Salvando…</string>
+    <string name="practice_confirm_title">Confirme que é você</string>
+    <string name="practice_confirm_needed_fingerprint">Confirme com sua impressão digital para salvar sua nova frase secreta.</string>
+    <string name="practice_confirm_needed_face">Confirme com seu rosto para salvar sua nova frase secreta.</string>
+    <string name="practice_confirm_needed_both">Confirme com seu rosto ou sua impressão digital para salvar sua nova frase secreta.</string>
+    <string name="practice_confirm_needed_biometric">Confirme com a biometria para salvar sua nova frase secreta.</string>
+    <string name="practice_changed">Frase secreta alterada. Seu kit de recuperação continua funcionando.</string>
+    <string name="kit_check_title">Confira sua cópia</string>
+    <string name="kit_check_lead">Digite estas palavras a partir do seu papel, não de memória.</string>
+    <string name="kit_check_action">Verificar palavras</string>
+    <string name="kit_check_see_again">Ver as palavras de novo</string>
+    <string name="kit_check_mismatch">Esta não é a palavra %1$d do seu kit.</string>
+    <string name="drawer_extra_security">Segurança extra</string>
+    <string name="drawer_extra_security_on">Prática da frase secreta e verificação do kit ativadas</string>
+    <string name="drawer_extra_security_off">Desativada. Sem prática da frase secreta nem verificação do kit</string>
+    <string name="kit_print_title">Kit de recuperação</string>
+    <string name="kit_print_for_list">Para: sua lista de cofres</string>
+    <string name="kit_print_for_vault">Para: %1$s</string>
+    <string name="kit_print_date">Impresso em %1$s</string>
+    <string name="kit_print_anyone_list">Quem tiver estas palavras pode abrir sua lista de cofres. Elas não podem ser alteradas nem canceladas.</string>
+    <string name="kit_print_anyone_vault">Quem tiver estas palavras pode abrir %1$s. Elas não podem ser alteradas nem canceladas.</string>
+    <string name="kit_print_how_heading">Como usar esta página</string>
+    <string name="kit_print_list_step_1">Abra o app e vá até a tela de desbloqueio.</string>
+    <string name="kit_print_list_step_2">Toque em “%1$s”.</string>
+    <string name="kit_print_list_step_3">Digite as 24 palavras em ordem e depois escolha uma nova frase secreta.</string>
+    <string name="kit_print_vault_step_1">Abra o app e desbloqueie sua lista de cofres.</string>
+    <string name="kit_print_vault_step_2">Abra o menu e toque em “%1$s”.</string>
+    <string name="kit_print_vault_step_3">Digite as 24 palavras em ordem e depois escolha uma nova frase secreta para %1$s.</string>
+    <string name="kit_print_backups">Estas palavras também abrem seus backups.</string>
+    <string name="kit_print_keep_heading">Onde guardar</string>
+    <string name="kit_print_keep_body">Em um lugar seguro e reservado, como junto do seu passaporte ou de outros documentos importantes. Não tire foto dela nem a guarde no seu celular. Se você perder esta página e sua frase secreta, ninguém conseguirá recuperar seus cofres.</string>
+    <plurals name="practice_right">
+        <item quantity="one">Certo. Próxima prática em %1$d dia.</item>
+        <item quantity="other">Certo. Próxima prática em %1$d dias.</item>
+    </plurals>
 </resources>

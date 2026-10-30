@@ -18,11 +18,15 @@ import kotlinx.coroutines.launch
 
 /**
  * Sets FLAG_SECURE on every activity as it is created, so the app cannot be
- * screenshotted, screen-recorded, or shown in the recent-apps thumbnail.
+ * screenshotted or screen-recorded.
  *
  * Done here rather than in MainActivity.onCreate so that activity number two
  * cannot be added without it. [AutoLock] rides the same callbacks for the same
  * reason — P1-10.
+ *
+ * `recents-shows-identity`. The recent-apps card is not blank: `MainActivity` lifts the
+ * flag on the way out, only over a committed frame of the identity picture, and sets it
+ * again before anything else is drawn on the way back.
  */
 open class VaultApplication : Application() {
 
@@ -46,6 +50,11 @@ open class VaultApplication : Application() {
         AppLanguage.apply(this)
     }
 
+    /**
+     * The flag, on every window from its creation. Never lifted here: lifting it for the
+     * recents card is `MainActivity`'s, which knows when the identity picture is on screen —
+     * `recents-shows-identity` D4.
+     */
     private object FlagSecure : ActivityLifecycleCallbacks {
         override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
             activity.window.setFlags(
@@ -118,6 +127,13 @@ object AutoLock : Application.ActivityLifecycleCallbacks {
         awaitingResult = pending
         evaluate()
     }
+
+    /**
+     * `recents-shows-identity` D1. A result this app launched is outstanding — the photo
+     * picker, the file chooser, a permission request. `MainActivity`'s leave path reads it
+     * and raises no identity picture, because each of those comes back to the screen it left.
+     */
+    val isAwaitingResult: Boolean get() = awaitingResult
 
     /** For tests: whether the app currently believes it is foreground. */
     val isForeground: Boolean get() = started > 0

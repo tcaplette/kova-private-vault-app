@@ -154,20 +154,26 @@ fun CalculatorCover(
      * reported as each is reached. Null on a live cover, for [onProgress]'s reason.
      */
     dotsProgress: ((Int) -> Unit)? = null,
+    /**
+     * `recents-shows-identity` D3. Drawn as the recent-apps card's picture: a fresh display,
+     * no trigger, no hold and no dots. Nor the system bars — this copy sits beneath the live
+     * screen for the whole session, and the bars are the live screen's.
+     */
+    still: Boolean = false,
 ) {
     CalculatorTheme {
         // Live only. While setup hosts the keypad the top of the window is the vault's bar,
         // and the calculator's icons over it went dark-on-dark.
-        if (onProgress == null && dotsProgress == null) SystemBarsFollowTheCalculator()
+        if (onProgress == null && dotsProgress == null && !still) SystemBarsFollowTheCalculator()
         CalculatorScreen(
-            onTrigger = onTrigger,
-            onProgress = onProgress,
-            sequence = sequence,
-            showDots = showDots,
-            dotsError = dotsError,
-            holdArea = holdArea,
-            onHold = onHold,
-            dotsProgress = dotsProgress,
+            onTrigger = if (still) ({}) else onTrigger,
+            onProgress = onProgress.takeIf { !still },
+            sequence = sequence && !still,
+            showDots = showDots && !still,
+            dotsError = dotsError && !still,
+            holdArea = holdArea.takeIf { !still },
+            onHold = if (still) ({}) else onHold,
+            dotsProgress = dotsProgress.takeIf { !still },
             modifier = modifier,
         )
     }

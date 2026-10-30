@@ -28,11 +28,12 @@ The photos are public-domain (CC0) images from Wikimedia Commons, and the music 
 ### Vaults and unlocking
 
 - **Several vaults, one passphrase.** One passphrase opens your vault list. Any vault can also have its own passphrase, with its own recovery kit. Each vault gets a name, a colour and an icon.
-- **24-word recovery kit.** You get it at setup. You can print it, and view it again from the menu up to three times. It recovers a forgotten passphrase and restores backups.
+- **24-word recovery kit.** You get it at setup, and you check three of its words before you go on, so you know it was written down. You can print it: the page says what it is for, how to use it and where to keep it. You can view it again from the menu up to three times. It recovers a forgotten passphrase and restores backups.
+- **Extra Security.** On by default, and switched from the menu. If you open your vaults with your fingerprint, the app asks for your passphrase now and then so you don't forget it, and if you have forgotten it you can set a new one there and then. Every new recovery kit is followed by the three-word check.
 - **Biometric unlock.** Fingerprint or face, on phones whose sensor meets Android's strong (Class 3) standard. It is a second way in, and your passphrase always works.
 - **Face-down lock.** Turn the phone over and the vault locks, either at once or after a delay you choose.
 - **What happened while you were away.** After you unlock, the vault lists failed unlock attempts, recovery-kit uses, and changes to the device since your last visit: root, developer options, the clock moving backwards, or the vault running on a different phone. The log is tamper-evident.
-- **Screen protection.** The app blocks screenshots and blanks its recent-apps preview. The lock screen warns you if the phone is rooted, a debugger is attached, or an accessibility service can read the screen.
+- **Screen protection.** The app blocks screenshots and screen recording. In recent apps it shows its cover, or its unlock screen, and never what is inside. The lock screen warns you if the phone is rooted, a debugger is attached, or an accessibility service can read the screen.
 
 ### What you can keep
 
@@ -58,7 +59,7 @@ The photos are public-domain (CC0) images from Wikimedia Commons, and the music 
 - **Covers.** The app can appear on the home screen as a calculator (a scientific one), a music player (it plays the music on your phone) or a voice recorder (it records). The vault opens only through a gesture you set up on the cover: a button sequence, a 2-second hold on a spot you choose, a pattern, or a combination.
 - **Intruder capture.** After a failed unlock, the app quietly takes a front-camera photo, an audio clip or a video. Each capture is sealed so only your passphrase opens it, and appears on a timeline.
 - **Decoy vault.** A second vault with its own passphrase, filled with photos you choose and given dates and a history that look like months of normal use.
-- **Panic credential.** A phrase that, typed at the lock screen, opens one vault list and permanently shuts every other vault on the phone. It also empties your backup folder. Nothing on screen shows that it happened.
+- **Panic credential.** A phrase that, typed at the lock screen, opens one vault list and shuts every other vault on the phone. It also empties your backup folder. Nothing on screen shows that it happened. The other vaults' files stay on the phone, and their recovery kits still open them. To set one up, you enter your passphrase and the phrase twice, and the app refuses a phrase too much like your passphrase.
 
 ### Everywhere
 
@@ -119,6 +120,12 @@ adb install kova.apk
 
 A self-built copy has no trial and no purchase. Everything in it works from the first launch, for as long as you use it.
 
+## Security
+
+Kova derives its keys from your passphrase with Argon2id (64 MiB, 6 passes) and encrypts everything you keep with XChaCha20-Poly1305 through libsodium. Biometric unlock wraps the key with an AES-256-GCM key in the Android Keystore that needs a Class 3 biometric for every use. Shares to a paired contact use X-Wing, a post-quantum hybrid of ML-KEM-768 and X25519. [docs/security-design.md](docs/security-design.md) explains the keys, the file layout, the threat model and the known limits.
+
+To report a vulnerability, see [SECURITY.md](SECURITY.md).
+
 ## Licence
 
 Kova is source-available under the [PolyForm Strict License 1.0.0](LICENSE), with one added permission. You may read the source and build Kova for your own personal use on your own devices. You may not distribute it, in source or built form, change it or build new works from it, or sell it or use it for any commercial purpose. The third-party libraries and fonts it uses keep their own licences, and the app lists each one, with its full text, under Open-source licences in the menu.
@@ -134,10 +141,6 @@ This section is in progress.
 This section is in progress.
 
 ### Google Play
-
-This section is in progress.
-
-### Reporting a security issue
 
 This section is in progress.
 

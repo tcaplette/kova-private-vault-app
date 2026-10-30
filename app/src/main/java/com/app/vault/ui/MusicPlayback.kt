@@ -49,7 +49,11 @@ import kotlinx.coroutines.withContext
 @Stable
 class MusicPlayerState internal constructor(
     private val context: Context,
-    private val player: ExoPlayer,
+    /**
+     * Null in still mode — `recents-shows-identity` D3. The card's picture of the player
+     * reads the library and the stored last track for display, and builds no player at all.
+     */
+    private val player: ExoPlayer?,
     /**
      * Whether the player may remember what it played.
      *
@@ -105,11 +109,18 @@ class MusicPlayerState internal constructor(
      * which is the line `cover-front-ends` draws.
      */
     private fun restore(library: List<MusicLibrary.Track>) {
-        if (!persist) return
+        if (!persist && player != null) return
         val id = CoverStore.lastTrackId(context) ?: return
         val track = library.firstOrNull { it.id == id } ?: return
-        prepare(track, library, playWhenReady = false)
         val at = CoverStore.lastPositionMs(context)
+        if (player == null) {
+            // Still: what the live player would restore, drawn and never prepared.
+            queue = library
+            current = track
+            positionMs = at
+            return
+        }
+        prepare(track, library, playWhenReady = false)
         player.seekTo(at)
         positionMs = at
     }
@@ -124,6 +135,7 @@ class MusicPlayerState internal constructor(
         inQueue: List<MusicLibrary.Track>,
         playWhenReady: Boolean,
     ) {
+        val player = player ?: return
         queue = inQueue.ifEmpty { listOf(track) }
         val index = queue.indexOfFirst { it.id == track.id }.coerceAtLeast(0)
         player.setMediaItems(
@@ -144,10 +156,12 @@ class MusicPlayerState internal constructor(
             play(first, tracks)
             return
         }
+        val player = player ?: return
         if (player.isPlaying) player.pause() else player.play()
     }
 
     fun next() {
+        val player = player ?: return
         if (player.hasNextMediaItem()) player.seekToNextMediaItem() else player.seekTo(0, 0L)
     }
 
@@ -156,6 +170,7 @@ class MusicPlayerState internal constructor(
      * the previous one only if you press it again early on.
      */
     fun previous() {
+        val player = player ?: return
         if (player.currentPosition > RESTART_WINDOW_MS || !player.hasPreviousMediaItem()) {
             player.seekTo(0L)
         } else {
@@ -165,11 +180,13 @@ class MusicPlayerState internal constructor(
     }
 
     fun seekTo(ms: Long) {
+        val player = player ?: return
         player.seekTo(ms.coerceIn(0L, durationMs))
         positionMs = player.currentPosition
     }
 
     fun toggleShuffle() {
+        val player = player ?: return
         shuffle = !shuffle
         player.shuffleModeEnabled = shuffle
     }
@@ -180,6 +197,7 @@ class MusicPlayerState internal constructor(
      * as every other control.
      */
     fun shuffleAll(inQueue: List<MusicLibrary.Track>) {
+        val player = player ?: return
         if (inQueue.isEmpty()) return
         shuffle = true
         player.shuffleModeEnabled = true
@@ -188,6 +206,7 @@ class MusicPlayerState internal constructor(
 
     /** Off → all → one → off, which is the cycle every player on the device uses. */
     fun cycleRepeat() {
+        val player = player ?: return
         repeat = when (repeat) {
             Player.REPEAT_MODE_OFF -> Player.REPEAT_MODE_ALL
             Player.REPEAT_MODE_ALL -> Player.REPEAT_MODE_ONE
@@ -201,6 +220,7 @@ class MusicPlayerState internal constructor(
         get() = current?.durationMs ?: 0L
 
     internal fun onPlayerChanged() {
+        val player = player ?: return
         playing = player.isPlaying
         val id = player.currentMediaItem?.mediaId?.toLongOrNull()
         current = queue.firstOrNull { it.id == id } ?: current
@@ -208,11 +228,12 @@ class MusicPlayerState internal constructor(
     }
 
     internal fun tick() {
-        positionMs = player.currentPosition
+        positionMs = player?.currentPosition ?: return
     }
 
     /** Pause and remember. Called when the cover stops, not on every position change. */
     internal fun pauseAndRemember() {
+        val player = player ?: return
         player.pause()
         playing = false
         if (!persist) return
@@ -234,8 +255,15 @@ class MusicPlayerState internal constructor(
  * once the vault's own unlock screen is up.
  */
 @Composable
-fun rememberMusicPlayer(persist: Boolean = true): MusicPlayerState {
+fun rememberMusicPlayer(persist: Boolean = true, still: Boolean = false): MusicPlayerState {
     val context = LocalContext.current
+    if (still) {
+        // `recents-shows-identity` D3. The library and the stored last track, for display:
+        // no player built or prepared, nothing played, nothing written to `CoverStore`.
+        val state = remember { MusicPlayerState(context, null, persist = false) }
+        LaunchedEffect(state) { state.load() }
+        return state
+    }
     val player = remember { ExoPlayer.Builder(context).build() }
     val state = remember(player, persist) { MusicPlayerState(context, player, persist) }
 

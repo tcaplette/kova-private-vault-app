@@ -131,7 +131,7 @@
     <string name="kit_print_job">Kit de recuperación de la bóveda</string>
     <string name="panic_wrong_passphrase">Esa frase de contraseña no abre esta lista de bóvedas.</string>
     <string name="panic_wrong_phrase">Esa no es tu frase de pánico.</string>
-    <string name="panic_too_close">Se parece demasiado a tu frase de contraseña; un error de escritura podría activarla. Elige algo diferente.</string>
+    <string name="panic_too_close">Se parece demasiado a tu frase de contraseña; podrías escribir una en lugar de la otra. Elige una frase que tenga poco en común con ella.</string>
     <string name="panic_in_use">Esa frase ya abre una lista de bóvedas. Elige otra.</string>
     <string name="panic_no_room">No hay espacio para otra frase en este dispositivo.</string>
     <string name="panic_cleared">Tu frase de pánico anterior ya no funciona aquí, así que está desactivada. Define una nueva.</string>
@@ -165,11 +165,6 @@
     <string name="notification_channel_recording">Grabación</string>
     <string name="notification_recording">Grabando</string>
     <string name="notification_stop">Detener</string>
-
-    <!-- The printed recovery kit -->
-    <string name="kit_print_heading">Kit de recuperación de la bóveda</string>
-    <string name="kit_print_line_1">Estas 24 palabras abren esta bóveda. Guarda esta página en un lugar seguro.</string>
-    <string name="kit_print_line_2">No se pueden cambiar ni cancelar.</string>
 
     <!-- Biometric unlock — the screen, the drawer row and the first-run step -->
     <string name="bio_name">Desbloqueo biométrico</string>
@@ -557,7 +552,7 @@
     <string name="panic_status_on">La credencial de pánico está activada</string>
     <string name="panic_status_off">La credencial de pánico está desactivada</string>
     <string name="panic_fact_survives">Esta lista de bóvedas sobrevive</string>
-    <string name="panic_fact_survives_body">Si la escribes en la pantalla de bloqueo, tu frase de pánico abre esta lista de bóvedas como siempre, y todas las bóvedas que no están en ella dejan de abrirse en este dispositivo, para siempre.</string>
+    <string name="panic_fact_survives_body">Si la escribes en la pantalla de bloqueo, tu frase de pánico abre esta lista de bóvedas como siempre, y todas las bóvedas que no están en ella dejan de abrirse en este dispositivo.</string>
     <string name="panic_fact_way_in">Destruye la entrada, no los archivos</string>
     <string name="panic_fact_way_in_body">Las demás bóvedas se quedan en este dispositivo como datos ilegibles. Sus kits de recuperación de 24 palabras todavía las abren.</string>
     <string name="panic_fact_silent">Nada confirma que funcionó</string>
@@ -746,7 +741,7 @@
     <string name="onboarding_backup_title">Guarda una copia en otro lugar</string>
     <string name="onboarding_backup_lead">Si pierdes o se rompe este teléfono, todo lo que hay en la bóveda se va con él, a menos que exista una copia.</string>
     <string name="onboarding_panic_title">Una frase de contraseña que cierra las demás</string>
-    <string name="onboarding_panic_lead">Si la escribes en la pantalla de bloqueo, abre una bóveda y cierra para siempre todas las demás de este dispositivo.</string>
+    <string name="onboarding_panic_lead">Si la escribes en la pantalla de bloqueo, abre una bóveda y cierra todas las demás de este dispositivo.</string>
     <string name="onboarding_panic_set_up">Configurar una credencial de pánico</string>
     <string name="onboarding_fact_ordinary">Parece un desbloqueo normal</string>
     <string name="onboarding_fact_ordinary_body">La misma pantalla, la misma velocidad, nada que ver. Ese es el objetivo: quien esté mirando no se entera de nada.</string>
@@ -847,7 +842,7 @@
     <string name="kit_title_list">Tu kit de recuperación</string>
     <string name="kit_title_vault">Kit de recuperación de %1$s</string>
     <string name="kit_title_short">Kit de recuperación</string>
-    <string name="kit_body_list">Estas 24 palabras son la única forma de volver a las bóvedas que abre tu frase de contraseña si la olvidas. Anótalas en orden y guarda el papel en un lugar seguro.\n\nQuien tenga estas palabras puede abrir esas bóvedas, incluidas las que agregues después. Una bóveda a la que le des su propia frase de contraseña no está entre ellas: tiene su propio kit. Estas palabras no se pueden cambiar ni cancelar.</string>
+    <string name="kit_body_list">Si olvidas tu frase de contraseña, estas 24 palabras te devuelven a las bóvedas que abre. Anótalas en orden y guarda el papel en un lugar seguro.\n\nQuien tenga estas palabras puede abrir esas bóvedas, incluidas las que agregues después. Una bóveda a la que le des su propia frase de contraseña no está entre ellas: tiene su propio kit. Estas palabras no se pueden cambiar ni cancelar.</string>
     <string name="kit_body_list_backup">Si alguna vez haces una copia de seguridad de esta bóveda en una carpeta en la nube, son estas palabras las que la restauran, no tu frase de contraseña. Si pierdes este dispositivo y esta página juntos, nadie podrá abrir la copia, ni siquiera tú.</string>
     <string name="kit_body_vault">Estas 24 palabras son la única forma de volver a %1$s si olvidas la frase de contraseña que acabas de definir. Anótalas en orden y guarda el papel en un lugar seguro.\n\nLa frase de contraseña que abre tu lista de bóvedas no abrirá esta, y tampoco el kit de recuperación de esa lista. Si pierdes la frase de contraseña y esta página, todo lo que hay en %1$s desaparece para siempre.\n\nQuien tenga estas palabras puede abrir %1$s. No se pueden cambiar ni cancelar.</string>
     <string name="kit_type_acknowledgement">Escribe “%1$s” para confirmar que las anotaste y que sabes que la frase de contraseña no se puede restablecer.</string>
@@ -1815,4 +1810,57 @@
     <string name="licences_version">Versión %1$s</string>
     <string name="licences_source">Origen</string>
     <string name="licences_licence">Licencia</string>
+
+    <!-- recovery-practice: passphrase practice, the kit check, Extra Security and the printed kit -->
+    <string name="practice_title">Practica tu frase de contraseña</string>
+    <string name="practice_lead_fingerprint">Has estado abriendo tus bóvedas con tu huella digital. Escribe tu frase de contraseña para no olvidarla.</string>
+    <string name="practice_lead_face">Has estado abriendo tus bóvedas con tu rostro. Escribe tu frase de contraseña para no olvidarla.</string>
+    <string name="practice_lead_both">Has estado abriendo tus bóvedas con tu rostro o tu huella digital. Escribe tu frase de contraseña para no olvidarla.</string>
+    <string name="practice_lead_biometric">Has estado abriendo tus bóvedas con la biometría. Escribe tu frase de contraseña para no olvidarla.</string>
+    <string name="practice_check">Comprobar</string>
+    <string name="practice_checking">Comprobando…</string>
+    <string name="practice_skip">Omitir</string>
+    <string name="practice_wrong">Esa no es tu frase de contraseña.</string>
+    <string name="practice_forgot_panel_fingerprint">¿La olvidaste? Tu huella digital ya abrió tus bóvedas, así que puedes elegir una frase de contraseña nueva ahora. No necesitarás tu kit de recuperación.</string>
+    <string name="practice_forgot_panel_face">¿La olvidaste? Tu rostro ya abrió tus bóvedas, así que puedes elegir una frase de contraseña nueva ahora. No necesitarás tu kit de recuperación.</string>
+    <string name="practice_forgot_panel_both">¿La olvidaste? Tu rostro o tu huella digital ya abrieron tus bóvedas, así que puedes elegir una frase de contraseña nueva ahora. No necesitarás tu kit de recuperación.</string>
+    <string name="practice_forgot_panel_biometric">¿La olvidaste? La biometría ya abrió tus bóvedas, así que puedes elegir una frase de contraseña nueva ahora. No necesitarás tu kit de recuperación.</string>
+    <string name="practice_set_new">Definir una frase de contraseña nueva ahora</string>
+    <string name="practice_new_title">Nueva frase de contraseña</string>
+    <string name="practice_new_lead">Elige la frase de contraseña con la que abrirás tus bóvedas a partir de ahora. La anterior dejará de funcionar. Tus 24 palabras no cambian.</string>
+    <string name="practice_saving">Guardando…</string>
+    <string name="practice_confirm_title">Confirma que eres tú</string>
+    <string name="practice_confirm_needed_fingerprint">Confirma con tu huella digital para guardar tu nueva frase de contraseña.</string>
+    <string name="practice_confirm_needed_face">Confirma con tu rostro para guardar tu nueva frase de contraseña.</string>
+    <string name="practice_confirm_needed_both">Confirma con tu rostro o tu huella digital para guardar tu nueva frase de contraseña.</string>
+    <string name="practice_confirm_needed_biometric">Confirma con la biometría para guardar tu nueva frase de contraseña.</string>
+    <string name="practice_changed">Frase de contraseña cambiada. Tu kit de recuperación sigue funcionando.</string>
+    <string name="kit_check_title">Comprueba tu copia</string>
+    <string name="kit_check_lead">Escribe estas palabras a partir de tu papel, no de memoria.</string>
+    <string name="kit_check_action">Comprobar palabras</string>
+    <string name="kit_check_see_again">Ver las palabras otra vez</string>
+    <string name="kit_check_mismatch">Esta no es la palabra %1$d de tu kit.</string>
+    <string name="drawer_extra_security">Seguridad adicional</string>
+    <string name="drawer_extra_security_on">La práctica de frase de contraseña y la comprobación del kit están activadas</string>
+    <string name="drawer_extra_security_off">Desactivada. Sin práctica de frase de contraseña ni comprobación del kit</string>
+    <string name="kit_print_title">Kit de recuperación</string>
+    <string name="kit_print_for_list">Para: tu lista de bóvedas</string>
+    <string name="kit_print_for_vault">Para: %1$s</string>
+    <string name="kit_print_date">Impreso el %1$s</string>
+    <string name="kit_print_anyone_list">Quien tenga estas palabras puede abrir tu lista de bóvedas. No se pueden cambiar ni cancelar.</string>
+    <string name="kit_print_anyone_vault">Quien tenga estas palabras puede abrir %1$s. No se pueden cambiar ni cancelar.</string>
+    <string name="kit_print_how_heading">Cómo usar esta página</string>
+    <string name="kit_print_list_step_1">Abre la app y ve a su pantalla de desbloqueo.</string>
+    <string name="kit_print_list_step_2">Toca «%1$s».</string>
+    <string name="kit_print_list_step_3">Escribe las 24 palabras en orden y luego elige una frase de contraseña nueva.</string>
+    <string name="kit_print_vault_step_1">Abre la app y desbloquea tu lista de bóvedas.</string>
+    <string name="kit_print_vault_step_2">Abre el menú y toca «%1$s».</string>
+    <string name="kit_print_vault_step_3">Escribe las 24 palabras en orden y luego elige una frase de contraseña nueva para %1$s.</string>
+    <string name="kit_print_backups">Estas palabras también abren tus copias de seguridad.</string>
+    <string name="kit_print_keep_heading">Dónde guardarla</string>
+    <string name="kit_print_keep_body">En un lugar seguro y privado, por ejemplo con tu pasaporte u otros documentos importantes. No le hagas fotos ni la guardes en tu teléfono. Si pierdes esta página y tu frase de contraseña, nadie podrá recuperar tus bóvedas.</string>
+    <plurals name="practice_right">
+        <item quantity="one">Correcto. Próxima práctica en %1$d día.</item>
+        <item quantity="other">Correcto. Próxima práctica en %1$d días.</item>
+    </plurals>
 </resources>

@@ -115,10 +115,16 @@ object VaultKeys {
      * reaches new installs only. Never read on an unlock path — `VaultKeysTest`
      * fails if it is.
      *
-     * **Provisional.** t=8 lands near 500 ms on an x86_64 emulator, which is not an
-     * ARM phone.
+     * **Tuned on real hardware, 2026-10-30.** `CryptoSpikeBenchmark` on a Samsung Galaxy
+     * A53 (Exynos 1280, Android 16): t=3 236 ms, t=6 453 ms against the 500 ms target. A
+     * mid-range phone is the reference because that is where unlock is slowest for most
+     * owners. The earlier t=8 came from an x86_64 emulator and is kept in
+     * [RELEASED_KDF_PARAMS], not here.
      */
-    val ARGON2ID_PARAMS = Argon2idParams(memoryKib = 64 * 1024, iterations = 8, parallelism = 1)
+    val ARGON2ID_PARAMS = Argon2idParams(memoryKib = 64 * 1024, iterations = 6, parallelism = 1)
+
+    /** The emulator-tuned set every build before the A53 measurement created with. */
+    private val EMULATOR_TUNED_PARAMS = Argon2idParams(memoryKib = 64 * 1024, iterations = 8, parallelism = 1)
 
     /**
      * Every parameter set the app has published, oldest first — P2-25.
@@ -149,7 +155,7 @@ object VaultKeys {
      * ever grows long enough to feel, the archive gains a recorded parameter block
      * and pays §11's fingerprint then, when it buys something.
      */
-    var RELEASED_KDF_PARAMS: List<Argon2idParams> = listOf(ARGON2ID_PARAMS)
+    var RELEASED_KDF_PARAMS: List<Argon2idParams> = listOf(EMULATOR_TUNED_PARAMS, ARGON2ID_PARAMS)
         set(value) {
             check(value.isNotEmpty()) { "the published parameter list cannot be empty" }
             field = value

@@ -56,7 +56,7 @@ class BiometricWrap(private val file: File) {
 
         private const val SLOT_INDEX_BYTES = 1
 
-        /** `VMK ‖ metadata blob ID ‖ slot index` — 49 B. */
+        /** `key ‖ blob ID ‖ slot index` — 49 B: the slot's 48 bytes (the keyring key and its blob ID) and its index. */
         private const val PAYLOAD_BYTES =
             SlotArray.VMK_BYTES + SlotArray.BLOB_ID_BYTES + SLOT_INDEX_BYTES
 
@@ -237,6 +237,31 @@ class BiometricWrap(private val file: File) {
         private val FINGERPRINT_ONLY_FACT = R.string.bio_fact_fingerprint_only to R.string.bio_fact_fingerprint_only_body
 
         private val PASSPHRASE_FACT = R.string.bio_fact_passphrase to R.string.bio_fact_passphrase_body
+
+        /**
+         * The practice screens' three sentences that name what has been opening the vaults —
+         * `recovery-practice` D3, D4: the lead, the forgotten-it panel, and the line under Set
+         * passphrase after a cancelled confirmation. Named from [layout], so a phone that
+         * unlocks with its face is never told about a fingerprint.
+         */
+        data class PracticeWords(val lead: Int, val panel: Int, val confirm: Int)
+
+        fun practiceWords(layout: BiometricLayout): PracticeWords = when (layout) {
+            BiometricLayout.Fingerprint -> PracticeWords(
+                R.string.practice_lead_fingerprint, R.string.practice_forgot_panel_fingerprint,
+                R.string.practice_confirm_needed_fingerprint,
+            )
+            BiometricLayout.Face -> PracticeWords(
+                R.string.practice_lead_face, R.string.practice_forgot_panel_face, R.string.practice_confirm_needed_face,
+            )
+            BiometricLayout.Both -> PracticeWords(
+                R.string.practice_lead_both, R.string.practice_forgot_panel_both, R.string.practice_confirm_needed_both,
+            )
+            BiometricLayout.Unnamed, BiometricLayout.None -> PracticeWords(
+                R.string.practice_lead_biometric, R.string.practice_forgot_panel_biometric,
+                R.string.practice_confirm_needed_biometric,
+            )
+        }
 
         /**
          * The facts under the rows, heading then body, in the order they are drawn. None

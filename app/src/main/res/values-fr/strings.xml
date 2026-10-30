@@ -131,7 +131,7 @@
     <string name="kit_print_job">Kit de récupération du coffre</string>
     <string name="panic_wrong_passphrase">Cette phrase secrète n\'ouvre pas cette liste de coffres.</string>
     <string name="panic_wrong_phrase">Ce n\'est pas votre phrase de panique.</string>
-    <string name="panic_too_close">Trop proche de votre phrase secrète : une seule faute de frappe pourrait la déclencher. Choisissez autre chose.</string>
+    <string name="panic_too_close">Trop proche de votre phrase secrète : vous pourriez taper l\'une à la place de l\'autre. Choisissez une phrase qui a peu en commun avec elle.</string>
     <string name="panic_in_use">Cette phrase ouvre déjà une liste de coffres. Choisissez-en une autre.</string>
     <string name="panic_no_room">Il n\'y a pas de place pour une autre phrase sur cet appareil.</string>
     <string name="panic_cleared">Votre ancienne phrase de panique ne fonctionne plus ici, elle est donc désactivée. Définissez-en une nouvelle.</string>
@@ -165,11 +165,6 @@
     <string name="notification_channel_recording">Enregistrement</string>
     <string name="notification_recording">Enregistrement</string>
     <string name="notification_stop">Arrêter</string>
-
-    <!-- The printed recovery kit -->
-    <string name="kit_print_heading">Kit de récupération du coffre</string>
-    <string name="kit_print_line_1">Ces 24 mots ouvrent ce coffre. Conservez cette page en lieu sûr.</string>
-    <string name="kit_print_line_2">Ils ne peuvent être ni modifiés ni annulés.</string>
 
     <!-- Biometric unlock — the screen, the drawer row and the first-run step -->
     <string name="bio_name">Déverrouillage biométrique</string>
@@ -557,7 +552,7 @@
     <string name="panic_status_on">L\'identifiant de panique est activé</string>
     <string name="panic_status_off">L\'identifiant de panique est désactivé</string>
     <string name="panic_fact_survives">Cette liste de coffres est préservée</string>
-    <string name="panic_fact_survives_body">Saisie sur l\'écran de verrouillage, votre phrase de panique ouvre cette liste de coffres comme d\'habitude, et tous les coffres qui n\'y figurent pas ne s\'ouvrent plus jamais sur cet appareil.</string>
+    <string name="panic_fact_survives_body">Saisie sur l\'écran de verrouillage, votre phrase de panique ouvre cette liste de coffres comme d\'habitude, et tous les coffres qui n\'y figurent pas ne s\'ouvrent plus sur cet appareil.</string>
     <string name="panic_fact_way_in">Elle détruit l\'accès, pas les fichiers</string>
     <string name="panic_fact_way_in_body">Les autres coffres restent sur cet appareil sous forme de données illisibles. Leurs kits de récupération de 24 mots les ouvrent toujours.</string>
     <string name="panic_fact_silent">Rien ne confirme qu\'elle a fonctionné</string>
@@ -746,7 +741,7 @@
     <string name="onboarding_backup_title">Gardez une copie ailleurs</string>
     <string name="onboarding_backup_lead">Si ce téléphone est perdu ou cassé, tout le contenu du coffre disparaît avec lui, sauf s\'il existe une copie.</string>
     <string name="onboarding_panic_title">Une phrase secrète qui ferme les autres</string>
-    <string name="onboarding_panic_lead">Saisie sur l\'écran de verrouillage, elle ouvre un coffre et ferme définitivement tous les autres sur cet appareil.</string>
+    <string name="onboarding_panic_lead">Saisie sur l\'écran de verrouillage, elle ouvre un coffre et ferme tous les autres sur cet appareil.</string>
     <string name="onboarding_panic_set_up">Configurer un identifiant de panique</string>
     <string name="onboarding_fact_ordinary">Cela ressemble à un déverrouillage ordinaire</string>
     <string name="onboarding_fact_ordinary_body">Même écran, même rapidité, rien à voir. C\'est le principe : quiconque regarde n\'apprend rien.</string>
@@ -847,7 +842,7 @@
     <string name="kit_title_list">Votre kit de récupération</string>
     <string name="kit_title_vault">Kit de récupération de %1$s</string>
     <string name="kit_title_short">Kit de récupération</string>
-    <string name="kit_body_list">Ces 24 mots sont le seul moyen d\'accéder à nouveau aux coffres qu\'ouvre votre phrase secrète, si vous l\'oubliez. Notez-les dans l\'ordre et rangez le papier en lieu sûr.\n\nQuiconque possède ces mots peut ouvrir ces coffres, y compris ceux que vous ajouterez plus tard. Un coffre auquel vous donnez sa propre phrase secrète n\'en fait pas partie : il a son propre kit. Ces mots ne peuvent être ni modifiés ni annulés.</string>
+    <string name="kit_body_list">Si vous oubliez votre phrase secrète, ces 24 mots vous permettent d\'accéder à nouveau aux coffres qu\'elle ouvre. Notez-les dans l\'ordre et rangez le papier en lieu sûr.\n\nQuiconque possède ces mots peut ouvrir ces coffres, y compris ceux que vous ajouterez plus tard. Un coffre auquel vous donnez sa propre phrase secrète n\'en fait pas partie : il a son propre kit. Ces mots ne peuvent être ni modifiés ni annulés.</string>
     <string name="kit_body_list_backup">Si vous sauvegardez un jour ce coffre dans un dossier cloud, ce sont ces mots qui le restaurent, et non votre phrase secrète. Perdez cet appareil et cette page en même temps, et personne ne pourra ouvrir la sauvegarde, pas même vous.</string>
     <string name="kit_body_vault">Ces 24 mots sont le seul moyen d\'accéder à nouveau à %1$s si vous oubliez la phrase secrète que vous venez de définir. Notez-les dans l\'ordre et rangez le papier en lieu sûr.\n\nLa phrase secrète qui ouvre votre liste de coffres n\'ouvrira pas celui-ci, pas plus que le kit de récupération de cette liste. Perdez la phrase secrète et cette page, et tout le contenu de %1$s disparaît définitivement.\n\nQuiconque possède ces mots peut ouvrir %1$s. Ils ne peuvent être ni modifiés ni annulés.</string>
     <string name="kit_type_acknowledgement">Saisissez « %1$s » pour confirmer que vous les avez notés et que vous savez que la phrase secrète ne peut pas être réinitialisée.</string>
@@ -1815,4 +1810,57 @@
     <string name="licences_version">Version %1$s</string>
     <string name="licences_source">Source</string>
     <string name="licences_licence">Licence</string>
+
+    <!-- recovery-practice: passphrase practice, the kit check, Extra Security and the printed kit -->
+    <string name="practice_title">Entraînez-vous à votre phrase secrète</string>
+    <string name="practice_lead_fingerprint">Vous ouvrez vos coffres avec votre empreinte digitale. Saisissez votre phrase secrète pour ne pas l\'oublier.</string>
+    <string name="practice_lead_face">Vous ouvrez vos coffres avec votre visage. Saisissez votre phrase secrète pour ne pas l\'oublier.</string>
+    <string name="practice_lead_both">Vous ouvrez vos coffres avec votre visage ou votre empreinte digitale. Saisissez votre phrase secrète pour ne pas l\'oublier.</string>
+    <string name="practice_lead_biometric">Vous ouvrez vos coffres avec une donnée biométrique. Saisissez votre phrase secrète pour ne pas l\'oublier.</string>
+    <string name="practice_check">Vérifier</string>
+    <string name="practice_checking">Vérification…</string>
+    <string name="practice_skip">Passer</string>
+    <string name="practice_wrong">Ce n\'est pas votre phrase secrète.</string>
+    <string name="practice_forgot_panel_fingerprint">Vous l\'avez oubliée ? Votre empreinte digitale a déjà ouvert vos coffres, vous pouvez donc choisir une nouvelle phrase secrète maintenant. Vous n\'aurez pas besoin de votre kit de récupération.</string>
+    <string name="practice_forgot_panel_face">Vous l\'avez oubliée ? Votre visage a déjà ouvert vos coffres, vous pouvez donc choisir une nouvelle phrase secrète maintenant. Vous n\'aurez pas besoin de votre kit de récupération.</string>
+    <string name="practice_forgot_panel_both">Vous l\'avez oubliée ? Votre visage ou votre empreinte digitale a déjà ouvert vos coffres, vous pouvez donc choisir une nouvelle phrase secrète maintenant. Vous n\'aurez pas besoin de votre kit de récupération.</string>
+    <string name="practice_forgot_panel_biometric">Vous l\'avez oubliée ? Une donnée biométrique a déjà ouvert vos coffres, vous pouvez donc choisir une nouvelle phrase secrète maintenant. Vous n\'aurez pas besoin de votre kit de récupération.</string>
+    <string name="practice_set_new">Définir une nouvelle phrase secrète maintenant</string>
+    <string name="practice_new_title">Nouvelle phrase secrète</string>
+    <string name="practice_new_lead">Choisissez la phrase secrète qui ouvrira vos coffres désormais. L\'ancienne ne fonctionnera plus. Vos 24 mots ne changent pas.</string>
+    <string name="practice_saving">Enregistrement…</string>
+    <string name="practice_confirm_title">Confirmez votre identité</string>
+    <string name="practice_confirm_needed_fingerprint">Confirmez avec votre empreinte digitale pour enregistrer votre nouvelle phrase secrète.</string>
+    <string name="practice_confirm_needed_face">Confirmez avec votre visage pour enregistrer votre nouvelle phrase secrète.</string>
+    <string name="practice_confirm_needed_both">Confirmez avec votre visage ou votre empreinte digitale pour enregistrer votre nouvelle phrase secrète.</string>
+    <string name="practice_confirm_needed_biometric">Confirmez avec votre donnée biométrique pour enregistrer votre nouvelle phrase secrète.</string>
+    <string name="practice_changed">Phrase secrète modifiée. Votre kit de récupération fonctionne toujours.</string>
+    <string name="kit_check_title">Vérifiez votre copie</string>
+    <string name="kit_check_lead">Saisissez ces mots depuis votre papier, pas de mémoire.</string>
+    <string name="kit_check_action">Vérifier les mots</string>
+    <string name="kit_check_see_again">Revoir les mots</string>
+    <string name="kit_check_mismatch">Ce n\'est pas le mot %1$d de votre kit.</string>
+    <string name="drawer_extra_security">Sécurité renforcée</string>
+    <string name="drawer_extra_security_on">Entraînement à la phrase secrète et vérification du kit activés</string>
+    <string name="drawer_extra_security_off">Désactivée. Ni entraînement à la phrase secrète ni vérification du kit</string>
+    <string name="kit_print_title">Kit de récupération</string>
+    <string name="kit_print_for_list">Pour : votre liste de coffres</string>
+    <string name="kit_print_for_vault">Pour : %1$s</string>
+    <string name="kit_print_date">Imprimé le %1$s</string>
+    <string name="kit_print_anyone_list">Quiconque possède ces mots peut ouvrir votre liste de coffres. Ils ne peuvent être ni modifiés ni annulés.</string>
+    <string name="kit_print_anyone_vault">Quiconque possède ces mots peut ouvrir %1$s. Ils ne peuvent être ni modifiés ni annulés.</string>
+    <string name="kit_print_how_heading">Comment utiliser cette page</string>
+    <string name="kit_print_list_step_1">Ouvrez l\'application et allez à son écran de déverrouillage.</string>
+    <string name="kit_print_list_step_2">Touchez « %1$s ».</string>
+    <string name="kit_print_list_step_3">Saisissez les 24 mots dans l\'ordre, puis choisissez une nouvelle phrase secrète.</string>
+    <string name="kit_print_vault_step_1">Ouvrez l\'application et déverrouillez votre liste de coffres.</string>
+    <string name="kit_print_vault_step_2">Ouvrez le menu et touchez « %1$s ».</string>
+    <string name="kit_print_vault_step_3">Saisissez les 24 mots dans l\'ordre, puis choisissez une nouvelle phrase secrète pour %1$s.</string>
+    <string name="kit_print_backups">Ces mots ouvrent aussi vos sauvegardes.</string>
+    <string name="kit_print_keep_heading">Où la conserver</string>
+    <string name="kit_print_keep_body">Dans un endroit sûr et privé, par exemple avec votre passeport ou d\'autres papiers importants. Ne la photographiez pas et ne la gardez pas sur votre téléphone. Si vous perdez cette page et votre phrase secrète, personne ne pourra récupérer vos coffres.</string>
+    <plurals name="practice_right">
+        <item quantity="one">C\'est bien ça. Prochain entraînement dans %1$d jour.</item>
+        <item quantity="other">C\'est bien ça. Prochain entraînement dans %1$d jours.</item>
+    </plurals>
 </resources>

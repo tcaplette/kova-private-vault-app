@@ -25,6 +25,10 @@ import android.content.Context
  * vaults, on the one preference whose effect a person holding the phone can already
  * see. **P2-23's appearance choice is the fifth** and makes the trade once more: one
  * name for the device, naming no vault, no item and no count of either.
+ * **`recovery-practice`'s [ExtraSecurity] switch and [PassphrasePractice]'s schedule**
+ * are kept here on the same terms: one boolean, and one due time, one step and one
+ * set time, for the device — naming no vault, no item and no count of either. The
+ * schedule says a fingerprint is enrolled, which `vault.bio` already says.
  */
 object GridPreference {
 
@@ -81,7 +85,7 @@ object GridPreference {
         VaultDestination.Memos -> "view_memos"
     }
 
-    private fun prefs(context: Context) =
+    internal fun prefs(context: Context) =
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     /** The stored column count, or null if the user has never chosen one. */

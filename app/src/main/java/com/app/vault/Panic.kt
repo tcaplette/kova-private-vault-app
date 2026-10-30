@@ -1,5 +1,8 @@
 package com.app.vault
 
+import java.nio.ByteBuffer
+import java.nio.charset.CodingErrorAction
+
 /**
  * The panic phrase — P2-3, reshaped by `panic-phrase`.
  *
@@ -25,36 +28,82 @@ package com.app.vault
 object Panic {
 
     /**
-     * Whether [a] and [b] are equal or one single-character insertion, deletion or
-     * substitution apart — the typo distance `panic-pin` forbids between a panic phrase
-     * and the passphrase entered beside it.
+     * Whether [a] and [b] are too alike to sit side by side — the distance `panic-pin`
+     * requires between a panic phrase and the passphrase entered beside it.
      *
-     * Byte-wise, for P1-10's reason: the passphrase reaches the app as bytes and stops
-     * being a `String` at the earliest boundary. A multi-byte character edited is
-     * several bytes edited, so this is stricter than a character count, never looser.
+     * **A typo is not the realistic accident.** A single-character slip cannot reach a
+     * phrase of fifteen code points or more that the user chose separately. Typing the
+     * wrong one of two *similar* phrases from memory can: `blue river morning 42` beside
+     * `blue river morning 43!`, or the same words with different capitals. So both are
+     * compared without case and with every run of whitespace read as one space, and they
+     * are too alike when the edit distance between them is under a third of the longer
+     * one's length — never less than two, so one edit is always refused.
+     *
+     * Compared in code points, decoded straight from the bytes, so a multi-byte character
+     * counts once. Every buffer holding either one is zeroed before this returns, for
+     * P1-10's reason: the passphrase stopped being a `String` at the earliest boundary
+     * and must not become one here.
      */
-    fun withinOneEdit(a: ByteArray, b: ByteArray): Boolean {
-        if (a.size == b.size) {
-            var differences = 0
-            for (i in a.indices) if (a[i] != b[i] && ++differences > 1) return false
-            return true
+    fun tooSimilar(a: ByteArray, b: ByteArray): Boolean {
+        val x = normalised(a)
+        val y = normalised(b)
+        try {
+            val longer = maxOf(x.size, y.size)
+            val threshold = maxOf(2, (longer + 2) / 3)
+            return editDistance(x, y) < threshold
+        } finally {
+            x.fill(0)
+            y.fill(0)
         }
-        val (short, long) = if (a.size < b.size) a to b else b to a
-        if (long.size - short.size != 1) return false
-        // One insertion into [short] gives [long]: skip at most one byte of [long].
-        var i = 0
-        var j = 0
-        var skipped = false
-        while (i < short.size) {
-            if (short[i] == long[j]) {
-                i++
-                j++
-            } else {
-                if (skipped) return false
-                skipped = true
-                j++
+    }
+
+    /** Lower-cased code points, each whitespace run one space, none at either end. */
+    private fun normalised(bytes: ByteArray): IntArray {
+        val decoder = Charsets.UTF_8.newDecoder()
+            .onMalformedInput(CodingErrorAction.REPLACE)
+            .onUnmappableCharacter(CodingErrorAction.REPLACE)
+        val chars = decoder.decode(ByteBuffer.wrap(bytes))
+        val buffer = chars.array()
+        val out = IntArray(chars.remaining())
+        var n = 0
+        try {
+            var i = chars.position()
+            val end = chars.limit()
+            var pendingSpace = false
+            while (i < end) {
+                val cp = Character.codePointAt(buffer, i, end)
+                i += Character.charCount(cp)
+                if (Character.isWhitespace(cp) || Character.isSpaceChar(cp)) {
+                    pendingSpace = n > 0
+                    continue
+                }
+                if (pendingSpace) {
+                    out[n++] = ' '.code
+                    pendingSpace = false
+                }
+                out[n++] = Character.toLowerCase(cp)
             }
+            return out.copyOf(n)
+        } finally {
+            buffer.fill('\u0000')
+            out.fill(0)
         }
-        return true
+    }
+
+    /** Levenshtein distance over code points, two rows. */
+    private fun editDistance(x: IntArray, y: IntArray): Int {
+        var previous = IntArray(y.size + 1) { it }
+        var current = IntArray(y.size + 1)
+        for (i in 1..x.size) {
+            current[0] = i
+            for (j in 1..y.size) {
+                val substitution = previous[j - 1] + if (x[i - 1] == y[j - 1]) 0 else 1
+                current[j] = minOf(previous[j] + 1, current[j - 1] + 1, substitution)
+            }
+            val swap = previous
+            previous = current
+            current = swap
+        }
+        return previous[y.size]
     }
 }

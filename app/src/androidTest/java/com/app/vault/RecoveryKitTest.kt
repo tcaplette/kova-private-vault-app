@@ -423,7 +423,7 @@ class RecoveryKitTest {
                     as android.print.PrintManager
                 val job = pm.print(
                     "Vault recovery kit",
-                    RecoveryKitPrintAdapter(activity, List(24) { "${it + 1}. abandon" }),
+                    RecoveryKitPrintAdapter(activity, List(24) { "abandon" }, KitOwner.List(), System.currentTimeMillis()),
                     null
                 )
                 assertNotNull("FLAG_SECURE blocked the print job outright", job)
@@ -435,8 +435,8 @@ class RecoveryKitTest {
 
     /** The page itself: real PDF bytes carrying all 24 words. */
     @Test fun theKitRendersToASinglePagePdf() {
-        val words = List(24) { "${it + 1}. abandon" }
-        val pdf = RecoveryKitPrintAdapter.render(ctx, words, 595, 842)   // A4 at 72 dpi
+        val words = List(24) { "abandon" }
+        val pdf = RecoveryKitPrintAdapter.render(ctx, words, KitOwner.List(), System.currentTimeMillis(), 595, 842)   // A4 at 72 dpi
 
         assertTrue("must be a PDF", pdf.take(4).toByteArray().contentEquals("%PDF".toByteArray()))
         assertTrue("must not be empty", pdf.size > 500)
@@ -608,5 +608,78 @@ class RecoveryKitTest {
         )
         assertEquals(1, VaultKeyringSession.listKitViewsLeft())
         assertEquals(1, VaultKeyringSession.vaults().single { it.position == position }.kitViewsUsed)
+    }
+
+    // --- `recovery-practice` D4: a new list passphrase from the open session ----------
+
+    /** [threeKeyrings] with A open and a panic phrase on it. Returns A's kit and home slot. */
+    private fun openWithPanic(): Pair<String, Int> {
+        val (phrase, home) = threeKeyrings()
+        assertTrue(vault.unlock(pass(GOOD)).opened)
+        assertEquals(VaultLifecycle.PanicResult.DONE, vault.setPanic(pass(GOOD), pass(PANIC)))
+        return phrase to home
+    }
+
+    @Test fun aResealChangesOnlyTheHomeSlotAndTheNewPassphraseOpensTheList() {
+        val (phrase, home) = openWithPanic()
+        val panic = VaultKeyringSession.panicSlot()
+        val wrap = VaultKeyringSession.wrapPayload()!!
+        val before = slotsFile.readBytes()
+
+        val outcome = vault.resealListPassphrase(pass(REPLACEMENT))
+        assertTrue(outcome.opened)
+        assertEquals(null, outcome.refusal)
+        val after = slotsFile.readBytes()
+        assertArrayEquals(
+            "install salt and KDF header",
+            before.copyOfRange(0, SlotArray.SLOTS_OFFSET), after.copyOfRange(0, SlotArray.SLOTS_OFFSET),
+        )
+        for (i in 0 until SlotArray.SLOT_COUNT) {
+            val same = slotRegion(before, i).contentEquals(slotRegion(after, i))
+            if (i == home) assertFalse("the home slot must be resealed", same)
+            else assertTrue("slot $i must be untouched (panic is $panic)", same)
+        }
+        VaultLifecycle.lockNow()
+
+        assertTrue("the new passphrase opens the list", opens(REPLACEMENT))
+        assertFalse("the old one opens nothing", opens(GOOD))
+        assertTrue("the decoy survives", opens(DECOY))
+        assertTrue("the other list survives", opens(OTHER))
+
+        assertTrue("the biometric wrap's payload still opens the list", VaultKeyringSession.resolveFromWrap(store, wrap))
+        assertEquals(home, VaultKeyringSession.homeSlot())
+        VaultLifecycle.lockNow()
+
+        assertTrue("the kit still recovers it", vault.recover(mnemonic, phrase, pass(GOOD)).opened)
+        VaultLifecycle.lockNow()
+        assertTrue(opens(GOOD))
+    }
+
+    @Test fun aResealToAPassphraseInUseIsRefusedAndNothingIsWritten() {
+        openWithPanic()
+        val before = slotsFile.readBytes()
+        listOf(DECOY, OTHER, PANIC).forEach { taken ->
+            val outcome = vault.resealListPassphrase(pass(taken))
+            assertFalse(taken, outcome.opened)
+            assertEquals(taken, VaultLifecycle.Refusal.PASSPHRASE_IN_USE, outcome.refusal)
+            assertArrayEquals("the slot file is unchanged after $taken", before, slotsFile.readBytes())
+        }
+        assertTrue("the list stays open", VaultKeyringSession.isOpen)
+        VaultLifecycle.lockNow()
+        assertTrue(opens(GOOD))
+    }
+
+    @Test fun aResealZeroesThePassphraseAndRefusesWithNoListOpen() {
+        assertTrue(vault.create(pass(GOOD)).opened)
+        val secret = pass(REPLACEMENT)
+        assertTrue(vault.resealListPassphrase(secret).opened)
+        assertArrayEquals(ByteArray(secret.size), secret)
+        VaultLifecycle.lockNow()
+
+        val before = slotsFile.readBytes()
+        val locked = pass(OTHER)
+        assertFalse("no keyring open, no write", vault.resealListPassphrase(locked).opened)
+        assertArrayEquals(ByteArray(locked.size), locked)
+        assertArrayEquals(before, slotsFile.readBytes())
     }
 }

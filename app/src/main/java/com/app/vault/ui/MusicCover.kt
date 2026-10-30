@@ -170,11 +170,18 @@ fun MusicCover(
     holdArea: Int? = null,
     /** D2. A 2-second hold in [holdArea]: the activity brings up the dots. */
     onHold: () -> Unit = {},
+    /**
+     * `recents-shows-identity` D3. Drawn as the recent-apps card's picture: the library and
+     * the stored last track, paused, read for display. No player is built, nothing plays,
+     * nothing is written, and there is no trigger, no hold and no system-bar change — this
+     * copy sits beneath the live screen for the whole session.
+     */
+    still: Boolean = false,
 ) {
     MusicTheme {
         // Live only — `persist` is false exactly when setup hosts the cover. The top of the
         // window is then the vault's bar, and the cover's icons over it went dark-on-dark.
-        if (persist) CoverSystemBars()
+        if (persist && !still) CoverSystemBars()
         Box(
             modifier
                 .fillMaxSize()
@@ -182,13 +189,14 @@ fun MusicCover(
         ) {
             MusicScreen(
                 hasAccess = hasAccess,
-                onTrigger = onTrigger,
-                persist = persist,
-                onProgress = onProgress,
-                showDots = showDots,
-                dotsError = dotsError,
-                holdArea = holdArea,
-                onHold = onHold,
+                onTrigger = if (still) ({}) else onTrigger,
+                persist = persist && !still,
+                onProgress = onProgress.takeIf { !still },
+                showDots = showDots && !still,
+                dotsError = dotsError && !still,
+                holdArea = holdArea.takeIf { !still },
+                onHold = if (still) ({}) else onHold,
+                still = still,
             )
         }
     }
@@ -223,8 +231,9 @@ private fun MusicScreen(
     dotsError: Boolean,
     holdArea: Int?,
     onHold: () -> Unit,
+    still: Boolean,
 ) {
-    val player = rememberMusicPlayer(persist)
+    val player = rememberMusicPlayer(persist, still)
     var tab by remember { mutableStateOf(Tab.Tracks) }
     var browse by remember { mutableStateOf<Browse?>(null) }
     var expanded by remember { mutableStateOf(false) }

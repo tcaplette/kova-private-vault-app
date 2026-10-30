@@ -361,18 +361,24 @@ fun RecoveryKitStepScreen(
     words: List<String>,
     onPrint: () -> Unit,
     onContinue: () -> Unit,
+    /**
+     * `recovery-practice` D5. Back from the kit check: the acknowledgement was typed for these
+     * words, so it starts typed. A resumed step (`first-run-onboarding`) passes false and starts
+     * empty.
+     */
+    acknowledged: Boolean = false,
 ) {
-    var typed by remember { mutableStateOf("") }
     // `app-languages`: the phrase in the app's language, and the comparison reads the same one.
     val phrase = stringResource(ACKNOWLEDGEMENT)
-    val acknowledged = typed.trim() == phrase
+    var typed by remember { mutableStateOf(if (acknowledged) phrase else "") }
+    val ready = typed.trim() == phrase
 
     OnboardingScaffold(
         title = stringResource(R.string.onboarding_kit_title),
         lead = stringResource(R.string.onboarding_kit_lead),
         icon = R.drawable.ic_vpn_key,
         onContinue = onContinue,
-        continueEnabled = acknowledged,
+        continueEnabled = ready,
         secondaryLabel = stringResource(R.string.kit_print),
         onSecondary = onPrint,
     ) {

@@ -10,7 +10,7 @@ import java.io.File
  *
  * A bundled sample pack is the worst option available for a decoy: identical bytes
  * on every install, so anyone who has downloaded the app can prove a vault is a
- * decoy by hashing its contents — and P3-1 open-sources the crypto core, so
+ * decoy by hashing its contents — and P3-1 publishes the crypto core's source, so
  * "anyone" is the right word. The items in a decoy are the user's own photographs,
  * because those are the only plausible ones, and this asserts the alternative never
  * quietly arrives.

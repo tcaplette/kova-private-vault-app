@@ -60,6 +60,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.focusGroup
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.zIndex
 import androidx.compose.ui.graphics.toArgb
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
@@ -72,6 +80,12 @@ import android.print.PrintManager
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.lifecycle.lifecycleScope
+import com.app.vault.ui.KitCheckFraming
+import com.app.vault.ui.KitCheckScreen
+import com.app.vault.ui.PassphrasePracticeScreen
+import com.app.vault.ui.PracticeNewPassphraseScreen
+import com.app.vault.ui.PracticeStage
+import com.app.vault.ui.PracticeState
 import com.app.vault.ui.FolderCoverScreen
 import com.app.vault.ui.FrameOutcome
 import com.app.vault.ui.FolderDeleteScreen
@@ -325,6 +339,15 @@ class MainActivity : FragmentActivity() {
     private val thumbs by lazy { ThumbnailStore(blobs) }
     private val lifecycleOps by lazy { VaultLifecycle(File(filesDir, "vault.slots"), blobs) }
     private val bio by lazy { BiometricWrap(this) }
+
+    /** `recovery-practice` D1. The schedule exists only beside a wrap. */
+    private val practice by lazy { PassphrasePractice.of(this) }
+
+    /** Every wrap removal clears the practice schedule with it — `recovery-practice` 1.3. */
+    private fun disableWrap() {
+        bio.disable()
+        practice.clear()
+    }
 
     private var index by mutableStateOf(MetadataDb.empty())
 
@@ -670,6 +693,14 @@ class MainActivity : FragmentActivity() {
      */
     private var coverShowing by mutableStateOf(false)
     private var coverGrant by mutableStateOf(true)
+
+    /**
+     * `recents-shows-identity` D1, D2. The user chose to leave — Home, Recents, another app —
+     * and the identity picture is raised over whatever is on screen, so the recent-apps card
+     * shows the identity. Set in [onUserLeaveHint], cleared in [onStart] and [onResume] after
+     * `FLAG_SECURE` is back. Plain state: nothing about it survives the process.
+     */
+    private var leaving by mutableStateOf(false)
 
     // --- `cover-hold-dots`: the pattern covers' shown dots ---------------------------------
 
@@ -1150,6 +1181,29 @@ class MainActivity : FragmentActivity() {
      */
     private var recoveryKit by mutableStateOf<List<String>?>(null)
     private var recovering by mutableStateOf(false)
+
+    /**
+     * `recovery-practice` D5. The kit check is drawn in place of the creation kit on screen —
+     * whichever one it is, since only one is ever up. Memory only; a lock drops it, so a
+     * resumed kit shows its words with an empty acknowledgement.
+     */
+    private var kitChecking by mutableStateOf(false)
+
+    /** D5. Back from the check: the words reopen with the acknowledgement already typed. */
+    private var kitAcknowledged by mutableStateOf(false)
+
+    /**
+     * D6. The held kit on screen is the decoy's — a list of its own, printed as one under the
+     * decoy's name. Carried through a lock in the held kit's status field.
+     */
+    private var recoveryKitDecoy by mutableStateOf(false)
+
+    /** `recovery-practice` D3. The practice screens are up, after a due fingerprint unlock. */
+    private var practiceShowing by mutableStateOf(false)
+    private val practiceState = PracticeState()
+
+    /** D7. Read once at start and on each toggle. */
+    private var extraSecurityOn by mutableStateOf(true)
     private var recoveryFailed by mutableStateOf(false)
 
     /** P1-14. */
@@ -2452,6 +2506,7 @@ class MainActivity : FragmentActivity() {
         }
         // P2-20, likewise. Off until the user says otherwise.
         faceDownOn = GridPreference.faceDown(this)
+        extraSecurityOn = ExtraSecurity.isOn(this)
         faceDownLockAfter = GridPreference.faceDownLockAfter(this)
         faceDownAvailable = FaceDownLock.available(this)
         // P2-22. **Admit before reading.** Every alias's component state is derived
@@ -2470,6 +2525,8 @@ class MainActivity : FragmentActivity() {
         coverGrant = coverGranted(identity.cover)
         val hadWrap = bio.hasRecord()
         bioEnabled = bio.isEnabled()
+        // `isEnabled` removes a half-state wrap on its own; the schedule goes with it.
+        if (!bioEnabled) practice.clear()
         warnings = RuntimeWarnings.check(this).map { it.message }
         // A wrap that was on disk and is not usable was destroyed by an enrolment
         // change, whether the platform deleted the key or merely invalidated it.
@@ -2501,7 +2558,9 @@ class MainActivity : FragmentActivity() {
         }
         setLocalizedContent {
             VaultTheme(appearance) {
-                Surface(color = VaultColors.Surface) {
+                // `recents-shows-identity` D2. The live tree, and the identity picture beside it.
+                Box(Modifier.fillMaxSize()) {
+                Surface(color = VaultColors.Surface, modifier = Modifier.fillMaxSize()) {
                     // P2-20. `keyringOpen` and `unlocked` are already Compose state,
                     // so lock, unlock and the toggle all re-run this with no plumbing
                     // of their own. Both, because an unlock opens the keyring onto the
@@ -3214,13 +3273,27 @@ class MainActivity : FragmentActivity() {
                                         )
                                         // D4. The kit at creation, unchanged, at the last position. Its own
                                         // Continue, behind the typed acknowledgement, ends the flow.
-                                        NewVaultStep.Kit -> RecoveryKitScreen(
-                                            words = kit.orEmpty(),
-                                            onPrint = ::printRecoveryKit,
-                                            vaultName = recoveryKitVault,
-                                            createdViewsLeft = recoveryKitCreationLeft,
-                                            onContinue = ::finishVaultFlow,
-                                        )
+                                        // `recovery-practice` D5. Then the check, while Extra Security is on.
+                                        NewVaultStep.Kit -> if (kitChecking) {
+                                            KitCheckScreen(
+                                                mnemonic = mnemonic,
+                                                words = kit.orEmpty(),
+                                                onCorrect = { kitPassed(::finishVaultFlow) },
+                                                onSeeWords = ::kitSeeWords,
+                                                framing = KitCheckFraming.Standalone,
+                                            )
+                                        } else {
+                                            RecoveryKitScreen(
+                                                words = kit.orEmpty(),
+                                                onPrint = {
+                                                    printRecoveryKit(kit.orEmpty(), KitOwner.Vault(recoveryKitVault ?: vaultName))
+                                                },
+                                                vaultName = recoveryKitVault,
+                                                createdViewsLeft = recoveryKitCreationLeft,
+                                                acknowledged = kitAcknowledged,
+                                                onContinue = { kitContinue(gated = true, then = ::finishVaultFlow) },
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -3239,15 +3312,25 @@ class MainActivity : FragmentActivity() {
                                 )
                             }
                         }
+                        // `recovery-practice` D5. A creation-form kit here is checked too, while
+                        // Extra Security is on; a later view never is.
+                        kit != null && onboardingStep == null && kitChecking && recoveryKitStatus == null -> KitCheckScreen(
+                            mnemonic = mnemonic,
+                            words = kit,
+                            onCorrect = { kitPassed(::putAwayCreationKit) },
+                            onSeeWords = ::kitSeeWords,
+                            framing = KitCheckFraming.Standalone,
+                        )
                         kit != null && onboardingStep == null -> RecoveryKitScreen(
                             words = kit,
-                            onPrint = ::printRecoveryKit,
+                            onPrint = { printRecoveryKit(kit, heldKitOwner()) },
                             // `per-vault-passphrases`. Null for the keyring's own kit,
                             // which is every path that existed before this one.
                             vaultName = recoveryKitVault,
                             // `recovery-kit-three-views`. A later view: Done, and back, close it.
                             status = recoveryKitStatus,
                             createdViewsLeft = recoveryKitCreationLeft,
+                            acknowledged = kitAcknowledged,
                             // `first-run-onboarding`. A kit the lock held is drawn
                             // here ahead of a paused flow, and putting it away is
                             // what resumes the flow. `resumeOnboarding` returns
@@ -3258,11 +3341,7 @@ class MainActivity : FragmentActivity() {
                                 if (recoveryKitStatus != null) {
                                     closeKitView()
                                 } else {
-                                    recoveryKit = null
-                                    recoveryKitVault = null
-                                    recoveryKitCreationLeft = VaultKeyring.KIT_VIEWS
-                                    loadIndex()
-                                    resumeOnboarding()
+                                    kitContinue(gated = true, then = ::putAwayCreationKit)
                                 }
                             },
                         )
@@ -3417,11 +3496,20 @@ class MainActivity : FragmentActivity() {
                         // The decoy's own 24 words, named as the decoy's —
                         // `RecoveryKitScreen`'s `vaultName` form. Ahead of the frame
                         // and inside the flow: see `decoyShowingKit`.
+                        decoying && decoyShowingKit && kitChecking -> KitCheckScreen(
+                            mnemonic = mnemonic,
+                            words = decoyKitWords.orEmpty(),
+                            onCorrect = { kitPassed(::returnFromDecoy) },
+                            onSeeWords = ::kitSeeWords,
+                            framing = KitCheckFraming.Standalone,
+                        )
                         decoying && decoyShowingKit -> RecoveryKitScreen(
                             words = decoyKitWords.orEmpty(),
-                            onPrint = ::printRecoveryKit,
+                            // D6. The decoy is a list of its own, recovered from the unlock screen.
+                            onPrint = { printRecoveryKit(decoyKitWords.orEmpty(), KitOwner.List(decoyName.trim())) },
                             vaultName = decoyName.trim(),
-                            onContinue = ::returnFromDecoy,
+                            acknowledged = kitAcknowledged,
+                            onContinue = { kitContinue(gated = true, then = ::returnFromDecoy) },
                         )
                         decoying -> DecoyFrame(
                             step = decoyStep,
@@ -3941,8 +4029,13 @@ class MainActivity : FragmentActivity() {
                         }
                         onboardingStep != null -> OnboardingFrame(
                             step = onboardingStep!!,
-                            onBack = onboardingStep!!.previousStep()
-                                ?.let { prev -> { if (!busy) advanceOnboarding(prev) } },
+                            // `recovery-practice` D5. The check's Back is the words, still on step 2.
+                            onBack = if (onboardingStep == Onboarding.Step.Kit && kitChecking) {
+                                ::kitSeeWords
+                            } else {
+                                onboardingStep!!.previousStep()
+                                    ?.let { prev -> { if (!busy) advanceOnboarding(prev) } }
+                            },
                             // `first-vault-naming` D5. Drawn, and inert, while the vault is being written.
                             backEnabled = !busy,
                         ) {
@@ -3978,6 +4071,27 @@ class MainActivity : FragmentActivity() {
                             warnings = warnings + newerVersionWarning() + indexWarnings(),
                             onRecover = { recovering = true },
                         )
+                        // `recovery-practice` D3. After a fingerprint unlock that was due a
+                        // check, in place of the list and before it is drawn.
+                        practiceShowing -> when (practiceState.stage) {
+                            PracticeStage.Check -> PassphrasePracticeScreen(
+                                state = practiceState,
+                                words = BiometricWrap.practiceWords(biometricLayout()),
+                                onCheck = ::practiceCheck,
+                                onSkip = ::practiceSkip,
+                                onSetNew = {
+                                    practiceState.draft.clear()
+                                    practiceState.confirmNeeded = false
+                                    practiceState.stage = PracticeStage.NewPassphrase
+                                },
+                            )
+                            PracticeStage.NewPassphrase -> PracticeNewPassphraseScreen(
+                                state = practiceState,
+                                words = BiometricWrap.practiceWords(biometricLayout()),
+                                onSave = ::practiceSave,
+                                onBack = ::practiceBack,
+                            )
+                        }
                         // `intruder-captures-at-home`. The Intruder capture screen, its viewer and
                         // the move, over the vault list they were opened from. Below the lock
                         // screen, so a lock landing on any of them shows the lock screen; the
@@ -4571,20 +4685,96 @@ class MainActivity : FragmentActivity() {
                         contentAlignment = Alignment.BottomCenter,
                     ) {
                         SnackbarHost(snackbars) { data ->
-                            val visuals = data.visuals as LanguageSnack
+                            // The language snackbar carries its lines with their locales; a plain
+                            // one (`recovery-practice`'s, [showMessage]) is its message alone.
+                            val language = data.visuals as? LanguageSnack
                             Snackbar(
-                                action = {
-                                    TextButton(
-                                        onClick = data::performAction,
-                                        colors = ButtonDefaults.textButtonColors(contentColor = VaultColors.Primary),
-                                    ) { Text(visuals.action) }
+                                action = language?.let { visuals ->
+                                    {
+                                        TextButton(
+                                            onClick = data::performAction,
+                                            colors = ButtonDefaults.textButtonColors(contentColor = VaultColors.Primary),
+                                        ) { Text(visuals.action) }
+                                    }
                                 },
                                 containerColor = VaultColors.SurfaceContainerHigh,
                                 contentColor = VaultColors.OnSurface,
-                            ) { Text(visuals.text) }
+                            ) {
+                                if (language != null) Text(language.text) else Text(data.visuals.message)
+                            }
                         }
                     }
                 }
+                IdentityLayer()
+                }
+            }
+        }
+    }
+
+    /**
+     * `recents-shows-identity` D2–D5. The identity picture: composed and laid out for the
+     * whole session, invisible and beneath the live screen, and raised — instantly, with no
+     * motion of its own — when the user leaves, so the recent-apps card shows the identity.
+     *
+     * | Identity and state       | Draws                              |
+     * |--------------------------|------------------------------------|
+     * | A cover is worn          | that cover, still                  |
+     * | No cover, a vault exists | the unlock screen, still, empty    |
+     * | No cover, no vault yet   | the welcome screen                 |
+     *
+     * Kept ready rather than built at leave time, so raising it is two modifiers and no
+     * composition or library read stands between the leave and the committed frame.
+     *
+     * **Not composed while the live screen is the music player or the recorder.** A second
+     * copy would build a second player and read the library twice for nothing; the live cover,
+     * its dots taken down by [onUserLeaveHint], is the picture. The calculator and the unlock
+     * screen keep their copy even while live, so a partly typed sequence or passphrase never
+     * reaches the card — and the live one is still holding it when the user comes back.
+     *
+     * Inert in both states: every pointer event is consumed before anything inside it sees
+     * one, it is cleared from the semantics tree, and focus cannot enter it.
+     */
+    @Composable
+    private fun IdentityLayer() {
+        val raised = leaving
+        // D4. The frame that raises the picture is the one the flag comes off after.
+        if (raised) SideEffect { liftSecureAfterCommit() }
+        val cover = identity.cover
+        if (coverShowing && (cover == Cover.MusicPlayer || cover == Cover.VoiceRecorder)) return
+        Box(
+            Modifier
+                .fillMaxSize()
+                .zIndex(if (raised) 1f else -1f)
+                .graphicsLayer { alpha = if (raised) 1f else 0f }
+                .pointerInput(Unit) {
+                    awaitPointerEventScope {
+                        while (true) {
+                            awaitPointerEvent(PointerEventPass.Initial).changes.forEach { it.consume() }
+                        }
+                    }
+                }
+                .clearAndSetSemantics {}
+                .focusProperties {
+                    canFocus = false
+                    onEnter = { cancelFocusChange() }
+                }
+                .focusGroup(),
+        ) {
+            when {
+                cover == Cover.Calculator -> CalculatorCover(onTrigger = {}, still = true)
+                cover == Cover.MusicPlayer -> MusicCover(hasAccess = coverGrant, onTrigger = {}, still = true)
+                cover == Cover.VoiceRecorder -> RecorderCover(hasPermission = coverGrant, onTrigger = {}, still = true)
+                hasVault -> VaultUnlockScreen(
+                    onUnlock = {},
+                    busy = false,
+                    failed = false,
+                    onBiometric = if (bioEnabled) ({}) else null,
+                    biometricLabel = bioButtonLabel,
+                    biometricFace = biometricLayout() == BiometricLayout.Face,
+                    onRecover = {},
+                    still = true,
+                )
+                else -> OnboardingWelcomeScreen(onBegin = {}, onRestore = {}, onLanguage = {})
             }
         }
     }
@@ -4750,8 +4940,10 @@ class MainActivity : FragmentActivity() {
         // `recovery-kit-three-views`. A later view's count rides between the words and the
         // name, empty at creation, so it comes back in the form it left in.
         // `vault-passphrase-manage`: a creation kit with fewer than three views rides as "c<left>".
+        // `recovery-practice` D6: a decoy's kit rides as "d", so it prints as the list it is.
         val status = recoveryKitStatus?.takeIf { recoveryKit != null }?.left?.toString()
             ?: recoveryKitCreationLeft.takeIf { recoveryKit != null && it < VaultKeyring.KIT_VIEWS }?.let { "c$it" }
+            ?: "d".takeIf { recoveryKit == null || recoveryKitDecoy }
             ?: ""
         val plain = (words.joinToString(" ") + "\n" + status + "\n" + name.orEmpty()).toByteArray(Charsets.UTF_8)
         try {
@@ -4783,6 +4975,7 @@ class MainActivity : FragmentActivity() {
             recoveryKitCreationLeft = status.removePrefix("c").takeIf { status.startsWith("c") }?.toIntOrNull()
                 ?: VaultKeyring.KIT_VIEWS
             recoveryKitVault = text.substring(cut2 + 1).ifEmpty { null }
+            recoveryKitDecoy = status == "d"
             recoveryKit = text.substring(0, cut).split(' ')
             heldKit = null
         } finally {
@@ -4876,6 +5069,9 @@ class MainActivity : FragmentActivity() {
      */
     private fun dismissTop() {
         when {
+            // `recovery-practice` D5. Whichever creation kit the check stands in for, Back is
+            // its words, with the acknowledgement kept and no view spent.
+            kitChecking -> kitSeeWords()
             // The kit at creation is deliberately absent. Dismissing it by gesture before
             // it was written down would cost one of only three later views.
             // Back leaves the activity from both, which is what a gate should do.
@@ -4883,6 +5079,9 @@ class MainActivity : FragmentActivity() {
             // `recovery-kit-three-views`, D4. A later view is different: back is Done,
             // because the view was spent when the words appeared.
             recoveryKit != null && recoveryKitStatus != null -> closeKitView()
+            // `recovery-practice` D3, D4. Back on the practice screen is Skip; on the new
+            // passphrase it is the practice screen. Below a kit drawn over it.
+            practiceShowing && recoveryKit == null -> practiceBack()
             // `new-vault-setup-flow`, in the `when`'s position: drawn above the kit branch.
             // Back is a step; on a first step it is Cancel; on the flow's own kit it does
             // nothing — the kit's rule, and the flow does not leave the app either.
@@ -5323,7 +5522,12 @@ class MainActivity : FragmentActivity() {
                 // right place when the flow was started without one open.
                 runOnUiThread {
                     busy = false
-                    unlocked = true
+                    // The list is the keyring open with no vault: `unlocked = true` drew the
+                    // grid over the decoy's index, which the lock had not cleared from screen.
+                    keyringOpen = true
+                    unlocked = false
+                    index = MetadataDb.empty()
+                    open = null
                     vaultEntries = entries
                     if (fromOnboarding) completeOnboardingStep()
                 }
@@ -6255,8 +6459,53 @@ class MainActivity : FragmentActivity() {
         hideCoverDots()
     }
 
+    /**
+     * `recents-shows-identity` D1. The user is leaving by choice, so the identity picture goes
+     * up, and the flag comes off once a frame of it is committed ([IdentityLayer]).
+     *
+     * Not while a result this app launched is outstanding: the photo picker, the file chooser
+     * and a permission request each come back to the screen they left, and a cover drawn over
+     * it while it animates out would flash at the user. The dots come down here as well as in
+     * [onStop], because a live cover is its own picture and the card must not carry them.
+     */
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        if (AutoLock.isAwaitingResult) return
+        leaving = true
+        hideCoverDots()
+    }
+
+    /**
+     * `recents-shows-identity` D4. The flag back on, then the picture down — in that order,
+     * so no frame of the live screen is ever drawn with the flag off. [onStart] and
+     * [onResume] both, because a cancelled leave gesture resumes without stopping.
+     */
+    private fun returnFromLeave() {
+        window.setFlags(
+            android.view.WindowManager.LayoutParams.FLAG_SECURE,
+            android.view.WindowManager.LayoutParams.FLAG_SECURE,
+        )
+        leaving = false
+    }
+
+    /**
+     * `recents-shows-identity` D4. Called by the composition that raised the picture: once
+     * the frame holding it is submitted, the flag comes off so Android records it for the
+     * card. A return that landed first wins, and the flag stays on.
+     */
+    private fun liftSecureAfterCommit() {
+        val view = window.decorView
+        view.viewTreeObserver.registerFrameCommitCallback {
+            if (leaving) window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE)
+        }
+        // The live-cover case changes no pixel once its dots are already down, and a callback
+        // registered on a frame that draws nothing would wait for one that never comes.
+        view.invalidate()
+    }
+
     override fun onStart() {
         super.onStart()
+        returnFromLeave()
         // P1-16. Play's answer arrives on its own schedule, and a purchase made in
         // Play's sheet lands while this activity is away. Reading it here is the
         // whole of the "purchase completed" path — no listener plumbing, no state
@@ -6350,6 +6599,7 @@ class MainActivity : FragmentActivity() {
      */
     override fun onResume() {
         super.onResume()
+        returnFromLeave()
         FaceDownLock.start(this, ::faceDownLock)
         // `per-vault-intruder-capture` D8, D9. A grant or revocation in Settings, the quick-settings
         // access switches and the unused-app exemption all change without a restart.
@@ -6999,6 +7249,9 @@ class MainActivity : FragmentActivity() {
             // count lives in the session, which Compose cannot observe.
             listKitViewsLeft = (kitViewsSpent to vaultEntries).let { VaultKeyringSession.listKitViewsLeft() },
             onListKit = closing { openKitView(-1) },
+            // `recovery-practice` D7. A switch: toggles in place, the sheet stays open.
+            extraSecurityOn = extraSecurityOn,
+            onToggleExtraSecurity = ::toggleExtraSecurity,
             vaultKitViewsLeft = if (vaultOpen) {
                 vaultEntries.firstOrNull { it.position == VaultKeyringSession.openVaultPosition() }
                     ?.takeIf { it.hasOwnPassphrase }
@@ -7498,15 +7751,30 @@ class MainActivity : FragmentActivity() {
                 problem = setupProblem,
             )
 
-            Onboarding.Step.Kit -> RecoveryKitStepScreen(
-                words = recoveryKit.orEmpty(),
-                onPrint = ::printRecoveryKit,
-                onContinue = {
-                    recoveryKit = null
-                    loadIndex()
-                    completeOnboardingStep()
-                },
-            )
+            // `recovery-practice` D5. Two screens in one step: the words, then the check, which
+            // always runs here — the switch that turns it off is not reachable yet.
+            Onboarding.Step.Kit -> if (kitChecking) {
+                KitCheckScreen(
+                    mnemonic = mnemonic,
+                    words = recoveryKit.orEmpty(),
+                    onCorrect = {
+                        kitPassed {
+                            recoveryKit = null
+                            loadIndex()
+                            completeOnboardingStep()
+                        }
+                    },
+                    onSeeWords = ::kitSeeWords,
+                    framing = KitCheckFraming.Onboarding,
+                )
+            } else {
+                RecoveryKitStepScreen(
+                    words = recoveryKit.orEmpty(),
+                    onPrint = { printRecoveryKit(recoveryKit.orEmpty(), KitOwner.List()) },
+                    acknowledged = kitAcknowledged,
+                    onContinue = { kitContinue(gated = false) {} },
+                )
+            }
 
             Onboarding.Step.Fingerprint -> FingerprintStepScreen(
                 layout = biometricLayout(),
@@ -8240,7 +8508,7 @@ class MainActivity : FragmentActivity() {
                     // vault's passphrase moments ago, for this vault, and this screen asked none.
                     authorised -> true.also { passphrase.fill(0) }
                     // The home store belongs to the list, so the list's passphrase opens it.
-                    homeCaptures -> ExportAuth.confirms(File(filesDir, "vault.slots"), passphrase, captureStore = true)
+                    homeCaptures -> ExportAuth.confirms(File(filesDir, "vault.slots"), passphrase)
                     // D8. A vault, its selection or its own captures: the passphrase that opens it.
                     else -> ExportAuth.confirmsOpenVault(File(filesDir, "vault.slots"), passphrase)
                 }
@@ -8356,11 +8624,177 @@ class MainActivity : FragmentActivity() {
      * Printing is what P1-12 asked for; the honest response is to build it and
      * say what it costs.
      */
-    private fun printRecoveryKit() {
-        val words = recoveryKit ?: return
-        val text = words.mapIndexed { i, w -> "${i + 1}. $w" }
-        (getSystemService(PRINT_SERVICE) as PrintManager)
-            .print(getString(R.string.kit_print_job), RecoveryKitPrintAdapter(this, text), null)
+    private fun printRecoveryKit(words: List<String>, owner: KitOwner) {
+        if (words.isEmpty()) return
+        (getSystemService(PRINT_SERVICE) as PrintManager).print(
+            getString(R.string.kit_print_job),
+            RecoveryKitPrintAdapter(this, words, owner, System.currentTimeMillis()),
+            null,
+        )
+    }
+
+    /**
+     * Whose kit the app's kit branch is showing — `recovery-practice` D6. The list's own, a held
+     * decoy kit (a list, under the decoy's name), or a vault's own kit at creation or in a view.
+     */
+    private fun heldKitOwner(): KitOwner = when {
+        recoveryKitVault == null -> KitOwner.List()
+        recoveryKitDecoy -> KitOwner.List(recoveryKitVault)
+        else -> KitOwner.Vault(recoveryKitVault!!)
+    }
+
+    /**
+     * Continue on a creation kit — `recovery-practice` D5. The check comes next when it runs:
+     * always where [gated] is false (first run's step 2), otherwise while Extra Security is on.
+     */
+    private fun kitContinue(gated: Boolean, then: () -> Unit) {
+        if (!gated || ExtraSecurity.isOn(this)) kitChecking = true else then()
+    }
+
+    /** The check passed: the kit's own Continue, as before the check existed. */
+    private fun kitPassed(then: () -> Unit) {
+        kitChecking = false
+        kitAcknowledged = false
+        then()
+    }
+
+    /** "See the words again" and Back: the same words, acknowledged, no view spent. */
+    private fun kitSeeWords() {
+        kitChecking = false
+        kitAcknowledged = true
+    }
+
+    /** The app's kit branch's Continue at creation, after the check where it runs. */
+    private fun putAwayCreationKit() {
+        recoveryKit = null
+        recoveryKitVault = null
+        recoveryKitDecoy = false
+        recoveryKitCreationLeft = VaultKeyring.KIT_VIEWS
+        loadIndex()
+        resumeOnboarding()
+    }
+
+    // --- passphrase practice — `recovery-practice` D2–D4 --------------------------------
+
+    /**
+     * D2. One derivation against the home slot through [VaultLifecycle.confirmsListPassphrase],
+     * off the main thread, and **nothing else**: no tamper-log entry, no intruder capture, no
+     * panic and no unlock limit. The panic phrase opens the panic slot, not the home one, so it
+     * reads as wrong. A lock landing while it runs drops the answer unwritten.
+     */
+    private fun practiceCheck() {
+        val state = practiceState
+        if (state.checking || state.entry.text.isEmpty()) return
+        val entry = state.entry.text.toByteArray(Charsets.UTF_8)
+        state.checking = true
+        thread {
+            val right = runCatching { lifecycleOps.confirmsListPassphrase(entry) }.getOrDefault(false)
+            runOnUiThread {
+                if (!practiceShowing || !state.checking) return@runOnUiThread
+                state.checking = false
+                val now = System.currentTimeMillis()
+                if (right) {
+                    practice.recordRight(now, firstTry = !state.hadWrong)
+                    val days = practice.nextInterval()
+                    closePractice()
+                    showMessage(resources.getQuantityString(R.plurals.practice_right, days, days))
+                } else {
+                    practice.recordWrong()
+                    state.markWrong()
+                }
+            }
+        }
+    }
+
+    /** D1. Skip, and Back on the practice screen: the step is kept, due again in 1 day. */
+    private fun practiceSkip() {
+        if (practiceState.checking) return
+        practice.skip(System.currentTimeMillis())
+        closePractice()
+    }
+
+    private fun practiceBack() {
+        when (practiceState.stage) {
+            PracticeStage.Check -> practiceSkip()
+            PracticeStage.NewPassphrase -> if (!practiceState.saving) {
+                practiceState.draft.clear()
+                practiceState.confirmNeeded = false
+                practiceState.stage = PracticeStage.Check
+            }
+        }
+    }
+
+    private fun closePractice() {
+        practiceShowing = false
+        practiceState.clear()
+    }
+
+    /**
+     * D4. The screen has run the floor and the match; this raises a fresh strong-biometric
+     * confirmation on the wrap's decrypt cipher, then seals the open list's home slot under the
+     * new passphrase. A cancelled or failed prompt writes nothing and keeps the fields.
+     */
+    private fun practiceSave() {
+        val state = practiceState
+        if (state.saving) return
+        state.confirmNeeded = false
+        val cipher = try {
+            bio.decryptCipher()
+        } catch (e: Exception) {
+            Log.i("VaultBio", "wrap unusable for the confirmation: ${e.javaClass.simpleName}")
+            state.confirmNeeded = true
+            return
+        }
+        authenticate(
+            getString(R.string.practice_confirm_title),
+            getString(R.string.action_cancel),
+            cipher,
+            onError = { if (practiceShowing) state.confirmNeeded = true },
+        ) {
+            if (!practiceShowing || state.stage != PracticeStage.NewPassphrase) return@authenticate
+            val chosen = state.draft.new.toByteArray(Charsets.UTF_8)
+            state.saving = true
+            thread {
+                val outcome = runCatching { lifecycleOps.resealListPassphrase(chosen) }.getOrElse {
+                    Log.w("VaultKeyring", "the list passphrase could not be resealed", it)
+                    chosen.fill(0)
+                    VaultLifecycle.Outcome(opened = false, derivations = 0, slotsAttempted = 0)
+                }
+                runOnUiThread {
+                    if (!practiceShowing) return@runOnUiThread
+                    state.saving = false
+                    when {
+                        outcome.opened -> {
+                            practice.start(System.currentTimeMillis())
+                            closePractice()
+                            showMessage(getString(R.string.practice_changed))
+                        }
+                        outcome.refusal == VaultLifecycle.Refusal.PASSPHRASE_IN_USE ->
+                            state.draft.newError = getString(R.string.kit_passphrase_in_use)
+                        // Nothing was written; the fields stay for another try.
+                        else -> state.draft.newError = getString(R.string.panic_not_saved)
+                    }
+                }
+            }
+        }
+    }
+
+    /** A plain snackbar on the app's one host. */
+    private fun showMessage(text: String) {
+        snackbars.currentSnackbarData?.dismiss()
+        lifecycleScope.launch { snackbars.showSnackbar(text) }
+    }
+
+    /** D7. The drawer's switch: on restarts practice at 1 day, off clears it. */
+    private fun toggleExtraSecurity() {
+        val on = !extraSecurityOn
+        ExtraSecurity.set(this, on)
+        extraSecurityOn = on
+        if (on) {
+            if (bio.hasRecord()) practice.start(System.currentTimeMillis())
+        } else {
+            practice.clear()
+        }
     }
 
     /**
@@ -9594,7 +10028,7 @@ class MainActivity : FragmentActivity() {
                     // after a panic nothing may greet anyone with setup screens, and a
                     // step left in `shared_prefs/` would say setup was running when the
                     // panic fired. A local `commit`, inside the wipe's silent removals.
-                    destroyWrap = { bio.disable(); Onboarding.finish(this@MainActivity) },
+                    destroyWrap = { disableWrap(); Onboarding.finish(this@MainActivity) },
                     // `cloud-mirror`. Enqueued, never performed here: a provider that
                     // hangs would make a panic unlock measurably slower than an
                     // ordinary one, which `panic-pin` forbids. `enqueue` returns as
@@ -9606,7 +10040,7 @@ class MainActivity : FragmentActivity() {
                     // the notice says so where the user will meet it.
                     onMigrated = {
                         if (bio.isEnabled()) {
-                            bio.disable()
+                            disableWrap()
                             runOnUiThread {
                                 bioEnabled = false
                                 bioNotice = BIO_AFTER_MIGRATION
@@ -9639,6 +10073,9 @@ class MainActivity : FragmentActivity() {
                 decoySetUp = VaultKeyringSession.hasDecoy()
                 if (outcome.opened) {
                     vaultEntries = VaultKeyringSession.vaults()
+                    // `recovery-practice` D1. Typing it is practice in itself: the next check
+                    // moves one current interval ahead, and no practice screen is shown.
+                    practice.notePassphraseUnlock(System.currentTimeMillis())
                     // **`afterUnlock` does not run here — `vault-keyring`.** Every part
                     // of it is per *vault*: the trash purge, orphan adoption and the
                     // reload all begin `VaultSession.vmk() ?: return`, so running them
@@ -10228,6 +10665,13 @@ class MainActivity : FragmentActivity() {
         recoveryKit = null
         recoveryKitCreationLeft = VaultKeyring.KIT_VIEWS
         recoveryKitVault = null
+        recoveryKitDecoy = false
+        // `recovery-practice`. The check goes with the kit, so a resumed kit shows its words
+        // with an empty acknowledgement (D5); the practice screens go with what was typed,
+        // writing nothing, so the next unlock decides afresh (D1, 4.4).
+        kitChecking = false
+        kitAcknowledged = false
+        closePractice()
         closeKitView()
         closeBackup()
         closeArchiveImport()
@@ -10295,6 +10739,11 @@ class MainActivity : FragmentActivity() {
          * passes nothing.
          */
         onFailed: (() -> Unit)? = null,
+        /**
+         * `recovery-practice` D4. The prompt ended without a match — cancelled, locked out or
+         * dismissed. The practice confirmation says so under its button.
+         */
+        onError: (() -> Unit)? = null,
         onOpened: (Cipher) -> Unit,
     ) {
         val prompt = BiometricPrompt(
@@ -10310,6 +10759,10 @@ class MainActivity : FragmentActivity() {
                 // and neither copy would be the one the user is looking at.
                 override fun onAuthenticationFailed() {
                     onFailed?.invoke()
+                }
+
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    onError?.invoke()
                 }
             },
         )
@@ -10393,6 +10846,12 @@ class MainActivity : FragmentActivity() {
                         keyringOpen = true
                         decoySetUp = VaultKeyringSession.hasDecoy()
                         vaultEntries = VaultKeyringSession.vaults()
+                        // `recovery-practice` D1. Decided here, before the list is drawn, so the
+                        // list never appears and is then covered. Never during first run.
+                        if (onboardingStep == null && practice.isDue(System.currentTimeMillis())) {
+                            practiceState.clear()
+                            practiceShowing = true
+                        }
                         // `cover-biometric-suppression`. With the guard in
                         // `autoPromptBiometric` the prompt is raised only after the
                         // cover is already down, and the biometric control lives on a
@@ -10426,14 +10885,17 @@ class MainActivity : FragmentActivity() {
             bio.encryptCipher()
         } catch (e: Exception) {
             Log.i("VaultBio", "could not create a wrap key: ${e.javaClass.simpleName}")
-            bio.disable()
+            disableWrap()
             bioEnabled = false
             return
         }
         authenticate(getString(BiometricWrap.ENABLE_LABEL), getString(R.string.bio_prompt_use_passphrase), cipher) { authenticated ->
             thread {
                 val ok = runCatching { bio.write(authenticated, vault) }.isSuccess
-                runOnUiThread { bioEnabled = ok.also { if (!it) bio.disable() } }
+                runOnUiThread {
+                    bioEnabled = ok.also { if (!it) disableWrap() }
+                    if (ok) practice.start(System.currentTimeMillis())
+                }
             }
         }
     }
@@ -11163,8 +11625,8 @@ class MainActivity : FragmentActivity() {
      * Recents reads the **running activity's** label, and the running component is
      * always this activity whichever alias routed to it — so without this the task
      * switcher keeps saying the application's name and one gesture undoes the
-     * feature. The thumbnail is already blank under `FLAG_SECURE` (P1-10), so after
-     * this nothing in recents names the app.
+     * feature. The card's picture is the identity itself ([IdentityLayer],
+     * `recents-shows-identity`), so after this nothing in recents names the app.
      *
      * `TaskDescription.Builder` arrived at API 33 and `minSdk` is 30, so this is one
      * version branch to the two-argument constructor below it — in preference to a
@@ -11188,7 +11650,7 @@ class MainActivity : FragmentActivity() {
 
     private fun toggleBiometric() {
         if (bioEnabled) {
-            bio.disable()
+            disableWrap()
             bioEnabled = false
         } else {
             enableBiometric()
@@ -11210,7 +11672,7 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun biometricLost() {
-        bio.disable()
+        disableWrap()
         bioEnabled = false
         bioNotice = BIO_INVALIDATED
     }

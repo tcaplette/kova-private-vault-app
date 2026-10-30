@@ -594,7 +594,7 @@ class VaultLifecycle(
      * Sets the open keyring's panic phrase — D1, D4.
      *
      * [passphrase] must open the keyring's own slot, which confirms it is the owner and
-     * gives [Panic.withinOneEdit] the one passphrase it can compare. The phrase is sealed
+     * gives [Panic.tooSimilar] the one passphrase it can compare. The phrase is sealed
      * into a free slot drawn as [create] draws one, holding this keyring's key and blob
      * ID, and **only then** are the records written — occupancy first, `slot-occupancy-map`
      * D3's asymmetry: a record missing a slot costs a keyring, one claiming it costs
@@ -724,6 +724,41 @@ class VaultLifecycle(
      * [passphrase] is zeroed on every path.
      */
     fun confirmsListPassphrase(passphrase: ByteArray): Boolean = confirmsListPassphrase(slotsFile, passphrase)
+
+    /**
+     * Seals the open list into its home slot under [newPassphrase] — `recovery-practice` D4.
+     *
+     * The write recovery makes (`recovery-own-slot-only`), from the open session instead of
+     * the words: the forgotten passphrase stops working, and every other slot, the keyring
+     * blob, the words, the biometric wrap (it holds the unchanged slot payload) and every
+     * vault's own passphrase are left as they were. Refused with nothing written when no
+     * keyring is open, there is no home slot, or [newPassphrase] already opens another slot
+     * ([Refusal.PASSPHRASE_IN_USE], what typing it at the lock screen would say). The fresh
+     * biometric confirmation is the caller's; this file references no Keystore (I7).
+     * [newPassphrase] and the KEK are zeroed on every path.
+     */
+    fun resealListPassphrase(newPassphrase: ByteArray): Outcome {
+        val failed = Outcome(opened = false, derivations = 0, slotsAttempted = 0)
+        try {
+            if (newPassphrase.size < MIN_PASSPHRASE_BYTES) return failed
+            val home = VaultKeyringSession.homeSlot()
+            if (home !in 0 until SlotArray.SLOT_COUNT || !slotsFile.exists()) return failed
+            if (VaultKeyringSession.keyringBlobId()?.also { it.fill(0) } == null) return failed
+            val slots = SlotArray(slotsFile)
+            val kek = VaultKeys.deriveKek(newPassphrase, slots.installSalt(), slots.kdfParams())
+            try {
+                if (VaultUnlock.opensAnySlot(kek, slots, except = home)) {
+                    return refused(Refusal.PASSPHRASE_IN_USE, derivations = 1)
+                }
+                sealThisKeyring(slots, home, kek) ?: return failed
+                return Outcome(opened = true, derivations = 1, slotsAttempted = SlotArray.SLOT_COUNT)
+            } finally {
+                kek.fill(0)
+            }
+        } finally {
+            newPassphrase.fill(0)
+        }
+    }
 
     /** How a passphrase act on Edit vault ended — `vault-passphrase-manage`. */
     enum class PassphraseAct { DONE, WRONG_PASSPHRASE, NOT_SAVED }
@@ -955,7 +990,7 @@ class VaultLifecycle(
     /** The refusals that need no key, checked before any derivation is spent. */
     private fun validatePhrase(passphrase: ByteArray, phrase: ByteArray): PanicResult? = when {
         phrase.size < MIN_PASSPHRASE_BYTES -> PanicResult.TOO_SHORT
-        Panic.withinOneEdit(phrase, passphrase) -> PanicResult.TOO_CLOSE
+        Panic.tooSimilar(phrase, passphrase) -> PanicResult.TOO_CLOSE
         else -> null
     }
 

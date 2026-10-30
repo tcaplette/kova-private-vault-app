@@ -49,6 +49,7 @@ class SlotOccupancyDeviceTest {
         const val D = "delta-keyring-passphrase"
         const val DECOY = "the-decoy-keyring-passphrase"
         const val NEW = "a-brand-new-passphrase"
+        const val PANIC = "a-panic-phrase-far-from-it"
     }
 
     private fun pass(s: String) = s.toByteArray(Charsets.UTF_8)
@@ -375,7 +376,7 @@ class SlotOccupancyDeviceTest {
         val words = VaultKeyringSession.withKey { mnemonic.encode(it) }!!.joinToString(" ")
         assertTrue(createFromOpen(B).opened)
         assertTrue(vault.reopen(pass(A), 0).keyringOpen)
-        assertTrue(vault.setPanic(pass(A), pass(DECOY)) == VaultLifecycle.PanicResult.DONE)
+        assertTrue(vault.setPanic(pass(A), pass(PANIC)) == VaultLifecycle.PanicResult.DONE)
         val known = VaultKeyringSession.knownSlots()
         val home = VaultKeyringSession.homeSlot()
         val panic = VaultKeyringSession.panicSlot()
@@ -409,7 +410,7 @@ class SlotOccupancyDeviceTest {
         assertTrue(vault.reopen(pass(A), 0).keyringOpen)
         assertTrue(createFromOpen(C).opened)
         assertTrue(vault.reopen(pass(A), 0).keyringOpen)
-        assertTrue(vault.setPanic(pass(A), pass(DECOY)) == VaultLifecycle.PanicResult.DONE)
+        assertTrue(vault.setPanic(pass(A), pass(PANIC)) == VaultLifecycle.PanicResult.DONE)
         assertEquals("three known slots and the panic slot", 4, Integer.bitCount(VaultKeyringSession.knownSlots()))
         lockKeyringAndVault()
 
@@ -455,6 +456,9 @@ class SlotOccupancyDeviceTest {
         val bytes = VaultKeyring.serialise(aged)
         bytes[0] = ((bytes[0].toInt() and 0x80) or VaultKeyring.VERSION_NO_KNOWN_SLOTS).toByte()
         bytes[187] = 0xC3.toByte()   // filler, where a version 3 block keeps the record
+        // Below version 7 an entry's byte 2 was the name length's high byte, always 0; a
+        // version 2 block with an appearance there is malformed and refused, decoy bit and all.
+        VaultKeyringSession.vaults().forEach { bytes[1 + it.position * VaultKeyring.ENTRY_BYTES + 2] = 0 }
 
         val id = VaultKeyringSession.keyringBlobId()!!
         VaultKeyringSession.withKey { key ->

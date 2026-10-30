@@ -129,7 +129,7 @@
     <string name="kit_print_job">보관함 복구 키트</string>
     <string name="panic_wrong_passphrase">그 암호 문구로는 이 보관함 목록을 열 수 없습니다.</string>
     <string name="panic_wrong_phrase">패닉 문구가 아닙니다.</string>
-    <string name="panic_too_close">암호 문구와 너무 비슷합니다. 오타 하나로 작동할 수 있습니다. 다른 것을 선택하세요.</string>
+    <string name="panic_too_close">암호 문구와 너무 비슷합니다. 하나를 입력하려다 다른 하나를 입력할 수 있습니다. 공통점이 적은 문구를 선택하세요.</string>
     <string name="panic_in_use">그 문구는 이미 보관함 목록을 엽니다. 다른 것을 선택하세요.</string>
     <string name="panic_no_room">이 기기에는 문구를 더 추가할 공간이 없습니다.</string>
     <string name="panic_cleared">이전 패닉 문구는 더 이상 여기서 작동하지 않아 꺼졌습니다. 새 문구를 설정하세요.</string>
@@ -161,11 +161,6 @@
     <string name="notification_channel_recording">녹음</string>
     <string name="notification_recording">녹음 중</string>
     <string name="notification_stop">중지</string>
-
-    <!-- The printed recovery kit -->
-    <string name="kit_print_heading">보관함 복구 키트</string>
-    <string name="kit_print_line_1">이 24개 단어로 이 보관함을 열 수 있습니다. 이 페이지를 안전하게 보관하세요.</string>
-    <string name="kit_print_line_2">이 단어는 변경하거나 취소할 수 없습니다.</string>
 
     <!-- Biometric unlock — the screen, the drawer row and the first-run step -->
     <string name="bio_name">생체 인식 잠금 해제</string>
@@ -521,7 +516,7 @@
     <string name="panic_status_on">패닉 인증 정보가 켜져 있습니다</string>
     <string name="panic_status_off">패닉 인증 정보가 꺼져 있습니다</string>
     <string name="panic_fact_survives">이 보관함 목록은 남습니다</string>
-    <string name="panic_fact_survives_body">잠금 화면에서 패닉 문구를 입력하면 이 보관함 목록은 평소처럼 열리고, 목록에 없는 모든 보관함은 이 기기에서 영구적으로 열리지 않게 됩니다.</string>
+    <string name="panic_fact_survives_body">잠금 화면에서 패닉 문구를 입력하면 이 보관함 목록은 평소처럼 열리고, 목록에 없는 모든 보관함은 이 기기에서 더 이상 열리지 않습니다.</string>
     <string name="panic_fact_way_in">파일이 아니라 들어가는 길을 없앱니다</string>
     <string name="panic_fact_way_in_body">다른 보관함은 읽을 수 없는 데이터로 이 기기에 남습니다. 24개 단어로 된 복구 키트로는 여전히 열 수 있습니다.</string>
     <string name="panic_fact_silent">작동했다는 표시가 없습니다</string>
@@ -688,7 +683,7 @@
     <string name="onboarding_backup_title">다른 곳에 사본 보관하기</string>
     <string name="onboarding_backup_lead">이 휴대전화를 잃어버리거나 고장 나면, 사본이 없는 한 보관함의 모든 것도 함께 사라집니다.</string>
     <string name="onboarding_panic_title">다른 보관함을 닫는 암호 문구</string>
-    <string name="onboarding_panic_lead">잠금 화면에서 입력하면 보관함 하나가 열리고, 이 기기의 다른 모든 보관함은 영구적으로 닫힙니다.</string>
+    <string name="onboarding_panic_lead">잠금 화면에서 입력하면 보관함 하나가 열리고, 이 기기의 다른 모든 보관함은 닫힙니다.</string>
     <string name="onboarding_panic_set_up">패닉 인증 정보 설정</string>
     <string name="onboarding_fact_ordinary">평범한 잠금 해제처럼 보입니다</string>
     <string name="onboarding_fact_ordinary_body">같은 화면, 같은 속도, 보이는 것은 없습니다. 그것이 핵심입니다. 지켜보는 사람은 아무것도 알 수 없습니다.</string>
@@ -779,7 +774,7 @@
     <string name="kit_title_list">내 복구 키트</string>
     <string name="kit_title_vault">%1$s 복구 키트</string>
     <string name="kit_title_short">복구 키트</string>
-    <string name="kit_body_list">암호 문구를 잊은 경우 이 24개 단어가 암호 문구로 여는 보관함에 다시 들어가는 유일한 방법입니다. 순서대로 적어서 안전한 곳에 보관하세요.\n\n이 단어를 가진 사람은 누구나 나중에 추가하는 것을 포함해 그 보관함들을 열 수 있습니다. 자체 암호 문구를 설정한 보관함은 포함되지 않으며, 별도의 키트가 있습니다. 이 단어는 변경하거나 취소할 수 없습니다.</string>
+    <string name="kit_body_list">암호 문구를 잊은 경우 이 24개 단어로 암호 문구로 여는 보관함에 다시 들어갈 수 있습니다. 순서대로 적어서 안전한 곳에 보관하세요.\n\n이 단어를 가진 사람은 누구나 나중에 추가하는 것을 포함해 그 보관함들을 열 수 있습니다. 자체 암호 문구를 설정한 보관함은 포함되지 않으며, 별도의 키트가 있습니다. 이 단어는 변경하거나 취소할 수 없습니다.</string>
     <string name="kit_body_list_backup">이 보관함을 클라우드 폴더에 백업한 경우, 복원에 사용하는 것은 암호 문구가 아니라 이 단어입니다. 이 기기와 이 페이지를 함께 잃어버리면 나를 포함해 누구도 백업을 열 수 없습니다.</string>
     <string name="kit_body_vault">방금 설정한 암호 문구를 잊은 경우 이 24개 단어가 %1$s에 다시 들어가는 유일한 방법입니다. 순서대로 적어서 안전한 곳에 보관하세요.\n\n보관함 목록을 여는 암호 문구로는 이 보관함을 열 수 없으며, 그 목록의 복구 키트로도 열 수 없습니다. 암호 문구와 이 페이지를 모두 잃어버리면 %1$s의 모든 것이 영원히 사라집니다.\n\n이 단어를 가진 사람은 누구나 %1$s을(를) 열 수 있습니다. 변경하거나 취소할 수 없습니다.</string>
     <string name="kit_type_acknowledgement">적어 두었으며 암호 문구를 재설정할 수 없다는 것을 알고 있음을 확인하려면 \'%1$s\'를 입력하세요.</string>
@@ -1693,4 +1688,56 @@
     <string name="licences_version">버전 %1$s</string>
     <string name="licences_source">소스</string>
     <string name="licences_licence">라이선스</string>
+
+    <!-- recovery-practice: passphrase practice, the kit check, Extra Security and the printed kit -->
+    <string name="practice_title">암호 문구 연습하기</string>
+    <string name="practice_lead_fingerprint">그동안 지문으로 보관함을 열었습니다. 잊지 않도록 암호 문구를 입력하세요.</string>
+    <string name="practice_lead_face">그동안 얼굴 인식으로 보관함을 열었습니다. 잊지 않도록 암호 문구를 입력하세요.</string>
+    <string name="practice_lead_both">그동안 얼굴 인식 또는 지문으로 보관함을 열었습니다. 잊지 않도록 암호 문구를 입력하세요.</string>
+    <string name="practice_lead_biometric">그동안 생체 인식으로 보관함을 열었습니다. 잊지 않도록 암호 문구를 입력하세요.</string>
+    <string name="practice_check">확인</string>
+    <string name="practice_checking">확인 중…</string>
+    <string name="practice_skip">건너뛰기</string>
+    <string name="practice_wrong">암호 문구가 아닙니다.</string>
+    <string name="practice_forgot_panel_fingerprint">잊으셨나요? 지문으로 이미 보관함을 열었으므로 지금 새 암호 문구를 선택할 수 있습니다. 복구 키트는 필요하지 않습니다.</string>
+    <string name="practice_forgot_panel_face">잊으셨나요? 얼굴 인식으로 이미 보관함을 열었으므로 지금 새 암호 문구를 선택할 수 있습니다. 복구 키트는 필요하지 않습니다.</string>
+    <string name="practice_forgot_panel_both">잊으셨나요? 얼굴 인식 또는 지문으로 이미 보관함을 열었으므로 지금 새 암호 문구를 선택할 수 있습니다. 복구 키트는 필요하지 않습니다.</string>
+    <string name="practice_forgot_panel_biometric">잊으셨나요? 생체 인식으로 이미 보관함을 열었으므로 지금 새 암호 문구를 선택할 수 있습니다. 복구 키트는 필요하지 않습니다.</string>
+    <string name="practice_set_new">지금 새 암호 문구 설정</string>
+    <string name="practice_new_title">새 암호 문구</string>
+    <string name="practice_new_lead">앞으로 보관함을 열 때 사용할 암호 문구를 선택하세요. 이전 암호 문구는 더 이상 작동하지 않습니다. 24개 단어는 바뀌지 않습니다.</string>
+    <string name="practice_saving">저장 중…</string>
+    <string name="practice_confirm_title">본인 확인</string>
+    <string name="practice_confirm_needed_fingerprint">새 암호 문구를 저장하려면 지문으로 확인하세요.</string>
+    <string name="practice_confirm_needed_face">새 암호 문구를 저장하려면 얼굴 인식으로 확인하세요.</string>
+    <string name="practice_confirm_needed_both">새 암호 문구를 저장하려면 얼굴 인식 또는 지문으로 확인하세요.</string>
+    <string name="practice_confirm_needed_biometric">새 암호 문구를 저장하려면 생체 인식으로 확인하세요.</string>
+    <string name="practice_changed">암호 문구가 변경되었습니다. 복구 키트는 계속 사용할 수 있습니다.</string>
+    <string name="kit_check_title">사본 확인</string>
+    <string name="kit_check_lead">기억에 의존하지 말고 종이를 보고 이 단어들을 입력하세요.</string>
+    <string name="kit_check_action">단어 확인</string>
+    <string name="kit_check_see_again">단어 다시 보기</string>
+    <string name="kit_check_mismatch">키트의 %1$d번째 단어가 아닙니다.</string>
+    <string name="drawer_extra_security">추가 보안</string>
+    <string name="drawer_extra_security_on">암호 문구 연습과 키트 확인이 켜져 있습니다</string>
+    <string name="drawer_extra_security_off">꺼짐. 암호 문구 연습과 키트 확인 없음</string>
+    <string name="kit_print_title">복구 키트</string>
+    <string name="kit_print_for_list">대상: 내 보관함 목록</string>
+    <string name="kit_print_for_vault">대상: %1$s</string>
+    <string name="kit_print_date">인쇄일: %1$s</string>
+    <string name="kit_print_anyone_list">이 단어를 가진 사람은 누구나 보관함 목록을 열 수 있습니다. 변경하거나 취소할 수 없습니다.</string>
+    <string name="kit_print_anyone_vault">이 단어를 가진 사람은 누구나 %1$s을(를) 열 수 있습니다. 변경하거나 취소할 수 없습니다.</string>
+    <string name="kit_print_how_heading">이 페이지 사용 방법</string>
+    <string name="kit_print_list_step_1">앱을 열고 잠금 해제 화면으로 이동합니다.</string>
+    <string name="kit_print_list_step_2">‘%1$s’를 탭합니다.</string>
+    <string name="kit_print_list_step_3">24개 단어를 순서대로 입력한 다음 새 암호 문구를 선택합니다.</string>
+    <string name="kit_print_vault_step_1">앱을 열고 보관함 목록의 잠금을 해제합니다.</string>
+    <string name="kit_print_vault_step_2">메뉴를 열고 ‘%1$s’를 탭합니다.</string>
+    <string name="kit_print_vault_step_3">24개 단어를 순서대로 입력한 다음 %1$s의 새 암호 문구를 선택합니다.</string>
+    <string name="kit_print_backups">이 단어로 백업도 열 수 있습니다.</string>
+    <string name="kit_print_keep_heading">보관 장소</string>
+    <string name="kit_print_keep_body">여권이나 다른 중요한 서류와 함께 두는 등 안전하고 남이 볼 수 없는 곳에 보관하세요. 사진을 찍거나 휴대전화에 보관하지 마세요. 이 페이지와 암호 문구를 모두 잃어버리면 누구도 보관함을 되찾을 수 없습니다.</string>
+    <plurals name="practice_right">
+        <item quantity="other">맞습니다. 다음 연습은 %1$d일 후입니다.</item>
+    </plurals>
 </resources>

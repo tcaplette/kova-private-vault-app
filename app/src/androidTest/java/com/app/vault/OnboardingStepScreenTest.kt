@@ -465,6 +465,8 @@ class OnboardingStepScreenTest {
             assertEquals("an empty name must not leave the step", 0, continued)
 
             compose.onNode(hasSetTextAction()).performTextInput("Family")
+            // The keyboard rising moves Continue; a click before it settles can miss it.
+            compose.waitForIdle()
             compose.onNodeWithText("Continue").performClick()
             compose.waitForIdle()
             assertEquals(0, count("Give the vault a name."))

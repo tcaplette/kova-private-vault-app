@@ -340,10 +340,17 @@ fun VaultUnlockScreen(
     /** P1-12. Opens the 24-word recovery screen. */
     onRecover: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
+    /**
+     * `recents-shows-identity` D3. Drawn as the recent-apps card's picture: the screen at
+     * rest. No focus, so it never raises the keyboard or pulls focus from the live field; no
+     * submit; the biometric control drawn but disabled; no warning or notice lines, which are
+     * about this session's device state.
+     */
+    still: Boolean = false,
 ) {
     var passphrase by remember { mutableStateOf("") }
     val submit = {
-        if (!busy && passphrase.isNotEmpty()) {
+        if (!still && !busy && passphrase.isNotEmpty()) {
             val bytes = passphrase.toByteArray(Charsets.UTF_8)
             passphrase = ""
             onUnlock(bytes)
@@ -357,8 +364,8 @@ fun VaultUnlockScreen(
     // that instant as well raced the window transition — the keyboard's animation was
     // cancelled and the screen never settled.
     val focus = remember { FocusRequester() }
-    LaunchedEffect(busy) {
-        if (!busy) {
+    LaunchedEffect(busy, still) {
+        if (!busy && !still) {
             // One frame first: `Scaffold` composes its content during measure, after
             // this effect has started, so the field's focus target is not attached yet
             // and an immediate request is refused.
@@ -474,7 +481,7 @@ fun VaultUnlockScreen(
             // One line per finding, named in words — DESIGN.md §6.4, so the screen
             // reads correctly with colour disregarded. Nothing is gated on these and
             // nothing is dismissible: they describe the device, not an error.
-            warnings.forEach { warning ->
+            if (!still) warnings.forEach { warning ->
                 Text(
                     text = warning,
                     style = MaterialTheme.typography.bodyMedium,
@@ -497,7 +504,7 @@ fun VaultUnlockScreen(
                 modifier = Modifier
                     .padding(top = Spacing.xl)
                     .offset { IntOffset(shake.value.dp.roundToPx(), 0) }
-                    .focusRequester(focus),
+                    .let { if (still) it else it.focusRequester(focus) },
             )
 
             // P1-12, D10. Where every login screen puts it. Always offered — whether
@@ -505,7 +512,7 @@ fun VaultUnlockScreen(
             // answer that question.
             if (onRecover != null) {
                 TextButton(
-                    onClick = onRecover,
+                    onClick = { if (!still) onRecover() },
                     enabled = !busy,
                     modifier = Modifier
                         .align(Alignment.End)
@@ -518,7 +525,7 @@ fun VaultUnlockScreen(
             // P1-9: an enrolment change or a wiped key destroyed the wrap. It names
             // what happened and what still works, and it is not an error the user can
             // act on — the passphrase above is the action.
-            biometricNotice?.let { notice ->
+            biometricNotice?.takeIf { !still }?.let { notice ->
                 Text(
                     text = notice,
                     style = MaterialTheme.typography.bodyMedium,
@@ -575,7 +582,7 @@ fun VaultUnlockScreen(
             if (onBiometric != null) {
                 OutlinedButton(
                     onClick = onBiometric,
-                    enabled = !busy,
+                    enabled = !busy && !still,
                     border = BorderStroke(1.dp, VaultColors.Outline),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = VaultColors.Primary),
                     // Full width, so a platform label longer than the button can never

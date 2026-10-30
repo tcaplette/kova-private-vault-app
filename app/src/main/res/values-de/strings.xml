@@ -130,7 +130,7 @@
     <string name="kit_print_job">Wiederherstellungs-Kit für den Tresor</string>
     <string name="panic_wrong_passphrase">Diese Passphrase öffnet diese Tresorliste nicht.</string>
     <string name="panic_wrong_phrase">Das ist nicht deine Panik-Phrase.</string>
-    <string name="panic_too_close">Zu ähnlich wie deine Passphrase – ein Tippfehler könnte sie auslösen. Wähle etwas anderes.</string>
+    <string name="panic_too_close">Zu ähnlich wie deine Passphrase – du könntest die eine statt der anderen eingeben. Wähle eine Phrase, die wenig mit ihr gemeinsam hat.</string>
     <string name="panic_in_use">Diese Phrase öffnet schon eine Tresorliste. Wähle eine andere.</string>
     <string name="panic_no_room">Auf diesem Gerät ist kein Platz für eine weitere Phrase.</string>
     <string name="panic_cleared">Deine alte Panik-Phrase funktioniert hier nicht mehr, deshalb ist sie aus. Lege eine neue fest.</string>
@@ -163,11 +163,6 @@
     <string name="notification_channel_recording">Aufnahme</string>
     <string name="notification_recording">Aufnahme läuft</string>
     <string name="notification_stop">Stopp</string>
-
-    <!-- The printed recovery kit -->
-    <string name="kit_print_heading">Wiederherstellungs-Kit für den Tresor</string>
-    <string name="kit_print_line_1">Diese 24 Wörter öffnen diesen Tresor. Bewahre dieses Blatt sicher auf.</string>
-    <string name="kit_print_line_2">Sie lassen sich weder ändern noch widerrufen.</string>
 
     <!-- Biometric unlock — the screen, the drawer row and the first-run step -->
     <string name="bio_name">Biometrische Entsperrung</string>
@@ -539,7 +534,7 @@
     <string name="panic_status_on">Panik-Zugang ist an</string>
     <string name="panic_status_off">Panik-Zugang ist aus</string>
     <string name="panic_fact_survives">Diese Tresorliste bleibt</string>
-    <string name="panic_fact_survives_body">Auf dem Sperrbildschirm eingegeben, öffnet deine Panik-Phrase diese Tresorliste wie gewohnt, und jeder Tresor, der nicht darauf steht, lässt sich auf diesem Gerät nie wieder öffnen.</string>
+    <string name="panic_fact_survives_body">Auf dem Sperrbildschirm eingegeben, öffnet deine Panik-Phrase diese Tresorliste wie gewohnt, und jeder Tresor, der nicht darauf steht, lässt sich auf diesem Gerät nicht mehr öffnen.</string>
     <string name="panic_fact_way_in">Sie zerstört den Zugang, nicht die Dateien</string>
     <string name="panic_fact_way_in_body">Die anderen Tresore bleiben als unlesbare Daten auf diesem Gerät. Ihre Wiederherstellungs-Kits aus 24 Wörtern öffnen sie weiterhin.</string>
     <string name="panic_fact_silent">Nichts bestätigt, dass es funktioniert hat</string>
@@ -717,7 +712,7 @@
     <string name="onboarding_backup_title">Eine Kopie woanders aufbewahren</string>
     <string name="onboarding_backup_lead">Wenn dieses Telefon verloren geht oder kaputtgeht, geht alles im Tresor mit – außer es gibt eine Kopie.</string>
     <string name="onboarding_panic_title">Eine Passphrase, die die anderen verschließt</string>
-    <string name="onboarding_panic_lead">Auf dem Sperrbildschirm eingegeben, öffnet sie einen Tresor und verschließt jeden anderen auf diesem Gerät dauerhaft.</string>
+    <string name="onboarding_panic_lead">Auf dem Sperrbildschirm eingegeben, öffnet sie einen Tresor und verschließt jeden anderen auf diesem Gerät.</string>
     <string name="onboarding_panic_set_up">Panik-Zugang einrichten</string>
     <string name="onboarding_fact_ordinary">Es sieht aus wie eine normale Entsperrung</string>
     <string name="onboarding_fact_ordinary_body">Gleicher Bildschirm, gleiches Tempo, nichts zu sehen. Genau darum geht es – wer zusieht, erfährt nichts.</string>
@@ -813,7 +808,7 @@
     <string name="kit_title_list">Dein Wiederherstellungs-Kit</string>
     <string name="kit_title_vault">Wiederherstellungs-Kit für %1$s</string>
     <string name="kit_title_short">Wiederherstellungs-Kit</string>
-    <string name="kit_body_list">Diese 24 Wörter sind der einzige Weg zurück in die Tresore, die deine Passphrase öffnet, falls du sie vergisst. Schreib sie der Reihe nach auf und bewahre das Papier sicher auf.\n\nWer diese Wörter hat, kann diese Tresore öffnen, auch alle, die du später hinzufügst. Ein Tresor mit eigener Passphrase gehört nicht dazu – er hat ein eigenes Kit. Diese Wörter lassen sich weder ändern noch widerrufen.</string>
+    <string name="kit_body_list">Falls du deine Passphrase vergisst, bringen dich diese 24 Wörter zurück in die Tresore, die sie öffnet. Schreib sie der Reihe nach auf und bewahre das Papier sicher auf.\n\nWer diese Wörter hat, kann diese Tresore öffnen, auch alle, die du später hinzufügst. Ein Tresor mit eigener Passphrase gehört nicht dazu – er hat ein eigenes Kit. Diese Wörter lassen sich weder ändern noch widerrufen.</string>
     <string name="kit_body_list_backup">Wenn du diesen Tresor je in einem Cloud-Ordner sicherst, stellen diese Wörter ihn wieder her – nicht deine Passphrase. Verlierst du dieses Gerät und dieses Blatt zusammen, kann niemand die Sicherung öffnen, auch du nicht.</string>
     <string name="kit_body_vault">Diese 24 Wörter sind der einzige Weg zurück in %1$s, falls du die gerade festgelegte Passphrase vergisst. Schreib sie der Reihe nach auf und bewahre das Papier sicher auf.\n\nDie Passphrase, die deine Tresorliste öffnet, öffnet diesen nicht, und das Wiederherstellungs-Kit dieser Liste auch nicht. Verlierst du die Passphrase und dieses Blatt, ist alles in %1$s für immer weg.\n\nWer diese Wörter hat, kann %1$s öffnen. Sie lassen sich weder ändern noch widerrufen.</string>
     <string name="kit_type_acknowledgement">Tippe „%1$s“, um zu bestätigen, dass du sie aufgeschrieben hast und weißt, dass sich die Passphrase nicht zurücksetzen lässt.</string>
@@ -1755,4 +1750,57 @@
     <string name="licences_version">Version %1$s</string>
     <string name="licences_source">Quelle</string>
     <string name="licences_licence">Lizenz</string>
+
+    <!-- recovery-practice: passphrase practice, the kit check, Extra Security and the printed kit -->
+    <string name="practice_title">Übe deine Passphrase</string>
+    <string name="practice_lead_fingerprint">Du hast deine Tresore zuletzt mit deinem Fingerabdruck geöffnet. Tippe deine Passphrase ein, damit du sie nicht vergisst.</string>
+    <string name="practice_lead_face">Du hast deine Tresore zuletzt mit deinem Gesicht geöffnet. Tippe deine Passphrase ein, damit du sie nicht vergisst.</string>
+    <string name="practice_lead_both">Du hast deine Tresore zuletzt mit deinem Gesicht oder Fingerabdruck geöffnet. Tippe deine Passphrase ein, damit du sie nicht vergisst.</string>
+    <string name="practice_lead_biometric">Du hast deine Tresore zuletzt mit einem biometrischen Merkmal geöffnet. Tippe deine Passphrase ein, damit du sie nicht vergisst.</string>
+    <string name="practice_check">Prüfen</string>
+    <string name="practice_checking">Wird geprüft…</string>
+    <string name="practice_skip">Überspringen</string>
+    <string name="practice_wrong">Das ist nicht deine Passphrase.</string>
+    <string name="practice_forgot_panel_fingerprint">Vergessen? Dein Fingerabdruck hat deine Tresore schon geöffnet, also kannst du jetzt eine neue Passphrase wählen. Dein Wiederherstellungs-Kit brauchst du dafür nicht.</string>
+    <string name="practice_forgot_panel_face">Vergessen? Dein Gesicht hat deine Tresore schon geöffnet, also kannst du jetzt eine neue Passphrase wählen. Dein Wiederherstellungs-Kit brauchst du dafür nicht.</string>
+    <string name="practice_forgot_panel_both">Vergessen? Dein Gesicht oder Fingerabdruck hat deine Tresore schon geöffnet, also kannst du jetzt eine neue Passphrase wählen. Dein Wiederherstellungs-Kit brauchst du dafür nicht.</string>
+    <string name="practice_forgot_panel_biometric">Vergessen? Ein biometrisches Merkmal hat deine Tresore schon geöffnet, also kannst du jetzt eine neue Passphrase wählen. Dein Wiederherstellungs-Kit brauchst du dafür nicht.</string>
+    <string name="practice_set_new">Jetzt neue Passphrase festlegen</string>
+    <string name="practice_new_title">Neue Passphrase</string>
+    <string name="practice_new_lead">Wähle die Passphrase, mit der du deine Tresore ab jetzt öffnest. Die alte funktioniert dann nicht mehr. Deine 24 Wörter bleiben gleich.</string>
+    <string name="practice_saving">Wird gespeichert…</string>
+    <string name="practice_confirm_title">Bestätige, dass du es bist</string>
+    <string name="practice_confirm_needed_fingerprint">Bestätige mit deinem Fingerabdruck, um die neue Passphrase zu speichern.</string>
+    <string name="practice_confirm_needed_face">Bestätige mit deinem Gesicht, um die neue Passphrase zu speichern.</string>
+    <string name="practice_confirm_needed_both">Bestätige mit deinem Gesicht oder Fingerabdruck, um die neue Passphrase zu speichern.</string>
+    <string name="practice_confirm_needed_biometric">Bestätige mit deinem biometrischen Merkmal, um die neue Passphrase zu speichern.</string>
+    <string name="practice_changed">Passphrase geändert. Dein Wiederherstellungs-Kit funktioniert weiterhin.</string>
+    <string name="kit_check_title">Prüfe deine Abschrift</string>
+    <string name="kit_check_lead">Tippe diese Wörter von deinem Papier ab, nicht aus dem Gedächtnis.</string>
+    <string name="kit_check_action">Wörter prüfen</string>
+    <string name="kit_check_see_again">Wörter noch einmal ansehen</string>
+    <string name="kit_check_mismatch">Das ist nicht Wort %1$d auf deinem Kit.</string>
+    <string name="drawer_extra_security">Extra-Sicherheit</string>
+    <string name="drawer_extra_security_on">Passphrase-Übung und Kit-Prüfung sind an</string>
+    <string name="drawer_extra_security_off">Aus. Keine Passphrase-Übung und keine Kit-Prüfung</string>
+    <string name="kit_print_title">Wiederherstellungs-Kit</string>
+    <string name="kit_print_for_list">Für: deine Tresorliste</string>
+    <string name="kit_print_for_vault">Für: %1$s</string>
+    <string name="kit_print_date">Gedruckt am %1$s</string>
+    <string name="kit_print_anyone_list">Wer diese Wörter hat, kann deine Tresorliste öffnen. Sie lassen sich weder ändern noch widerrufen.</string>
+    <string name="kit_print_anyone_vault">Wer diese Wörter hat, kann %1$s öffnen. Sie lassen sich weder ändern noch widerrufen.</string>
+    <string name="kit_print_how_heading">So benutzt du dieses Blatt</string>
+    <string name="kit_print_list_step_1">Öffne die App und geh zu ihrem Entsperrbildschirm.</string>
+    <string name="kit_print_list_step_2">Tippe auf „%1$s“.</string>
+    <string name="kit_print_list_step_3">Tippe die 24 Wörter der Reihe nach ein und wähle dann eine neue Passphrase.</string>
+    <string name="kit_print_vault_step_1">Öffne die App und entsperre deine Tresorliste.</string>
+    <string name="kit_print_vault_step_2">Öffne das Menü und tippe auf „%1$s“.</string>
+    <string name="kit_print_vault_step_3">Tippe die 24 Wörter der Reihe nach ein und wähle dann eine neue Passphrase für %1$s.</string>
+    <string name="kit_print_backups">Diese Wörter öffnen auch deine Backups.</string>
+    <string name="kit_print_keep_heading">Wo du es aufbewahrst</string>
+    <string name="kit_print_keep_body">An einem sicheren, privaten Ort, etwa bei deinem Reisepass oder anderen wichtigen Unterlagen. Fotografiere es nicht und bewahre es nicht auf deinem Telefon auf. Verlierst du dieses Blatt und deine Passphrase, kann niemand deine Tresore zurückholen.</string>
+    <plurals name="practice_right">
+        <item quantity="one">Richtig. Nächste Übung in %1$d Tag.</item>
+        <item quantity="other">Richtig. Nächste Übung in %1$d Tagen.</item>
+    </plurals>
 </resources>

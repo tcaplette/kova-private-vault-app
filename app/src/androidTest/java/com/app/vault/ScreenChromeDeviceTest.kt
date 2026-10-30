@@ -16,6 +16,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.isRoot
 import androidx.compose.ui.test.printToLog
+import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performSemanticsAction
@@ -291,7 +292,7 @@ class ScreenChromeDeviceTest {
     private fun assertNoAppRowIsDrawn() {
         listOf(
             "App identity", ctx.getString(BiometricWrap.NAME), "Face-down lock",
-            "Set up a decoy", "Decoy", "Panic credential", "Intruder capture", "Photo details", "Contacts",
+            "Set up a decoy", "Decoy", "Panic credential", "Intruder capture", "Extra Security", "Photo details", "Contacts",
             "Recover a vault with its kit", "Open-source licences",
         ).forEach { row ->
             assertTrue(
@@ -539,8 +540,32 @@ class ScreenChromeDeviceTest {
             val homeIdentity = drawerRowTop("App identity")
             val homePanic = drawerRowTop("Panic credential")
             val homeIntruder = drawerRowTop("Intruder capture")
+            val homeKit = drawerRowTop("Recovery kit")
+            val homeExtra = drawerRowTop("Extra Security")
+            val homeDetails = drawerRowTop("Photo details")
             val recover = drawerRowTop("Recover a vault with its kit")
             val licences = drawerRowTop("Open-source licences")
+
+            // `recovery-practice` D7. Extra Security directly after the kit, Photo details after it.
+            assertOrder("at home", "Intruder capture", homeIntruder, "Recovery kit", homeKit)
+            assertOrder("at home", "Recovery kit", homeKit, "Extra Security", homeExtra)
+            assertOrder("at home", "Extra Security", homeExtra, "Photo details", homeDetails)
+            // Its state in words, and the row toggles it in place.
+            ExtraSecurity.set(ctx, true)
+            assertTrue(
+                "on reads as on",
+                compose.onAllNodes(hasText("Passphrase practice and kit check are on")).fetchSemanticsNodes().isNotEmpty(),
+            )
+            compose.onNode(hasText("Extra Security") and hasClickAction()).performScrollTo().performClick()
+            compose.waitForIdle()
+            assertTrue(
+                "off reads as off",
+                compose.onAllNodes(hasText("Off. No passphrase practice or kit check")).fetchSemanticsNodes().isNotEmpty(),
+            )
+            assertFalse("the switch wrote the setting", ExtraSecurity.isOn(ctx))
+            compose.onNode(hasText("Extra Security") and hasClickAction()).performScrollTo().performClick()
+            compose.waitForIdle()
+            assertTrue("and back on", ExtraSecurity.isOn(ctx))
 
             if (BuildConfig.TRIAL) {
                 assertOrder("at home", "Purchase", drawerRowTop("Purchase"), "App identity", homeIdentity)
