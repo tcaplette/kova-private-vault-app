@@ -7,6 +7,7 @@ import org.junit.Assume.assumeTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * Device fixtures for manual end-to-end runs. **Skipped by default.**
@@ -401,7 +402,7 @@ class DeviceFixtures {
         val request = androidx.work.OneTimeWorkRequestBuilder<ImportWorker>()
             .addTag(ImportWorker.IMPORT_TAG)
             .build()
-        WorkJobs.register(request.id, WorkJobs.ImportJob(uri, mutableListOf(blobId), indexId))
+        WorkJobs.register(request.id, WorkJobs.ImportJob(uri, CopyOnWriteArrayList(listOf(blobId)), indexId))
         androidx.work.WorkManager.getInstance(ctx).enqueue(request).result.get()
         Log.i("VaultGate1", "enqueued a real WorkManager import for $uri")
         // Let it run and finish (it will fail to open the URI — the input Data is

@@ -97,6 +97,7 @@
     <string name="restore_open_vaults_first">請先開啟你的保險庫。</string>
     <string name="restore_file_not_opened">無法開啟備份檔案。</string>
     <string name="restore_file_unreadable">無法讀取備份檔案。請確認存放備份的應用程式已登入。</string>
+    <string name="restore_chosen_unreadable">無法讀取這個檔案。請確認存放它的應用程式已登入。</string>
     <string name="restore_no_backup_in_folder">在這個資料夾中找不到備份。</string>
     <string name="capture_mode_permission_denied">這個模式需要它剛才要求的權限。目前已關閉。</string>
     <string name="decoy_trial_notice">建立誘餌保險庫會匯入真實的相片，而 30 天試用期會從保險庫加入第一項內容時開始。如果你想用自己的東西開始試用，請稍後再做。</string>
@@ -654,7 +655,7 @@
     <string name="onboarding_welcome_lead">你放進來的一切都會在這部裝置上加密，並一直留在裝置上。沒有帳戶，沒有伺服器，我們也無法看到其中任何內容——這個應用程式根本無法連上網際網路。</string>
     <string name="onboarding_welcome_steps">設定只需要九個簡短步驟。所有步驟都不是必要的，你之後也可以在設定中改變主意。</string>
     <string name="onboarding_get_started">開始使用</string>
-    <string name="onboarding_have_backup">我有要還原的備份</string>
+    <string name="onboarding_have_backup">我有備份或 .vault 檔案</string>
     <string name="onboarding_passphrase_lead">這是唯一能開啟你保險庫的東西。它無法重設。</string>
     <string name="onboarding_fact_no_reset">沒有重設，也沒有帳戶</string>
     <string name="onboarding_fact_no_reset_body">沒有人能幫你找回它——我們不能，任何人都不能。這正是意義所在，也是風險所在。</string>
@@ -1334,9 +1335,13 @@
     <string name="backup_keep">繼續備份</string>
     <string name="backup_on_sd_card">備份在 SD 卡上</string>
     <string name="restore_into_list">選擇這個清單中某個保險庫的備份——雲端應用程式中的檔案或 SD 卡上的資料夾。它會回到這個清單中。</string>
-    <string name="restore_lead">選擇你儲存在雲端應用程式的備份檔案，或 SD 卡上的資料夾。你需要復原套件中的 24 個單字——你的密碼短語無法開啟備份。</string>
+    <string name="restore_lead">選擇雲端應用程式或 SD 卡中的備份，或你儲存的 .vault 檔案。備份要用復原套件中的 24 個單字開啟。.vault 檔案要用你為它設定的密碼短語開啟。</string>
     <string name="restore_choose_file">選擇備份檔案</string>
     <string name="restore_copying">正在複製檔案… %1$d / %2$d</string>
+    <string name="restore_open_file">開啟檔案</string>
+    <plurals name="restore_from_file">
+        <item quantity="other">來自 %1$s · %2$d 個項目</item>
+    </plurals>
     <string name="import_title">匯入保險庫</string>
     <string name="import_lead">從 .vault 檔案，或從儲存在雲端應用程式或 SD 卡的備份找回保險庫。</string>
     <string name="import_choose_file">選擇檔案</string>
@@ -1389,8 +1394,8 @@
     <string name="unvault_progress">已移出 %1$d / %2$d</string>
     <string name="unvault_progress_left">已移出 %1$d / %2$d，保險庫中還剩 %3$d</string>
     <string name="unvault_busy">正在移出保險庫</string>
-    <string name="archive_title">要換新裝置嗎？</string>
-    <string name="archive_body">儲存一個可以在新手機上開啟的加密 .vault 檔案。為檔案本身設定一個密碼短語——它不是開啟你保險庫的那個，你在另一部裝置上會需要它。這不會清空這個保險庫，垃圾桶中的項目不包括在內。</string>
+    <string name="archive_title">要換到新手機或另一個建置版本嗎？</string>
+    <string name="archive_body">儲存一個可以在新手機上開啟的加密 .vault 檔案。在 Play 版本和你自己建置的副本之間切換也是同樣的方法。請先在這裡儲存每個保險庫，因為解除安裝會刪除所有內容。為檔案本身設定一個密碼短語——它不是開啟你保險庫的那個，你在另一部裝置上會需要它。這不會清空這個保險庫，垃圾桶中的項目不包括在內。</string>
     <string name="archive_passphrase_label">檔案的密碼短語</string>
     <string name="archive_save">儲存加密封存檔</string>
 

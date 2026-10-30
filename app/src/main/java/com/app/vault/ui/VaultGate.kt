@@ -161,6 +161,8 @@ fun VaultSetup(
      * that question for anyone holding the device.
      */
     onRestoreBackup: (() -> Unit)? = null,
+    /** `switch-builds-without-losing-vaults` D4. What a `.vault` file chosen on restore brought in. */
+    restored: String? = null,
 ) {
     // Plain `remember`, like the name it pairs with: nothing about this screen is saved.
     var naming by remember { mutableStateOf(true) }
@@ -185,6 +187,7 @@ fun VaultSetup(
                 onContinue = { if (onNameContinue()) naming = false },
                 secondaryLabel = onRestoreBackup?.let { stringResource(R.string.setup_restore_backup) },
                 onSecondary = onRestoreBackup,
+                restored = restored,
             )
         }
         return

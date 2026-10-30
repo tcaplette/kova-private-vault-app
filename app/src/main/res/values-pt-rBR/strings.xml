@@ -97,6 +97,7 @@
     <string name="restore_open_vaults_first">Abra seus cofres primeiro.</string>
     <string name="restore_file_not_opened">Não foi possível abrir o arquivo de backup.</string>
     <string name="restore_file_unreadable">Não foi possível ler o arquivo de backup. Verifique se o app onde ele está tem uma conta conectada.</string>
+    <string name="restore_chosen_unreadable">Não foi possível ler o arquivo. Verifique se o app onde ele está tem uma conta conectada.</string>
     <string name="restore_no_backup_in_folder">Nenhum backup foi encontrado nessa pasta.</string>
     <string name="capture_mode_permission_denied">Esse modo precisa da permissão que acabou de pedir. Ele está desativado.</string>
     <string name="decoy_trial_notice">Criar um cofre isca importa fotos reais, e o teste de 30 dias começa com a primeira coisa adicionada a um cofre. Deixe isso para depois se preferir começá-lo com suas próprias coisas.</string>
@@ -712,7 +713,7 @@
     <string name="onboarding_welcome_lead">Tudo o que você coloca aqui é criptografado neste dispositivo e fica nele. Não há conta, nem servidor, nem como vermos nada disso — este app não consegue acessar a internet de forma alguma.</string>
     <string name="onboarding_welcome_steps">A configuração tem nove etapas curtas. Nenhuma é obrigatória, e você pode mudar de ideia depois nas Configurações.</string>
     <string name="onboarding_get_started">Começar</string>
-    <string name="onboarding_have_backup">Tenho um backup para restaurar</string>
+    <string name="onboarding_have_backup">Tenho um backup ou um arquivo .vault</string>
     <string name="onboarding_passphrase_lead">Esta é a única coisa que abre seu cofre. Ela não pode ser redefinida.</string>
     <string name="onboarding_fact_no_reset">Não há redefinição nem conta</string>
     <string name="onboarding_fact_no_reset_body">Ninguém pode recuperá-la para você — nem nós, nem ninguém. Esse é o objetivo, e também o risco.</string>
@@ -1426,9 +1427,15 @@
     <string name="backup_keep">Continuar fazendo backup</string>
     <string name="backup_on_sd_card">O backup está em um cartão SD</string>
     <string name="restore_into_list">Escolha o backup de um cofre desta lista — o arquivo no seu app de nuvem ou a pasta no seu cartão SD. Ele volta para esta lista.</string>
-    <string name="restore_lead">Escolha o arquivo de backup que você salvou no app de nuvem ou a pasta no seu cartão SD. Você vai precisar das 24 palavras do seu kit de recuperação — sua frase secreta não abre um backup.</string>
+    <string name="restore_lead">Escolha um backup do app de nuvem ou do cartão SD, ou um arquivo .vault que você salvou. Um backup abre com as 24 palavras do seu kit de recuperação. Um arquivo .vault abre com a frase secreta que você escolheu para ele.</string>
     <string name="restore_choose_file">Escolher o arquivo de backup</string>
     <string name="restore_copying">Copiando arquivos… %1$d de %2$d</string>
+    <string name="restore_open_file">Abrir arquivo</string>
+    <plurals name="restore_from_file">
+        <item quantity="one">De %1$s · %2$d item</item>
+        <item quantity="many">De %1$s · %2$d itens</item>
+        <item quantity="other">De %1$s · %2$d itens</item>
+    </plurals>
     <string name="import_title">Importar um cofre</string>
     <string name="import_lead">Traga de volta um cofre de um arquivo .vault ou de um backup salvo no seu app de nuvem ou em um cartão SD.</string>
     <string name="import_choose_file">Escolher um arquivo</string>
@@ -1487,8 +1494,8 @@
     <string name="unvault_progress">%1$d de %2$d fora</string>
     <string name="unvault_progress_left">%1$d de %2$d fora, %3$d ainda no cofre</string>
     <string name="unvault_busy">Tirando do cofre</string>
-    <string name="archive_title">Vai mudar para um novo dispositivo?</string>
-    <string name="archive_body">Salve um arquivo .vault criptografado que você pode abrir no novo celular. Escolha uma frase secreta para o próprio arquivo — não é a que abre seus cofres, e você vai precisar dela no outro dispositivo. Isso não esvazia este cofre, e os itens na Lixeira não são incluídos.</string>
+    <string name="archive_title">Vai mudar para um novo celular ou outra compilação?</string>
+    <string name="archive_body">Salve um arquivo .vault criptografado que você pode abrir no novo celular. Trocar entre a versão do Play e uma cópia que você mesmo compilou funciona do mesmo jeito. Salve cada cofre aqui primeiro, porque desinstalar apaga tudo. Escolha uma frase secreta para o próprio arquivo — não é a que abre seus cofres, e você vai precisar dela no outro dispositivo. Isso não esvazia este cofre, e os itens na Lixeira não são incluídos.</string>
     <string name="archive_passphrase_label">Frase secreta do arquivo</string>
     <string name="archive_save">Salvar arquivo criptografado</string>
 

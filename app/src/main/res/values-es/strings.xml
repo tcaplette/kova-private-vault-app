@@ -97,6 +97,7 @@
     <string name="restore_open_vaults_first">Abre primero tus bóvedas.</string>
     <string name="restore_file_not_opened">No se pudo abrir el archivo de copia de seguridad.</string>
     <string name="restore_file_unreadable">No se pudo leer el archivo de copia de seguridad. Comprueba que la app que lo guarda tenga una sesión iniciada.</string>
+    <string name="restore_chosen_unreadable">No se pudo leer el archivo. Comprueba que la app que lo guarda tenga una sesión iniciada.</string>
     <string name="restore_no_backup_in_folder">No se encontró ninguna copia de seguridad en esa carpeta.</string>
     <string name="capture_mode_permission_denied">Ese modo necesita el permiso que acaba de pedir. Está desactivado.</string>
     <string name="decoy_trial_notice">Crear una bóveda señuelo importa fotos reales, y la prueba de 30 días empieza con lo primero que se agrega a una bóveda. Déjalo para después si prefieres empezarla con tus propias cosas.</string>
@@ -712,7 +713,7 @@
     <string name="onboarding_welcome_lead">Todo lo que guardas aquí se encripta en este dispositivo y se queda en él. No hay cuenta, ni servidor, ni forma de que veamos nada; esta app no puede conectarse a internet en absoluto.</string>
     <string name="onboarding_welcome_steps">La configuración tiene nueve pasos cortos. Ninguno es obligatorio, y puedes cambiar de opinión después en Configuración.</string>
     <string name="onboarding_get_started">Empezar</string>
-    <string name="onboarding_have_backup">Tengo una copia de seguridad para restaurar</string>
+    <string name="onboarding_have_backup">Tengo una copia de seguridad o un archivo .vault</string>
     <string name="onboarding_passphrase_lead">Es lo único que abre tu bóveda. No se puede restablecer.</string>
     <string name="onboarding_fact_no_reset">No hay restablecimiento ni cuenta</string>
     <string name="onboarding_fact_no_reset_body">Nadie puede recuperarla por ti: ni nosotros ni nadie. Ese es el objetivo, y también el riesgo.</string>
@@ -1426,9 +1427,15 @@
     <string name="backup_keep">Seguir haciendo copias</string>
     <string name="backup_on_sd_card">La copia de seguridad está en una tarjeta SD</string>
     <string name="restore_into_list">Elige la copia de seguridad de una bóveda de esta lista: el archivo en tu app en la nube o la carpeta en tu tarjeta SD. Volverá a esta lista.</string>
-    <string name="restore_lead">Elige el archivo de copia que guardaste en tu app en la nube o la carpeta en tu tarjeta SD. Necesitarás las 24 palabras de tu kit de recuperación; tu frase de contraseña no puede abrir una copia de seguridad.</string>
+    <string name="restore_lead">Elige una copia de seguridad de tu app en la nube o tu tarjeta SD, o un archivo .vault que guardaste. Una copia de seguridad se abre con las 24 palabras de tu kit de recuperación. Un archivo .vault se abre con la frase de contraseña que elegiste para él.</string>
     <string name="restore_choose_file">Elegir el archivo de copia de seguridad</string>
     <string name="restore_copying">Copiando archivos… %1$d de %2$d</string>
+    <string name="restore_open_file">Abrir archivo</string>
+    <plurals name="restore_from_file">
+        <item quantity="one">De %1$s · %2$d elemento</item>
+        <item quantity="many">De %1$s · %2$d elementos</item>
+        <item quantity="other">De %1$s · %2$d elementos</item>
+    </plurals>
     <string name="import_title">Importar una bóveda</string>
     <string name="import_lead">Recupera una bóveda desde un archivo .vault o desde una copia de seguridad guardada en tu app en la nube o en una tarjeta SD.</string>
     <string name="import_choose_file">Elegir un archivo</string>
@@ -1487,8 +1494,8 @@
     <string name="unvault_progress">%1$d de %2$d fuera</string>
     <string name="unvault_progress_left">%1$d de %2$d fuera, %3$d siguen en la bóveda</string>
     <string name="unvault_busy">Sacando de la bóveda</string>
-    <string name="archive_title">¿Te cambias a un dispositivo nuevo?</string>
-    <string name="archive_body">Guarda un archivo .vault encriptado que puedas abrir en el teléfono nuevo. Elige una frase de contraseña para el propio archivo: no es la que abre tus bóvedas, y la necesitarás en el otro dispositivo. No vacía esta bóveda, y los elementos de la Papelera no se incluyen.</string>
+    <string name="archive_title">¿Te cambias a un teléfono nuevo o a otra compilación?</string>
+    <string name="archive_body">Guarda un archivo .vault encriptado que puedas abrir en el teléfono nuevo. Cambiar entre la versión de Play y una copia que compilaste tú mismo funciona igual. Guarda aquí cada bóveda primero, porque desinstalar borra todo. Elige una frase de contraseña para el propio archivo: no es la que abre tus bóvedas, y la necesitarás en el otro dispositivo. No vacía esta bóveda, y los elementos de la Papelera no se incluyen.</string>
     <string name="archive_passphrase_label">Frase de contraseña del archivo</string>
     <string name="archive_save">Guardar archivo encriptado</string>
 

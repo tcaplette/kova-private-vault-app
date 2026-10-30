@@ -46,6 +46,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
@@ -97,6 +98,14 @@ sealed interface RestoreState {
     data class Copying(val done: Int, val total: Int) : RestoreState
     data class Problem(val message: String) : RestoreState
 }
+
+/**
+ * A file chosen on the restore screen with no vault list on the device —
+ * `switch-builds-without-losing-vaults`, D1 and D3. [vault] is false while its head is read
+ * for its kind; a backup leaves for the recovery kit, so a file that stays is a `.vault`.
+ * [problem] is the refusal under its passphrase field.
+ */
+data class RestoreFile(val name: String, val vault: Boolean, val problem: String? = null)
 
 /**
  * The Backup screen — `backup-screen-status-first`, on `cloud-mirror`.
@@ -155,9 +164,16 @@ fun BackupScreen(
     onChooseRestoreFolder: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
+    /** The file chosen with no vault list on the device — `switch-builds-without-losing-vaults`. */
+    restoreFile: RestoreFile? = null,
+    /** A chosen `.vault`'s passphrase. */
+    onOpenVaultFile: (ByteArray) -> Unit = {},
 ) {
     if (restoreMode) {
-        RestoreBody(restoreState, restoreIntoList, onChooseRestoreFile, onChooseRestoreFolder, onBack, modifier)
+        RestoreBody(
+            restoreState, restoreIntoList, restoreFile,
+            onChooseRestoreFile, onChooseRestoreFolder, onOpenVaultFile, onBack, modifier,
+        )
         return
     }
 
@@ -751,85 +767,157 @@ private fun StopBackupDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
 private fun RestoreBody(
     state: RestoreState,
     intoList: Boolean,
+    file: RestoreFile?,
     onChooseFile: () -> Unit,
     onChooseFolder: () -> Unit,
+    onOpenVaultFile: (ByteArray) -> Unit,
     onBack: () -> Unit,
     modifier: Modifier,
 ) {
-    VaultScaffold(
-        title = stringResource(R.string.setup_restore_backup),
-        modifier = modifier,
-        onBack = onBack,
-    ) {
-        Spacer(Modifier.height(Spacing.sm))
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(72.dp)
-                .clip(CircleShape)
-                .background(VaultColors.SurfaceContainerHigh),
+    NoClipboard {
+        VaultScaffold(
+            title = stringResource(R.string.setup_restore_backup),
+            modifier = modifier,
+            onBack = onBack,
         ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_history),
-                // The bar's title names the screen; the glyph repeats it.
-                contentDescription = null,
-                tint = VaultColors.Primary,
-                modifier = Modifier.size(40.dp),
-            )
-        }
-        Spacer(Modifier.height(Spacing.lg))
-        Text(
-            text = if (intoList) {
-                stringResource(R.string.restore_into_list)
-            } else {
-                stringResource(R.string.restore_lead)
-            },
-            style = MaterialTheme.typography.bodyLarge,
-            color = VaultColors.OnSurface,
-        )
-
-        Spacer(Modifier.height(Spacing.section))
-        PrimaryButton(
-            stringResource(R.string.restore_choose_file),
-            enabled = state !is RestoreState.Copying,
-            onClick = onChooseFile,
-        )
-        TextButton(
-            onClick = onChooseFolder,
-            enabled = state !is RestoreState.Copying,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = Spacing.sm),
-        ) {
-            Text(stringResource(R.string.backup_on_sd_card), style = MaterialTheme.typography.labelLarge)
-        }
-
-        when (state) {
-            is RestoreState.Copying -> Column(
+            Spacer(Modifier.height(Spacing.sm))
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .padding(top = Spacing.lg)
-                    .semantics(mergeDescendants = true) { liveRegion = LiveRegionMode.Polite },
+                    .size(72.dp)
+                    .clip(CircleShape)
+                    .background(VaultColors.SurfaceContainerHigh),
             ) {
-                LinearProgressIndicator(
-                    progress = { if (state.total == 0) 0f else state.done.toFloat() / state.total },
-                    color = VaultColors.Primary,
-                    trackColor = VaultColors.SurfaceContainer,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Text(
-                    text = stringResource(R.string.restore_copying, state.done, state.total),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = VaultColors.OnSurfaceVariant,
-                    modifier = Modifier.padding(top = Spacing.sm),
+                Icon(
+                    painter = painterResource(R.drawable.ic_history),
+                    // The bar's title names the screen; the glyph repeats it.
+                    contentDescription = null,
+                    tint = VaultColors.Primary,
+                    modifier = Modifier.size(40.dp),
                 )
             }
-            is RestoreState.Problem -> Text(
-                text = state.message,
-                style = MaterialTheme.typography.bodyMedium,
-                color = VaultColors.Error,
-                modifier = Modifier.padding(top = Spacing.lg),
+            Spacer(Modifier.height(Spacing.lg))
+            Text(
+                text = if (intoList) {
+                    stringResource(R.string.restore_into_list)
+                } else {
+                    stringResource(R.string.restore_lead)
+                },
+                style = MaterialTheme.typography.bodyLarge,
+                color = VaultColors.OnSurface,
             )
-            RestoreState.Idle -> Unit
+
+            Spacer(Modifier.height(Spacing.section))
+            val copying = state is RestoreState.Copying
+            if (file == null) {
+                PrimaryButton(
+                    // With no list a `.vault` comes in here too, so the action names no kind (D1).
+                    stringResource(if (intoList) R.string.restore_choose_file else R.string.import_choose_file),
+                    enabled = !copying,
+                    onClick = onChooseFile,
+                )
+                TextButton(
+                    onClick = onChooseFolder,
+                    enabled = !copying,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = Spacing.sm),
+                ) {
+                    Text(stringResource(R.string.backup_on_sd_card), style = MaterialTheme.typography.labelLarge)
+                }
+            } else {
+                VaultFileState(file, copying, onChooseFile, onOpenVaultFile)
+            }
+
+            when (state) {
+                is RestoreState.Copying -> Column(
+                    modifier = Modifier
+                        .padding(top = Spacing.lg)
+                        .semantics(mergeDescendants = true) { liveRegion = LiveRegionMode.Polite },
+                ) {
+                    LinearProgressIndicator(
+                        progress = { if (state.total == 0) 0f else state.done.toFloat() / state.total },
+                        color = VaultColors.Primary,
+                        trackColor = VaultColors.SurfaceContainer,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    Text(
+                        text = stringResource(R.string.restore_copying, state.done, state.total),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = VaultColors.OnSurfaceVariant,
+                        modifier = Modifier.padding(top = Spacing.sm),
+                    )
+                }
+                is RestoreState.Problem -> Text(
+                    text = state.message,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = VaultColors.Error,
+                    modifier = Modifier.padding(top = Spacing.lg),
+                )
+                RestoreState.Idle -> Unit
+            }
         }
+    }
+}
+
+/**
+ * D3. The chosen file in place of the two actions — the import screen's row, tappable to choose
+ * again — and, once it reads as a `.vault`, its passphrase and "Open file". The field is emptied
+ * as it is submitted, so a refusal lands on an empty field with the row kept, ready to retype.
+ */
+@Composable
+private fun VaultFileState(
+    file: RestoreFile,
+    copying: Boolean,
+    onChooseFile: () -> Unit,
+    onOpen: (ByteArray) -> Unit,
+) {
+    var passphrase by remember(file.name) { mutableStateOf("") }
+
+    fun submit() {
+        if (copying || passphrase.isEmpty()) return
+        val bytes = passphrase.toByteArray(Charsets.UTF_8)
+        passphrase = ""
+        onOpen(bytes)
+    }
+
+    ChosenBackupRow(
+        name = file.name,
+        kind = if (file.vault) stringResource(R.string.import_vault_file) else null,
+        folder = false,
+        enabled = !copying,
+        onClick = onChooseFile,
+    )
+    if (!file.vault) {
+        // Reading the file's head — a cloud app may have to fetch it first.
+        LinearProgressIndicator(
+            color = VaultColors.Primary,
+            trackColor = VaultColors.SurfaceContainerHigh,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = Spacing.md),
+        )
+        return
+    }
+    PassphraseField(
+        value = passphrase,
+        onValueChange = { passphrase = it },
+        label = stringResource(R.string.import_passphrase_label),
+        imeAction = ImeAction.Done,
+        enabled = !copying,
+        isError = file.problem != null,
+        supporting = file.problem,
+        announce = file.problem != null,
+        onImeAction = ::submit,
+        modifier = Modifier.padding(top = Spacing.lg),
+    )
+    Button(
+        onClick = ::submit,
+        enabled = !copying && passphrase.isNotEmpty(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = Spacing.lg),
+    ) {
+        Text(stringResource(R.string.restore_open_file), style = MaterialTheme.typography.labelLarge)
     }
 }

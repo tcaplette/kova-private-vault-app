@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.provider.MediaStore
 import android.app.Notification
 import android.app.NotificationChannel
@@ -14,6 +15,7 @@ import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -62,6 +64,20 @@ class ImportWorker(
          * WorkManager's database in plaintext, which Gate 1 read straight back.
          */
         const val IMPORT_TAG = "import"
+
+        /** Logcat tag for a failed attempt — step, class and attempt number, nothing else. */
+        private const val LOG_TAG = "import"
+
+        /** One run and two reruns of a live read failure (`concurrent-import-failure` D2). */
+        const val ATTEMPTS = 3
+        private val RETRY_DELAYS_MS = longArrayOf(500, 2_000)
+
+        /**
+         * Test-only: told the step and number of every failed attempt, before the
+         * worker decides whether to rerun. Null in the app.
+         */
+        @Volatile
+        var onAttemptFailed: ((ImportStep, Int) -> Unit)? = null
     }
 
     /**
@@ -124,7 +140,76 @@ class ImportWorker(
         val bytesWritten = java.util.concurrent.atomic.AtomicLong(0)
         val bytesTotal = java.util.concurrent.atomic.AtomicLong(-1)
 
-        val outcome = coroutineScope {
+        // `concurrent-import-failure` D2. A failure to read the source while the job is
+        // still in memory is a live grant failing, which can pass — the picker's provider
+        // was mid-sync when one batch lost an item. Rerun from what was staged, twice;
+        // only the third is final. A write failure is this phone's storage, final at once.
+        var attempt = 1
+        var outcome: ImportOutcome
+        while (true) {
+            outcome = runOnce(resolver, store, uri, blobIds, vmk, job, bytesWritten, bytesTotal)
+            if (outcome !is ImportOutcome.Failed) break
+            Log.w(LOG_TAG, "import failed at ${outcome.step}: ${outcome.cause} (attempt $attempt of $ATTEMPTS)")
+            onAttemptFailed?.invoke(outcome.step, attempt)
+            val retryable = outcome.step != ImportStep.WRITE &&
+                attempt < ATTEMPTS &&
+                WorkJobs.get<WorkJobs.ImportJob>(id) != null
+            if (!retryable) break
+            // A stop during the wait is a stop, not a failure: the partial stays, as
+            // it does for any cancellation.
+            try {
+                delay(RETRY_DELAYS_MS[attempt - 1])
+            } catch (_: CancellationException) {
+                return Result.retry()
+            }
+            if (isStopped) return Result.retry()
+            attempt++
+        }
+        setProgress(
+            workDataOf(
+                PROGRESS_BYTES to bytesWritten.get(),
+                PROGRESS_TOTAL to bytesTotal.get()
+            )
+        )
+
+        // Nothing may escape without cleaning up: a partial outliving a failure
+        // is a format leak (FORMAT.md §10), not merely wasted space.
+        return when (outcome) {
+            // Stopped, not broken. The system may re-run this, so the partial
+            // stays — it *is* the resume state P1-7 measured. If the stop was a
+            // real user cancellation, WorkManager will not re-run it and the
+            // unlock sweep collects the partial instead.
+            is ImportOutcome.Cancelled -> Result.retry()
+
+            // Final: the third read failure, a write failure, or a read failure
+            // with no job — after process death a picker URI can never become
+            // readable again, so retrying is a loop that never terminates. The
+            // partial is now garbage.
+            is ImportOutcome.Failed -> {
+                // Every blob this item claimed: the partial and any sealed blobs
+                // from an earlier attempt. A sealed blob whose item never
+                // completed is unreferenced by any index and would sit in the
+                // pool forever.
+                blobIds.forEach { store.discardPartial(it); store.delete(it) }
+                WorkJobs.clear(id)
+                Result.failure()
+            }
+            is ImportOutcome.Done -> done(outcome, store, indexId, vmk)
+        }
+    }
+
+    /** One run of the pipeline, with progress sampled while it copies. */
+    private suspend fun runOnce(
+        resolver: ContentResolver,
+        store: BlobStore,
+        uri: Uri,
+        blobIds: MutableList<ByteArray>,
+        vmk: ByteArray,
+        job: WorkJobs.ImportJob,
+        bytesWritten: java.util.concurrent.atomic.AtomicLong,
+        bytesTotal: java.util.concurrent.atomic.AtomicLong,
+    ): ImportOutcome =
+        coroutineScope {
             val reporter = launch {
                 while (isActive) {
                     setProgress(
@@ -165,119 +250,109 @@ class ImportWorker(
                 reporter.cancel()
             }
         }
-        setProgress(
-            workDataOf(
-                PROGRESS_BYTES to bytesWritten.get(),
-                PROGRESS_TOTAL to bytesTotal.get()
-            )
-        )
 
-        // Nothing may escape without cleaning up: a partial outliving a failure
-        // is a format leak (FORMAT.md §10), not merely wasted space.
-        return when (outcome) {
-            // Stopped, not broken. The system may re-run this, so the partial
-            // stays — it *is* the resume state P1-7 measured. If the stop was a
-            // real user cancellation, WorkManager will not re-run it and the
-            // unlock sweep collects the partial instead.
-            is ImportOutcome.Cancelled -> Result.retry()
-
-            // Final. The source could not be read, which for a picker URI after
-            // process death can never become true again, so retrying is a loop
-            // that never terminates. The partial is now garbage.
-            is ImportOutcome.Failed -> {
-                // Every blob this item claimed: the partial and any sealed blobs
-                // from an earlier attempt. A sealed blob whose item never
-                // completed is unreferenced by any index and would sit in the
-                // pool forever.
-                blobIds.forEach { store.discardPartial(it); store.delete(it) }
-                WorkJobs.clear(id)
-                Result.failure()
-            }
-            is ImportOutcome.Done -> {
-                // Recorded the moment the content blobs are known, ahead of
-                // anything else this branch does: they are already sealed on
-                // disk, so a kill from here to the commit below must not leave
-                // them untracked (`blob-ownership-by-record`, D4). One extra
-                // index commit per import, against a write-then-commit race that
-                // otherwise leaks — the same race closed for purge.
-                MetadataDb.commit(store, indexId, vmk) { db ->
-                    db.ownedChaff += outcome.item.blobIds
-                    db
-                }
-
-                // Decode the thumbnail and write the chaff blobs **before** the
-                // commit. Neither touches the index, both are slow, and P2-9's
-                // guard serializes everything inside it — holding it across a
-                // full-frame decode would turn a batch import into a queue.
-                val made = Thumbnails.generate(store, outcome.item, vmk)
-                val rng = java.security.SecureRandom()
-                val chaffCount = outcome.item.blobIds.sumOf {
-                    rng.nextInt(VaultLifecycle.IMPORT_CHAFF_MAX_PER_BLOB + 1)
-                }
-                val chaff = if (chaffCount > 0) store.writeChaff(chaffCount) else emptyList()
-
-                // Save the index per completed item, not per batch: a batch that
-                // dies halfway must keep what finished.
-                //
-                // **Every mutation of the index happens in here.** Before P2-9 this
-                // was a bare load / mutate / save, and N parallel workers ran it at
-                // once: seven imports recorded one item on a real device, and on the
-                // emulator left the index unparseable. See `MetadataDb.commit`.
-                val item = MetadataDb.commit(store, indexId, vmk) { db ->
-                    // Staging and flushing both mutate the index — `stage` appends
-                    // to the pack table and `flush` writes the pack blobs those
-                    // entries name — so both are inside, on one store instance.
-                    // The decode that produced these bytes is not, and was not.
-                    val thumbs = ThumbnailStore(store)
-                    val staged = if (made.webp != null) {
-                        outcome.item.withThumb(thumbs.stage(db, made.webp), made.durationMs)
-                            .also { thumbs.flush(db, vmk) }
-                    } else {
-                        outcome.item
-                    }
-                    db.items += staged
-
-                    // The content blobs just became this item's, not owned chaff
-                    // any more — remove the record the commit above added
-                    // (`blob-ownership-by-record`, D4).
-                    db.ownedChaff.removeAll { id ->
-                        outcome.item.blobIds.any { it.contentEquals(id) }
-                    }
-
-                    // §6's per-import chaff, scaled to the blobs this import wrote.
-                    // A split item writes many same-sized files at one timestamp; on
-                    // its own that is a legible burst, and this is what it hides in.
-                    // Owned and recorded, so the per-unlock churn can rewrite it.
-                    // Recorded in here because the record lives in the index — before
-                    // P2-9 it was lost with the commit and the chaff was orphaned.
-                    if (chaff.isNotEmpty()) db.ownedChaff += chaff
-
-                    // One entry per completed item, because one worker *is* one item.
-                    // The batch edge exists only in the Activity, which P1-10 lets die
-                    // while imports keep running, so a per-batch entry would be missing
-                    // exactly when the log matters most.
-                    //
-                    // Nested inside the commit deliberately: the log's blob ID is an
-                    // index field, so this must be part of the same transaction. The
-                    // guard is reentrant, which is why the save this may perform when
-                    // the log grows does not deadlock.
-                    TamperLog.append(
-                        store, db, indexId, vmk,
-                        TamperLog.IMPORT_COMPLETED, TamperLog.countPayload(1)
-                    )
-                    staged
-                }
-
-                WorkJobs.clear(id)
-                Result.success(workDataOf("deletable" to item.deletable))
-            }
+    private fun done(
+        outcome: ImportOutcome.Done,
+        store: BlobStore,
+        indexId: ByteArray,
+        vmk: ByteArray,
+    ): Result {
+        // Recorded the moment the content blobs are known, ahead of
+        // anything else this branch does: they are already sealed on
+        // disk, so a kill from here to the commit below must not leave
+        // them untracked (`blob-ownership-by-record`, D4). One extra
+        // index commit per import, against a write-then-commit race that
+        // otherwise leaks — the same race closed for purge.
+        MetadataDb.commit(store, indexId, vmk) { db ->
+            db.ownedChaff += outcome.item.blobIds
+            db
         }
+
+        // Decode the thumbnail and write the chaff blobs **before** the
+        // commit. Neither touches the index, both are slow, and P2-9's
+        // guard serializes everything inside it — holding it across a
+        // full-frame decode would turn a batch import into a queue.
+        val made = Thumbnails.generate(store, outcome.item, vmk)
+        val rng = java.security.SecureRandom()
+        val chaffCount = outcome.item.blobIds.sumOf {
+            rng.nextInt(VaultLifecycle.IMPORT_CHAFF_MAX_PER_BLOB + 1)
+        }
+        val chaff = if (chaffCount > 0) store.writeChaff(chaffCount) else emptyList()
+
+        // Save the index per completed item, not per batch: a batch that
+        // dies halfway must keep what finished.
+        //
+        // **Every mutation of the index happens in here.** Before P2-9 this
+        // was a bare load / mutate / save, and N parallel workers ran it at
+        // once: seven imports recorded one item on a real device, and on the
+        // emulator left the index unparseable. See `MetadataDb.commit`.
+        val item = MetadataDb.commit(store, indexId, vmk) { db ->
+            // Staging and flushing both mutate the index — `stage` appends
+            // to the pack table and `flush` writes the pack blobs those
+            // entries name — so both are inside, on one store instance.
+            // The decode that produced these bytes is not, and was not.
+            val thumbs = ThumbnailStore(store)
+            val staged = if (made.webp != null) {
+                outcome.item.withThumb(thumbs.stage(db, made.webp), made.durationMs)
+                    .also { thumbs.flush(db, vmk) }
+            } else {
+                outcome.item
+            }
+            db.items += staged
+
+            // The content blobs just became this item's, not owned chaff
+            // any more — remove the record the commit above added
+            // (`blob-ownership-by-record`, D4).
+            db.ownedChaff.removeAll { id ->
+                outcome.item.blobIds.any { it.contentEquals(id) }
+            }
+
+            // §6's per-import chaff, scaled to the blobs this import wrote.
+            // A split item writes many same-sized files at one timestamp; on
+            // its own that is a legible burst, and this is what it hides in.
+            // Owned and recorded, so the per-unlock churn can rewrite it.
+            // Recorded in here because the record lives in the index — before
+            // P2-9 it was lost with the commit and the chaff was orphaned.
+            if (chaff.isNotEmpty()) db.ownedChaff += chaff
+
+            // One entry per completed item, because one worker *is* one item.
+            // The batch edge exists only in the Activity, which P1-10 lets die
+            // while imports keep running, so a per-batch entry would be missing
+            // exactly when the log matters most.
+            //
+            // Nested inside the commit deliberately: the log's blob ID is an
+            // index field, so this must be part of the same transaction. The
+            // guard is reentrant, which is why the save this may perform when
+            // the log grows does not deadlock.
+            TamperLog.append(
+                store, db, indexId, vmk,
+                TamperLog.IMPORT_COMPLETED, TamperLog.countPayload(1)
+            )
+            staged
+        }
+
+        WorkJobs.clear(id)
+        return Result.success(workDataOf("deletable" to item.deletable))
     }
 }
 
+/**
+ * Where an import failed — `concurrent-import-failure` D1. The first three read the
+ * source; [WRITE] is this phone's store.
+ */
+enum class ImportStep { DESCRIBE, SIZE, OPEN, WRITE }
+
 sealed class ImportOutcome {
     class Done(val item: VaultItem, val sourceHash: String, val blobHash: String) : ImportOutcome()
-    class Failed(val reason: String) : ImportOutcome()
+
+    /**
+     * [cause] is the exception's simple class name, `"NoStream"` for a provider that
+     * returned no stream. **Never its message, never the URI**: a provider's message
+     * routinely carries both, and `import-pipeline` forbids recording the source.
+     */
+    class Failed(val step: ImportStep, val cause: String) : ImportOutcome() {
+        constructor(step: ImportStep, e: Exception) : this(step, e.javaClass.simpleName.ifEmpty { "Exception" })
+    }
     object Cancelled : ImportOutcome()
 }
 
@@ -335,13 +410,15 @@ class ImportPipeline(
         // on a dead picker grant they throw — and until P1-8.6 they threw *past*
         // the caller's handling, so WorkManager saw a raw exception instead of a
         // Failed outcome and the partial was never cleaned up.
-        val source: SourceInfo
-        val total: Long
-        try {
-            source = SourceMetadata.describe(resolver, uri)
-            total = sizeOf(uri)
+        val source = try {
+            SourceMetadata.describe(resolver, uri)
         } catch (e: Exception) {
-            return ImportOutcome.Failed(e.message ?: e::class.java.simpleName)
+            return ImportOutcome.Failed(ImportStep.DESCRIBE, e)
+        }
+        val total = try {
+            sizeOf(uri)
+        } catch (e: Exception) {
+            return ImportOutcome.Failed(ImportStep.SIZE, e)
         }
         // Where this item stands: whole blobs already sealed, plus whatever of
         // the next one survived. Blob-granular, so a resumed 4 GB import re-reads
@@ -353,8 +430,15 @@ class ImportPipeline(
         // was sealed is the filtered bytes. Filtering after the skip would resume at the wrong
         // place on a stripped item.
         val removed = strip?.takeIf { ExifPolicy.strippable(ExportDestination.mimeOf(source.name)) }
+        // Opening is its own step: a revoked grant or a provider mid-sync fails here,
+        // and that is the failure the worker retries. Everything after it is the write.
+        val opened = try {
+            resolver.openInputStream(uri)
+        } catch (e: Exception) {
+            return ImportOutcome.Failed(ImportStep.OPEN, e)
+        } ?: return ImportOutcome.Failed(ImportStep.OPEN, "NoStream")
         val written = try {
-            resolver.openInputStream(uri)?.use { raw ->
+            opened.use { raw ->
                 val seal = { src: java.io.InputStream ->
                     val counted = CountingStream(src)
                     if (resumeAt > 0) skipExactly(counted, resumeAt)
@@ -368,11 +452,11 @@ class ImportPipeline(
                 } else {
                     seal(raw)
                 }
-            } ?: return ImportOutcome.Failed("no stream for $uri")
+            }
         } catch (_: CancelledException) {
             return ImportOutcome.Cancelled
         } catch (e: Exception) {
-            return ImportOutcome.Failed(e.message ?: e::class.java.simpleName)
+            return ImportOutcome.Failed(ImportStep.WRITE, e)
         }
 
         // I6: decrypt what was stored and compare against the source before

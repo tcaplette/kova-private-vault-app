@@ -120,6 +120,17 @@ adb install kova.apk
 
 A self-built copy has no trial and no purchase. Everything in it works from the first launch, for as long as you use it.
 
+### Switching between the Play build and a self-build
+
+The Play build and a self-built copy are signed with different keys, so Android will not install one over the other. You have to uninstall the one you have first, and uninstalling deletes every vault in it. Save your vaults before you uninstall.
+
+1. Open each vault, open its menu, and choose **Unvault Everything**. Under "Moving to a new phone or another build?", enter the passphrase that opens your vault list and a new passphrase for the file, choose **Save encrypted archive**, and save the `.vault` file to Downloads. If a vault has automatic backup turned on, you can check its backup is up to date instead.
+2. Uninstall the app, then install the other build.
+3. On the welcome screen, choose **I have a backup or a .vault file**, then **Choose a file**, and pick the first `.vault` file. Enter the passphrase you chose for it, and finish setting up. That vault is the first one on your new vault list, with everything in it.
+4. Bring back any other vaults from the vault list's menu, with **Import a vault from a file**.
+
+It works the same way in both directions. Once everything is back, you can delete the `.vault` files from Downloads.
+
 ## Security
 
 Kova derives its keys from your passphrase with Argon2id (64 MiB, 6 passes) and encrypts everything you keep with XChaCha20-Poly1305 through libsodium. Biometric unlock wraps the key with an AES-256-GCM key in the Android Keystore that needs a Class 3 biometric for every use. Shares to a paired contact use X-Wing, a post-quantum hybrid of ML-KEM-768 and X25519. [docs/security-design.md](docs/security-design.md) explains the keys, the file layout, the threat model and the known limits.
@@ -133,10 +144,6 @@ Kova is source-available under the [PolyForm Strict License 1.0.0](LICENSE), wit
 ## Work in progress
 
 ### Trademark policy
-
-This section is in progress.
-
-### Switching between the Play build and a self-build
 
 This section is in progress.
 

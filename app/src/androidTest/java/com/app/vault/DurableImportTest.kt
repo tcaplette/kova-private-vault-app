@@ -258,11 +258,7 @@ class DurableImportTest {
 
         // The production sweep spares anything tagged on unfinished work.
         val claimed = setOf(live.joinToString("") { "%02x".format(it) })
-        store.stagedPartials().forEach { hex ->
-            if (hex !in claimed) {
-                store.discardPartial(hex.chunked(2).map { it.toInt(16).toByte() }.toByteArray())
-            }
-        }
+        assertEquals("one orphan to sweep", 1, store.sweepUnclaimed { claimed })
 
         assertTrue("a live import's partial was swept", store.resumeOffset(live) > 0)
         assertEquals("the orphan survived the sweep", 0L, store.resumeOffset(orphan))

@@ -97,6 +97,7 @@
     <string name="restore_open_vaults_first">先に保管庫を開いてください。</string>
     <string name="restore_file_not_opened">バックアップファイルを開けませんでした。</string>
     <string name="restore_file_unreadable">バックアップファイルを読み取れませんでした。保存先のアプリにログインしているか確認してください。</string>
+    <string name="restore_chosen_unreadable">ファイルを読み取れませんでした。保存先のアプリにログインしているか確認してください。</string>
     <string name="restore_no_backup_in_folder">そのフォルダにバックアップは見つかりませんでした。</string>
     <string name="capture_mode_permission_denied">このモードには、今リクエストした権限が必要です。オフになっています。</string>
     <string name="decoy_trial_notice">ダミー保管庫を作ると実際の写真がインポートされ、30 日間の試用期間は保管庫に最初に何かが追加された時点で始まります。自分のもので始めたい場合は、これを後回しにしてください。</string>
@@ -654,7 +655,7 @@
     <string name="onboarding_welcome_lead">ここに入れたものはすべてこのデバイス上で暗号化され、このデバイスに留まります。アカウントもサーバーもなく、私たちがそれを見る方法もありません。このアプリはインターネットにまったく接続できません。</string>
     <string name="onboarding_welcome_steps">設定は 9 つの短いステップで完了します。どれも必須ではなく、後から設定で変更できます。</string>
     <string name="onboarding_get_started">始める</string>
-    <string name="onboarding_have_backup">復元するバックアップがあります</string>
+    <string name="onboarding_have_backup">バックアップまたは .vault ファイルがあります</string>
     <string name="onboarding_passphrase_lead">保管庫を開けるのはこれだけです。リセットはできません。</string>
     <string name="onboarding_fact_no_reset">リセットもアカウントもありません</string>
     <string name="onboarding_fact_no_reset_body">誰にも復元できません。私たちにも、ほかの誰にもです。それが目的であり、リスクでもあります。</string>
@@ -1334,9 +1335,13 @@
     <string name="backup_keep">バックアップを続ける</string>
     <string name="backup_on_sd_card">バックアップは SD カードにあります</string>
     <string name="restore_into_list">このリストにある保管庫のバックアップ（クラウドアプリのファイルか SD カードのフォルダ）を選んでください。このリストに戻ります。</string>
-    <string name="restore_lead">クラウドアプリに保存したバックアップファイルか、SD カードのフォルダを選んでください。復元キットの 24 個の単語が必要です。パスフレーズではバックアップを開けません。</string>
+    <string name="restore_lead">クラウドアプリか SD カードのバックアップ、または保存した .vault ファイルを選んでください。バックアップは復元キットの 24 個の単語で開きます。.vault ファイルは、そのファイル用に決めたパスフレーズで開きます。</string>
     <string name="restore_choose_file">バックアップファイルを選ぶ</string>
     <string name="restore_copying">ファイルをコピー中… %1$d / %2$d</string>
+    <string name="restore_open_file">ファイルを開く</string>
+    <plurals name="restore_from_file">
+        <item quantity="other">%1$s から · %2$d 個のアイテム</item>
+    </plurals>
     <string name="import_title">保管庫をインポート</string>
     <string name="import_lead">.vault ファイル、またはクラウドアプリや SD カードに保存したバックアップから保管庫を戻します。</string>
     <string name="import_choose_file">ファイルを選ぶ</string>
@@ -1389,8 +1394,8 @@
     <string name="unvault_progress">%1$d / %2$d を書き出し済み</string>
     <string name="unvault_progress_left">%1$d / %2$d を書き出し済み、保管庫に残り %3$d</string>
     <string name="unvault_busy">保管庫から出しています</string>
-    <string name="archive_title">新しいデバイスに移行しますか？</string>
-    <string name="archive_body">新しいスマートフォンで開ける暗号化された .vault ファイルを 1 つ保存します。ファイル自体のパスフレーズを決めてください。保管庫を開くパスフレーズとは別のもので、もう一方のデバイスで必要になります。この保管庫が空になることはなく、ゴミ箱のアイテムは含まれません。</string>
+    <string name="archive_title">新しいスマートフォンや別のビルドに移行しますか？</string>
+    <string name="archive_body">新しいスマートフォンで開ける暗号化された .vault ファイルを 1 つ保存します。Play 版と自分でビルドしたコピーの切り替えも同じ方法でできます。アンインストールするとすべて削除されるため、先に各保管庫をここで保存してください。ファイル自体のパスフレーズを決めてください。保管庫を開くパスフレーズとは別のもので、もう一方のデバイスで必要になります。この保管庫が空になることはなく、ゴミ箱のアイテムは含まれません。</string>
     <string name="archive_passphrase_label">ファイルのパスフレーズ</string>
     <string name="archive_save">暗号化されたアーカイブを保存</string>
 

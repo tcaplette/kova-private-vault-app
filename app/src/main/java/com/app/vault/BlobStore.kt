@@ -99,6 +99,13 @@ open class BlobStore(
                 )
 
         fun offsetOfChunk(index: Long): Long = PREFIX_BYTES + index * STRIDE
+
+        /**
+         * Staging files a [writeTo] in this process has open, by path, with how many.
+         * Process-wide because every store on one directory shares its `incoming/`, and
+         * in memory because after a process death nothing is writing.
+         */
+        private val writing = HashMap<String, Int>()
     }
 
     private val sodium = Sodium.lazy
@@ -111,6 +118,15 @@ open class BlobStore(
 
     fun fileOf(blobId: ByteArray): File =
         File(dir, blobId.joinToString("") { "%02x".format(it) })
+
+    /**
+     * Deletes every file in the store and in [incoming] — `VaultLifecycle.sweepWithoutList`'s,
+     * for an install with no slot file, and nobody else's.
+     */
+    fun clear() {
+        dir.listFiles()?.forEach { it.deleteRecursively() }
+        incoming.listFiles()?.forEach { it.deleteRecursively() }
+    }
 
     /**
      * Every sealed blob in the pool, by ID — P2-9.
@@ -304,6 +320,33 @@ open class BlobStore(
             .map { it.name.removeSuffix(".tmp") }
 
     /**
+     * Deletes every staged partial that [claimed] does not name — the unlock sweep.
+     *
+     * **Lists first, then asks for the claims.** A writer claims a blob before it creates
+     * that blob's partial, so any partial in the listing was claimed before the claims are
+     * read, and is in them while its import lives. Read the other way round, a blob
+     * claimed between the two would be listed unclaimed and a live import's partial
+     * deleted under it (`concurrent-import-failure` D3).
+     *
+     * @return how many went.
+     */
+    fun sweepUnclaimed(claimed: () -> Set<String>): Int {
+        val staged = stagedPartials()
+        val live = claimed()
+        var swept = 0
+        staged.forEach { hex ->
+            if (hex in live) return@forEach
+            // Not every staged file is an import's: the index and a thumbnail pack stage
+            // here too, unclaimed by any job. One being written right now is
+            // not an orphan, and deleting it fails that write at its rename — the
+            // index's, under an import that outlived a lock.
+            val tmp = File(incoming, "$hex.tmp")
+            if (synchronized(writing) { tmp.path !in writing && tmp.delete() }) swept++
+        }
+        return swept
+    }
+
+    /**
      * @param resume continue an interrupted write, reusing the existing nonce
      *   prefix and appending after the last **whole** chunk. Any partial chunk is
      *   truncated away first, so nothing half-sealed is ever kept.
@@ -316,68 +359,76 @@ open class BlobStore(
         context: VaultKeys.BlobContext = VaultKeys.BlobContext.CONTENT
     ): WrittenBlob {
         val file = tempFileOf(blobId)
-        val resuming = resume && file.exists() && file.length() >= PREFIX_BYTES
-
-        val completeChunks = if (resuming) {
-            ((file.length() - PREFIX_BYTES) / STRIDE).coerceAtLeast(0)
-        } else {
-            0L
-        }
-
-        val prefix: ByteArray
-        if (resuming) {
-            prefix = ByteArray(PREFIX_BYTES)
-            RandomAccessFile(file, "rw").use { raf ->
-                raf.readFully(prefix)
-                // Drop any partial chunk: a truncated chunk was never sealed.
-                raf.setLength(PREFIX_BYTES + completeChunks * STRIDE)
-            }
-        } else {
-            prefix = ByteArray(PREFIX_BYTES).also { rng.nextBytes(it) }
-            file.delete()
-        }
-
-        val dek = VaultKeys.blobKey(vmk, blobId, context)
-        var plaintextLength = completeChunks * CHUNK
+        // Registered before the staging file is created, so the unlock sweep — which
+        // checks this under the same lock before it deletes — can never take a file
+        // out from under a write in progress (`concurrent-import-failure`, 4.2).
+        synchronized(writing) { writing.merge(file.path, 1, Int::plus) }
         try {
-            FileOutputStream(file, resuming).use { out ->
-                if (!resuming) out.write(prefix)
-                plaintextLength += sealChunks(out, blobId, dek, prefix, completeChunks, input)
-                out.fd.sync()
-            }
-            // Streaming is done. Past this point the file is padded, so a
-            // failure below leaves something that is *not* a valid resume state
-            // — resumeOffset would read the bucket size as written length — and
-            // it has to go.
-            try {
-                // A blob over the cap is a format violation, not a big file: the
-                // ladder stops at 16 MiB and chaff covers nothing above it. Items
-                // go through writeItem and never reach this. What can is a
-                // fixed-ID blob — the index (§7) or a thumbnail pack (§8) — which
-                // has nowhere to record a blob list, so this fails loudly rather
-                // than writing something Gate 1 would find.
-                padToBucket(file)
-                check(file.renameTo(fileOf(blobId))) { "could not move blob into place" }
-            } catch (e: Throwable) {
-                file.delete()
-                throw e
-            }
-        } finally {
-            // The partial is deliberately NOT deleted here.
-            //
-            // It was, until P1-8.6: `finally { file.delete() }` destroyed the
-            // resume state on every failure path, so an interrupted write could
-            // never be resumed. P1-7's resume test did not catch it because it
-            // built its partial by truncating a file rather than by interrupting
-            // a real write. Only a process kill — where this block never runs —
-            // left anything behind.
-            //
-            // A partial that outlives a failure is now cleaned up deliberately:
-            // discardPartial on final failure, and the unlock sweep otherwise.
-            dek.fill(0)
-        }
+            val resuming = resume && file.exists() && file.length() >= PREFIX_BYTES
 
-        return WrittenBlob(blobId, plaintextLength)
+            val completeChunks = if (resuming) {
+                ((file.length() - PREFIX_BYTES) / STRIDE).coerceAtLeast(0)
+            } else {
+                0L
+            }
+
+            val prefix: ByteArray
+            if (resuming) {
+                prefix = ByteArray(PREFIX_BYTES)
+                RandomAccessFile(file, "rw").use { raf ->
+                    raf.readFully(prefix)
+                    // Drop any partial chunk: a truncated chunk was never sealed.
+                    raf.setLength(PREFIX_BYTES + completeChunks * STRIDE)
+                }
+            } else {
+                prefix = ByteArray(PREFIX_BYTES).also { rng.nextBytes(it) }
+                file.delete()
+            }
+
+            val dek = VaultKeys.blobKey(vmk, blobId, context)
+            var plaintextLength = completeChunks * CHUNK
+            try {
+                FileOutputStream(file, resuming).use { out ->
+                    if (!resuming) out.write(prefix)
+                    plaintextLength += sealChunks(out, blobId, dek, prefix, completeChunks, input)
+                    out.fd.sync()
+                }
+                // Streaming is done. Past this point the file is padded, so a
+                // failure below leaves something that is *not* a valid resume state
+                // — resumeOffset would read the bucket size as written length — and
+                // it has to go.
+                try {
+                    // A blob over the cap is a format violation, not a big file: the
+                    // ladder stops at 16 MiB and chaff covers nothing above it. Items
+                    // go through writeItem and never reach this. What can is a
+                    // fixed-ID blob — the index (§7) or a thumbnail pack (§8) — which
+                    // has nowhere to record a blob list, so this fails loudly rather
+                    // than writing something Gate 1 would find.
+                    padToBucket(file)
+                    check(file.renameTo(fileOf(blobId))) { "could not move blob into place" }
+                } catch (e: Throwable) {
+                    file.delete()
+                    throw e
+                }
+            } finally {
+                // The partial is deliberately NOT deleted here.
+                //
+                // It was, until P1-8.6: `finally { file.delete() }` destroyed the
+                // resume state on every failure path, so an interrupted write could
+                // never be resumed. P1-7's resume test did not catch it because it
+                // built its partial by truncating a file rather than by interrupting
+                // a real write. Only a process kill — where this block never runs —
+                // left anything behind.
+                //
+                // A partial that outlives a failure is now cleaned up deliberately:
+                // discardPartial on final failure, and the unlock sweep otherwise.
+                dek.fill(0)
+            }
+
+            return WrittenBlob(blobId, plaintextLength)
+        } finally {
+            synchronized(writing) { writing.computeIfPresent(file.path) { _, n -> (n - 1).takeIf { it > 0 } } }
+        }
     }
 
     /** Reads until the buffer is full or the stream ends — `read` may return short. */

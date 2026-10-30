@@ -8,11 +8,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -25,6 +27,10 @@ import com.app.vault.ui.BackupStepScreen
 import com.app.vault.ui.CaptureStepScreen
 import com.app.vault.ui.FingerprintStepScreen
 import com.app.vault.ui.OnboardingFrame
+import com.app.vault.ui.OnboardingWelcomeScreen
+import androidx.compose.ui.res.pluralStringResource
+import com.app.vault.ui.NameStep
+import com.app.vault.ui.RestoreFile
 import com.app.vault.ui.RestoreState
 import com.app.vault.ui.VaultDrawerSheet
 import com.app.vault.ui.backupDrawerLine
@@ -393,6 +399,9 @@ class OnboardingDeviceTest {
         status: BackupStatus = BackupStatus.Off,
         restoreMode: Boolean = false,
         restoreState: RestoreState = RestoreState.Idle,
+        restoreIntoList: Boolean = false,
+        restoreFile: RestoreFile? = null,
+        onOpenVaultFile: (ByteArray) -> Unit = {},
         fileDestination: Boolean = true,
         destinations: List<CloudMirror.Destination> = listOf(drive, sdCard),
         onChooseDestination: (CloudMirror.Destination) -> Unit = {},
@@ -413,6 +422,9 @@ class OnboardingDeviceTest {
             onChooseRestoreFile = {},
             onChooseRestoreFolder = {},
             onBack = {},
+            restoreIntoList = restoreIntoList,
+            restoreFile = restoreFile,
+            onOpenVaultFile = onOpenVaultFile,
         )
     }
 
@@ -435,10 +447,27 @@ class OnboardingDeviceTest {
     fun withNoVaultOpenTheScreenRestores() {
         screen(backup(restoreMode = true)) {
             compose.onNodeWithText("Restore from a backup").assertExists()
-            compose.onNodeWithText("Choose the backup file").assertExists()
+            // `switch-builds-without-losing-vaults` D1. No list here: a backup or a `.vault`.
+            compose.onNodeWithText(
+                "Choose a backup from your cloud app or SD card, or a .vault file you saved. " +
+                    "A backup opens with the 24 words from your recovery kit. " +
+                    "A .vault file opens with the passphrase you chose for it.",
+            ).assertExists()
+            compose.onNodeWithText("Choose a file").assertExists()
             compose.onNodeWithText("Backup is on an SD card").assertExists()
+            assertEquals("the action names no kind", 0, count("Choose the backup file"))
             assertEquals("restore mode offers nothing to back up", 0, count("Turn on backup"))
             assertEquals(0, count("Backup is off"))
+        }
+    }
+
+    @Test
+    fun withTheListOpenRestoreKeepsItsBackupActions() {
+        screen(backup(restoreMode = true, restoreIntoList = true)) {
+            compose.onNodeWithText("It comes back onto this list.", substring = true).assertExists()
+            compose.onNodeWithText("Choose the backup file").assertExists()
+            compose.onNodeWithText("Backup is on an SD card").assertExists()
+            assertEquals(".vault files come in from the drawer here", 0, count("Choose a file"))
         }
     }
 
@@ -446,7 +475,74 @@ class OnboardingDeviceTest {
     fun restoreShowsItsProgress() {
         screen(backup(restoreMode = true, restoreState = RestoreState.Copying(40, 212))) {
             compose.onNodeWithText("Copying files… 40 of 212").assertExists()
-            compose.onNodeWithText("Choose the backup file").assertIsNotEnabled()
+            compose.onNodeWithText("Choose a file").assertIsNotEnabled()
+        }
+    }
+
+    @Test
+    fun aVaultFileAsksForItsPassphrase() {
+        var opened: String? = null
+        val file = RestoreFile("family.vault", vault = true)
+        screen(backup(restoreMode = true, restoreFile = file, onOpenVaultFile = { opened = String(it) })) {
+            compose.onNodeWithText("family.vault").assertExists()
+            compose.onNodeWithText(".vault file").assertExists()
+            assertEquals("the file row replaces both actions", 0, count("Choose a file"))
+            assertEquals(0, count("Backup is on an SD card"))
+            compose.onNodeWithText("Open file").assertIsNotEnabled()
+            compose.onNodeWithText("Passphrase for this file").performTextInput("the-file-passphrase")
+            compose.onNodeWithText("Open file").assertIsEnabled().performClick()
+            compose.waitForIdle()
+            assertEquals("the-file-passphrase", opened)
+        }
+    }
+
+    @Test
+    fun aVaultFileBeingReadDisablesEverything() {
+        val file = RestoreFile("family.vault", vault = true)
+        screen(backup(restoreMode = true, restoreFile = file, restoreState = RestoreState.Copying(3, 12))) {
+            compose.onNodeWithText("Copying files… 3 of 12").assertExists()
+            compose.onNodeWithText("Open file").assertIsNotEnabled()
+            compose.onNodeWithText("family.vault").assertIsNotEnabled()
+        }
+    }
+
+    @Test
+    fun aVaultFileThatDidNotOpenSaysSoUnderTheField() {
+        val failed = "That didn't open. Either the passphrase is wrong, or this isn't a .vault file this app can read."
+        val file = RestoreFile("family.vault", vault = true, problem = failed)
+        screen(backup(restoreMode = true, restoreFile = file)) {
+            compose.onNodeWithText(failed).assertExists()
+            compose.onNodeWithText("family.vault").assertExists()
+            compose.onNodeWithText("Open file").assertIsNotEnabled()
+        }
+    }
+
+    @Test
+    fun stepOneSaysWhatCameIn() {
+        for ((items, line) in listOf(214 to "From family.vault · 214 items", 1 to "From family.vault · 1 item")) {
+            var name by mutableStateOf("")
+            screen({
+                NameStep(
+                    name = name, onName = { name = it },
+                    appearance = VaultAppearance.defaultFor(0), onAppearance = {},
+                    accepts = { true }, error = null, onContinue = {},
+                    restored = pluralStringResource(R.plurals.restore_from_file, items, "family.vault", items),
+                )
+            }) {
+                compose.onNodeWithText(line).assertExists()
+                assertEquals("the name field starts empty", "", name)
+            }
+        }
+    }
+
+    @Test
+    fun theWelcomeNamesBothKinds() {
+        var restored = 0
+        screen({ OnboardingWelcomeScreen(onBegin = {}, onRestore = { restored++ }, onLanguage = {}) }) {
+            compose.onNodeWithText("I have a backup or a .vault file").assertExists().performClick()
+            compose.waitForIdle()
+            assertEquals(1, restored)
+            assertEquals(0, count("I have a backup to restore"))
         }
     }
 

@@ -97,6 +97,7 @@
     <string name="restore_open_vaults_first">Öffne zuerst deine Tresore.</string>
     <string name="restore_file_not_opened">Die Sicherungsdatei konnte nicht geöffnet werden.</string>
     <string name="restore_file_unreadable">Die Sicherungsdatei konnte nicht gelesen werden. Prüfe, ob die App, in der sie liegt, angemeldet ist.</string>
+    <string name="restore_chosen_unreadable">Die Datei konnte nicht gelesen werden. Prüfe, ob die App, in der sie liegt, angemeldet ist.</string>
     <string name="restore_no_backup_in_folder">In diesem Ordner wurde keine Sicherung gefunden.</string>
     <string name="capture_mode_permission_denied">Dieser Modus braucht die Berechtigung, nach der gerade gefragt wurde. Er ist aus.</string>
     <string name="decoy_trial_notice">Ein Köder-Tresor importiert echte Fotos, und der 30-tägige Testzeitraum beginnt mit dem ersten Element, das in einen Tresor kommt. Verschiebe das, wenn du ihn lieber mit deinen eigenen Sachen beginnen möchtest.</string>
@@ -683,7 +684,7 @@
     <string name="onboarding_welcome_lead">Alles, was du hier hineinlegst, wird auf diesem Gerät verschlüsselt und bleibt darauf. Es gibt kein Konto, keinen Server und für uns keine Möglichkeit, etwas davon zu sehen – diese App kann überhaupt nicht ins Internet.</string>
     <string name="onboarding_welcome_steps">Die Einrichtung hat neun kurze Schritte. Keiner davon ist Pflicht, und du kannst es dir später in den Einstellungen anders überlegen.</string>
     <string name="onboarding_get_started">Los geht’s</string>
-    <string name="onboarding_have_backup">Ich habe eine Sicherung zum Wiederherstellen</string>
+    <string name="onboarding_have_backup">Ich habe eine Sicherung oder eine .vault-Datei</string>
     <string name="onboarding_passphrase_lead">Nur das öffnet deinen Tresor. Es lässt sich nicht zurücksetzen.</string>
     <string name="onboarding_fact_no_reset">Kein Zurücksetzen, kein Konto</string>
     <string name="onboarding_fact_no_reset_body">Niemand kann das für dich wiederherstellen – nicht wir, niemand. Genau darum geht es, und genau das ist das Risiko.</string>
@@ -1380,9 +1381,14 @@
     <string name="backup_keep">Weiter sichern</string>
     <string name="backup_on_sd_card">Sicherung liegt auf einer SD-Karte</string>
     <string name="restore_into_list">Wähle die Sicherung eines Tresors auf dieser Liste – die Datei in deiner Cloud-App oder den Ordner auf deiner SD-Karte. Er kommt zurück auf diese Liste.</string>
-    <string name="restore_lead">Wähle die Sicherungsdatei, die du in deiner Cloud-App gespeichert hast, oder den Ordner auf deiner SD-Karte. Du brauchst die 24 Wörter aus deinem Wiederherstellungs-Kit – deine Passphrase kann keine Sicherung öffnen.</string>
+    <string name="restore_lead">Wähle eine Sicherung aus deiner Cloud-App oder von deiner SD-Karte oder eine .vault-Datei, die du gespeichert hast. Eine Sicherung öffnet sich mit den 24 Wörtern aus deinem Wiederherstellungs-Kit. Eine .vault-Datei öffnet sich mit der Passphrase, die du für sie gewählt hast.</string>
     <string name="restore_choose_file">Sicherungsdatei wählen</string>
     <string name="restore_copying">Dateien werden kopiert … %1$d von %2$d</string>
+    <string name="restore_open_file">Datei öffnen</string>
+    <plurals name="restore_from_file">
+        <item quantity="one">Aus %1$s · %2$d Element</item>
+        <item quantity="other">Aus %1$s · %2$d Elemente</item>
+    </plurals>
     <string name="import_title">Tresor importieren</string>
     <string name="import_lead">Hol einen Tresor aus einer .vault-Datei zurück oder aus einer Sicherung in deiner Cloud-App oder auf einer SD-Karte.</string>
     <string name="import_choose_file">Datei wählen</string>
@@ -1438,8 +1444,8 @@
     <string name="unvault_progress">%1$d von %2$d draußen</string>
     <string name="unvault_progress_left">%1$d von %2$d draußen, %3$d noch im Tresor</string>
     <string name="unvault_busy">Wird aus dem Tresor geholt</string>
-    <string name="archive_title">Wechselst du auf ein neues Gerät?</string>
-    <string name="archive_body">Speichere eine verschlüsselte .vault-Datei, die du auf dem neuen Smartphone öffnen kannst. Wähle eine Passphrase für die Datei selbst – es ist nicht die, mit der du deine Tresore öffnest, und du brauchst sie auf dem anderen Gerät. Dieser Tresor wird dadurch nicht geleert, und Elemente im Papierkorb sind nicht enthalten.</string>
+    <string name="archive_title">Wechselst du auf ein neues Smartphone oder einen anderen Build?</string>
+    <string name="archive_body">Speichere eine verschlüsselte .vault-Datei, die du auf dem neuen Smartphone öffnen kannst. Der Wechsel zwischen der Play-Version und einer selbst gebauten Kopie funktioniert genauso. Speichere jeden Tresor zuerst hier, denn beim Deinstallieren wird alles gelöscht. Wähle eine Passphrase für die Datei selbst – es ist nicht die, mit der du deine Tresore öffnest, und du brauchst sie auf dem anderen Gerät. Dieser Tresor wird dadurch nicht geleert, und Elemente im Papierkorb sind nicht enthalten.</string>
     <string name="archive_passphrase_label">Passphrase für die Datei</string>
     <string name="archive_save">Verschlüsseltes Archiv speichern</string>
 

@@ -97,6 +97,7 @@
     <string name="restore_open_vaults_first">먼저 보관함을 여세요.</string>
     <string name="restore_file_not_opened">백업 파일을 열 수 없습니다.</string>
     <string name="restore_file_unreadable">백업 파일을 읽을 수 없습니다. 백업이 있는 앱에 로그인되어 있는지 확인하세요.</string>
+    <string name="restore_chosen_unreadable">파일을 읽을 수 없습니다. 파일이 있는 앱에 로그인되어 있는지 확인하세요.</string>
     <string name="restore_no_backup_in_folder">해당 폴더에서 백업을 찾을 수 없습니다.</string>
     <string name="capture_mode_permission_denied">이 모드에는 방금 요청한 권한이 필요합니다. 꺼져 있습니다.</string>
     <string name="decoy_trial_notice">위장 보관함을 만들면 실제 사진을 가져오게 되며, 30일 체험 기간은 보관함에 처음 무언가가 추가될 때 시작됩니다. 내 물건으로 체험을 시작하고 싶다면 나중에 하세요.</string>
@@ -654,7 +655,7 @@
     <string name="onboarding_welcome_lead">여기에 넣는 모든 것은 이 기기에서 암호화되어 이 기기에 남습니다. 계정도 서버도 없고, 저희가 그것을 볼 방법도 없습니다. 이 앱은 인터넷에 전혀 연결할 수 없습니다.</string>
     <string name="onboarding_welcome_steps">설정은 짧은 9단계로 이루어집니다. 모두 필수가 아니며 나중에 설정에서 바꿀 수 있습니다.</string>
     <string name="onboarding_get_started">시작하기</string>
-    <string name="onboarding_have_backup">복원할 백업이 있습니다</string>
+    <string name="onboarding_have_backup">백업 또는 .vault 파일이 있습니다</string>
     <string name="onboarding_passphrase_lead">보관함을 열 수 있는 유일한 수단입니다. 재설정할 수 없습니다.</string>
     <string name="onboarding_fact_no_reset">재설정도 계정도 없습니다</string>
     <string name="onboarding_fact_no_reset_body">누구도 대신 복구해 줄 수 없습니다. 저희도, 다른 누구도요. 그것이 핵심이자 위험이기도 합니다.</string>
@@ -1334,9 +1335,13 @@
     <string name="backup_keep">계속 백업</string>
     <string name="backup_on_sd_card">백업이 SD 카드에 있습니다</string>
     <string name="restore_into_list">이 목록에 있는 보관함의 백업(클라우드 앱의 파일이나 SD 카드의 폴더)을 선택하세요. 이 목록으로 돌아옵니다.</string>
-    <string name="restore_lead">클라우드 앱에 저장한 백업 파일이나 SD 카드의 폴더를 선택하세요. 복구 키트의 24개 단어가 필요합니다. 암호 문구로는 백업을 열 수 없습니다.</string>
+    <string name="restore_lead">클라우드 앱이나 SD 카드의 백업, 또는 저장한 .vault 파일을 선택하세요. 백업은 복구 키트의 24개 단어로 열립니다. .vault 파일은 그 파일에 정한 암호 문구로 열립니다.</string>
     <string name="restore_choose_file">백업 파일 선택</string>
     <string name="restore_copying">파일 복사 중… %2$d개 중 %1$d개</string>
+    <string name="restore_open_file">파일 열기</string>
+    <plurals name="restore_from_file">
+        <item quantity="other">%1$s에서 · 항목 %2$d개</item>
+    </plurals>
     <string name="import_title">보관함 가져오기</string>
     <string name="import_lead">.vault 파일이나, 클라우드 앱 또는 SD 카드에 저장한 백업에서 보관함을 되돌립니다.</string>
     <string name="import_choose_file">파일 선택</string>
@@ -1389,8 +1394,8 @@
     <string name="unvault_progress">%2$d개 중 %1$d개 꺼냄</string>
     <string name="unvault_progress_left">%2$d개 중 %1$d개 꺼냄, 보관함에 %3$d개 남음</string>
     <string name="unvault_busy">보관함에서 꺼내는 중</string>
-    <string name="archive_title">새 기기로 옮기시나요?</string>
-    <string name="archive_body">새 휴대전화에서 열 수 있는 암호화된 .vault 파일을 하나 저장합니다. 파일 자체의 암호 문구를 정하세요. 보관함을 여는 암호 문구와는 다르며, 다른 기기에서 필요합니다. 이 보관함이 비워지지 않으며 휴지통의 항목은 포함되지 않습니다.</string>
+    <string name="archive_title">새 휴대전화나 다른 빌드로 옮기시나요?</string>
+    <string name="archive_body">새 휴대전화에서 열 수 있는 암호화된 .vault 파일을 하나 저장합니다. Play 버전과 직접 빌드한 사본 사이를 전환할 때도 같은 방법을 씁니다. 제거하면 모든 것이 삭제되므로 먼저 각 보관함을 여기에서 저장하세요. 파일 자체의 암호 문구를 정하세요. 보관함을 여는 암호 문구와는 다르며, 다른 기기에서 필요합니다. 이 보관함이 비워지지 않으며 휴지통의 항목은 포함되지 않습니다.</string>
     <string name="archive_passphrase_label">파일 암호 문구</string>
     <string name="archive_save">암호화된 보관 파일 저장</string>
 

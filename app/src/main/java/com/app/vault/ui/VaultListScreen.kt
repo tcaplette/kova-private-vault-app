@@ -522,6 +522,11 @@ fun NameStep(
     /** The no-vault setup screen's restore — `first-vault-naming` D8. New vault and first run pass none. */
     secondaryLabel: String? = null,
     onSecondary: (() -> Unit)? = null,
+    /**
+     * `switch-builds-without-losing-vaults` D4. First run continuing from a `.vault` file: the
+     * line saying what came in — "From family.vault · 214 items" — between the lead and the field.
+     */
+    restored: String? = null,
 ) {
     OnboardingScaffold(
         title = stringResource(R.string.vault_flow_name_title),
@@ -533,6 +538,14 @@ fun NameStep(
         secondaryLabel = secondaryLabel,
         onSecondary = onSecondary,
     ) {
+        if (restored != null) {
+            Text(
+                text = restored,
+                style = MaterialTheme.typography.bodyMedium,
+                color = VaultColors.OnSurfaceVariant,
+                modifier = Modifier.padding(bottom = Spacing.lg),
+            )
+        }
         OutlinedTextField(
             value = name,
             onValueChange = { if (accepts(it) || it.isEmpty()) onName(it) },

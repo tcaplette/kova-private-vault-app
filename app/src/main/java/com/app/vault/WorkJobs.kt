@@ -3,6 +3,7 @@ package com.app.vault
 import android.net.Uri
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * What a scheduled job is actually working on — held in memory, never written.
@@ -40,10 +41,14 @@ object WorkJobs {
      * before it is written. That serves two purposes: a retry in this process
      * resumes from the sealed ones, and the unlock sweep can tell the in-flight
      * partial from an orphan.
+     *
+     * Copy-on-write because those two run on different threads: the worker appends
+     * while an unlock sweep reads. Appends are one per 16 MiB blob and reads one per
+     * unlock, which is the case copy-on-write is for (`concurrent-import-failure` D3).
      */
     class ImportJob(
         val uri: Uri,
-        val blobIds: MutableList<ByteArray>,
+        val blobIds: CopyOnWriteArrayList<ByteArray>,
         val indexId: ByteArray,
         /**
          * P2-2. Set only by the decoy flow. `assignedCreatedAt` is used **only if
@@ -127,10 +132,15 @@ object WorkJobs {
         jobs.remove(id)
     }
 
-    /** Blob IDs, hex, that a live import claims. `MainActivity.sweepPartials` reads this. */
+    /**
+     * Blob IDs, hex, that a live import claims. `MainActivity.sweepPartials` reads this.
+     *
+     * Each job's list is read through one snapshot, so a worker claiming another blob
+     * meanwhile can neither fail this nor tear it.
+     */
     fun claimedBlobIds(): Set<String> =
         jobs.values.filterIsInstance<ImportJob>()
-            .flatMap { job -> job.blobIds.map { id -> id.joinToString("") { "%02x".format(it) } } }
+            .flatMap { job -> job.blobIds.toArray(arrayOf<ByteArray>()).map { id -> id.joinToString("") { "%02x".format(it) } } }
             .toSet()
 
     /** Test-only: an empty table is what every process death produces. */

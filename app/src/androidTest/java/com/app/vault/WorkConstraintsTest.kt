@@ -17,6 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * P1-8 task 1.8 — the runtime half of the `ACCESS_NETWORK_STATE` strip.
@@ -59,7 +60,7 @@ class WorkConstraintsTest {
         val request = OneTimeWorkRequestBuilder<ImportWorker>().build()
         WorkJobs.register(
             request.id,
-            WorkJobs.ImportJob(Uri.parse("content://nonexistent/c"), mutableListOf(), id())
+            WorkJobs.ImportJob(Uri.parse("content://nonexistent/c"), CopyOnWriteArrayList(), id())
         )
         wm.enqueue(request).result.get(10, TimeUnit.SECONDS)
 
@@ -90,7 +91,7 @@ class WorkConstraintsTest {
         val request = OneTimeWorkRequestBuilder<ImportWorker>().build()
         WorkJobs.register(
             request.id,
-            WorkJobs.ImportJob(Uri.parse("content://nonexistent/d"), mutableListOf(), id())
+            WorkJobs.ImportJob(Uri.parse("content://nonexistent/d"), CopyOnWriteArrayList(), id())
         )
 
         val constraints = request.workSpec.constraints

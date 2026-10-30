@@ -97,6 +97,7 @@
     <string name="restore_open_vaults_first">Open your vaults first.</string>
     <string name="restore_file_not_opened">The backup file could not be opened.</string>
     <string name="restore_file_unreadable">The backup file could not be read. Check the app that holds it is signed in.</string>
+    <string name="restore_chosen_unreadable">That file could not be read. Check the app that holds it is signed in.</string>
     <string name="restore_no_backup_in_folder">No backup was found in that folder.</string>
     <string name="capture_mode_permission_denied">That mode needs the permission it just asked for. It is off.</string>
     <string name="decoy_trial_notice">Building a decoy imports real photographs, and the 30-day trial starts with the first thing added to a vault. Leave this for later if you would rather start it with your own things.</string>
@@ -683,7 +684,7 @@
     <string name="onboarding_welcome_lead">Everything you put in here is encrypted on this device and stays on it. There is no account, no server, and no way for us to see any of it — this app cannot reach the internet at all.</string>
     <string name="onboarding_welcome_steps">Setting up takes nine short steps. None of them are required, and you can change your mind later in Settings.</string>
     <string name="onboarding_get_started">Get started</string>
-    <string name="onboarding_have_backup">I have a backup to restore</string>
+    <string name="onboarding_have_backup">I have a backup or a .vault file</string>
     <string name="onboarding_passphrase_lead">This is the only thing that opens your vault. It cannot be reset.</string>
     <string name="onboarding_fact_no_reset">There is no reset and no account</string>
     <string name="onboarding_fact_no_reset_body">Nobody can recover this for you — not us, not anyone. That is the point, and it is also the risk.</string>
@@ -1382,9 +1383,14 @@
     <string name="backup_keep">Keep backing up</string>
     <string name="backup_on_sd_card">Backup is on an SD card</string>
     <string name="restore_into_list">Choose the backup of a vault on this list — the file in your cloud app, or the folder on your SD card. It comes back onto this list.</string>
-    <string name="restore_lead">Choose the backup file you saved to your cloud app, or the folder on your SD card. You\'ll need the 24 words from your recovery kit — your passphrase can\'t open a backup.</string>
+    <string name="restore_lead">Choose a backup from your cloud app or SD card, or a .vault file you saved. A backup opens with the 24 words from your recovery kit. A .vault file opens with the passphrase you chose for it.</string>
     <string name="restore_choose_file">Choose the backup file</string>
     <string name="restore_copying">Copying files… %1$d of %2$d</string>
+    <string name="restore_open_file">Open file</string>
+    <plurals name="restore_from_file">
+        <item quantity="one">From %1$s · %2$d item</item>
+        <item quantity="other">From %1$s · %2$d items</item>
+    </plurals>
     <string name="import_title">Import a vault</string>
     <string name="import_lead">Bring back a vault from a .vault file, or from a backup saved to your cloud app or an SD card.</string>
     <string name="import_choose_file">Choose a file</string>
@@ -1440,8 +1446,8 @@
     <string name="unvault_progress">%1$d of %2$d out</string>
     <string name="unvault_progress_left">%1$d of %2$d out, %3$d left in the vault</string>
     <string name="unvault_busy">Unvaulting</string>
-    <string name="archive_title">Moving to a new device?</string>
-    <string name="archive_body">Save one encrypted .vault file you can open on the new phone. Choose a passphrase for the file itself — it is not the one that opens your vaults, and you will need it on the other device. It does not empty this vault, and Items in the Trash are not included.</string>
+    <string name="archive_title">Moving to a new phone or another build?</string>
+    <string name="archive_body">Save one encrypted .vault file you can open on the new phone. Switching between the Play version and a copy you built yourself works the same way. Save each vault here first, because uninstalling deletes everything. Choose a passphrase for the file itself — it is not the one that opens your vaults, and you will need it on the other device. It does not empty this vault, and Items in the Trash are not included.</string>
     <string name="archive_passphrase_label">Passphrase for the file</string>
     <string name="archive_save">Save encrypted archive</string>
 

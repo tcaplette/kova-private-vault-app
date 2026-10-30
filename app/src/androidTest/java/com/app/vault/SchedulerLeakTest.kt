@@ -15,6 +15,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * The Gate 1 finding, as a test — `gate1-import-queue-leak`.
@@ -69,7 +70,7 @@ class SchedulerLeakTest {
         val request = OneTimeWorkRequestBuilder<ImportWorker>()
             .addTag(ImportWorker.IMPORT_TAG)
             .build()
-        WorkJobs.register(request.id, WorkJobs.ImportJob(URI, mutableListOf(blobId(0xAB)), blobId(0xCD)))
+        WorkJobs.register(request.id, WorkJobs.ImportJob(URI, CopyOnWriteArrayList(listOf(blobId(0xAB))), blobId(0xCD)))
 
         assertEquals(
             "the request itself carries no input",
@@ -91,7 +92,7 @@ class SchedulerLeakTest {
         val request = OneTimeWorkRequestBuilder<ImportWorker>()
             .addTag(ImportWorker.IMPORT_TAG)
             .build()
-        WorkJobs.register(request.id, WorkJobs.ImportJob(URI, mutableListOf(blobId(0xAB)), blobId(0xCD)))
+        WorkJobs.register(request.id, WorkJobs.ImportJob(URI, CopyOnWriteArrayList(listOf(blobId(0xAB))), blobId(0xCD)))
         WorkManager.getInstance(ctx).enqueue(request).result.get(10, TimeUnit.SECONDS)
         // Give WorkManager time to write and checkpoint whatever it is going to.
         Thread.sleep(2000)
@@ -149,7 +150,7 @@ class SchedulerLeakTest {
         val request = OneTimeWorkRequestBuilder<ImportWorker>()
             .addTag(ImportWorker.IMPORT_TAG)
             .build()
-        WorkJobs.register(request.id, WorkJobs.ImportJob(URI, mutableListOf(blobId(0xAB)), blobId(0xCD)))
+        WorkJobs.register(request.id, WorkJobs.ImportJob(URI, CopyOnWriteArrayList(listOf(blobId(0xAB))), blobId(0xCD)))
         WorkJobs.clearAllForTest()
 
         assertTrue(
@@ -162,7 +163,7 @@ class SchedulerLeakTest {
         val live = blobId(0x11)
         val dead = blobId(0x22)
         val request = OneTimeWorkRequestBuilder<ImportWorker>().build()
-        WorkJobs.register(request.id, WorkJobs.ImportJob(URI, mutableListOf(live), blobId(0xCD)))
+        WorkJobs.register(request.id, WorkJobs.ImportJob(URI, CopyOnWriteArrayList(listOf(live)), blobId(0xCD)))
 
         val claimed = WorkJobs.claimedBlobIds()
         assertTrue("a live import's partial is claimed", hex(live) in claimed)

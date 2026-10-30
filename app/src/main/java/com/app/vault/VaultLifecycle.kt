@@ -344,6 +344,13 @@ class VaultLifecycle(
          * keyring's — see the KDoc above.
          */
         excludeSlot: Int = VaultKeyringSession.openSlotIndex(),
+        /**
+         * `switch-builds-without-losing-vaults`, D4. The key of a vault [readArchiveForFirstList]
+         * read into the store, to be the first entry in place of a new vault. First run only.
+         * Its index is already in the store, so none is written, and with it no creation chaff
+         * and no vault-created entry: the archive carried the vault's own. Stays the caller's.
+         */
+        firstVaultKey: ByteArray? = null,
         onProgress: (Int, Int) -> Unit = { _, _ -> },
     ): Outcome {
         require(passphrase.size >= MIN_PASSPHRASE_BYTES) {
@@ -355,11 +362,12 @@ class VaultLifecycle(
         // event in a store whose whole argument is that its blobs are not
         // attributable.
         val firstRun = !vaultExists()
+        require(firstVaultKey == null || firstRun) { "a vault from a file starts a list only on first run" }
 
         val slots = SlotArray(slotsFile)
         slots.initialiseIfAbsent()
 
-        val vmk = VaultKeys.newVmk()
+        val vmk = firstVaultKey?.copyOf() ?: VaultKeys.newVmk()
         // `initialiseIfAbsent` above wrote the creation constant on a first run and
         // left an existing header alone, so this reads the install's own parameters
         // either way — a second vault on an old install is sealed under what that
@@ -473,7 +481,8 @@ class VaultLifecycle(
             // that opened nothing is not in `proven` and so teaches nothing, silently.
             teachProvenKeyrings(proven, slotIndex)
 
-            val total = (if (firstRun) INSTALL_CHAFF_BLOBS else 0) + CREATION_CHAFF_BLOBS
+            val adopted = firstVaultKey != null
+            val total = (if (firstRun) INSTALL_CHAFF_BLOBS else 0) + (if (adopted) 0 else CREATION_CHAFF_BLOBS)
             var written = 0
 
             // Unowned, and recorded nowhere. This is the reserve that keeps
@@ -486,15 +495,16 @@ class VaultLifecycle(
             }
 
             val owned = mutableListOf<ByteArray>()
-            repeat(CREATION_CHAFF_BLOBS) {
-                owned += store.writeChaff(1)
-                onProgress(++written, total)
+            // The adopted vault's index, owned chaff and log are the ones its file carried.
+            val db = if (adopted) null else MetadataDb.empty().also { db ->
+                repeat(CREATION_CHAFF_BLOBS) {
+                    owned += store.writeChaff(1)
+                    onProgress(++written, total)
+                }
+                db.ownedChaff += owned
+                db.logBlobId = TamperLog.create(store)
+                db.save(store, metadataBlobId, vmk)
             }
-
-            val db = MetadataDb.empty()
-            db.ownedChaff += owned
-            db.logBlobId = TamperLog.create(store)
-            db.save(store, metadataBlobId, vmk)
 
             // The vault being left goes first, through the same lock the manual
             // action and the auto-lock policy call — otherwise its VMK is dropped
@@ -506,11 +516,13 @@ class VaultLifecycle(
 
             VaultKeyringSession.holdCreated(keyringKey, keyringId, keyring, slotIndex)
             VaultSession.unlocked(OpenVault(vmk.copyOf(), metadataBlobId.copyOf(), slotIndex))
-            TamperLog.created(
-                store, db, metadataBlobId, vmk,
-                timestamp = origin ?: System.currentTimeMillis(),
-            )
-            Log.i(TAG, "vault created: $total chaff blobs, ${owned.size} owned")
+            if (db != null) {
+                TamperLog.created(
+                    store, db, metadataBlobId, vmk,
+                    timestamp = origin ?: System.currentTimeMillis(),
+                )
+            }
+            Log.i(TAG, "vault created: $total chaff blobs, ${owned.size} owned${if (adopted) ", from a file" else ""}")
             return Outcome(opened = true, derivations = derivations, slotsAttempted = attempted)
         } finally {
             kek.fill(0)
@@ -1404,6 +1416,65 @@ class VaultLifecycle(
             vmk.fill(0)
             metadataBlobId.fill(0)
         }
+    }
+
+    /**
+     * A vault read from a `.vault` file with no list on the device, waiting for first run's
+     * "Create vault" — `switch-builds-without-losing-vaults`, D3. [vmk] is held in memory only;
+     * [discardHeld] or the caller zeroes it. [items] is what the file carried.
+     */
+    class HeldArchive(val vmk: ByteArray, val blobIds: List<ByteArray>, val items: Int)
+
+    /**
+     * Reads a `.vault` file into the empty store of an install with no list — D3.
+     *
+     * The archive is read as [importArchive] reads it, and its index loaded to prove it carried
+     * a vault; then nothing joins anything, because there is no list yet. [create] makes the
+     * list around it with `firstVaultKey`. Null for every failure, as import: a wrong
+     * passphrase, a corrupt file and a file that was never an archive are one outcome, and
+     * every blob the read wrote is gone again. Refused, writing nothing, where a list exists.
+     * [archivePassphrase] is zeroed on every path.
+     */
+    fun readArchiveForFirstList(
+        archive: java.io.InputStream,
+        archivePassphrase: ByteArray,
+        onProgress: (Int, Int) -> Unit = { _, _ -> },
+    ): HeldArchive? {
+        if (vaultExists() || VaultKeyringSession.isOpen) {
+            archivePassphrase.fill(0)
+            return null
+        }
+        val imported = VaultArchive.read(archive, archivePassphrase, store, onProgress) ?: return null
+        val metadataBlobId = VaultKeys.metadataBlobId(imported.vmk)
+        try {
+            val db = runCatching { MetadataDb.load(store, metadataBlobId, imported.vmk) }.getOrNull()
+                ?: run {
+                    imported.blobIds.forEach { store.delete(it) }
+                    imported.vmk.fill(0)
+                    return null
+                }
+            Log.i(TAG, "vault read from archive for a first list: ${db.items.size} items")
+            return HeldArchive(imported.vmk, imported.blobIds, db.items.count { it.deletedAt == null })
+        } finally {
+            metadataBlobId.fill(0)
+        }
+    }
+
+    /** Back to the welcome before "Create vault" — D5. Every blob the read wrote goes, and the key. */
+    fun discardHeld(held: HeldArchive) {
+        held.blobIds.forEach { store.delete(it) }
+        held.vmk.fill(0)
+    }
+
+    /**
+     * D5. With no slot file nothing can open a blob, so a launch that finds none empties the
+     * store and the incoming directory — what a `.vault` read left behind when the process
+     * ended before "Create vault". Touches nothing when a slot file exists. True if it swept.
+     */
+    fun sweepWithoutList(): Boolean {
+        if (vaultExists()) return false
+        store.clear()
+        return true
     }
 
     // --- unlock --------------------------------------------------------------

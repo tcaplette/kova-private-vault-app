@@ -97,6 +97,7 @@
     <string name="restore_open_vaults_first">Ouvrez d\'abord vos coffres.</string>
     <string name="restore_file_not_opened">Impossible d\'ouvrir le fichier de sauvegarde.</string>
     <string name="restore_file_unreadable">Impossible de lire le fichier de sauvegarde. Vérifiez que l\'application qui le contient est connectée.</string>
+    <string name="restore_chosen_unreadable">Impossible de lire le fichier. Vérifiez que l\'application qui le contient est connectée.</string>
     <string name="restore_no_backup_in_folder">Aucune sauvegarde trouvée dans ce dossier.</string>
     <string name="capture_mode_permission_denied">Ce mode a besoin de l\'autorisation qu\'il vient de demander. Il est désactivé.</string>
     <string name="decoy_trial_notice">Créer un coffre leurre importe de vraies photos, et l\'essai de 30 jours commence dès que quelque chose est ajouté à un coffre. Remettez cela à plus tard si vous préférez le commencer avec vos propres contenus.</string>
@@ -712,7 +713,7 @@
     <string name="onboarding_welcome_lead">Tout ce que vous placez ici est chiffré sur cet appareil et y reste. Pas de compte, pas de serveur, et aucun moyen pour nous d\'en voir quoi que ce soit : cette application ne peut pas du tout accéder à Internet.</string>
     <string name="onboarding_welcome_steps">La configuration comporte neuf courtes étapes. Aucune n\'est obligatoire, et vous pourrez changer d\'avis plus tard dans les Paramètres.</string>
     <string name="onboarding_get_started">Commencer</string>
-    <string name="onboarding_have_backup">J\'ai une sauvegarde à restaurer</string>
+    <string name="onboarding_have_backup">J\'ai une sauvegarde ou un fichier .vault</string>
     <string name="onboarding_passphrase_lead">C\'est la seule chose qui ouvre votre coffre. Elle ne peut pas être réinitialisée.</string>
     <string name="onboarding_fact_no_reset">Pas de réinitialisation, pas de compte</string>
     <string name="onboarding_fact_no_reset_body">Personne ne peut la retrouver pour vous : ni nous, ni personne. C\'est le principe, et c\'est aussi le risque.</string>
@@ -1426,9 +1427,15 @@
     <string name="backup_keep">Continuer la sauvegarde</string>
     <string name="backup_on_sd_card">La sauvegarde est sur une carte SD</string>
     <string name="restore_into_list">Choisissez la sauvegarde d\'un coffre de cette liste : le fichier dans votre application cloud, ou le dossier sur votre carte SD. Il revient dans cette liste.</string>
-    <string name="restore_lead">Choisissez le fichier de sauvegarde enregistré dans votre application cloud, ou le dossier sur votre carte SD. Vous aurez besoin des 24 mots de votre kit de récupération : votre phrase secrète ne peut pas ouvrir une sauvegarde.</string>
+    <string name="restore_lead">Choisissez une sauvegarde depuis votre application cloud ou votre carte SD, ou un fichier .vault que vous avez enregistré. Une sauvegarde s\'ouvre avec les 24 mots de votre kit de récupération. Un fichier .vault s\'ouvre avec la phrase secrète choisie pour lui.</string>
     <string name="restore_choose_file">Choisir le fichier de sauvegarde</string>
     <string name="restore_copying">Copie des fichiers… %1$d sur %2$d</string>
+    <string name="restore_open_file">Ouvrir le fichier</string>
+    <plurals name="restore_from_file">
+        <item quantity="one">Depuis %1$s · %2$d élément</item>
+        <item quantity="many">Depuis %1$s · %2$d éléments</item>
+        <item quantity="other">Depuis %1$s · %2$d éléments</item>
+    </plurals>
     <string name="import_title">Importer un coffre</string>
     <string name="import_lead">Récupérez un coffre depuis un fichier .vault, ou depuis une sauvegarde enregistrée dans votre application cloud ou sur une carte SD.</string>
     <string name="import_choose_file">Choisir un fichier</string>
@@ -1487,8 +1494,8 @@
     <string name="unvault_progress">%1$d sur %2$d sortis</string>
     <string name="unvault_progress_left">%1$d sur %2$d sortis, %3$d encore dans le coffre</string>
     <string name="unvault_busy">Sortie du coffre en cours</string>
-    <string name="archive_title">Vous changez d\'appareil ?</string>
-    <string name="archive_body">Enregistrez un fichier .vault chiffré que vous pourrez ouvrir sur le nouveau téléphone. Choisissez une phrase secrète pour le fichier lui-même : ce n\'est pas celle qui ouvre vos coffres, et vous en aurez besoin sur l\'autre appareil. Cela ne vide pas ce coffre, et les éléments de la corbeille ne sont pas inclus.</string>
+    <string name="archive_title">Vous changez de téléphone ou de version ?</string>
+    <string name="archive_body">Enregistrez un fichier .vault chiffré que vous pourrez ouvrir sur le nouveau téléphone. Passer de la version Play à une copie que vous avez compilée vous-même fonctionne de la même façon. Enregistrez d\'abord chaque coffre ici, car la désinstallation efface tout. Choisissez une phrase secrète pour le fichier lui-même : ce n\'est pas celle qui ouvre vos coffres, et vous en aurez besoin sur l\'autre appareil. Cela ne vide pas ce coffre, et les éléments de la corbeille ne sont pas inclus.</string>
     <string name="archive_passphrase_label">Phrase secrète du fichier</string>
     <string name="archive_save">Enregistrer l\'archive chiffrée</string>
 

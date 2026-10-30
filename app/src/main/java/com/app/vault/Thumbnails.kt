@@ -60,7 +60,9 @@ object Thumbnails {
 
             VaultKind.IMAGE -> {
             if (item.plaintextLength > MAX_IMAGE_BYTES) {
-                Log.w(TAG, "skipping ${item.filename}: ${item.plaintextLength} B is too large to decode")
+                // No filename: this runs inside an import, and nothing an import logs names
+                // its source (`import-pipeline`).
+                Log.w(TAG, "skipping a thumbnail: ${item.plaintextLength} B is too large to decode")
                 Generated(null, null)
             } else {
                 store.reader(item.blobIds, vmk, item.plaintextLength).use { r ->
@@ -74,7 +76,8 @@ object Thumbnails {
         // A thumbnail is derived data. Failing to make one must not fail the
         // import that already stored the item, and must not leave a partial
         // artifact — there is none to leave, since nothing has been staged yet.
-        Log.w(TAG, "thumbnail failed for ${item.filename}: ${e.message}")
+        // The class only — a decoder's message can carry the file's name.
+        Log.w(TAG, "thumbnail failed: ${e.javaClass.simpleName}")
         Generated(null, null)
     }
 

@@ -14,6 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * That WorkManager still works with `RECEIVE_BOOT_COMPLETED` stripped (P1-7 task
@@ -37,7 +38,7 @@ class ImportWorkerTest {
         val request = OneTimeWorkRequestBuilder<ImportWorker>().build()
         WorkJobs.register(
             request.id,
-            WorkJobs.ImportJob(Uri.parse("content://nonexistent/1"), mutableListOf(), id())
+            WorkJobs.ImportJob(Uri.parse("content://nonexistent/1"), CopyOnWriteArrayList(), id())
         )
 
         wm.enqueue(request).result.get(10, TimeUnit.SECONDS)
@@ -55,7 +56,7 @@ class ImportWorkerTest {
         val request = OneTimeWorkRequestBuilder<ImportWorker>().build()
         WorkJobs.register(
             request.id,
-            WorkJobs.ImportJob(Uri.parse("content://nonexistent/2"), mutableListOf(), id())
+            WorkJobs.ImportJob(Uri.parse("content://nonexistent/2"), CopyOnWriteArrayList(), id())
         )
 
         wm.enqueue(request).result.get(10, TimeUnit.SECONDS)

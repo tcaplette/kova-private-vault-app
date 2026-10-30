@@ -97,6 +97,7 @@
     <string name="restore_open_vaults_first">请先打开你的保险库。</string>
     <string name="restore_file_not_opened">无法打开备份文件。</string>
     <string name="restore_file_unreadable">无法读取备份文件。请检查存放备份的应用是否已登录。</string>
+    <string name="restore_chosen_unreadable">无法读取该文件。请检查存放它的应用是否已登录。</string>
     <string name="restore_no_backup_in_folder">在该文件夹中未找到备份。</string>
     <string name="capture_mode_permission_denied">该模式需要它刚才请求的权限。现已关闭。</string>
     <string name="decoy_trial_notice">创建诱饵保险库会导入真实照片，而 30 天试用期从保险库中添加第一项内容时开始。如果你想用自己的东西开始试用，请稍后再做。</string>
@@ -654,7 +655,7 @@
     <string name="onboarding_welcome_lead">你放进来的一切都会在此设备上加密，并一直留在设备上。没有账号，没有服务器，我们也无法看到其中任何内容——这个应用根本无法连接互联网。</string>
     <string name="onboarding_welcome_steps">设置只需九个简短步骤。所有步骤都不是必需的，你之后也可以在设置中改变主意。</string>
     <string name="onboarding_get_started">开始使用</string>
-    <string name="onboarding_have_backup">我有要恢复的备份</string>
+    <string name="onboarding_have_backup">我有备份或 .vault 文件</string>
     <string name="onboarding_passphrase_lead">这是唯一能打开你保险库的东西。它无法重置。</string>
     <string name="onboarding_fact_no_reset">没有重置，也没有账号</string>
     <string name="onboarding_fact_no_reset_body">没有人能帮你找回它——我们不能，任何人都不能。这正是意义所在，也是风险所在。</string>
@@ -1334,9 +1335,13 @@
     <string name="backup_keep">继续备份</string>
     <string name="backup_on_sd_card">备份在 SD 卡上</string>
     <string name="restore_into_list">选择此列表中某个保险库的备份——云应用中的文件或 SD 卡上的文件夹。它会回到此列表中。</string>
-    <string name="restore_lead">选择你保存到云应用的备份文件，或 SD 卡上的文件夹。你需要恢复套件中的 24 个单词——你的密码短语无法打开备份。</string>
+    <string name="restore_lead">选择云应用或 SD 卡中的备份，或你保存的 .vault 文件。备份用恢复套件中的 24 个单词打开。.vault 文件用你为它设置的密码短语打开。</string>
     <string name="restore_choose_file">选择备份文件</string>
     <string name="restore_copying">正在复制文件… %1$d / %2$d</string>
+    <string name="restore_open_file">打开文件</string>
+    <plurals name="restore_from_file">
+        <item quantity="other">来自 %1$s · %2$d 个项目</item>
+    </plurals>
     <string name="import_title">导入保险库</string>
     <string name="import_lead">从 .vault 文件，或从保存到云应用或 SD 卡的备份中找回保险库。</string>
     <string name="import_choose_file">选择文件</string>
@@ -1389,8 +1394,8 @@
     <string name="unvault_progress">已移出 %1$d / %2$d</string>
     <string name="unvault_progress_left">已移出 %1$d / %2$d，保险库中还剩 %3$d</string>
     <string name="unvault_busy">正在移出保险库</string>
-    <string name="archive_title">要换新设备吗？</string>
-    <string name="archive_body">保存一个可以在新手机上打开的加密 .vault 文件。为文件本身设置一个密码短语——它不是打开你保险库的那个，你在另一台设备上会需要它。这不会清空此保险库，回收站中的项目不包括在内。</string>
+    <string name="archive_title">要换到新手机或另一个构建版本吗？</string>
+    <string name="archive_body">保存一个可以在新手机上打开的加密 .vault 文件。在 Play 版本和你自己构建的副本之间切换也是同样的方法。请先在这里保存每个保险库，因为卸载会删除所有内容。为文件本身设置一个密码短语——它不是打开你保险库的那个，你在另一台设备上会需要它。这不会清空此保险库，回收站中的项目不包括在内。</string>
     <string name="archive_passphrase_label">文件的密码短语</string>
     <string name="archive_save">保存加密归档</string>
 

@@ -50,6 +50,7 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.app.vault.ui.LanguageSheet
 import kotlinx.coroutines.Dispatchers
@@ -99,6 +100,7 @@ import com.app.vault.ui.ImportKind
 import com.app.vault.ui.BackupScreen
 import com.app.vault.ui.BackupStatus
 import com.app.vault.ui.backupDrawerLine
+import com.app.vault.ui.RestoreFile
 import com.app.vault.ui.RestoreState
 import com.app.vault.ui.BiometricLayout
 import com.app.vault.ui.BiometricScreen
@@ -207,6 +209,7 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.security.SecureRandom
+import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.concurrent.thread
 
 /**
@@ -1840,6 +1843,23 @@ class MainActivity : FragmentActivity() {
     private var restoreState by mutableStateOf<RestoreState>(RestoreState.Idle)
 
     /**
+     * `switch-builds-without-losing-vaults` D1, D3. The file chosen on the restore screen with no
+     * vault list on the device, while it is read for its kind and, as a `.vault`, opened.
+     */
+    private var restoreFile by mutableStateOf<RestoreFile?>(null)
+    private var restoreFileUri: Uri? = null
+
+    /**
+     * D3. The vault a `.vault` file brought in, held until "Create vault" makes the list around
+     * it. **Never saveable**, as [firstName]: its key is in memory only, zeroed at creation, on
+     * Back to the welcome (which also deletes its blobs), and in [onDestroy].
+     */
+    private var heldArchive: VaultLifecycle.HeldArchive? = null
+
+    /** D4. The held vault's file name and item count, for step 1's line. */
+    private var heldFrom by mutableStateOf<Pair<String, Int>?>(null)
+
+    /**
      * `backup-to-cloud-apps` D7, `backup-file-recover-and-import` D8. The backup chosen to
      * recover from — a file or an SD-card folder — held in memory across the words screen
      * until Remove, a lock, or leaving.
@@ -2079,6 +2099,11 @@ class MainActivity : FragmentActivity() {
             restoreFileIntoList(uri)
             return@registerForActivityResult
         }
+        // `switch-builds-without-losing-vaults` D1. No list here: a backup or a `.vault`.
+        if (!lifecycleOps.vaultExists()) {
+            restoreChoseOnEmpty(uri)
+            return@registerForActivityResult
+        }
         if (CloudMirror.localEntries(blobsDir()).isNotEmpty()) {
             restoreState = RestoreState.Problem(
                 getString(R.string.restore_device_not_empty)
@@ -2100,6 +2125,121 @@ class MainActivity : FragmentActivity() {
         recoveryFailed = false
         recoveryBackupProblem = null
         recovering = true
+    }
+
+    /**
+     * `switch-builds-without-losing-vaults` D1. A file chosen on the restore screen of a device
+     * with no list, read for its kind by its structure, as Import reads it: a backup continues
+     * to the recovery kit as it always has; anything else is a `.vault`, which asks for its
+     * passphrase here. The file's row stands while its head is read.
+     */
+    private fun restoreChoseOnEmpty(uri: Uri) {
+        val name = displayName(uri)
+        restoreFileUri = uri
+        restoreFile = RestoreFile(name, vault = false)
+        restoreState = RestoreState.Idle
+        thread {
+            val backup = runCatching { isBackupFile(uri) }
+                .onFailure { Log.w("BackupRestore", "the chosen file could not be read", it) }
+                .getOrNull()
+            runOnUiThread {
+                if (restoreFileUri != uri) return@runOnUiThread
+                when (backup) {
+                    null -> {
+                        clearRestoreFile()
+                        // Its kind is unknown, so the file is not called a backup.
+                        restoreState = RestoreState.Problem(getString(R.string.restore_chosen_unreadable))
+                    }
+                    true -> {
+                        clearRestoreFile()
+                        if (CloudMirror.localEntries(blobsDir()).isNotEmpty()) {
+                            restoreState = RestoreState.Problem(getString(R.string.restore_device_not_empty))
+                        } else {
+                            restoreOntoEmpty(ChosenBackup(uri, folder = false, name = name))
+                        }
+                    }
+                    false -> {
+                        // Import's rule: no grant is kept behind a `.vault`.
+                        runCatching {
+                            contentResolver.releasePersistableUriPermission(
+                                uri,
+                                android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                                    android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION,
+                            )
+                        }
+                        restoreFile = RestoreFile(name, vault = true)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun clearRestoreFile() {
+        restoreFile = null
+        restoreFileUri = null
+    }
+
+    /**
+     * D3. Reads the chosen `.vault` into the empty store and holds its vault for "Create vault";
+     * first run then continues at step 1. On the Play build the entitlement check comes first,
+     * as Import's does (D4). A failure is Import's one message, under the emptied field.
+     */
+    private fun openRestoreVaultFile(passphrase: ByteArray) {
+        val uri = restoreFileUri
+        val file = restoreFile
+        if (uri == null || file == null) return passphrase.fill(0)
+        if (!Entitlement.importAllowed(this)) {
+            passphrase.fill(0)
+            restoreFile = file.copy(problem = getString(Entitlement.BLOCKED))
+            return
+        }
+        restoreFile = file.copy(problem = null)
+        restoreState = RestoreState.Copying(0, 0)
+        thread {
+            val held = runCatching {
+                contentResolver.openInputStream(uri)!!.use { input ->
+                    lifecycleOps.readArchiveForFirstList(input, passphrase) { done, total ->
+                        runOnUiThread { restoreState = RestoreState.Copying(done, total) }
+                    }
+                }
+            }.onFailure {
+                passphrase.fill(0)
+                Log.w("VaultArchive", "the .vault file could not be read", it)
+            }.getOrNull()
+            runOnUiThread {
+                restoreState = RestoreState.Idle
+                if (held == null) {
+                    restoreFile = restoreFile?.copy(problem = getString(R.string.import_failed))
+                    return@runOnUiThread
+                }
+                heldArchive = held
+                heldFrom = file.name to held.items
+                clearRestoreFile()
+                backupScreen = false
+            }
+        }
+    }
+
+    /** D5. The held vault leaves: its blobs are deleted and its key zeroed. */
+    private fun discardHeldArchive() {
+        heldArchive?.let(lifecycleOps::discardHeld)
+        heldArchive = null
+        heldFrom = null
+    }
+
+    /** Whether the file at [uri] is a backup by its structure; anything else is tried as a `.vault`. */
+    private fun isBackupFile(uri: Uri): Boolean {
+        val head = ByteArray(BackupFile.HEAD_BYTES)
+        val read = contentResolver.openInputStream(uri)!!.use { input ->
+            var n = 0
+            while (n < head.size) {
+                val r = input.read(head, n, head.size - n)
+                if (r < 0) break
+                n += r
+            }
+            n
+        }
+        return read == head.size && BackupFile.isBackup(head)
     }
 
     /** The name a picker's document goes by, for a row — never the URI's last segment when it has one. */
@@ -2472,6 +2612,9 @@ class MainActivity : FragmentActivity() {
         // controls.
         applyEdgeToEdge()
         hasVault = lifecycleOps.vaultExists()
+        // `switch-builds-without-losing-vaults` D5. Before the welcome: a `.vault` read whose
+        // process ended before "Create vault" left blobs nothing can open.
+        if (!hasVault) lifecycleOps.sweepWithoutList()
         // `first-run-onboarding`. A device with no vault whose flow has never
         // finished is a first run, and the flow owns it from the passphrase on.
         // `inProgress` is false on every later launch, so this is a no-op for every
@@ -3366,6 +3509,9 @@ class MainActivity : FragmentActivity() {
                             onChooseRestoreFile = ::chooseRestoreFile,
                             onChooseRestoreFolder = { pickMirrorFolder(restore = true) },
                             onBack = ::closeBackup,
+                            // `switch-builds-without-losing-vaults` D1. Only with no list here.
+                            restoreFile = restoreFile.takeIf { !hasVault },
+                            onOpenVaultFile = ::openRestoreVaultFile,
                         )
                         importingArchive -> ArchiveImportScreen(
                             mnemonic = mnemonic,
@@ -4056,6 +4202,7 @@ class MainActivity : FragmentActivity() {
                             onNameContinue = ::firstNameContinue,
                             problem = setupProblem,
                             onRestoreBackup = ::openBackup,
+                            restored = restoredLine(),
                         )
                         !keyringOpen -> VaultUnlockScreen(
                             onUnlock = ::attemptUnlock,
@@ -5105,7 +5252,7 @@ class MainActivity : FragmentActivity() {
                 advanceOnboarding(onboardingStep!!.previousStep())
             // Name and look is not the first screen: the welcome is before it, and back
             // returns there as the welcome's own back returns to the language screen.
-            onboardingStep == Onboarding.Step.Name -> welcomeSeen = false
+            onboardingStep == Onboarding.Step.Name -> backToWelcome()
             // `cloud-mirror`, in the `when`'s position — above the archive import
             // for the same reason it is drawn above it. Nothing on it is a gate: a
             // user who opens Backup and thinks better of it goes back.
@@ -6440,6 +6587,9 @@ class MainActivity : FragmentActivity() {
      */
     override fun onDestroy() {
         if (VaultLifecycle.beforeLock === writeResumeBeforeLock) VaultLifecycle.beforeLock = null
+        // `switch-builds-without-losing-vaults` D3. The next launch sweeps its blobs (D5).
+        heldArchive?.vmk?.fill(0)
+        heldArchive = null
         super.onDestroy()
     }
 
@@ -6635,6 +6785,9 @@ class MainActivity : FragmentActivity() {
         setupProblem = null
         busy = true
         setupProgress = 0 to 1
+        // `switch-builds-without-losing-vaults` D4. A vault a `.vault` file brought in is the
+        // first entry, in place of a new one.
+        val held = heldArchive
         thread {
             try {
                 // `first-vault-naming`. The name and look the user chose on Name and look.
@@ -6642,6 +6795,7 @@ class MainActivity : FragmentActivity() {
                     passphrase,
                     firstVaultName = name,
                     firstVaultAppearance = appearance,
+                    firstVaultKey = held?.vmk,
                 ) { done, total ->
                     setupProgress = done to total
                 }
@@ -6653,6 +6807,13 @@ class MainActivity : FragmentActivity() {
                 val words = VaultKeyringSession.withKey { mnemonic.encode(it) }
                 TamperLog.append(blobs, TamperLog.RECOVERY_KIT_GENERATED)
                 runOnUiThread {
+                    if (held != null) {
+                        held.vmk.fill(0)
+                        heldArchive = null
+                        heldFrom = null
+                        // `one-time-purchase` D4. A vault with items has been added.
+                        Entitlement.startTrialIfNeeded(this)
+                    }
                     hasVault = true
                     unlocked = true
                     keyringOpen = true
@@ -6887,7 +7048,7 @@ class MainActivity : FragmentActivity() {
                     WorkJobs.register(
                         request.id,
                         WorkJobs.ImportJob(
-                            uri, mutableListOf(), indexId,
+                            uri, CopyOnWriteArrayList(), indexId,
                             // Only ever a fallback: the pipeline prefers the
                             // source's own date, so a kept date cannot be replaced
                             // from here even by mistake.
@@ -7068,6 +7229,15 @@ class MainActivity : FragmentActivity() {
         }
         enrolThenEnable = false
         AutoLock.awaitingResult(false)
+    }
+
+    /**
+     * Back from step 1 to the welcome — `switch-builds-without-losing-vaults` D5: a vault a
+     * `.vault` file brought in goes with it.
+     */
+    private fun backToWelcome() {
+        discardHeldArchive()
+        welcomeSeen = false
     }
 
     private fun beginOnboarding() {
@@ -7728,6 +7898,12 @@ class MainActivity : FragmentActivity() {
      * a photo picker and two passphrases, an identity needs its rehearsal — but the
      * step that *introduces* them is its own.
      */
+    /** `switch-builds-without-losing-vaults` D4. "From family.vault · 214 items", or null. */
+    @Composable
+    private fun restoredLine(): String? = heldFrom?.let { (name, items) ->
+        pluralStringResource(R.plurals.restore_from_file, items, name, items)
+    }
+
     @Composable
     private fun OnboardingStepContent(step: Onboarding.Step) {
         when (step) {
@@ -7742,6 +7918,7 @@ class MainActivity : FragmentActivity() {
                 accepts = VaultKeyring::fits,
                 error = firstNameError,
                 onContinue = { if (firstNameContinue()) advanceOnboarding(Onboarding.Step.Passphrase) },
+                restored = restoredLine(),
             )
 
             Onboarding.Step.Passphrase -> PassphraseStepScreen(
@@ -7872,6 +8049,9 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun openBackup() {
+        // `switch-builds-without-losing-vaults` D5. Choosing again lets a held vault go.
+        if (!hasVault) discardHeldArchive()
+        clearRestoreFile()
         mirrorProblem = null
         restoringBackup = false
         restoreState = RestoreState.Idle
@@ -7880,6 +8060,9 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun closeBackup() {
+        // A `.vault` being read is not left half read.
+        if (restoreFile != null && restoreState is RestoreState.Copying) return
+        clearRestoreFile()
         backupScreen = false
         restoringBackup = false
         mirrorProblem = null
@@ -8271,18 +8454,8 @@ class MainActivity : FragmentActivity() {
                     if (own != null && own in SafDestination(this, uri).names()) ImportKind.THIS_LIST
                     else ImportKind.OTHER_LIST
                 } else {
-                    val head = ByteArray(BackupFile.HEAD_BYTES)
-                    val read = contentResolver.openInputStream(uri)!!.use { input ->
-                        var n = 0
-                        while (n < head.size) {
-                            val r = input.read(head, n, head.size - n)
-                            if (r < 0) break
-                            n += r
-                        }
-                        n
-                    }
                     when {
-                        read < head.size || !BackupFile.isBackup(head) -> ImportKind.VAULT_FILE
+                        !isBackupFile(uri) -> ImportKind.VAULT_FILE
                         opensWithThisList(uri) -> ImportKind.THIS_LIST
                         else -> ImportKind.OTHER_LIST
                     }
@@ -11757,7 +11930,7 @@ class MainActivity : FragmentActivity() {
                 request.id,
                 WorkJobs.ImportJob(
                     uri,
-                    mutableListOf(),
+                    CopyOnWriteArrayList(),
                     id,
                     folderId = destination,
                 ),
@@ -11957,15 +12130,9 @@ class MainActivity : FragmentActivity() {
         // `destination-settings-and-slideshow` D5. A memo's last blob is a partial until it
         // stops — the one recording now, and one cut off by the process dying that waits for
         // its vault. Neither is an orphan.
-        val claimed = WorkJobs.claimedBlobIds() + MemoPending.claimedBlobIds(this) +
-            VoiceMemo.current?.pendingBlobHex().orEmpty()
-
-        var swept = 0
-        blobs.stagedPartials().forEach { hex ->
-            if (hex !in claimed) {
-                blobs.discardPartial(hex.chunked(2).map { it.toInt(16).toByte() }.toByteArray())
-                swept++
-            }
+        val swept = blobs.sweepUnclaimed {
+            WorkJobs.claimedBlobIds() + MemoPending.claimedBlobIds(this) +
+                VoiceMemo.current?.pendingBlobHex().orEmpty()
         }
         if (swept > 0) Log.i("VaultSweep", "swept $swept orphaned partial(s)")
     }
